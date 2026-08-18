@@ -2,6 +2,24 @@
      [ESPACE 1] TABLEAU DE BORD DU DEMANDEUR (CLIENT EMPRUNTEUR)
      ==================================================================== -->
 <section id="view-role-client" class="app-view" style="display: none;">
+  <!-- Offline Mode Alert Bar (Visible when browser goes offline) -->
+  <div id="borrower-offline-alert" class="card" style="display: none; background: #fffbeb; border: 1px solid #fde68a; padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+          <i class="fas fa-wifi"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #92400e;">Mode Hors-Ligne Actif • Service Worker & Cache Opérationnels</div>
+          <div style="font-size: 0.72rem; color: #b45309;">Vous consultez l'état de votre dossier et vos échéances en cache local sans interruption.</div>
+        </div>
+      </div>
+      <span class="badge badge-approved" style="font-size: 0.68rem;">
+        <i class="fas fa-database mr-1"></i> Données Locales Synchronisées
+      </span>
+    </div>
+  </div>
+
   <!-- Borrower Welcome Banner -->
   <div class="borrower-welcome-banner">
     <div>
@@ -159,6 +177,96 @@
         <div>
           <div style="font-size: 0.82rem; font-weight: 700;">Simulateur de Prêt</div>
           <div style="font-size: 0.7rem; color: var(--text-muted);">Calcul Reste à Vivre</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPACT LOAN ESTIMATION COMPONENT (SIMULATION RAPIDE & ÉCHÉANCE MENSUELLE) -->
+  <div class="compact-estimator-card">
+    <div class="compact-estimator-header">
+      <div class="compact-estimator-title">
+        <div class="compact-estimator-icon">
+          <i class="fas fa-calculator"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--text-primary);">
+            Estimation Express de Mensualité de Prêt
+          </h3>
+          <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">
+            Ajustez le montant et la durée pour calculer instantanément votre mensualité estimée (Barème UEMOA CIF)
+          </p>
+        </div>
+      </div>
+      <span class="badge badge-approved" style="font-size: 0.72rem;">
+        <i class="fas fa-bolt mr-1"></i> Taux Dégressif 1.2% / mois
+      </span>
+    </div>
+
+    <div class="compact-estimator-grid">
+      <!-- Sliders Column -->
+      <div>
+        <!-- Amount Slider -->
+        <div class="compact-slider-group">
+          <div class="compact-slider-header">
+            <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant Souhaité :</span>
+            <span class="compact-slider-val" id="compact-est-amount-val">2 500 000 FCFA</span>
+          </div>
+          <input type="range" id="compact-est-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+          <div class="compact-presets-row">
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500k</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1M</button>
+            <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2.5M</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5M</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8M</button>
+          </div>
+        </div>
+
+        <!-- Duration Slider -->
+        <div class="compact-slider-group">
+          <div class="compact-slider-header">
+            <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée de Remboursement :</span>
+            <span class="compact-slider-val" id="compact-est-duration-val" style="color: var(--primary-700);">12 Mois</span>
+          </div>
+          <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+          <div class="compact-presets-row">
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(6)">6 mois</button>
+            <button type="button" class="compact-preset-chip active" id="chip-duration-12" onclick="App.setCompactPresetDuration(12)">12 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(18)">18 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(24)">24 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(36)">36 mois</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Calculation Box -->
+      <div class="compact-output-box">
+        <div class="compact-monthly-highlight">
+          <div class="compact-monthly-label">Votre Mensualité Estimée</div>
+          <div class="compact-monthly-amount" id="compact-est-monthly-val">235 000 FCFA</div>
+          <div style="font-size: 0.7rem; color: var(--cif-emerald-500); font-weight: 600;">
+            <i class="fas fa-check-circle mr-1"></i> Assurance & frais de dossier inclus
+          </div>
+        </div>
+
+        <div class="compact-stats-row">
+          <div class="compact-stat-item">
+            <span class="compact-stat-label">Total Remboursé :</span>
+            <span class="compact-stat-val" id="compact-est-total-val">2 820 000 FCFA</span>
+          </div>
+          <div class="compact-stat-item">
+            <span class="compact-stat-label">Coût du Crédit :</span>
+            <span class="compact-stat-val" id="compact-est-cost-val" style="color: var(--cif-gold-700);">320 000 FCFA</span>
+          </div>
+        </div>
+
+        <div class="compact-actions-row">
+          <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Transférer cette simulation vers le formulaire de demande de prêt">
+            <i class="fas fa-paper-plane mr-1"></i> Demander ce Prêt
+          </button>
+          <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Accéder au simulateur complet avec calcul du Reste à Vivre">
+            <i class="fas fa-sliders mr-1"></i> Détails
+          </button>
         </div>
       </div>
     </div>

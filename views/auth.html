@@ -47,7 +47,7 @@
 
       <div class="auth-countries-strip">
         <i class="fas fa-earth-africa"></i>
-        <span>Réseau CIF Régional : 🇧🇫 Burkina Faso • 🇹🇬 Togo • 🇧🇯 Bénin • 🇸🇳 Sénégal • 🇲🇱 Mali</span>
+        <span>Réseau CIF Régional : <span class="fi fi-bf"></span> Burkina Faso • <span class="fi fi-tg"></span> Togo • <span class="fi fi-bj"></span> Bénin • <span class="fi fi-sn"></span> Sénégal • <span class="fi fi-ml"></span> Mali</span>
       </div>
     </div>
 
@@ -66,39 +66,63 @@
           </div>
 
           <div class="demo-personas-grid">
-            <!-- Persona 1: Demandeur (Client) -->
-            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+            <!-- Persona 1: Demandeur (Client - Sénégal) -->
+            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur (Sénégal)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+                <span class="avatar-flag-badge demo-flag" title="Sénégal"><span class="fi fi-sn fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Fatou Ndiaye</h6>
-                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Client)</span>
+                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Sénégal)</span>
               </div>
             </button>
 
-            <!-- Persona 2: Agent de Crédit -->
-            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+            <!-- Persona 2: Agent de Crédit (Togo) -->
+            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit (Togo)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+                <span class="avatar-flag-badge demo-flag" title="Togo"><span class="fi fi-tg fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Kofi Mensah</h6>
-                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit</span>
+                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit (Togo)</span>
               </div>
             </button>
 
-            <!-- Persona 3: Analyste Risque -->
-            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+            <!-- Persona 3: Analyste Risque (Burkina Faso) -->
+            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque (Burkina Faso)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+                <span class="avatar-flag-badge demo-flag" title="Burkina Faso"><span class="fi fi-bf fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Aminata Diallo</h6>
-                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste Risque</span>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina Faso)</span>
               </div>
             </button>
 
-            <!-- Persona 4: Comité de Crédit -->
-            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+            <!-- Persona 4: Comité de Crédit (Mali) -->
+            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision (Mali)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+                <span class="avatar-flag-badge demo-flag" title="Mali"><span class="fi fi-ml fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Moussa Traoré</h6>
-                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité de Crédit</span>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité (Mali)</span>
+              </div>
+            </button>
+
+            <!-- Persona 5: Conformité LBC/FT (Bénin) -->
+            <button class="demo-persona-btn" data-demo-id="demo-compliance" title="Ouvrir l'espace Conformité LBC/FT (Bénin)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Conformité">
+                <span class="avatar-flag-badge demo-flag" title="Bénin"><span class="fi fi-bj fis"></span></span>
+              </div>
+              <div class="demo-persona-info">
+                <h6>Bakary Sanou</h6>
+                <span style="color: #ef4444;"><i class="fas fa-shield-halved"></i> Conformité (Bénin)</span>
               </div>
             </button>
           </div>

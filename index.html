@@ -9,6 +9,9 @@
   <!-- FontAwesome 6 Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Flag Icons CDN (lipis/flag-icons v7.0.0) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css">
+  
   <!-- Chart.js 4 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
@@ -73,7 +76,7 @@
 
       <div class="auth-countries-strip">
         <i class="fas fa-earth-africa"></i>
-        <span>Réseau CIF Régional : 🇧🇫 Burkina Faso • 🇹🇬 Togo • 🇧🇯 Bénin • 🇸🇳 Sénégal • 🇲🇱 Mali</span>
+        <span>Réseau CIF Régional : <span class="fi fi-bf"></span> Burkina Faso • <span class="fi fi-tg"></span> Togo • <span class="fi fi-bj"></span> Bénin • <span class="fi fi-sn"></span> Sénégal • <span class="fi fi-ml"></span> Mali</span>
       </div>
     </div>
 
@@ -92,39 +95,63 @@
           </div>
 
           <div class="demo-personas-grid">
-            <!-- Persona 1: Demandeur (Client) -->
-            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+            <!-- Persona 1: Demandeur (Client - Sénégal) -->
+            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur (Sénégal)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+                <span class="avatar-flag-badge demo-flag" title="Sénégal"><span class="fi fi-sn fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Fatou Ndiaye</h6>
-                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Client)</span>
+                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Sénégal)</span>
               </div>
             </button>
 
-            <!-- Persona 2: Agent de Crédit -->
-            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+            <!-- Persona 2: Agent de Crédit (Togo) -->
+            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit (Togo)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+                <span class="avatar-flag-badge demo-flag" title="Togo"><span class="fi fi-tg fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Kofi Mensah</h6>
-                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit</span>
+                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit (Togo)</span>
               </div>
             </button>
 
-            <!-- Persona 3: Analyste Risque -->
-            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+            <!-- Persona 3: Analyste Risque (Burkina Faso) -->
+            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque (Burkina Faso)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+                <span class="avatar-flag-badge demo-flag" title="Burkina Faso"><span class="fi fi-bf fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Aminata Diallo</h6>
-                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste Risque</span>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina Faso)</span>
               </div>
             </button>
 
-            <!-- Persona 4: Comité de Crédit -->
-            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+            <!-- Persona 4: Comité de Crédit (Mali) -->
+            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision (Mali)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+                <span class="avatar-flag-badge demo-flag" title="Mali"><span class="fi fi-ml fis"></span></span>
+              </div>
               <div class="demo-persona-info">
                 <h6>Moussa Traoré</h6>
-                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité de Crédit</span>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité (Mali)</span>
+              </div>
+            </button>
+
+            <!-- Persona 5: Conformité LBC/FT (Bénin) -->
+            <button class="demo-persona-btn" data-demo-id="demo-compliance" title="Ouvrir l'espace Conformité LBC/FT (Bénin)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Conformité">
+                <span class="avatar-flag-badge demo-flag" title="Bénin"><span class="fi fi-bj fis"></span></span>
+              </div>
+              <div class="demo-persona-info">
+                <h6>Bakary Sanou</h6>
+                <span style="color: #ef4444;"><i class="fas fa-shield-halved"></i> Conformité (Bénin)</span>
               </div>
             </button>
           </div>
@@ -172,11 +199,11 @@
   <aside id="sidebar">
     <div class="sidebar-header">
       <a href="#" class="brand-logo" onclick="App.switchView(APP_CONSTANTS.ROLES[App.currentRole].homeView)">
-        <div class="brand-icon">
+        <div class="brand-icon" title="Crédit Fast UEMOA">
           <i class="fas fa-hand-holding-dollar"></i>
         </div>
-        <div>
-          <span>CRÉDIT FAST</span>
+        <div class="brand-title-group">
+          <span class="brand-name">CRÉDIT FAST</span>
           <span class="brand-tag">CIF-WA+</span>
         </div>
       </a>
@@ -190,13 +217,13 @@
     <div class="sidebar-user-card">
       <div class="user-avatar-wrap">
         <img id="user-avatar-display" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
-        <span class="user-status-dot"></span>
+        <span class="avatar-flag-badge sidebar-flag" id="sidebar-avatar-flag" title="Pays de l'utilisateur"></span>
       </div>
       <div class="user-info">
         <div id="user-name-display" class="user-name">Aminata Diallo</div>
         <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
-        <div class="user-region-badge">
-          <i class="fas fa-location-dot"></i> UEMOA • DigiCoop-WA+
+        <div class="user-region-badge" id="sidebar-region-badge">
+          <i class="fas fa-location-dot"></i> <span id="sidebar-country-text">Burkina Faso (UEMOA)</span>
         </div>
       </div>
     </div>
@@ -206,17 +233,26 @@
       <!-- Injected Dynamically based on Authenticated Role -->
     </nav>
   
-    <!-- Sidebar Footer / Logout & Regional Strip -->
+    <!-- Sidebar Footer / Regional Strip & Circular Flags -->
     <div class="sidebar-footer">
-      <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;" title="Se Déconnecter">
-        <i class="fas fa-power-off text-danger"></i> <span>Se Déconnecter</span>
-      </button>
       <div class="digicoop-card">
-        <div class="digicoop-text">
-          <h6>Projet DigiCoop-WA+</h6>
-          <p>5 Pays : BF • TG • BJ • SN • ML</p>
+        <div class="digicoop-text" style="width: 100%;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h6>Réseau Régional CIF</h6>
+            <span style="font-size: 0.62rem; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.15); padding: 1px 5px; border-radius: 4px;">UEMOA</span>
+          </div>
+          <div class="sidebar-flags-row">
+            <span class="sidebar-flag-circle" title="Burkina Faso (Ouagadougou)" onclick="App.updateUserCountry('BF'); App.showToast('Caisse active sélectionnée : Burkina Faso', 'info');"><span class="fi fi-bf fis"></span></span>
+            <span class="sidebar-flag-circle" title="Togo (Lomé)" onclick="App.updateUserCountry('TG'); App.showToast('Caisse active sélectionnée : Togo', 'info');"><span class="fi fi-tg fis"></span></span>
+            <span class="sidebar-flag-circle" title="Bénin (Cotonou)" onclick="App.updateUserCountry('BJ'); App.showToast('Caisse active sélectionnée : Bénin', 'info');"><span class="fi fi-bj fis"></span></span>
+            <span class="sidebar-flag-circle" title="Sénégal (Dakar)" onclick="App.updateUserCountry('SN'); App.showToast('Caisse active sélectionnée : Sénégal', 'info');"><span class="fi fi-sn fis"></span></span>
+            <span class="sidebar-flag-circle" title="Mali (Bamako)" onclick="App.updateUserCountry('ML'); App.showToast('Caisse active sélectionnée : Mali', 'info');"><span class="fi fi-ml fis"></span></span>
+          </div>
         </div>
       </div>
+      <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout sidebar-logout-btn" id="sidebar-logout-btn" onclick="App.openLogoutConfirmModal(); return false;" title="Se Déconnecter" style="margin-top: 0.65rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+        <i class="fas fa-right-from-bracket mr-2"></i> <span>Se Déconnecter</span>
+      </button>
     </div>
   </aside>
   
@@ -257,16 +293,13 @@
       </div>
     
       <div class="topbar-right">
-        <!-- Country Static Display Flag Badge -->
-        <div class="topbar-country-badge" id="topbar-country-badge" title="Réseau Régional CIF UEMOA">
-          <span class="country-flag" id="country-flag-icon">🇧🇫</span>
-          <span class="country-name" id="country-name-display">Burkina Faso (UEMOA)</span>
+        <!-- Offline Mode Indicator Badge -->
+        <div id="topbar-offline-badge" class="badge" style="display: none; background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 0.72rem; padding: 0.3rem 0.6rem; align-items: center; gap: 0.35rem;" title="Mode hors-ligne actif : Données en cache local disponibles">
+          <i class="fas fa-wifi"></i> <span>Hors-Ligne (Cache Actif)</span>
         </div>
     
-        <!-- Active Role Badge Pill -->
-        <span id="user-role-pill-badge" class="badge user-role-pill">
-          Analyste Risque
-        </span>
+        <!-- Active Role Badge Pill (Populated dynamically by active user) -->
+        <span id="user-role-pill-badge" class="badge user-role-pill"></span>
     
         <!-- Dark / Light Mode Toggle -->
         <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème (Mode Sombre / Clair)">
@@ -277,7 +310,7 @@
         <div class="notif-dropdown-container" style="position: relative;">
           <button id="notif-bell-btn" class="topbar-action-btn" title="Centre de Notifications" aria-label="Notifications">
             <i class="fas fa-bell"></i>
-            <span class="btn-badge" id="topbar-notif-badge">3</span>
+            <span class="btn-badge" id="topbar-notif-badge">0</span>
           </button>
           <div id="notif-dropdown" class="notif-dropdown-menu" style="display: none;">
             <!-- Header -->
@@ -288,101 +321,43 @@
                 </div>
                 <div>
                   <h5 class="notif-header-title">Centre de Notifications</h5>
-                  <div class="notif-header-subtitle">Alertes Risque, Décisions & Pipeline CIF</div>
+                  <div class="notif-header-subtitle" id="notif-header-subtitle">Alertes & Flux Métier Dédié</div>
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span class="badge badge-submitted" id="notif-unread-count-badge">3 Non Lues</span>
+                <span class="badge badge-submitted" id="notif-unread-count-badge">0 Non Lue</span>
                 <button class="notif-mark-read-btn" onclick="App.markAllNotificationsRead()" title="Marquer toutes les notifications comme lues">
                   <i class="fas fa-check-double"></i>
                 </button>
               </div>
             </div>
     
-            <!-- Filter Chips -->
+            <!-- Filter Chips (Injected dynamically based on active role) -->
             <div class="notif-filter-bar" id="notif-filter-bar">
-              <button class="notif-chip active" onclick="App.filterNotifications('ALL', this)">Toutes (3)</button>
-              <button class="notif-chip" onclick="App.filterNotifications('RISK', this)">
-                <i class="fas fa-triangle-exclamation text-warning mr-1"></i> Risque
-              </button>
-              <button class="notif-chip" onclick="App.filterNotifications('COMMITTEE', this)">
-                <i class="fas fa-gavel text-emerald mr-1"></i> Comité
-              </button>
-              <button class="notif-chip" onclick="App.filterNotifications('DISBURSEMENT', this)">
-                <i class="fas fa-money-bill-transfer text-primary mr-1"></i> Décaissement
-              </button>
+              <!-- Injected dynamically -->
             </div>
     
-            <!-- Notification List -->
+            <!-- Notification List (Injected dynamically based on active role) -->
             <div class="notif-list" id="notif-list-container">
-              <!-- Notification Item 1 (Risk / OCR Anomaly) -->
-              <div class="notif-item unread notif-cat-RISK" onclick="App.handleNotificationClick(3, 'view-analyst-dossiers')">
-                <div class="notif-item-icon warning">
-                  <i class="fas fa-triangle-exclamation"></i>
-                </div>
-                <div class="notif-item-content">
-                  <div class="notif-item-header">
-                    <span class="notif-item-title">Anomalie Documentaire Critique (OCR)</span>
-                    <span class="notif-unread-dot"></span>
-                  </div>
-                  <p class="notif-item-desc">Facture proforma expirée de 18 mois avec discordance de 600 000 FCFA sur le dossier Quincaillerie.</p>
-                  <div class="notif-item-meta">
-                    <span class="notif-item-tag"><i class="fas fa-folder-open mr-1"></i> #REQ-2026-0893</span>
-                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 12 min</span>
-                  </div>
-                </div>
-              </div>
-    
-              <!-- Notification Item 2 (Committee Meeting) -->
-              <div class="notif-item unread notif-cat-COMMITTEE" onclick="App.handleNotificationClick(2, 'view-role-committee')">
-                <div class="notif-item-icon emerald">
-                  <i class="fas fa-gavel"></i>
-                </div>
-                <div class="notif-item-content">
-                  <div class="notif-item-header">
-                    <span class="notif-item-title">Comité de Crédit Convoqué</span>
-                    <span class="notif-unread-dot"></span>
-                  </div>
-                  <p class="notif-item-desc">Dossier Amadou Sanogo (8.5M FCFA) prêt avec quorum atteint. Vote électronique ouvert.</p>
-                  <div class="notif-item-meta">
-                    <span class="notif-item-tag" style="background: rgba(16, 185, 129, 0.12); color: #047857;"><i class="fas fa-users-viewfinder mr-1"></i> Comité Ouaga</span>
-                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 45 min</span>
-                  </div>
-                </div>
-              </div>
-    
-              <!-- Notification Item 3 (Disbursement Ready) -->
-              <div class="notif-item unread notif-cat-DISBURSEMENT" onclick="App.handleNotificationClick(1, 'view-agent-inspections')">
-                <div class="notif-item-icon primary">
-                  <i class="fas fa-money-bill-wave"></i>
-                </div>
-                <div class="notif-item-content">
-                  <div class="notif-item-header">
-                    <span class="notif-item-title">Garantie Terrain Contrôlée</span>
-                    <span class="notif-unread-dot"></span>
-                  </div>
-                  <p class="notif-item-desc">Rapport de visite validé pour Fatou Ndiaye. Couverture réelle certifiée à 138%.</p>
-                  <div class="notif-item-meta">
-                    <span class="notif-item-tag" style="background: rgba(14, 165, 233, 0.12); color: #0284c7;"><i class="fas fa-shield-check mr-1"></i> Gage Stock Wax</span>
-                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 2h</span>
-                  </div>
-                </div>
-              </div>
+              <!-- Injected dynamically -->
             </div>
     
             <!-- Footer -->
             <div class="notif-dropdown-footer">
-              <button class="notif-footer-btn" onclick="App.switchView('view-audit-logs'); document.getElementById('notif-dropdown').style.display='none';">
-                <i class="fas fa-clock-rotate-left mr-1"></i> Consulter l'historique complet d'audit CIF
+              <button class="notif-footer-btn" id="notif-footer-action-btn" onclick="App.handleNotifFooterAction();">
+                <i class="fas fa-clock-rotate-left mr-1"></i> <span id="notif-footer-action-text">Consulter le journal d'activité</span>
               </button>
             </div>
           </div>
         </div>
     
-        <!-- Profile Icon with Dropbox -->
+        <!-- Profile Icon with Dropbox & Country Flag Overlay -->
         <div class="profile-dropdown-container" id="profile-dropdown-container">
           <button class="topbar-profile-btn" id="topbar-profile-btn" aria-haspopup="true" aria-expanded="false" title="Mon Profil & Paramètres">
-            <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
+            <div class="topbar-avatar-wrap">
+              <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
+              <span class="avatar-flag-badge" id="topbar-avatar-flag" title="Pays de l'utilisateur"></span>
+            </div>
             <div class="topbar-user-meta">
               <span id="topbar-user-name" class="topbar-user-name">Aminata Diallo</span>
               <span id="topbar-user-role" class="topbar-user-role">Analyste Risque</span>
@@ -393,7 +368,10 @@
           <!-- Dropdown Menu Box -->
           <div id="profile-dropdown-menu" class="profile-dropdown-menu">
             <div class="profile-dropdown-header">
-              <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
+              <div class="topbar-avatar-wrap">
+                <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
+                <span class="avatar-flag-badge lg" id="menu-avatar-flag" title="Pays de l'utilisateur"></span>
+              </div>
               <div class="menu-user-details">
                 <h6 id="menu-user-name">Aminata Diallo</h6>
                 <span id="menu-user-email" class="menu-user-email">aminata.diallo@cif-ao.org</span>
@@ -405,9 +383,15 @@
     
             <ul class="profile-menu-list">
               <li>
+                <a href="#" class="profile-menu-item" id="btn-edit-profile" onclick="App.openEditProfileModal(); return false;">
+                  <i class="fas fa-user-pen text-primary"></i>
+                  <span>Modifier mon Profil</span>
+                </a>
+              </li>
+              <li>
                 <a href="#" class="profile-menu-item" id="btn-open-settings" onclick="App.openSettingsModal(); return false;">
-                  <i class="fas fa-sliders-h text-primary"></i>
-                  <span>Paramètres du Compte</span>
+                  <i class="fas fa-sliders-h text-secondary"></i>
+                  <span>Paramètres & Préférences</span>
                 </a>
               </li>
               <li>
@@ -427,7 +411,7 @@
             <div class="profile-dropdown-divider"></div>
     
             <div class="profile-dropdown-footer">
-              <button class="btn btn-danger-subtle btn-sm btn-action-logout" style="width: 100%; justify-content: center;">
+              <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout" id="btn-topbar-logout" onclick="App.openLogoutConfirmModal(); return false;" style="width: 100%; justify-content: center;">
                 <i class="fas fa-right-from-bracket mr-2"></i> Se Déconnecter
               </button>
             </div>
@@ -445,6 +429,24 @@
            [ESPACE 1] TABLEAU DE BORD DU DEMANDEUR (CLIENT EMPRUNTEUR)
            ==================================================================== -->
       <section id="view-role-client" class="app-view" style="display: none;">
+        <!-- Offline Mode Alert Bar (Visible when browser goes offline) -->
+        <div id="borrower-offline-alert" class="card" style="display: none; background: #fffbeb; border: 1px solid #fde68a; padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+                <i class="fas fa-wifi"></i>
+              </div>
+              <div>
+                <div style="font-size: 0.82rem; font-weight: 700; color: #92400e;">Mode Hors-Ligne Actif • Service Worker & Cache Opérationnels</div>
+                <div style="font-size: 0.72rem; color: #b45309;">Vous consultez l'état de votre dossier et vos échéances en cache local sans interruption.</div>
+              </div>
+            </div>
+            <span class="badge badge-approved" style="font-size: 0.68rem;">
+              <i class="fas fa-database mr-1"></i> Données Locales Synchronisées
+            </span>
+          </div>
+        </div>
+      
         <!-- Borrower Welcome Banner -->
         <div class="borrower-welcome-banner">
           <div>
@@ -602,6 +604,96 @@
               <div>
                 <div style="font-size: 0.82rem; font-weight: 700;">Simulateur de Prêt</div>
                 <div style="font-size: 0.7rem; color: var(--text-muted);">Calcul Reste à Vivre</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- COMPACT LOAN ESTIMATION COMPONENT (SIMULATION RAPIDE & ÉCHÉANCE MENSUELLE) -->
+        <div class="compact-estimator-card">
+          <div class="compact-estimator-header">
+            <div class="compact-estimator-title">
+              <div class="compact-estimator-icon">
+                <i class="fas fa-calculator"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--text-primary);">
+                  Estimation Express de Mensualité de Prêt
+                </h3>
+                <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">
+                  Ajustez le montant et la durée pour calculer instantanément votre mensualité estimée (Barème UEMOA CIF)
+                </p>
+              </div>
+            </div>
+            <span class="badge badge-approved" style="font-size: 0.72rem;">
+              <i class="fas fa-bolt mr-1"></i> Taux Dégressif 1.2% / mois
+            </span>
+          </div>
+      
+          <div class="compact-estimator-grid">
+            <!-- Sliders Column -->
+            <div>
+              <!-- Amount Slider -->
+              <div class="compact-slider-group">
+                <div class="compact-slider-header">
+                  <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant Souhaité :</span>
+                  <span class="compact-slider-val" id="compact-est-amount-val">2 500 000 FCFA</span>
+                </div>
+                <input type="range" id="compact-est-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+                <div class="compact-presets-row">
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500k</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1M</button>
+                  <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2.5M</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5M</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8M</button>
+                </div>
+              </div>
+      
+              <!-- Duration Slider -->
+              <div class="compact-slider-group">
+                <div class="compact-slider-header">
+                  <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée de Remboursement :</span>
+                  <span class="compact-slider-val" id="compact-est-duration-val" style="color: var(--primary-700);">12 Mois</span>
+                </div>
+                <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+                <div class="compact-presets-row">
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(6)">6 mois</button>
+                  <button type="button" class="compact-preset-chip active" id="chip-duration-12" onclick="App.setCompactPresetDuration(12)">12 mois</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(18)">18 mois</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(24)">24 mois</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(36)">36 mois</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Output Calculation Box -->
+            <div class="compact-output-box">
+              <div class="compact-monthly-highlight">
+                <div class="compact-monthly-label">Votre Mensualité Estimée</div>
+                <div class="compact-monthly-amount" id="compact-est-monthly-val">235 000 FCFA</div>
+                <div style="font-size: 0.7rem; color: var(--cif-emerald-500); font-weight: 600;">
+                  <i class="fas fa-check-circle mr-1"></i> Assurance & frais de dossier inclus
+                </div>
+              </div>
+      
+              <div class="compact-stats-row">
+                <div class="compact-stat-item">
+                  <span class="compact-stat-label">Total Remboursé :</span>
+                  <span class="compact-stat-val" id="compact-est-total-val">2 820 000 FCFA</span>
+                </div>
+                <div class="compact-stat-item">
+                  <span class="compact-stat-label">Coût du Crédit :</span>
+                  <span class="compact-stat-val" id="compact-est-cost-val" style="color: var(--cif-gold-700);">320 000 FCFA</span>
+                </div>
+              </div>
+      
+              <div class="compact-actions-row">
+                <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Transférer cette simulation vers le formulaire de demande de prêt">
+                  <i class="fas fa-paper-plane mr-1"></i> Demander ce Prêt
+                </button>
+                <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Accéder au simulateur complet avec calcul du Reste à Vivre">
+                  <i class="fas fa-sliders mr-1"></i> Détails
+                </button>
               </div>
             </div>
           </div>
@@ -1223,7 +1315,7 @@
         <!-- Documents Grid -->
         <div class="grid-3" id="client-documents-grid">
           <!-- Doc Card 1: CNI ECOWAS -->
-          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('cni')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1242,14 +1334,14 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du document CNI sécurisé...', 'info')">
-                <i class="fas fa-eye"></i> Aperçu
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('cni')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
       
           <!-- Doc Card 2: Registre du Commerce (RCCM) -->
-          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('rccm')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1268,14 +1360,14 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Certifié Conforme</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du RCCM...', 'info')">
-                <i class="fas fa-eye"></i> Aperçu
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('rccm')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
       
           <!-- Doc Card 3: Facture Proforma Tissus Wax -->
-          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('proforma')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1294,14 +1386,14 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-check-double"></i> Conforme au prêt</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du devis...', 'info')">
-                <i class="fas fa-download"></i> Télécharger
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('proforma')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
       
           <!-- Doc Card 4: Quittance Électricité Senelec -->
-          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('senelec')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1320,14 +1412,14 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Vérifié</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du justificatif Senelec...', 'info')">
-                <i class="fas fa-eye"></i> Aperçu
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('senelec')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
       
           <!-- Doc Card 5: Acte de Nantissement Épargne CIF -->
-          <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('guarantee')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1346,14 +1438,14 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-lock"></i> Actif & Enregistré</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'acte notarié...', 'info')">
-                <i class="fas fa-download"></i> Télécharger
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('guarantee')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
       
           <!-- Doc Card 6: Contrat Cadre de Microcrédit -->
-          <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative;">
+          <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('contract')">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -1372,8 +1464,8 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
               <span class="badge badge-approved"><i class="fas fa-certificate"></i> Signé & Scellé</span>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de la copie légale du contrat...', 'info')">
-                <i class="fas fa-download"></i> Télécharger
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('contract')">
+                <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
             </div>
           </div>
@@ -2568,13 +2660,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>🇸🇳 Caisse Médina (Dakar)</td>
+                      <td><span class="fi fi-sn mr-1" style="border-radius: 2px;"></span> Caisse Médina (Dakar)</td>
                       <td>CPT-CIF-SN-00918</td>
                       <td>Épargne Collectée</td>
                       <td class="amount-cell">1 450 000 FCFA</td>
                     </tr>
                     <tr>
-                      <td>🇧🇫 Caisse Ouaga 2000</td>
+                      <td><span class="fi fi-bf mr-1" style="border-radius: 2px;"></span> Caisse Ouaga 2000</td>
                       <td>CPT-CIF-BF-04421</td>
                       <td>Courant Commercial</td>
                       <td class="amount-cell">2 800 000 FCFA</td>
@@ -3189,8 +3281,8 @@
         </h3>
         <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Dakar, Sénégal • SN-DKR-008821</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
+      <div style="display: flex; align-items: center; gap: 0.75rem;" id="modal-header-actions">
+        <button class="btn btn-secondary btn-sm" id="modal-cold-start-btn" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
           <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
         </button>
         <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
@@ -3209,14 +3301,14 @@
             <div style="font-size: 0.78rem; color: var(--text-subtle);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
           </div>
           <div class="score-main-display" style="padding: 0.75rem 1.25rem;">
-            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 295deg; width: 70px; height: 70px;">
+            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 0deg; width: 70px; height: 70px;">
               <div class="score-gauge-inner" style="width: 54px; height: 54px;">
-                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">82</div>
+                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">0</div>
               </div>
             </div>
             <div>
               <div style="font-weight: 700; font-size: 0.95rem;">Score Explicable V2</div>
-              <div class="score-risk-tag">Risque Faible</div>
+              <div class="score-risk-tag" id="modal-score-risk-tag">Calcul en cours...</div>
             </div>
           </div>
         </div>
@@ -3283,25 +3375,27 @@
             <!-- Factors Rendered Dynamically -->
           </div>
 
-          <!-- Analyst Recommendation Box -->
-          <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
-            <div class="card-body" style="padding: 1rem;">
-              <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
-              <div class="form-group" style="margin-bottom: 0.75rem;">
-                <label class="form-label">Avis Consultatif</label>
-                <select id="analyst-reco-select" class="form-control">
-                  <option value="FAVORABLE">Favorable pour passage en Comité</option>
-                  <option value="RESERVE">Favorable sous réserve de compléments</option>
-                  <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
-                </select>
+          <!-- Role-Adapted Decision / Tracking Box -->
+          <div id="modal-role-action-container">
+            <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
+              <div class="card-body" style="padding: 1rem;">
+                <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Avis Consultatif</label>
+                  <select id="analyst-reco-select" class="form-control">
+                    <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                    <option value="RESERVE">Favorable sous réserve de compléments</option>
+                    <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Note d'analyse de synthèse</label>
+                  <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
+                </div>
+                <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
+                  <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
+                </button>
               </div>
-              <div class="form-group" style="margin-bottom: 0.75rem;">
-                <label class="form-label">Note d'analyse de synthèse</label>
-                <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
-              </div>
-              <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
-                <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
-              </button>
             </div>
           </div>
         </div>
@@ -3515,11 +3609,14 @@
           <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label" style="font-size: 0.75rem;">Pays / Caisse d'attache</label>
             <select id="setting-country" class="form-control" onchange="App.updateUserCountry(this.value)">
-              <option value="BF">🇧🇫 Burkina Faso (Ouagadougou)</option>
-              <option value="SN">🇸🇳 Sénégal (Dakar)</option>
-              <option value="TG">🇹🇬 Togo (Lomé)</option>
-              <option value="BJ">🇧🇯 Bénin (Cotonou)</option>
-              <option value="ML">🇲🇱 Mali (Bamako)</option>
+              <option value="BF">Burkina Faso (Ouagadougou)</option>
+              <option value="SN">Sénégal (Dakar)</option>
+              <option value="TG">Togo (Lomé)</option>
+              <option value="BJ">Bénin (Cotonou)</option>
+              <option value="ML">Mali (Bamako)</option>
+              <option value="CI">Côte d'Ivoire (Abidjan)</option>
+              <option value="NE">Niger (Niamey)</option>
+              <option value="GW">Guinée-Bissau (Bissau)</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom: 0;">
@@ -3553,6 +3650,96 @@
         <i class="fas fa-check mr-1"></i> Enregistrer Préférences
       </button>
     </div>
+  </div>
+</div>
+
+
+<!-- ==========================================================================
+     MODAL: MODIFIER LE PROFIL UTILISATEUR (Email & Téléphone / Mobile Money)
+     Confédération des Institutions Financières d'Afrique de l'Ouest (CIF)
+     ========================================================================== -->
+<div id="modal-edit-profile" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog" style="max-width: 520px;">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-user-pen text-primary"></i> Modifier mon Profil
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Mettez à jour votre adresse e-mail professionnelle et votre numéro de contact</p>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeEditProfileModal()" title="Fermer la fenêtre">&times;</button>
+    </div>
+
+    <form id="edit-profile-form" onsubmit="event.preventDefault(); App.saveUserProfile();">
+      <div class="modal-body">
+        <!-- User Summary Card with Avatar & Superimposed Flag -->
+        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-surface-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); margin-bottom: 1.25rem;">
+          <div class="topbar-avatar-wrap">
+            <img id="edit-profile-avatar-img" src="" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-500);">
+            <span class="avatar-flag-badge lg" id="edit-profile-avatar-flag"></span>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <h5 id="edit-profile-card-name" style="font-size: 0.95rem; font-weight: 700; margin: 0 0 2px 0; color: var(--text-primary);"></h5>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span id="edit-profile-card-role" class="badge user-role-pill" style="font-size: 0.7rem; padding: 2px 8px;"></span>
+              <span id="edit-profile-card-location" style="font-size: 0.72rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: 3px;">
+                <i class="fas fa-location-dot"></i> <span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Coordonnées Actives -->
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" for="edit-profile-email" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fas fa-envelope text-primary"></i> Adresse E-mail Professionnelle <span class="text-danger">*</span>
+          </label>
+          <div style="position: relative;">
+            <input type="email" id="edit-profile-email" class="form-control" placeholder="nom.prenom@cif-ao.org" required style="padding-left: 2.25rem;">
+            <i class="fas fa-at" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+          </div>
+          <small style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
+            Utilisée pour les alertes de sécurité, rapports de crédit et convocations.
+          </small>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" for="edit-profile-phone" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fas fa-phone text-emerald"></i> Numéro de Téléphone / Mobile Money <span class="text-danger">*</span>
+          </label>
+          <div style="position: relative;">
+            <input type="tel" id="edit-profile-phone" class="form-control" placeholder="+226 70 12 34 56" required style="padding-left: 2.25rem;">
+            <i class="fas fa-mobile-screen" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+          </div>
+          <small style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
+            Format international (ex: +221 77..., +228 90..., +226 70...). Alertes instantanées SMS & WhatsApp.
+          </small>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0.5rem;">
+          <label class="form-label" for="edit-profile-title" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fas fa-id-badge text-info"></i> Titre & Fonction CIF
+          </label>
+          <input type="text" id="edit-profile-title" class="form-control" readonly style="background: var(--bg-surface-secondary); cursor: not-allowed; font-size: 0.82rem;">
+        </div>
+
+        <div style="margin-top: 1rem; padding: 0.65rem 0.85rem; background: rgba(79, 70, 229, 0.06); border: 1px dashed rgba(79, 70, 229, 0.25); border-radius: var(--radius-md); display: flex; align-items: flex-start; gap: 0.6rem;">
+          <i class="fas fa-shield-check text-primary" style="font-size: 1rem; margin-top: 2px;"></i>
+          <span style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.4;">
+            Vos coordonnées sont chiffrées selon les standards de sécurité UEMOA. Toute modification prend effet immédiatement sur vos alertes en temps réel.
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="App.closeEditProfileModal()">
+          Annuler
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm" id="btn-save-user-profile">
+          <i class="fas fa-floppy-disk mr-1"></i> Enregistrer les Modifications
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -3766,6 +3953,169 @@
 </div>
 
 
+<!-- ====================================================================
+     [MODAL] ANIMATION DE SUCCÈS & VALIDATION TRANSACTIONS (GREEN CHECKMARK)
+     ==================================================================== -->
+<div id="modal-success-animation" class="modal" style="display: none; position: fixed; inset: 0; z-index: 2200; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);">
+  <div class="success-anim-dialog">
+    <!-- Animated Checkmark SVG -->
+    <div class="success-icon-wrapper">
+      <div class="success-icon-glow"></div>
+      <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h3 class="success-anim-title" id="success-modal-title">Demande Transmise avec Succès !</h3>
+    <p class="success-anim-subtitle" id="success-modal-subtitle">
+      Votre dossier a été horodaté et transmis avec succès aux services d'analyse de la Caisse CIF.
+    </p>
+
+    <!-- Details Card -->
+    <div class="success-details-card" id="success-modal-details-card">
+      <div class="success-detail-row">
+        <span class="success-detail-label">Référence :</span>
+        <span class="success-detail-val" id="success-detail-ref">REQ-2026-0895</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Montant :</span>
+        <span class="success-detail-val" id="success-detail-amount" style="color: var(--primary-700);">2 500 000 FCFA</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Mensualité Estimée :</span>
+        <span class="success-detail-val" id="success-detail-payment" style="color: var(--cif-emerald-600);">235 000 FCFA</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Statut :</span>
+        <span class="badge badge-approved" id="success-detail-status" style="font-size: 0.7rem;">
+          <i class="fas fa-circle-check"></i> Enregistré & Conforme
+        </span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+      <button class="btn btn-success btn-lg" id="success-modal-primary-btn" onclick="App.closeSuccessModal()" style="width: 100%; justify-content: center;">
+        <i class="fas fa-arrow-right mr-1"></i> Poursuivre vers mon Espace
+      </button>
+      <button class="btn btn-secondary btn-sm" id="success-modal-secondary-btn" onclick="App.downloadSuccessReceipt()" style="width: 100%; justify-content: center;">
+        <i class="fas fa-file-arrow-down mr-1"></i> Télécharger le Récépissé Officiel (PDF)
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====================================================================
+     [MODAL] VISIONNEUSE LIGHTBOX DE DOCUMENTS & EXTRACTION OCR (GED)
+     ==================================================================== -->
+<div id="modal-doc-lightbox" class="doc-lightbox-modal" onclick="if(event.target === this) App.closeDocLightbox()">
+  <div class="doc-lightbox-container" onclick="event.stopPropagation()">
+    <!-- Topbar -->
+    <div class="doc-lightbox-topbar">
+      <div class="doc-lightbox-title-box">
+        <div class="doc-lightbox-icon">
+          <i class="fas fa-file-pdf" id="doc-lightbox-file-icon"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <h4 style="font-size: 0.95rem; font-weight: 700; margin: 0; color: var(--text-primary);" id="doc-lightbox-title">
+              Facture Proforma Stock Wax Assigamé
+            </h4>
+            <span class="badge badge-approved" id="doc-lightbox-badge" style="font-size: 0.68rem;">
+              <i class="fas fa-check-circle"></i> OCR Validé 100%
+            </span>
+          </div>
+          <span style="font-size: 0.72rem; color: var(--text-muted);" id="doc-lightbox-meta">
+            PDF • 1.4 Mo • Horodaté le 11/08/2026 à 10:15
+          </span>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <!-- Zoom & Rotation Controls -->
+        <div class="doc-lightbox-toolbar">
+          <button class="doc-tool-btn" onclick="App.zoomDocLightbox(0.85)" title="Zoom Arrière (-)">
+            <i class="fas fa-magnifying-glass-minus"></i>
+          </button>
+          <span style="font-size: 0.72rem; font-weight: 700; padding: 0 0.25rem; font-family: var(--font-family-code);" id="doc-lightbox-zoom-val">100%</span>
+          <button class="doc-tool-btn" onclick="App.zoomDocLightbox(1.15)" title="Zoom Avant (+)">
+            <i class="fas fa-magnifying-glass-plus"></i>
+          </button>
+          <button class="doc-tool-btn" onclick="App.resetDocLightboxZoom()" title="Réinitialiser la taille">
+            <i class="fas fa-arrows-rotate"></i>
+          </button>
+          <button class="doc-tool-btn" onclick="App.rotateDocLightbox()" title="Pivoter de 90°">
+            <i class="fas fa-rotate-right"></i>
+          </button>
+        </div>
+
+        <!-- Download & Close -->
+        <button class="btn btn-secondary btn-sm" onclick="App.downloadDocLightbox()" title="Télécharger le fichier original">
+          <i class="fas fa-download mr-1"></i> Télécharger
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="App.closeDocLightbox()" style="border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;" title="Fermer (Échap)">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area (Split Canvas + OCR Meta Sidebar) -->
+    <div class="doc-lightbox-main">
+      <!-- Canvas Area (Document Page) -->
+      <div class="doc-lightbox-canvas-area" id="doc-lightbox-canvas-area">
+        <div id="doc-lightbox-sheet" class="doc-lightbox-preview-sheet" style="transform: scale(1) rotate(0deg); width: 620px; min-height: 800px; padding: 2rem; position: relative;">
+          <!-- Dynamically Rendered Document Content -->
+          <div id="doc-lightbox-rendered-content">
+            <!-- Default Content populated dynamically by js/app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- OCR Insights & Data Extraction Sidebar -->
+      <div class="doc-lightbox-sidebar">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.65rem;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fas fa-brain text-primary"></i> Moteur IA & OCR CIF
+          </div>
+          <span class="badge badge-client" style="font-size: 0.68rem;" id="doc-lightbox-conf-score">99.8% Confiance</span>
+        </div>
+
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Toutes les données textuelles et métadonnées ont été extraites par Reconnaissance Optique de Caractères conforme UEMOA.
+        </p>
+
+        <!-- Dynamic Extracted Fields Container -->
+        <div id="doc-lightbox-fields-list" style="margin-bottom: 1.25rem;">
+          <!-- Items injected dynamically -->
+        </div>
+
+        <!-- Compliance & Fraud Checks -->
+        <div style="margin-top: auto; background: var(--bg-body); border-radius: var(--radius-md); padding: 0.75rem; border: 1px solid var(--border-color);">
+          <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem; text-transform: uppercase;">
+            <i class="fas fa-shield-halved text-emerald mr-1"></i> Contrôles de Conformité
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-subtle); display: flex; flex-direction: column; gap: 0.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fas fa-check text-emerald"></i> Format conforme UEMOA
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fas fa-check text-emerald"></i> Signature et cachet reconnus
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <i class="fas fa-check text-emerald"></i> Intégrité du fichier certifiée SHA-256
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ==========================================================================
      6. Toast Feedback Container
      ========================================================================== -->
@@ -3773,13 +4123,13 @@
 
 
 <!-- JavaScript Application Modules -->
-<script src="js/constants.js"></script>
-<script src="js/data.js"></script>
-<script src="js/credit-scoring.js"></script>
-<script src="js/ocr-engine.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/interactions.js"></script>
-<script src="js/app.js"></script>
+<script src="js/constants.js?v=2.2"></script>
+<script src="js/data.js?v=2.2"></script>
+<script src="js/credit-scoring.js?v=2.2"></script>
+<script src="js/ocr-engine.js?v=2.2"></script>
+<script src="js/charts.js?v=2.2"></script>
+<script src="js/interactions.js?v=2.2"></script>
+<script src="js/app.js?v=2.2"></script>
 
 
 </body>

@@ -20,6 +20,7 @@ const App = {
     this.initClientWizard();
     this.initComplianceScreening();
     this.initNotifications();
+    this.initServiceWorkerAndOffline();
 
     // Check existing auth session or auto-load default persona
     const savedUser = localStorage.getItem('AUTH_USER');
@@ -68,13 +69,68 @@ const App = {
       });
     }
 
-    // Logout Buttons
+    // Logout Buttons (Intercept and open confirmation dialog)
     document.querySelectorAll('.btn-action-logout').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        this.logout();
+        e.stopPropagation();
+        this.openLogoutConfirmModal();
       });
     });
+  },
+
+  openLogoutConfirmModal() {
+    // 1. Close profile dropdown menu if open
+    const profileMenu = document.getElementById('profile-dropdown-menu');
+    const profileBtn = document.getElementById('topbar-profile-btn');
+    if (profileMenu) profileMenu.classList.remove('show');
+    if (profileBtn) profileBtn.classList.remove('active');
+
+    // 2. Populate active user data in the confirmation modal
+    const user = this.currentUser || APP_CONSTANTS.DEMO_ACCOUNTS[2];
+    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+
+    const avatarImg = document.getElementById('logout-confirm-user-avatar');
+    const avatarFlag = document.getElementById('logout-confirm-avatar-flag');
+    const userName = document.getElementById('logout-confirm-user-name');
+    const userRole = document.getElementById('logout-confirm-user-role');
+    const userEmail = document.getElementById('logout-confirm-user-email');
+
+    if (avatarImg) avatarImg.src = user.avatar;
+    if (avatarFlag) {
+      const flagCode = user.countryFlag || (user.id === 'demo-client' ? 'sn' : user.id === 'demo-agent' ? 'tg' : user.id === 'demo-committee' ? 'ml' : user.id === 'demo-compliance' ? 'bj' : 'bf');
+      avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis"></span>`;
+    }
+    if (userName) userName.textContent = user.name;
+    if (userRole) {
+      userRole.textContent = roleConfig.name;
+      userRole.style.color = roleConfig.badgeColor;
+      userRole.style.backgroundColor = roleConfig.badgeBg;
+      userRole.style.borderColor = roleConfig.badgeColor;
+    }
+    if (userEmail) userEmail.textContent = user.email;
+
+    // 3. Display the modal
+    const modal = document.getElementById('modal-confirm-logout');
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+    }
+  },
+
+  closeLogoutConfirmModal() {
+    const modal = document.getElementById('modal-confirm-logout');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 150);
+    }
+  },
+
+  confirmLogout() {
+    this.closeLogoutConfirmModal();
+    this.logout();
   },
 
   login(user) {
@@ -93,6 +149,9 @@ const App = {
 
     // Render Role-Specific Sidebar & Navigate to Dedicated Home Dashboard
     this.renderSidebarForRole(user.role);
+
+    // Render Role-Specific Notifications in Topbar
+    this.renderNotificationsForRole(user.role);
 
     const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
     this.switchView(roleConfig.homeView);
@@ -157,6 +216,10 @@ const App = {
       rolePill.style.backgroundColor = roleConfig.badgeBg;
       rolePill.style.borderColor = roleConfig.badgeColor;
     }
+
+    // Dynamic Topbar Flag & Country sync based on logged-in user profile
+    const userCountryCode = user.countryCode || (user.id === 'demo-client' ? 'SN' : user.id === 'demo-agent' ? 'TG' : user.id === 'demo-committee' ? 'ML' : user.id === 'demo-compliance' ? 'BJ' : 'BF');
+    this.updateUserCountry(userCountryCode);
   },
 
   // 2. DYNAMIC ROLE-SPECIFIC SIDEBAR RENDERER
@@ -167,16 +230,21 @@ const App = {
     const roleConfig = APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
     let html = '';
 
-    roleConfig.navGroups.forEach(group => {
-      html += `<div class="menu-group-title">${group.title}</div><ul>`;
+    roleConfig.navGroups.forEach((group, gIdx) => {
+      html += `
+        <div class="sidebar-nav-group" id="sidebar-nav-group-${gIdx}">
+          <div class="menu-group-title">${group.title}</div>
+          <ul class="nav-items-list">
+      `;
       group.items.forEach(item => {
         const badgeHtml = item.badge 
           ? `<span class="nav-badge ${item.badgeClass || ''}">${item.badge}</span>` 
           : '';
+        const tooltipText = item.badge ? `${item.label} • ${item.badge}` : item.label;
 
         html += `
           <li class="nav-item">
-            <a class="nav-link" data-view-target="${item.target}" data-nav-title="${item.label}" title="${item.label}">
+            <a class="nav-link" data-view-target="${item.target}" data-nav-title="${tooltipText}" title="${item.label}">
               <i class="fas ${item.icon}"></i>
               <span class="nav-link-text">${item.label}</span>
               ${badgeHtml}
@@ -184,7 +252,7 @@ const App = {
           </li>
         `;
       });
-      html += `</ul>`;
+      html += `</ul></div>`;
     });
 
     container.innerHTML = html;
@@ -210,8 +278,20 @@ const App = {
     });
   },
 
-  // 3. SPA Navigation Router with Dynamic Role Rendering
+  // 3. SPA Navigation Router with Role-Based Access Control (RBAC Guard)
   switchView(viewId) {
+    // Role-Based Access Control verification
+    const userRole = this.currentRole || (this.currentUser ? this.currentUser.role : 'ANALYST');
+    const allowedViews = (APP_CONSTANTS.ROLE_PERMITTED_VIEWS && APP_CONSTANTS.ROLE_PERMITTED_VIEWS[userRole]) || [];
+    
+    // Strict RBAC Guard: If target view is not allowed for current role, redirect to role home
+    if (allowedViews.length > 0 && !allowedViews.includes(viewId)) {
+      const roleConfig = APP_CONSTANTS.ROLES[userRole] || APP_CONSTANTS.ROLES.ANALYST;
+      const targetFallback = roleConfig.homeView || 'view-role-analyst';
+      this.showToast(`Accès restreint : cette page est réservée à l'espace ${roleConfig.name}`, 'warning');
+      viewId = targetFallback;
+    }
+
     this.currentView = viewId;
 
     // Highlight active nav item
@@ -288,6 +368,8 @@ const App = {
     if (activePurpose) activePurpose.textContent = req.purpose;
     if (activeRef) activeRef.textContent = req.request_number;
     if (activeStatus) activeStatus.innerHTML = AppInteractions.getStatusBadge(req.status);
+
+    this.updateCompactEstimator();
   },
 
   // [ROLE 2] AGENT DE CRÉDIT (CHARGÉ DE CLIENTÈLE)
@@ -1166,9 +1248,103 @@ const App = {
         if (e.key === 'Escape') {
           profileMenu.classList.remove('show');
           profileBtn.classList.remove('active');
+          const logoutModal = document.getElementById('modal-confirm-logout');
+          if (logoutModal && logoutModal.style.display !== 'none') {
+            this.closeLogoutConfirmModal();
+          }
         }
       });
     }
+  },
+
+  // Edit Profile Modal Handlers (Email & Phone / Mobile Money updates)
+  openEditProfileModal() {
+    const modal = document.getElementById('modal-edit-profile');
+    const profileMenu = document.getElementById('profile-dropdown-menu');
+    const profileBtn = document.getElementById('topbar-profile-btn');
+    if (profileMenu) profileMenu.classList.remove('show');
+    if (profileBtn) profileBtn.classList.remove('active');
+
+    const user = this.currentUser || APP_CONSTANTS.DEMO_ACCOUNTS[2];
+
+    const emailInput = document.getElementById('edit-profile-email');
+    const phoneInput = document.getElementById('edit-profile-phone');
+    const titleInput = document.getElementById('edit-profile-title');
+    const avatarImg = document.getElementById('edit-profile-avatar-img');
+    const avatarFlag = document.getElementById('edit-profile-avatar-flag');
+    const cardName = document.getElementById('edit-profile-card-name');
+    const cardRole = document.getElementById('edit-profile-card-role');
+    const cardLocation = document.getElementById('edit-profile-card-location');
+
+    if (emailInput) emailInput.value = user.email || '';
+    if (phoneInput) phoneInput.value = user.phone || '+226 70 88 99 00';
+    if (titleInput) titleInput.value = `${user.title || ''} • ${user.location || ''}`;
+    if (avatarImg) avatarImg.src = user.avatar || '';
+    if (cardName) cardName.textContent = user.name || '';
+    
+    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+    if (cardRole) {
+      cardRole.textContent = roleConfig.shortName || roleConfig.name;
+      cardRole.style.color = roleConfig.badgeColor;
+      cardRole.style.backgroundColor = roleConfig.badgeBg;
+      cardRole.style.borderColor = roleConfig.badgeColor;
+    }
+    
+    if (cardLocation) {
+      const locSpan = cardLocation.querySelector('span');
+      if (locSpan) locSpan.textContent = user.location || 'UEMOA';
+    }
+
+    if (avatarFlag) {
+      const flagCode = (user.countryFlag || user.countryCode || 'bf').toLowerCase();
+      avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis" title="${user.countryName || 'UEMOA'}"></span>`;
+    }
+
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+    }
+  },
+
+  closeEditProfileModal() {
+    const modal = document.getElementById('modal-edit-profile');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => modal.style.display = 'none', 250);
+    }
+  },
+
+  saveUserProfile() {
+    const emailInput = document.getElementById('edit-profile-email');
+    const phoneInput = document.getElementById('edit-profile-phone');
+
+    if (!emailInput || !phoneInput) return;
+
+    const newEmail = emailInput.value.trim();
+    const newPhone = phoneInput.value.trim();
+
+    if (!newEmail || !newEmail.includes('@')) {
+      this.showToast('Veuillez saisir une adresse e-mail valide', 'danger');
+      return;
+    }
+
+    if (!newPhone || newPhone.length < 6) {
+      this.showToast('Veuillez saisir un numéro de téléphone valide', 'danger');
+      return;
+    }
+
+    if (this.currentUser) {
+      this.currentUser.email = newEmail;
+      this.currentUser.phone = newPhone;
+      localStorage.setItem('AUTH_USER', JSON.stringify(this.currentUser));
+    }
+
+    // Update in UI
+    const menuEmail = document.getElementById('menu-user-email');
+    if (menuEmail) menuEmail.textContent = newEmail;
+
+    this.closeEditProfileModal();
+    this.showToast(`Profil mis à jour : E-mail (${newEmail}) et Téléphone (${newPhone}) enregistrés`, 'success');
   },
 
   // Settings Modal Handlers
@@ -1215,17 +1391,96 @@ const App = {
 
   updateUserCountry(code) {
     const map = {
-      'BF': { name: 'Burkina Faso (UEMOA)', flag: '🇧🇫' },
-      'SN': { name: 'Sénégal (Dakar)', flag: '🇸🇳' },
-      'TG': { name: 'Togo (Lomé)', flag: '🇹🇬' },
-      'BJ': { name: 'Bénin (Cotonou)', flag: '🇧🇯' },
-      'ML': { name: 'Mali (Bamako)', flag: '🇲🇱' }
+      'BF': { name: 'Burkina Faso (Ouagadougou)', code: 'bf' },
+      'SN': { name: 'Sénégal (Dakar)', code: 'sn' },
+      'TG': { name: 'Togo (Lomé)', code: 'tg' },
+      'BJ': { name: 'Bénin (Cotonou)', code: 'bj' },
+      'ML': { name: 'Mali (Bamako)', code: 'ml' },
+      'CI': { name: 'Côte d\'Ivoire (Abidjan)', code: 'ci' },
+      'NE': { name: 'Niger (Niamey)', code: 'ne' },
+      'GW': { name: 'Guinée-Bissau (Bissau)', code: 'gw' }
     };
     const c = map[code] || map['BF'];
-    const flagEl = document.getElementById('country-flag-icon');
-    const nameEl = document.getElementById('country-name-display');
-    if (flagEl) flagEl.textContent = c.flag;
-    if (nameEl) nameEl.textContent = c.name;
+    
+    // 1. Update circular overlay flag badge on topbar user avatar
+    const topbarAvatarFlag = document.getElementById('topbar-avatar-flag');
+    if (topbarAvatarFlag) {
+      topbarAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
+    }
+
+    // 2. Update circular overlay flag badge in profile dropdown header
+    const menuAvatarFlag = document.getElementById('menu-avatar-flag');
+    if (menuAvatarFlag) {
+      menuAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
+    }
+
+    // 3. Update circular overlay flag badge on sidebar user avatar
+    const sidebarAvatarFlag = document.getElementById('sidebar-avatar-flag');
+    if (sidebarAvatarFlag) {
+      sidebarAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
+    }
+
+    // 4. Update sidebar region text
+    const sidebarCountryText = document.getElementById('sidebar-country-text');
+    if (sidebarCountryText) {
+      sidebarCountryText.textContent = c.name;
+    }
+
+    // 5. Update settings modal country select if open
+    const settingCountrySelect = document.getElementById('setting-country');
+    if (settingCountrySelect && settingCountrySelect.value !== code) {
+      settingCountrySelect.value = code;
+    }
+
+    if (this.currentUser) {
+      this.currentUser.countryCode = code;
+      this.currentUser.countryName = c.name;
+      this.currentUser.countryFlag = c.code;
+    }
+  },
+
+  // ==========================================================================
+  // [FEATURE] SERVICE WORKER & OFFLINE RESILIENCE CONTROLLER
+  // ==========================================================================
+  initServiceWorkerAndOffline() {
+    // 1. Register Service Worker for offline asset caching
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('[ServiceWorker] Registre actif avec portée :', registration.scope);
+          })
+          .catch((err) => {
+            console.warn('[ServiceWorker] Note : Enregistrement SW en environnement de prévisualisation :', err);
+          });
+      });
+    }
+
+    // 2. Listen to network connectivity changes
+    window.addEventListener('online', () => {
+      this.updateOfflineStatus(true);
+      this.showToast('Connexion rétablie : Synchronisation temps réel active', 'success');
+    });
+
+    window.addEventListener('offline', () => {
+      this.updateOfflineStatus(false);
+      this.showToast('Mode Hors-Ligne Actif : Vos données du tableau de bord restent consultables via le cache local', 'info');
+    });
+
+    // Check initial connectivity status
+    this.updateOfflineStatus(navigator.onLine);
+  },
+
+  updateOfflineStatus(isOnline) {
+    const topbarBadge = document.getElementById('topbar-offline-badge');
+    const borrowerAlert = document.getElementById('borrower-offline-alert');
+
+    if (topbarBadge) {
+      topbarBadge.style.display = isOnline ? 'none' : 'inline-flex';
+    }
+    if (borrowerAlert) {
+      borrowerAlert.style.display = isOnline ? 'none' : 'block';
+    }
   },
 
   saveSettings() {
@@ -1281,6 +1536,193 @@ const App = {
         }
       }
     });
+  },
+
+  // =========================================================================
+  // ROLE-BASED NOTIFICATIONS MANAGER
+  // =========================================================================
+  currentRoleNotifications: [],
+  currentNotifFilter: 'ALL',
+
+  initNotifications() {
+    const notifBtn = document.getElementById('notif-bell-btn');
+    const notifDropdown = document.getElementById('notif-dropdown');
+
+    if (notifBtn && notifDropdown) {
+      notifBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = notifDropdown.style.display === 'block';
+        notifDropdown.style.display = isOpen ? 'none' : 'block';
+
+        // Close profile dropdown if open
+        const profileMenu = document.getElementById('profile-dropdown-menu');
+        const profileBtn = document.getElementById('topbar-profile-btn');
+        if (profileMenu) profileMenu.classList.remove('show');
+        if (profileBtn) profileBtn.classList.remove('active');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+          notifDropdown.style.display = 'none';
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          notifDropdown.style.display = 'none';
+        }
+      });
+    }
+  },
+
+  renderNotificationsForRole(roleCode) {
+    const role = roleCode || (this.currentUser ? this.currentUser.role : 'ANALYST');
+    const roleConfig = APP_CONSTANTS.ROLES[role] || APP_CONSTANTS.ROLES.ANALYST;
+
+    // Load list from constants clone
+    const notifs = (APP_CONSTANTS.ROLE_NOTIFICATIONS && APP_CONSTANTS.ROLE_NOTIFICATIONS[role]) || [];
+    this.currentRoleNotifications = JSON.parse(JSON.stringify(notifs));
+    this.currentNotifFilter = 'ALL';
+
+    // Subtitle update
+    const subtitleEl = document.getElementById('notif-header-subtitle');
+    if (subtitleEl) {
+      subtitleEl.textContent = `Alertes & Flux : Espace ${roleConfig.name}`;
+    }
+
+    // Render Filter Chips
+    const filterContainer = document.getElementById('notif-filter-bar');
+    if (filterContainer) {
+      const filters = (APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS && APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS[role]) || [{ key: 'ALL', label: 'Toutes' }];
+      filterContainer.innerHTML = filters.map((f, idx) => `
+        <button class="notif-chip ${idx === 0 ? 'active' : ''}" data-filter-key="${f.key}" onclick="App.filterNotifications('${f.key}', this)">
+          ${f.icon ? `<i class="fas ${f.icon} mr-1"></i>` : ''} ${f.label}
+        </button>
+      `).join('');
+    }
+
+    // Update Footer Action Button text
+    const footerText = document.getElementById('notif-footer-action-text');
+    if (footerText) {
+      if (role === 'CLIENT') footerText.textContent = 'Accéder à mes demandes & dossiers';
+      else if (role === 'CREDIT_OFFICER') footerText.textContent = 'Consulter le portefeuille guichet';
+      else if (role === 'COMMITTEE') footerText.textContent = 'Voir les décisions & procès-verbaux';
+      else if (role === 'COMPLIANCE') footerText.textContent = 'Ouvrir le registre d\'audit LBC/FT';
+      else footerText.textContent = 'Consulter l\'historique d\'audit CIF';
+    }
+
+    this.updateNotificationListUI();
+  },
+
+  updateNotificationListUI() {
+    const container = document.getElementById('notif-list-container');
+    const badgeTop = document.getElementById('topbar-notif-badge');
+    const badgeUnread = document.getElementById('notif-unread-count-badge');
+    if (!container) return;
+
+    const notifs = this.currentRoleNotifications || [];
+    const unreadCount = notifs.filter(n => n.unread).length;
+
+    // Update Topbar badge
+    if (badgeTop) {
+      badgeTop.textContent = unreadCount;
+      badgeTop.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+
+    // Update Dropdown header badge
+    if (badgeUnread) {
+      badgeUnread.textContent = `${unreadCount} Non Lue${unreadCount > 1 ? 's' : ''}`;
+      badgeUnread.className = `badge ${unreadCount > 0 ? 'badge-submitted' : 'badge-approved'}`;
+    }
+
+    // Filter items
+    const filtered = this.currentNotifFilter === 'ALL' 
+      ? notifs 
+      : notifs.filter(n => n.category === this.currentNotifFilter);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: var(--text-subtle);">
+          <i class="fas fa-bell-slash" style="font-size: 1.8rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+          <p style="font-size: 0.82rem; margin: 0;">Aucune notification dans cette catégorie.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(item => `
+      <div class="notif-item ${item.unread ? 'unread' : ''} notif-cat-${item.category}" onclick="App.handleNotificationClick(${item.id}, '${item.targetView}')">
+        <div class="notif-item-icon ${item.iconType || 'primary'}">
+          <i class="fas ${item.icon}"></i>
+        </div>
+        <div class="notif-item-content">
+          <div class="notif-item-header">
+            <span class="notif-item-title">${item.title}</span>
+            ${item.unread ? '<span class="notif-unread-dot"></span>' : ''}
+          </div>
+          <p class="notif-item-desc">${item.desc}</p>
+          <div class="notif-item-meta">
+            <span class="notif-item-tag"><i class="fas fa-tag mr-1"></i> ${item.tag}</span>
+            <span class="notif-item-time"><i class="far fa-clock mr-1"></i> ${item.time}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  filterNotifications(category, chipEl) {
+    this.currentNotifFilter = category;
+    const chips = document.querySelectorAll('#notif-filter-bar .notif-chip');
+    chips.forEach(c => c.classList.remove('active'));
+    if (chipEl) chipEl.classList.add('active');
+    this.updateNotificationListUI();
+  },
+
+  handleNotificationClick(notifId, targetView) {
+    const notif = (this.currentRoleNotifications || []).find(n => n.id === notifId);
+    if (notif) {
+      notif.unread = false;
+    }
+
+    this.updateNotificationListUI();
+
+    // Close notification dropdown
+    const notifDropdown = document.getElementById('notif-dropdown');
+    if (notifDropdown) notifDropdown.style.display = 'none';
+
+    // Navigate to target view if provided and valid
+    if (targetView) {
+      this.switchView(targetView);
+    }
+  },
+
+  markAllNotificationsRead() {
+    (this.currentRoleNotifications || []).forEach(n => {
+      n.unread = false;
+    });
+    this.updateNotificationListUI();
+    this.showToast('Toutes les notifications ont été marquées comme lues', 'success');
+  },
+
+  handleNotifFooterAction() {
+    const notifDropdown = document.getElementById('notif-dropdown');
+    if (notifDropdown) notifDropdown.style.display = 'none';
+
+    const role = this.currentRole || (this.currentUser ? this.currentUser.role : 'ANALYST');
+    if (role === 'CLIENT') {
+      this.switchView('view-client-requests');
+    } else if (role === 'CREDIT_OFFICER') {
+      this.switchView('view-agent-clients');
+    } else if (role === 'COMMITTEE') {
+      this.switchView('view-role-committee');
+    } else if (role === 'COMPLIANCE') {
+      this.switchView('view-audit-logs');
+    } else {
+      this.switchView('view-audit-logs');
+    }
   },
 
   initClientWizard() {
@@ -1433,14 +1875,25 @@ const App = {
 
     DB.addAuditLog(4, 'NEW_CREDIT_SUBMISSION', 'credit_requests', newReq.id, `Nouvelle demande de ${CreditScoringEngine.formatFCFA(amount)} déposée par ${clientName}`);
 
-    this.showToast('Demande enregistrée avec succès ! Redirection...', 'success');
-    
-    if (this.currentRole === 'CLIENT') {
-      this.switchView('view-role-client');
-    } else {
-      this.switchView('view-analyst-dossiers');
-      AppInteractions.renderRequestsTable();
-    }
+    this.showSuccessModal({
+      title: 'Demande de Crédit Déposée avec Succès !',
+      subtitle: `Votre dossier #${newReq.request_number} a été scellé par empreinte cryptographique et transmis au service d'analyse CIF.`,
+      reference: newReq.request_number,
+      amount: CreditScoringEngine.formatFCFA(amount),
+      payment: `${CreditScoringEngine.formatFCFA(cap.estimatedPayment)} / mois (${months} mois)`,
+      statusHtml: '<i class="fas fa-circle-check"></i> Enregistré & En Attente d\'Analyse',
+      statusClass: 'badge-approved',
+      primaryBtnText: 'Consulter mon Tableau de Bord Emprunteur',
+      onPrimaryClick: () => {
+        if (this.currentRole === 'CLIENT') {
+          this.switchView('view-role-client');
+        } else {
+          this.switchView('view-analyst-dossiers');
+          AppInteractions.renderRequestsTable();
+        }
+      },
+      receiptTitle: `Recipisse_Demande_${newReq.request_number}.pdf`
+    });
   },
 
   initComplianceScreening() {
@@ -1849,23 +2302,40 @@ const App = {
 
   submitClientPayment(event) {
     event.preventDefault();
-    const phone = document.getElementById('payment-phone-number').value || '77 540 88 12';
+    const phone = document.getElementById('payment-phone-number')?.value || '77 540 88 12';
     const selectedProvider = document.querySelector('input[name="momo_provider"]:checked')?.value || 'Orange Money';
 
     this.closeClientPaymentModal();
     this.showToast(`Requête USSD envoyée vers le +221 ${phone} (${selectedProvider})...`, 'info');
 
     setTimeout(() => {
-      this.showToast(`Paiement de 235 000 FCFA validé avec succès ! Reçu N° REC-2026-0905 généré.`, 'success');
-      
       // Update the table row in schedule if rendered
       const due3Row = document.querySelector('#client-schedule-table-body tr:nth-child(3)');
       if (due3Row) {
         due3Row.style.background = '';
-        due3Row.children[7].innerHTML = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 18/08 (${selectedProvider})</span>`;
-        due3Row.children[8].innerHTML = `<button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du reçu REC-2026-0905', 'success')"><i class="fas fa-file-invoice"></i> Reçu #3</button>`;
+        if (due3Row.children[7]) {
+          due3Row.children[7].innerHTML = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 18/08 (${selectedProvider})</span>`;
+        }
+        if (due3Row.children[8]) {
+          due3Row.children[8].innerHTML = `<button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du reçu REC-2026-0905', 'success')"><i class="fas fa-file-invoice"></i> Reçu #3</button>`;
+        }
       }
-    }, 1800);
+
+      this.showSuccessModal({
+        title: 'Paiement Mobile Money Validé !',
+        subtitle: `Le règlement de votre échéance N° 3 a été débité et certifié via ${selectedProvider}.`,
+        reference: 'TXN-MOMO-2026-0905-8821',
+        amount: '235 000 FCFA',
+        payment: 'Échéance N° 3 Soldée (Principal: 208 333 F + Intérêts: 26 667 F)',
+        statusHtml: `<i class="fas fa-circle-check"></i> Règlement Confirmé (${selectedProvider})`,
+        statusClass: 'badge-approved',
+        primaryBtnText: 'Voir mon Échéancier de Remboursement',
+        onPrimaryClick: () => {
+          this.switchView('view-client-schedule');
+        },
+        receiptTitle: 'Recu_Paiement_MOMO_2026_0905.pdf'
+      });
+    }, 1200);
   },
 
   sendAdvisorMessage() {
@@ -2554,10 +3024,608 @@ const App = {
 
   closeCommitteeModal() {
     this.closeModal('committee-modal');
+  },
+
+  // ==========================================================================
+  // [FEATURE] COMPACT LOAN ESTIMATION COMPONENT (BORROWER DASHBOARD)
+  // ==========================================================================
+  updateCompactEstimator() {
+    const amountSlider = document.getElementById('compact-est-amount-range');
+    const durationSlider = document.getElementById('compact-est-duration-range');
+    if (!amountSlider || !durationSlider) return;
+
+    const amount = parseInt(amountSlider.value, 10) || 2500000;
+    const duration = parseInt(durationSlider.value, 10) || 12;
+
+    const amountValEl = document.getElementById('compact-est-amount-val');
+    const durationValEl = document.getElementById('compact-est-duration-val');
+    if (amountValEl) amountValEl.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (durationValEl) durationValEl.textContent = `${duration} Mois`;
+
+    // Monthly interest rate: 1.2% per month (standard UEMOA microfinance scale)
+    const rateMonthly = 0.012;
+    const monthlyPayment = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    const totalPayments = monthlyPayment * duration;
+    const totalInterest = totalPayments - amount;
+    const insuranceAndFees = Math.round(amount * 0.012);
+    const monthlyTotal = Math.round(monthlyPayment + (insuranceAndFees / duration));
+    const totalCost = Math.round(totalInterest + insuranceAndFees);
+    const totalRepaid = Math.round(amount + totalCost);
+
+    const monthlyValEl = document.getElementById('compact-est-monthly-val');
+    const totalValEl = document.getElementById('compact-est-total-val');
+    const costValEl = document.getElementById('compact-est-cost-val');
+
+    if (monthlyValEl) monthlyValEl.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
+    if (totalValEl) totalValEl.textContent = CreditScoringEngine.formatFCFA(totalRepaid);
+    if (costValEl) costValEl.textContent = CreditScoringEngine.formatFCFA(totalCost);
+
+    // Update active preset chips
+    document.querySelectorAll('.compact-preset-chip').forEach(chip => chip.classList.remove('active'));
+    const amountChip = document.getElementById(`chip-amount-${amount}`);
+    const durationChip = document.getElementById(`chip-duration-${duration}`);
+    if (amountChip) amountChip.classList.add('active');
+    if (durationChip) durationChip.classList.add('active');
+  },
+
+  setCompactPresetAmount(amount) {
+    const slider = document.getElementById('compact-est-amount-range');
+    if (slider) {
+      slider.value = amount;
+      this.updateCompactEstimator();
+    }
+  },
+
+  setCompactPresetDuration(months) {
+    const slider = document.getElementById('compact-est-duration-range');
+    if (slider) {
+      slider.value = months;
+      this.updateCompactEstimator();
+    }
+  },
+
+  applyFromCompactEstimator() {
+    const amountSlider = document.getElementById('compact-est-amount-range');
+    const durationSlider = document.getElementById('compact-est-duration-range');
+    const amount = amountSlider ? parseInt(amountSlider.value, 10) : 2500000;
+    const duration = durationSlider ? parseInt(durationSlider.value, 10) : 12;
+
+    this.switchView('view-client-wizard');
+
+    // Pre-fill amount and duration in wizard
+    const wizAmount = document.getElementById('wiz-amount');
+    const wizDuration = document.getElementById('wiz-duration');
+    if (wizAmount) {
+      wizAmount.value = amount;
+      wizAmount.dispatchEvent(new Event('input'));
+    }
+    if (wizDuration) {
+      wizDuration.value = duration;
+      wizDuration.dispatchEvent(new Event('input'));
+    }
+
+    this.showToast(`Simulation transférée : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
+  },
+
+  // ==========================================================================
+  // [FEATURE] SUCCESS ANIMATION MODAL CONTROLLER (GREEN CHECKMARK)
+  // ==========================================================================
+  successOnPrimaryCallback: null,
+  successReceiptFilename: 'Recipisse_Transaction_CIF.pdf',
+
+  showSuccessModal(config = {}) {
+    const modal = document.getElementById('modal-success-animation');
+    if (!modal) return;
+
+    const titleEl = document.getElementById('success-modal-title');
+    const subtitleEl = document.getElementById('success-modal-subtitle');
+    const refEl = document.getElementById('success-detail-ref');
+    const amountEl = document.getElementById('success-detail-amount');
+    const paymentEl = document.getElementById('success-detail-payment');
+    const statusEl = document.getElementById('success-detail-status');
+    const primaryBtn = document.getElementById('success-modal-primary-btn');
+
+    if (titleEl && config.title) titleEl.textContent = config.title;
+    if (subtitleEl && config.subtitle) subtitleEl.textContent = config.subtitle;
+    if (refEl && config.reference) refEl.textContent = config.reference;
+    if (amountEl && config.amount) amountEl.textContent = config.amount;
+    if (paymentEl && config.payment) paymentEl.textContent = config.payment;
+
+    if (statusEl && config.statusHtml) {
+      statusEl.innerHTML = config.statusHtml;
+      if (config.statusClass) {
+        statusEl.className = `badge ${config.statusClass}`;
+      }
+    }
+
+    if (primaryBtn && config.primaryBtnText) {
+      primaryBtn.innerHTML = `<i class="fas fa-arrow-right mr-1"></i> ${config.primaryBtnText}`;
+    }
+
+    this.successOnPrimaryCallback = config.onPrimaryClick || null;
+    this.successReceiptFilename = config.receiptTitle || 'Recipisse_Transaction_CIF.pdf';
+
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.classList.add('active');
+    }, 10);
+  },
+
+  closeSuccessModal() {
+    const modal = document.getElementById('modal-success-animation');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 250);
+    }
+
+    if (typeof this.successOnPrimaryCallback === 'function') {
+      const cb = this.successOnPrimaryCallback;
+      this.successOnPrimaryCallback = null;
+      cb();
+    }
+  },
+
+  downloadSuccessReceipt() {
+    this.showToast(`Génération du récépissé officiel sécurisé (${this.successReceiptFilename})...`, 'info');
+    setTimeout(() => {
+      this.showToast(`Récépissé ${this.successReceiptFilename} téléchargé avec succès !`, 'success');
+    }, 600);
+  },
+
+  // ==========================================================================
+  // [FEATURE] LIGHT-BOX DOCUMENT PREVIEW & OCR VIEWER
+  // ==========================================================================
+  docLightboxZoom: 1,
+  docLightboxRotation: 0,
+  currentLightboxDocKey: 'proforma',
+
+  openDocLightbox(docKey = 'proforma') {
+    this.currentLightboxDocKey = docKey;
+    this.docLightboxZoom = 1;
+    this.docLightboxRotation = 0;
+
+    const modal = document.getElementById('modal-doc-lightbox');
+    if (!modal) return;
+
+    const docData = this.getDocLightboxData(docKey);
+
+    // Set Topbar info
+    const titleEl = document.getElementById('doc-lightbox-title');
+    const metaEl = document.getElementById('doc-lightbox-meta');
+    const badgeEl = document.getElementById('doc-lightbox-badge');
+    const iconEl = document.getElementById('doc-lightbox-file-icon');
+    const confScoreEl = document.getElementById('doc-lightbox-conf-score');
+
+    if (titleEl) titleEl.textContent = docData.title;
+    if (metaEl) metaEl.textContent = docData.meta;
+    if (badgeEl) {
+      badgeEl.className = `badge ${docData.badgeClass || 'badge-approved'}`;
+      badgeEl.innerHTML = docData.badgeHtml;
+    }
+    if (iconEl) iconEl.className = docData.iconClass || 'fas fa-file-pdf';
+    if (confScoreEl) confScoreEl.textContent = `${docData.confidenceScore || '99.8%'} Confiance`;
+
+    // Render OCR Fields in Sidebar
+    const fieldsList = document.getElementById('doc-lightbox-fields-list');
+    if (fieldsList) {
+      fieldsList.innerHTML = docData.fields.map(f => `
+        <div class="doc-ocr-field-row">
+          <span class="doc-ocr-field-lbl">${f.label}</span>
+          <span class="doc-ocr-field-val">${f.value}</span>
+        </div>
+      `).join('');
+    }
+
+    // Render Document Sheet Content
+    const renderedContent = document.getElementById('doc-lightbox-rendered-content');
+    if (renderedContent) {
+      renderedContent.innerHTML = docData.sheetHtml;
+    }
+
+    this.applyLightboxTransform();
+
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.classList.add('active');
+    }, 10);
+  },
+
+  closeDocLightbox() {
+    const modal = document.getElementById('modal-doc-lightbox');
+    if (!modal) return;
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 250);
+  },
+
+  zoomDocLightbox(factor) {
+    if (factor > 1) {
+      this.docLightboxZoom = Math.min(2.2, this.docLightboxZoom * factor);
+    } else {
+      this.docLightboxZoom = Math.max(0.6, this.docLightboxZoom * factor);
+    }
+    this.applyLightboxTransform();
+  },
+
+  resetDocLightboxZoom() {
+    this.docLightboxZoom = 1;
+    this.docLightboxRotation = 0;
+    this.applyLightboxTransform();
+  },
+
+  rotateDocLightbox() {
+    this.docLightboxRotation = (this.docLightboxRotation + 90) % 360;
+    this.applyLightboxTransform();
+  },
+
+  applyLightboxTransform() {
+    const sheet = document.getElementById('doc-lightbox-sheet');
+    const zoomVal = document.getElementById('doc-lightbox-zoom-val');
+    if (sheet) {
+      sheet.style.transform = `scale(${this.docLightboxZoom}) rotate(${this.docLightboxRotation}deg)`;
+    }
+    if (zoomVal) {
+      zoomVal.textContent = `${Math.round(this.docLightboxZoom * 100)}%`;
+    }
+  },
+
+  downloadDocLightbox() {
+    const docData = this.getDocLightboxData(this.currentLightboxDocKey);
+    this.showToast(`Téléchargement de : ${docData.filename || 'Document_Officiel.pdf'}...`, 'info');
+    setTimeout(() => {
+      this.showToast(`Document "${docData.title}" téléchargé avec succès`, 'success');
+    }, 500);
+  },
+
+  getDocLightboxData(docKey) {
+    const docs = {
+      cni: {
+        title: "Carte Nationale d'Identité Biométrique CEDEAO",
+        meta: "PDF / Image HD • 1.1 Mo • Certifié OCR UEMOA 100%",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Identité Certifiée",
+        iconClass: "fas fa-id-card",
+        confidenceScore: "100%",
+        filename: "CNI_Biometrique_Fatou_Ndiaye.pdf",
+        fields: [
+          { label: "N° Carte Nationale", value: "1 756 1989 00412" },
+          { label: "Nom & Prénom", value: "NDIAYE Fatou" },
+          { label: "Date de Naissance", value: "14/03/1989 (Dakar)" },
+          { label: "Nationalité", value: "Sénégalaise (CEDEAO / UEMOA)" },
+          { label: "Délivrée le", value: "15/03/2019 par DAF Dakar" },
+          { label: "Date d'Expiration", value: "14/03/2029 (En cours de validité)" },
+          { label: "Puce Biométrique", value: "UID-SN-882104-OK" }
+        ],
+        sheetHtml: `
+          <div style="border: 2px solid #15803d; border-radius: 12px; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <!-- Header Senegal -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #15803d; padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: #15803d; text-transform: uppercase; line-height: 1.3;">
+                RÉPUBLIQUE DU SÉNÉGAL<br><span style="font-size: 0.65rem; color: #047857;">COMMUNAUTÉ ÉCONOMIQUE DES ÉTATS DE L'AFRIQUE DE L'OUEST</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.4rem;">
+                <div style="width: 28px; height: 18px; background: linear-gradient(to right, #15803d 33.3%, #facc15 33.3%, #facc15 66.6%, #dc2626 66.6%); border-radius: 2px; border: 1px solid rgba(0,0,0,0.2);"></div>
+                <span style="font-size: 0.75rem; font-weight: 800; color: #1e293b;">CEDEAO / ECOWAS</span>
+              </div>
+            </div>
+
+            <!-- Card Body with Avatar and Fields -->
+            <div style="display: grid; grid-template-columns: 110px 1fr; gap: 1.25rem; align-items: center;">
+              <div style="text-align: center;">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&auto=format&fit=crop&q=80" alt="Fatou Ndiaye" style="width: 100px; height: 120px; object-fit: cover; border-radius: 6px; border: 2px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <div style="font-size: 0.65rem; font-weight: 700; color: #15803d; margin-top: 4px;"><i class="fas fa-fingerprint"></i> Biométrie OK</div>
+              </div>
+              <div style="font-size: 0.76rem; color: #334155; line-height: 1.6;">
+                <div><span style="font-weight: 700; color: #0f172a;">NOM :</span> NDIAYE</div>
+                <div><span style="font-weight: 700; color: #0f172a;">PRÉNOM :</span> Fatou</div>
+                <div><span style="font-weight: 700; color: #0f172a;">NÉ LE :</span> 14/03/1989 à Dakar</div>
+                <div><span style="font-weight: 700; color: #0f172a;">SEXE :</span> F • <span style="font-weight: 700; color: #0f172a;">TAILLE :</span> 1.68 m</div>
+                <div><span style="font-weight: 700; color: #0f172a;">N° IDENTIFIANT :</span> <strong style="font-family: monospace; color: #1e40af;">1 756 1989 00412</strong></div>
+                <div><span style="font-weight: 700; color: #0f172a;">VALIDITÉ :</span> 15/03/2019 - 14/03/2029</div>
+              </div>
+            </div>
+
+            <!-- MRZ Band -->
+            <div style="margin-top: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.6rem; font-family: monospace; font-size: 0.72rem; color: #0f172a; letter-spacing: 2px; line-height: 1.4;">
+              IDSNANDIAYE<<FATOU<<<<<<<<<<<<<<<<<<<<<<<<<<<br>
+              17561989004128SEN8903144F2903141<<<<<<<<<<<<6
+            </div>
+
+            <!-- Hologram stamp watermark -->
+            <div style="position: absolute; bottom: 20px; right: 25px; border: 2px dashed rgba(21, 128, 61, 0.4); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; transform: rotate(-15deg); color: rgba(21, 128, 61, 0.6); font-size: 0.65rem; font-weight: 900; text-align: center; pointer-events: none;">
+              SÉNÉGAL<br>OFFICIEL<br>UEMOA
+            </div>
+          </div>
+        `
+      },
+      rccm: {
+        title: "Extrait Registre du Commerce et du Crédit Mobilier (RCCM)",
+        meta: "PDF • 850 Ko • Greffe Tribunal de Commerce de Dakar",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-check-circle\"></i> RCCM Authentifié",
+        iconClass: "fas fa-landmark",
+        confidenceScore: "99.9%",
+        filename: "RCCM_Confection_Fatou_Dakar.pdf",
+        fields: [
+          { label: "N° Immatriculation RCCM", value: "SN.DKR.2022.A.18402" },
+          { label: "NINEA (Fiscal)", value: "008923412 2A2" },
+          { label: "Dénomination Commerciale", value: "ATELIER COUTURE & WAX FATOU" },
+          { label: "Forme Juridique", value: "Entreprise Individuelle (Artisanat)" },
+          { label: "Date Immatriculation", value: "18/02/2022" },
+          { label: "Siège Social", value: "Médina Rue 22 x 15, Dakar (Sénégal)" },
+          { label: "Activité Déclarée", value: "Confection textile, négoce de tissus et prêt-à-porter" }
+        ],
+        sheetHtml: `
+          <div style="border: 2px solid #334155; padding: 2rem; background: #ffffff; color: #0f172a; font-family: serif;">
+            <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+              <h4 style="font-size: 1.1rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">OHADA - RÉPUBLIQUE DU SÉNÉGAL</h4>
+              <h5 style="font-size: 0.9rem; margin: 4px 0 0 0; color: #475569;">TRIBUNAL DE COMMERCE HORS CLASSE DE DAKAR</h5>
+              <div style="font-size: 0.8rem; font-weight: 700; color: #047857; margin-top: 6px;">EXTRAIT D'IMMATRICULATION AU RCCM</div>
+            </div>
+
+            <div style="font-size: 0.82rem; line-height: 1.8; color: #1e293b;">
+              <p><strong>N° DU DOSSIER :</strong> SN.DKR.2022.A.18402 • <strong>NINEA :</strong> 008923412 2A2</p>
+              <p><strong>DÉNOMINATION :</strong> ATELIER DE COUTURE & WAX FATOU</p>
+              <p><strong>EXPLOITANT :</strong> NDIAYE Fatou (Nationalité Sénégalaise)</p>
+              <p><strong>OBJET SOCIAL :</strong> Fabrication, confection artisanale de vêtements traditionnels et modernes, importation et distribution de textiles Wax, Bazin et soieries.</p>
+              <p><strong>ADRESSE DE L'ÉTABLISSEMENT :</strong> Rue 22 x 15 Médina, Dakar</p>
+              <p><strong>DATE DE DÉBUT D'ACTIVITÉ :</strong> 01 Février 2022</p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+              <div style="font-size: 0.72rem; color: #64748b; font-family: sans-serif;">
+                Délivré à Dakar le 18/02/2022<br>Certifié conforme par le Greffe
+              </div>
+              <div style="text-align: center;">
+                <div style="border: 2px solid #dc2626; color: #dc2626; font-size: 0.65rem; font-weight: 900; padding: 0.5rem 0.75rem; border-radius: 4px; transform: rotate(-5deg); display: inline-block;">
+                  GREFFE TRIBUNAL DE COMMERCE<br>DAKAR - SÉNÉGAL<br>ENREGISTRÉ
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      proforma: {
+        title: "Facture Proforma Fournisseur Stock Wax Assigamé",
+        meta: "PDF • 1.4 Mo • Éts Textile Assigamé Lomé (Togo)",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Devis & Proforma Validé",
+        iconClass: "fas fa-file-invoice-dollar",
+        confidenceScore: "99.8%",
+        filename: "Facture_Proforma_PF-2026-0881.pdf",
+        fields: [
+          { label: "Fournisseur", value: "Établissements Textile Assigamé & Cie" },
+          { label: "Réf Devis Proforma", value: "PF-2026-0881" },
+          { label: "Date d'Émission", value: "08 Août 2026" },
+          { label: "Validité de l'Offre", value: "30 Jours (jusqu'au 07/09/2026)" },
+          { label: "Montant HT", value: "2 300 000 FCFA" },
+          { label: "Transport & TVA", value: "200 000 FCFA" },
+          { label: "Montant Total TTC", value: "2 500 000 FCFA" },
+          { label: "Objet d'Achat", value: "Rouleaux Wax Hollandais & Bazin Riche" }
+        ],
+        sheetHtml: `
+          <div style="background: #ffffff; padding: 2rem; border: 1px solid #e2e8f0; color: #1e293b; font-family: sans-serif;">
+            <!-- Supplier Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+              <div>
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0284c7; margin: 0;">ÉTS TEXTILES ASSIGAMÉ & CIE</h4>
+                <div style="font-size: 0.76rem; color: #64748b; margin-top: 3px;">
+                  Grand Marché de Lomé - Allée Centrale N° 44 • Togo<br>
+                  Tél : +228 90 22 41 80 • NIF : 1002934811
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                  FACTURE PROFORMA
+                </span>
+                <div style="font-size: 0.76rem; font-weight: 700; margin-top: 6px;">N° PF-2026-0881</div>
+                <div style="font-size: 0.72rem; color: #64748b;">Date : 08/08/2026</div>
+              </div>
+            </div>
+
+            <!-- Client Info Box -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.85rem; margin-bottom: 1.5rem; font-size: 0.78rem;">
+              <div style="font-weight: 700; color: #0f172a; margin-bottom: 3px;">CLIENT DESTINATAIRE :</div>
+              <div>Mme Fatou NDIAYE • Atelier Couture & Confection</div>
+              <div>Médina Rue 22 x 15, Dakar (Sénégal) • Tél : +221 77 540 88 12</div>
+            </div>
+
+            <!-- Items Table -->
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 1.5rem;">
+              <thead>
+                <tr style="background: #f1f5f9; text-align: left; border-bottom: 2px solid #cbd5e1;">
+                  <th style="padding: 0.6rem;">Désignation des Articles</th>
+                  <th style="padding: 0.6rem; text-align: center;">Qté</th>
+                  <th style="padding: 0.6rem; text-align: right;">Prix Unit.</th>
+                  <th style="padding: 0.6rem; text-align: right;">Montant Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                  <td style="padding: 0.6rem;"><strong>Super Wax Hollandais Véritable (6 yards)</strong><br><span style="color: #64748b; font-size: 0.7rem;">Coloris assortis Tabaski / Fêtes</span></td>
+                  <td style="padding: 0.6rem; text-align: center;">40 pcs</td>
+                  <td style="padding: 0.6rem; text-align: right;">35 000 F</td>
+                  <td style="padding: 0.6rem; text-align: right; font-weight: 600;">1 400 000 F</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                  <td style="padding: 0.6rem;"><strong>Bazin Riche Getzner Autriche (10 mètres)</strong><br><span style="color: #64748b; font-size: 0.7rem;">Blanc, Bleu Ciel et Teintures traditionnelles</span></td>
+                  <td style="padding: 0.6rem; text-align: center;">10 pcs</td>
+                  <td style="padding: 0.6rem; text-align: right;">90 000 F</td>
+                  <td style="padding: 0.6rem; text-align: right; font-weight: 600;">900 000 F</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Totals -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+              <div style="width: 250px; font-size: 0.8rem;">
+                <div style="display: flex; justify-content: space-between; padding: 0.3rem 0;">
+                  <span>Sous-total HT :</span>
+                  <span>2 300 000 FCFA</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid #e2e8f0;">
+                  <span>Fret maritime & Assurance :</span>
+                  <span>200 000 FCFA</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; font-weight: 800; font-size: 0.95rem; color: #0284c7;">
+                  <span>TOTAL NET À PAYER :</span>
+                  <span>2 500 000 FCFA</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Cachet -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
+              <div style="font-size: 0.7rem; color: #64748b;">
+                Modalité : Livraison contre paiement CIF / Caisse Médina Dakar
+              </div>
+              <div style="border: 2px solid #0369a1; color: #0369a1; font-weight: 800; font-size: 0.68rem; padding: 0.4rem 0.8rem; border-radius: 4px; transform: rotate(-3deg);">
+                ÉTS TEXTILES ASSIGAMÉ<br>POUR ACCORD ET VENTE
+              </div>
+            </div>
+          </div>
+        `
+      },
+      senelec: {
+        title: "Quittance d'Électricité Senelec (Justificatif Domicile)",
+        meta: "PDF • 920 Ko • Senelec Agence Médina Dakar",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Domicile Certifié",
+        iconClass: "fas fa-bolt",
+        confidenceScore: "99.5%",
+        filename: "Quittance_Senelec_Fatou_Ndiaye.pdf",
+        fields: [
+          { label: "Organisme Émetteur", value: "SENELEC Sénégal" },
+          { label: "N° Police / Compteur", value: "884-2190-33" },
+          { label: "Titulaire Abonnement", value: "Mme Fatou NDIAYE" },
+          { label: "Adresse Fournie", value: "Rue 22 x 15 Médina, Dakar" },
+          { label: "Période Facturée", value: "Juillet 2026" },
+          { label: "Statut Règlement", value: "Acquitté / 0 F solde impayé" }
+        ],
+        sheetHtml: `
+          <div style="background: #ffffff; padding: 2rem; border: 1px solid #e2e8f0; color: #1e293b; font-family: sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f59e0b; padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+              <div>
+                <h4 style="font-size: 1.2rem; font-weight: 900; color: #d97706; margin: 0;">SENELEC</h4>
+                <div style="font-size: 0.72rem; color: #64748b;">Société Nationale d'Électricité du Sénégal</div>
+              </div>
+              <span class="badge badge-approved" style="font-size: 0.75rem; padding: 0.35rem 0.6rem;">
+                <i class="fas fa-check"></i> FACTURE ACQUITTÉE
+              </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.78rem; margin-bottom: 1.5rem;">
+              <div style="background: #fefce8; padding: 0.75rem; border-radius: 6px; border: 1px solid #fef08a;">
+                <div style="font-weight: 700; color: #854d0e; margin-bottom: 4px;">ABONNÉ / TITULAIRE :</div>
+                <div>NDIAYE Fatou</div>
+                <div>Rue 22 x 15 Médina Dakar</div>
+                <div>Code Distr. : DKR-MED-04</div>
+              </div>
+              <div style="background: #f8fafc; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">DONNÉES COMPTEUR :</div>
+                <div>Police N° : <strong>884-2190-33</strong></div>
+                <div>Tarif : Usage Domestique Petite Puissance</div>
+                <div>Index Consommé : 240 kWh</div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.8rem; border-top: 1px solid #e2e8f0; padding-top: 1rem; display: flex; justify-content: space-between;">
+              <span>Montant Facture TTC : <strong>28 450 FCFA</strong></span>
+              <span style="color: #15803d; font-weight: 700;">SOLDE ANTÉRIEUR : 0 FCFA</span>
+            </div>
+          </div>
+        `
+      },
+      guarantee: {
+        title: "Attestation de Nantissement d'Épargne CIF",
+        meta: "PDF • 1.8 Mo • Caisse CIF Médina Dakar",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Sûreté Enregistrée",
+        iconClass: "fas fa-shield-halved",
+        confidenceScore: "100%",
+        filename: "Attestation_Nantissement_Epargne.pdf",
+        fields: [
+          { label: "Type de Sûreté", value: "Gage Espèces & Nantissement Compte Épargne" },
+          { label: "N° Compte Gagiste", value: "SN-DKR-SAV-004128" },
+          { label: "Titulaire du Compte", value: "Mme Fatou NDIAYE" },
+          { label: "Montant Bloqué", value: "500 000 FCFA" },
+          { label: "Taux de Couverture", value: "20% du Prêt Principal" },
+          { label: "Caisse Dépositaire", value: "Caisse Mutuelle CIF Médina Dakar" }
+        ],
+        sheetHtml: `
+          <div style="background: #ffffff; padding: 2rem; border: 2px solid #4f46e5; border-radius: 8px; color: #1e293b; font-family: sans-serif;">
+            <div style="text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: #4f46e5; margin: 0;">CONFÉDÉRATION DES INSTITUTIONS FINANCIÈRES (CIF)</h4>
+              <h5 style="font-size: 0.85rem; color: #64748b; margin: 4px 0 0 0;">Caisse Mutuelle d'Épargne et de Crédit - Agence Médina Dakar</h5>
+              <div style="font-size: 0.8rem; font-weight: 800; color: #15803d; margin-top: 6px;">ACTE DE NANTISSEMENT D'ÉPARGNE LIQUIDE</div>
+            </div>
+
+            <div style="font-size: 0.8rem; line-height: 1.8;">
+              <p>Par les présentes, la soussignée <strong>Mme Fatou NDIAYE</strong> consent à titre de garantie solidaire le nantissement à hauteur de <strong>500 000 FCFA</strong> de son compte d'épargne N° <code>SN-DKR-SAV-004128</code> ouvert auprès de la Caisse CIF Médina.</p>
+              <p>Cette sûreté liquide garantit le remboursement effectif du prêt N° <code>REQ-2026-0895</code> d'un montant de 2 500 000 FCFA consenti pour une durée de 12 mois.</p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
+              <div style="font-size: 0.72rem; color: #64748b;">
+                Fait à Dakar, le 12/08/2026<br>Visa du Chef d'Agence CIF
+              </div>
+              <div style="border: 2px solid #4f46e5; color: #4f46e5; font-size: 0.68rem; font-weight: 800; padding: 0.4rem 0.8rem; border-radius: 4px;">
+                CAISSE CIF MÉDINA<br>SERVICE ENGAGEMENTS
+              </div>
+            </div>
+          </div>
+        `
+      },
+      contract: {
+        title: "Contrat Cadre de Financement & Prêt Électronique CIF",
+        meta: "PDF • 2.2 Mo • Signé Numériquement via OTP UEMOA",
+        badgeClass: "badge-approved",
+        badgeHtml: "<i class=\"fas fa-signature\"></i> Signé & Scellé",
+        iconClass: "fas fa-file-contract",
+        confidenceScore: "100%",
+        filename: "Contrat_Pret_CIF_2026_0895.pdf",
+        fields: [
+          { label: "Contrat N°", value: "CTR-CIF-DKR-2026-0895" },
+          { label: "Emprunteur", value: "Mme Fatou NDIAYE" },
+          { label: "Montant du Financement", value: "2 500 000 FCFA" },
+          { label: "Taux d'Intérêt", value: "1.20% / mois dégressif (14.4% l'an)" },
+          { label: "Échéances", value: "12 mensualités de 235 000 FCFA" },
+          { label: "Horodatage Signature", value: "18/08/2026 à 09:30:14 GMT" },
+          { label: "Signature Électronique", value: "Certifiée conforme OTP SMS (SHA-256 Validé)" }
+        ],
+        sheetHtml: `
+          <div style="background: #ffffff; padding: 2rem; border: 2px solid #047857; border-radius: 8px; color: #1e293b; font-family: serif;">
+            <div style="text-align: center; border-bottom: 2px solid #047857; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+              <h4 style="font-size: 1.15rem; font-weight: 900; color: #047857; margin: 0; font-family: sans-serif;">DIGICOOP-WA+ • CONTRAT DE CRÉDIT CIF</h4>
+              <div style="font-size: 0.76rem; color: #64748b; font-family: sans-serif; margin-top: 3px;">CONTRAT N° CTR-CIF-DKR-2026-0895</div>
+            </div>
+
+            <div style="font-size: 0.8rem; line-height: 1.8;">
+              <p><strong>ARTICLE 1 - OBJET :</strong> La Caisse CIF accorde à Mme Fatou NDIAYE un prêt professionnel d'un montant de <strong>2 500 000 FCFA</strong> destiné à l'acquisition de stock commercial de textile.</p>
+              <p><strong>ARTICLE 2 - REMBOURSEMENT :</strong> L'emprunteur s'engage à rembourser le prêt selon l'échéancier mensuel dégressif annexé, en 12 termes égaux de <strong>235 000 FCFA</strong> prélevés via Mobile Money ou guichet.</p>
+              <p><strong>ARTICLE 3 - DISPOSITIF COLD START :</strong> Ce prêt bénéficie du programme d'inclusion financière DigiCoop-WA+ sans pénalité d'absence d'historique bancaire préalable.</p>
+            </div>
+
+            <div style="margin-top: 2rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 0.85rem; font-family: sans-serif; font-size: 0.74rem;">
+              <div style="font-weight: 700; color: #15803d; margin-bottom: 2px;"><i class="fas fa-certificate mr-1"></i> SIGNATURE ÉLECTRONIQUE CERTIFIÉE</div>
+              <div style="color: #334155;">Signé par Fatou NDIAYE (OTP +221 77 540 88 12) • Horodatage certifié SHA-256 : <code>9f83ab20...551c4a</code></div>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    return docs[docKey] || docs.proforma;
   }
 };
 
 window.App = App;
+window.openEditProfileModal = () => App.openEditProfileModal && App.openEditProfileModal();
+window.closeEditProfileModal = () => App.closeEditProfileModal && App.closeEditProfileModal();
+window.saveUserProfile = () => App.saveUserProfile && App.saveUserProfile();
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init();

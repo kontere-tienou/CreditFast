@@ -8,6 +8,16 @@ const AppInteractions = {
   activeDossierId: 1,
   activeColdStartOverride: null,
 
+  getCurrentUserRole() {
+    if (window.App && window.App.currentRole) return window.App.currentRole;
+    if (window.App && window.App.currentUser && window.App.currentUser.role) return window.App.currentUser.role;
+    try {
+      const auth = JSON.parse(localStorage.getItem('AUTH_USER'));
+      if (auth && auth.role) return auth.role;
+    } catch(e) {}
+    return 'ANALYST';
+  },
+
   // Render Credit Requests Table (Vue Analyste)
   renderRequestsTable(statusFilter = 'ALL', searchFilter = '', buttonEl = null) {
     const tableBody = document.getElementById('requests-table-body');
@@ -145,6 +155,9 @@ const AppInteractions = {
     const modal = document.getElementById('dossier-modal');
     if (!modal) return;
 
+    const role = this.getCurrentUserRole();
+    const isClient = role === 'CLIENT';
+
     const client = DB.findById('clients', req.client_id) || {};
     const docs = DB.get('documents').filter(d => d.credit_request_id == req.id);
     const anomalies = DB.get('anomalies').filter(a => a.credit_request_id == req.id);
@@ -155,6 +168,26 @@ const AppInteractions = {
     document.getElementById('modal-dossier-ref').textContent = req.request_number;
     document.getElementById('modal-client-name').textContent = req.client_name;
     document.getElementById('modal-client-location').textContent = `${req.city}, ${req.country} • N° CIF : ${client.client_number || 'SN-DKR-008821'} • Zone : ${client.residential_zone || 'Urbaine'}`;
+
+    // Role-Based Header Actions: Hide Cold Start simulation from demandeur/client
+    const headerActions = document.getElementById('modal-header-actions');
+    if (headerActions) {
+      if (isClient) {
+        headerActions.innerHTML = `
+          <span class="badge badge-submitted" style="font-size: 0.76rem; padding: 4px 10px;">
+            <i class="fas fa-user-circle mr-1"></i> Espace Demandeur
+          </span>
+          <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
+        `;
+      } else {
+        headerActions.innerHTML = `
+          <button class="btn btn-secondary btn-sm" id="modal-cold-start-btn" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
+            <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+          </button>
+          <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
+        `;
+      }
+    }
 
     // Populate Financial Capacity
     const cap = evalData.capacity;
@@ -178,26 +211,39 @@ const AppInteractions = {
       }
     }
 
-    // Populate Score & Gauge
-    const scoreValEl = document.getElementById('modal-score-val');
-    if (scoreValEl) scoreValEl.textContent = evalData.overallScore;
-    const scoreGauge = document.getElementById('modal-score-gauge');
-    if (scoreGauge) scoreGauge.style.setProperty('--score-deg', `${(evalData.overallScore / 100) * 360}deg`);
+    // Animate Score & Gauge progressively upon modal opening
+    this.animateScoreGauge(evalData.overallScore || 70, 1100, evalData);
 
-    // Model & Cold Start Switch Bar
+    // Model & Cold Start Switch Bar (Adapted by Role)
     const modelBadge = document.getElementById('modal-model-badge');
     if (modelBadge) {
-      modelBadge.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-card-subtle); padding: 6px 12px; border-radius: var(--radius-md); font-size: 0.76rem;">
-          <div>
-            <strong>Moteur Actif :</strong> ${evalData.model.name} (${evalData.model.version})
-            ${evalData.isColdStart ? '<span class="badge badge-warning ml-1"><i class="fas fa-seedling"></i> Cold Start Activé</span>' : '<span class="badge badge-submitted ml-1"><i class="fas fa-history"></i> Standard</span>'}
+      if (isClient) {
+        modelBadge.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-card-subtle); padding: 8px 14px; border-radius: var(--radius-md); font-size: 0.78rem;">
+            <div>
+              <i class="fas fa-shield-check" style="color: var(--cif-emerald-500); margin-right: 6px;"></i>
+              <strong>Audit & Réglementation CIF :</strong> Dossier instruit selon les standards microfinance WA+
+            </div>
+            <div>
+              <span class="badge ${req.status === 'APPROVED' ? 'badge-approved' : (req.status === 'REJECTED' ? 'badge-rejected' : 'badge-submitted')}">
+                <i class="fas ${req.status === 'APPROVED' ? 'fa-check' : 'fa-hourglass-half'}"></i> ${req.status === 'APPROVED' ? 'Prêt Accordé' : (req.status === 'REJECTED' ? 'Dossier Refusé' : 'Instruction en cours')}
+              </span>
+            </div>
           </div>
-          <div>
-            <span style="font-weight: 700; color: var(--cif-emerald-500);"><i class="fas fa-shield-check"></i> Indice de Confiance : ${evalData.confidenceScore}%</span>
+        `;
+      } else {
+        modelBadge.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-card-subtle); padding: 6px 12px; border-radius: var(--radius-md); font-size: 0.76rem;">
+            <div>
+              <strong>Moteur Actif :</strong> ${evalData.model.name} (${evalData.model.version})
+              ${evalData.isColdStart ? '<span class="badge badge-warning ml-1"><i class="fas fa-seedling"></i> Cold Start Activé</span>' : '<span class="badge badge-submitted ml-1"><i class="fas fa-history"></i> Standard</span>'}
+            </div>
+            <div>
+              <span style="font-weight: 700; color: var(--cif-emerald-500);"><i class="fas fa-shield-check"></i> Indice de Confiance : ${evalData.confidenceScore}%</span>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     }
 
     // Populate Factors
@@ -221,10 +267,10 @@ const AppInteractions = {
       `).join('');
     }
 
-    // Populate Docs
-    this.renderModalDocuments(docs);
+    // Populate Docs according to current user role
+    this.renderModalDocuments(docs, role);
 
-    // Populate Anomalies
+    // Populate Anomalies according to current user role
     const anomaliesBox = document.getElementById('modal-anomalies-list');
     if (anomaliesBox) {
       if (anomalies.length === 0) {
@@ -236,14 +282,19 @@ const AppInteractions = {
             <div class="anomaly-content">
               <h5>${a.description}</h5>
               <p style="margin-top: 2px;">Valeur détectée OCR : <strong>${a.detected_value || 'Incohérente'}</strong> • Attendu : <strong>${a.expected_value || 'Conforme'}</strong></p>
-              ${a.status === 'OPEN' 
-                ? `<button class="btn btn-secondary btn-sm" style="margin-top: 6px;" onclick="AppInteractions.resolveAnomaly(${a.id})">Marquer Résolu</button>` 
-                : '<span style="font-size: 0.7rem; color: #166534;"><i class="fas fa-check"></i> Résolu</span>'}
+              ${(!isClient && (role === 'ANALYST' || role === 'ADMIN'))
+                ? (a.status === 'OPEN' 
+                    ? `<button class="btn btn-secondary btn-sm" style="margin-top: 6px;" onclick="AppInteractions.resolveAnomaly(${a.id})">Marquer Résolu</button>` 
+                    : '<span style="font-size: 0.7rem; color: #166534;"><i class="fas fa-check"></i> Résolu</span>')
+                : `<span style="font-size: 0.72rem; color: var(--text-subtle);"><i class="fas fa-info-circle mr-1"></i> Statut : <strong>${a.status === 'OPEN' ? 'En cours d\'examen' : 'Résolu'}</strong></span>`}
             </div>
           </div>
         `).join('');
       }
     }
+
+    // Render Role Actions or Client Tracking Box
+    this.renderModalRoleActions(req, evalData, role);
 
     // Render Radar Chart in Modal
     setTimeout(() => {
@@ -253,6 +304,80 @@ const AppInteractions = {
     modal.classList.add('active');
   },
 
+  /**
+   * Animate the #modal-score-gauge and its numerical counter progressively upon opening
+   */
+  animateScoreGauge(targetScore = 70, duration = 1100, evalData = {}) {
+    const scoreGauge = document.getElementById('modal-score-gauge');
+    const scoreValEl = document.getElementById('modal-score-val');
+    const riskTagEl = document.getElementById('modal-score-risk-tag');
+    if (!scoreGauge) return;
+
+    if (this._scoreGaugeAnimFrame) {
+      cancelAnimationFrame(this._scoreGaugeAnimFrame);
+    }
+
+    // Reset gauge and value to 0 before animation starts
+    scoreGauge.style.setProperty('--score-deg', '0deg');
+    if (scoreValEl) scoreValEl.textContent = '0';
+    if (riskTagEl) {
+      riskTagEl.textContent = 'Calcul en cours...';
+      riskTagEl.style.color = '#94a3b8';
+      riskTagEl.style.borderColor = 'rgba(148, 163, 184, 0.4)';
+      riskTagEl.style.backgroundColor = 'rgba(148, 163, 184, 0.15)';
+    }
+
+    const finalScore = Math.max(0, Math.min(100, Math.round(targetScore)));
+    const startTime = performance.now();
+
+    const updateRiskTag = (score) => {
+      if (!riskTagEl) return;
+      if (score >= 75) {
+        riskTagEl.textContent = 'Risque Faible';
+        riskTagEl.style.color = '#34d399';
+        riskTagEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        riskTagEl.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+      } else if (score >= 55) {
+        riskTagEl.textContent = 'Risque Modéré';
+        riskTagEl.style.color = '#fbbf24';
+        riskTagEl.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        riskTagEl.style.backgroundColor = 'rgba(245, 158, 11, 0.2)';
+      } else {
+        riskTagEl.textContent = 'Risque Élevé';
+        riskTagEl.style.color = '#f87171';
+        riskTagEl.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+        riskTagEl.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+      }
+    };
+
+    const step = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Smooth cubic-out easing curve (starts brisk, lands gently)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentScore = Math.round(easeOut * finalScore);
+      const currentDeg = (easeOut * finalScore / 100) * 360;
+
+      scoreGauge.style.setProperty('--score-deg', `${currentDeg.toFixed(1)}deg`);
+      if (scoreValEl) scoreValEl.textContent = currentScore;
+      updateRiskTag(currentScore);
+
+      if (progress < 1) {
+        this._scoreGaugeAnimFrame = requestAnimationFrame(step);
+      } else {
+        scoreGauge.style.setProperty('--score-deg', `${((finalScore / 100) * 360).toFixed(1)}deg`);
+        if (scoreValEl) scoreValEl.textContent = finalScore;
+        updateRiskTag(finalScore);
+      }
+    };
+
+    // Slight delay of 120ms to synchronize seamlessly with modal CSS scale/fade entrance
+    setTimeout(() => {
+      this._scoreGaugeAnimFrame = requestAnimationFrame(step);
+    }, 120);
+  },
+
   toggleColdStartInModal() {
     const current = this.activeColdStartOverride;
     const next = current === null ? true : !current;
@@ -260,9 +385,13 @@ const AppInteractions = {
     window.App.showToast(`Simulation basculée en mode ${next ? 'COLD START' : 'STANDARD'}`, 'info');
   },
 
-  renderModalDocuments(docs) {
+  renderModalDocuments(docs, role = null) {
     const docsContainer = document.getElementById('modal-docs-list');
     if (!docsContainer) return;
+
+    const currentRole = role || this.getCurrentUserRole();
+    const isClient = currentRole === 'CLIENT';
+    const canValidate = !isClient && (currentRole === 'ANALYST' || currentRole === 'ADMIN');
 
     if (docs.length === 0) {
       docsContainer.innerHTML = '<p style="color: var(--text-subtle); font-size: 0.8rem;">Aucun document téléversé</p>';
@@ -272,16 +401,19 @@ const AppInteractions = {
     docsContainer.innerHTML = docs.map(doc => {
       const ext = DB.get('document_extractions').find(e => e.document_id == doc.id);
       const val = DB.get('human_validations').find(v => v.document_id == doc.id);
+      const isDocValid = val && (val.decision === 'VALIDATED' || val.status === 'VALIDATED');
+      const isDocNeedMore = val && (val.decision === 'TO_COMPLETE' || val.status === 'TO_COMPLETE');
+      const isDocRejected = val && (val.decision === 'REJECTED' || val.status === 'REJECTED');
 
       return `
-        <div class="card" style="margin-bottom: 1rem; border-color: ${val ? 'var(--cif-emerald-100)' : 'var(--border-subtle)'};">
+        <div class="card" style="margin-bottom: 1rem; border-color: ${isDocValid ? 'var(--cif-emerald-100)' : 'var(--border-subtle)'};">
           <div class="card-header" style="padding: 0.75rem 1rem;">
             <div style="font-weight: 600; font-size: 0.84rem; display: flex; align-items: center; gap: 6px;">
               <i class="fas fa-file-pdf text-primary"></i> ${doc.original_filename || doc.name}
             </div>
             <div>
               ${val 
-                ? `<span class="badge badge-approved"><i class="fas fa-user-check"></i> ${val.decision || val.status}</span>` 
+                ? `<span class="badge ${isDocValid ? 'badge-approved' : (isDocRejected ? 'badge-rejected' : 'badge-verification')}"><i class="fas ${isDocValid ? 'fa-user-check' : 'fa-user-clock'}"></i> ${val.decision || val.status}</span>` 
                 : `<span class="badge badge-verification">Validation Humaine Requise</span>`}
             </div>
           </div>
@@ -289,21 +421,168 @@ const AppInteractions = {
             <div style="font-family: var(--font-family-code); font-size: 0.76rem; background: var(--surface-card-subtle); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem; white-space: pre-line;">
               ${ext ? ext.extracted_text : 'Traitement OCR en cours...'}
             </div>
-            <div class="human-validation-actions">
-              <button class="btn btn-success btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'VALIDATED')">
-                <i class="fas fa-check"></i> Valider Pièce
-              </button>
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'TO_COMPLETE')">
-                <i class="fas fa-rotate"></i> Demander Complément
-              </button>
-              <button class="btn btn-danger btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'REJECTED')">
-                <i class="fas fa-times"></i> Rejeter
+
+            ${canValidate ? `
+              <div class="human-validation-actions">
+                <button class="btn btn-success btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'VALIDATED')">
+                  <i class="fas fa-check"></i> Valider Pièce
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'TO_COMPLETE')">
+                  <i class="fas fa-rotate"></i> Demander Complément
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'REJECTED')">
+                  <i class="fas fa-times"></i> Rejeter
+                </button>
+              </div>
+            ` : (isClient ? `
+              <div class="doc-client-status ${isDocValid ? 'valid' : (isDocNeedMore ? 'warning' : (isDocRejected ? 'danger' : 'pending'))}">
+                ${isDocValid 
+                  ? `<i class="fas fa-check-circle mr-1"></i> Pièce validée et conforme.` 
+                  : (isDocNeedMore 
+                      ? `<i class="fas fa-circle-exclamation mr-1"></i> Complément requis : ${val ? (val.comment || 'Merci de fournir une version plus lisible') : 'Information complémentaire demandée'}` 
+                      : (isDocRejected 
+                          ? `<i class="fas fa-circle-xmark mr-1"></i> Document non recevable : ${val ? (val.comment || 'Rejeté') : 'Non recevable'}` 
+                          : `<i class="fas fa-clock mr-1"></i> Document en cours d'examen par le service des risques`))}
+              </div>
+            ` : `
+              <div style="font-size: 0.74rem; color: var(--text-subtle);">
+                <i class="fas fa-info-circle mr-1"></i> Statut de conformité : <strong>${val ? (val.decision || val.status) : 'En attente de revue analyste'}</strong>
+              </div>
+            `)}
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  renderModalRoleActions(req, evalData, role) {
+    const container = document.getElementById('modal-role-action-container');
+    if (!container) return;
+
+    if (role === 'CLIENT') {
+      const isApproved = req.status === 'APPROVED';
+      const isRejected = req.status === 'REJECTED';
+      const isCommittee = req.status === 'COMMITTEE';
+
+      container.innerHTML = `
+        <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle); border: 1.5px solid var(--border-subtle);">
+          <div class="card-body" style="padding: 1.15rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <h5 style="font-size: 0.9rem; margin: 0; color: var(--text-main); font-weight: 700;">
+                <i class="fas fa-timeline text-primary mr-1"></i> Suivi de votre Demande de Financement
+              </h5>
+              <span class="badge ${isApproved ? 'badge-approved' : (isRejected ? 'badge-rejected' : 'badge-submitted')}">
+                ${isApproved ? 'Prêt Accordé' : (isRejected ? 'Dossier Clôturé' : 'En Instruction')}
+              </span>
+            </div>
+
+            <div class="client-dossier-steps">
+              <div class="client-step completed">
+                <div class="step-icon"><i class="fas fa-check"></i></div>
+                <div class="step-content">
+                  <strong>1. Dépôt & Pièces justificatives</strong>
+                  <p>Dossier enregistré le ${new Date(req.created_at || Date.now()).toLocaleDateString('fr-FR')} • Montant : ${CreditScoringEngine.formatFCFA(req.requested_amount)}</p>
+                </div>
+              </div>
+
+              <div class="client-step ${isApproved || isCommittee ? 'completed' : 'active'}">
+                <div class="step-icon">
+                  <i class="fas ${isApproved || isCommittee ? 'fa-check' : 'fa-spinner fa-spin'}"></i>
+                </div>
+                <div class="step-content">
+                  <strong>2. Analyse de Capacité & Scoring CIF</strong>
+                  <p>${isApproved || isCommittee ? 'Instruction technique finalisée par le service des risques.' : 'Analyse de votre capacité de remboursement en cours par votre analyste.'}</p>
+                </div>
+              </div>
+
+              <div class="client-step ${isApproved ? 'completed' : (isCommittee ? 'active' : '')}">
+                <div class="step-icon">
+                  <i class="fas ${isApproved ? 'fa-check' : (isCommittee ? 'fa-gavel' : 'fa-clock')}"></i>
+                </div>
+                <div class="step-content">
+                  <strong>3. Décision du Comité de Crédit</strong>
+                  <p>${isApproved ? 'Félicitations ! Votre demande a été approuvée.' : (isRejected ? 'Demande non retenue selon les critères en vigueur.' : (isCommittee ? 'Dossier transmis au Comité pour arbitrage final.' : 'En attente de transmission au Comité'))}</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <div style="font-size: 0.76rem; color: var(--text-subtle);">
+                <i class="fas fa-building mr-1"></i> Agence CIF : <strong>Dakar Plateau / Centre</strong>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.closeModal('dossier-modal'); App.switchView('view-client-advisor');">
+                <i class="fas fa-headset mr-1"></i> Échanger avec mon Conseiller
               </button>
             </div>
           </div>
         </div>
       `;
-    }).join('');
+    } else if (role === 'COMMITTEE') {
+      const review = DB.get('credit_reviews').find(r => r.credit_request_id == req.id) || {};
+      container.innerHTML = `
+        <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle); border-left: 4px solid var(--cif-gold-500, #f59e0b);">
+          <div class="card-body" style="padding: 1.15rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem;">
+              <h5 style="font-size: 0.9rem; margin: 0; font-weight: 700;">
+                <i class="fas fa-gavel text-warning mr-1"></i> Espace Délibération du Comité
+              </h5>
+              <span class="badge ${review.recommendation === 'FAVORABLE' ? 'badge-approved' : 'badge-verification'}">
+                Avis Analyste : ${review.recommendation || 'FAVORABLE'}
+              </span>
+            </div>
+            
+            <div style="font-size: 0.78rem; background: var(--surface-card); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 0.85rem; border: 1px solid var(--border-subtle);">
+              <strong>Synthèse Analyste :</strong> 
+              <p style="margin: 3px 0 0; color: var(--text-subtle);">${review.comment || 'Capacité nette vérifiée, ratio de couverture conforme et garanties validées.'}</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" style="width: 100%; font-weight: 700; padding: 0.65rem 1rem;" onclick="AppInteractions.openCommitteeModal(${req.id})">
+              <i class="fas fa-gavel mr-1"></i> Ouvrir la Délibération & Voter la Décision
+            </button>
+          </div>
+        </div>
+      `;
+    } else if (role === 'AUDITOR') {
+      container.innerHTML = `
+        <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle); border-left: 4px solid var(--cif-purple-500, #8b5cf6);">
+          <div class="card-body" style="padding: 1.15rem;">
+            <h5 style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">
+              <i class="fas fa-fingerprint text-purple mr-1"></i> Piste d'Audit & Journal Cryptographique
+            </h5>
+            <p style="font-size: 0.76rem; color: var(--text-subtle); margin-bottom: 0.75rem;">
+              Dossier vérifié sans altération. 10 facteurs de risque tracés avec signature immuable.
+            </p>
+            <div style="font-size: 0.74rem; font-family: var(--font-family-code); background: var(--surface-card); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              SHA-256 : e8f2a79...bc4102d9 • Horodatage BCEAO : Certifié
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      // ANALYST, CREDIT_OFFICER, ADMIN
+      container.innerHTML = `
+        <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
+          <div class="card-body" style="padding: 1rem;">
+            <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label">Avis Consultatif</label>
+              <select id="analyst-reco-select" class="form-control">
+                <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                <option value="RESERVE">Favorable sous réserve de compléments</option>
+                <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label">Note d'analyse de synthèse</label>
+              <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
+            </div>
+            <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
+              <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
+            </button>
+          </div>
+        </div>
+      `;
+    }
   },
 
   validateDocument(docId, status) {

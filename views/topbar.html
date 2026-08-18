@@ -30,16 +30,13 @@
   </div>
 
   <div class="topbar-right">
-    <!-- Country Static Display Flag Badge -->
-    <div class="topbar-country-badge" id="topbar-country-badge" title="Réseau Régional CIF UEMOA">
-      <span class="country-flag" id="country-flag-icon">🇧🇫</span>
-      <span class="country-name" id="country-name-display">Burkina Faso (UEMOA)</span>
+    <!-- Offline Mode Indicator Badge -->
+    <div id="topbar-offline-badge" class="badge" style="display: none; background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); font-size: 0.72rem; padding: 0.3rem 0.6rem; align-items: center; gap: 0.35rem;" title="Mode hors-ligne actif : Données en cache local disponibles">
+      <i class="fas fa-wifi"></i> <span>Hors-Ligne (Cache Actif)</span>
     </div>
 
-    <!-- Active Role Badge Pill -->
-    <span id="user-role-pill-badge" class="badge user-role-pill">
-      Analyste Risque
-    </span>
+    <!-- Active Role Badge Pill (Populated dynamically by active user) -->
+    <span id="user-role-pill-badge" class="badge user-role-pill"></span>
 
     <!-- Dark / Light Mode Toggle -->
     <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème (Mode Sombre / Clair)">
@@ -50,7 +47,7 @@
     <div class="notif-dropdown-container" style="position: relative;">
       <button id="notif-bell-btn" class="topbar-action-btn" title="Centre de Notifications" aria-label="Notifications">
         <i class="fas fa-bell"></i>
-        <span class="btn-badge" id="topbar-notif-badge">3</span>
+        <span class="btn-badge" id="topbar-notif-badge">0</span>
       </button>
       <div id="notif-dropdown" class="notif-dropdown-menu" style="display: none;">
         <!-- Header -->
@@ -61,101 +58,43 @@
             </div>
             <div>
               <h5 class="notif-header-title">Centre de Notifications</h5>
-              <div class="notif-header-subtitle">Alertes Risque, Décisions & Pipeline CIF</div>
+              <div class="notif-header-subtitle" id="notif-header-subtitle">Alertes & Flux Métier Dédié</div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span class="badge badge-submitted" id="notif-unread-count-badge">3 Non Lues</span>
+            <span class="badge badge-submitted" id="notif-unread-count-badge">0 Non Lue</span>
             <button class="notif-mark-read-btn" onclick="App.markAllNotificationsRead()" title="Marquer toutes les notifications comme lues">
               <i class="fas fa-check-double"></i>
             </button>
           </div>
         </div>
 
-        <!-- Filter Chips -->
+        <!-- Filter Chips (Injected dynamically based on active role) -->
         <div class="notif-filter-bar" id="notif-filter-bar">
-          <button class="notif-chip active" onclick="App.filterNotifications('ALL', this)">Toutes (3)</button>
-          <button class="notif-chip" onclick="App.filterNotifications('RISK', this)">
-            <i class="fas fa-triangle-exclamation text-warning mr-1"></i> Risque
-          </button>
-          <button class="notif-chip" onclick="App.filterNotifications('COMMITTEE', this)">
-            <i class="fas fa-gavel text-emerald mr-1"></i> Comité
-          </button>
-          <button class="notif-chip" onclick="App.filterNotifications('DISBURSEMENT', this)">
-            <i class="fas fa-money-bill-transfer text-primary mr-1"></i> Décaissement
-          </button>
+          <!-- Injected dynamically -->
         </div>
 
-        <!-- Notification List -->
+        <!-- Notification List (Injected dynamically based on active role) -->
         <div class="notif-list" id="notif-list-container">
-          <!-- Notification Item 1 (Risk / OCR Anomaly) -->
-          <div class="notif-item unread notif-cat-RISK" onclick="App.handleNotificationClick(3, 'view-analyst-dossiers')">
-            <div class="notif-item-icon warning">
-              <i class="fas fa-triangle-exclamation"></i>
-            </div>
-            <div class="notif-item-content">
-              <div class="notif-item-header">
-                <span class="notif-item-title">Anomalie Documentaire Critique (OCR)</span>
-                <span class="notif-unread-dot"></span>
-              </div>
-              <p class="notif-item-desc">Facture proforma expirée de 18 mois avec discordance de 600 000 FCFA sur le dossier Quincaillerie.</p>
-              <div class="notif-item-meta">
-                <span class="notif-item-tag"><i class="fas fa-folder-open mr-1"></i> #REQ-2026-0893</span>
-                <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 12 min</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Notification Item 2 (Committee Meeting) -->
-          <div class="notif-item unread notif-cat-COMMITTEE" onclick="App.handleNotificationClick(2, 'view-role-committee')">
-            <div class="notif-item-icon emerald">
-              <i class="fas fa-gavel"></i>
-            </div>
-            <div class="notif-item-content">
-              <div class="notif-item-header">
-                <span class="notif-item-title">Comité de Crédit Convoqué</span>
-                <span class="notif-unread-dot"></span>
-              </div>
-              <p class="notif-item-desc">Dossier Amadou Sanogo (8.5M FCFA) prêt avec quorum atteint. Vote électronique ouvert.</p>
-              <div class="notif-item-meta">
-                <span class="notif-item-tag" style="background: rgba(16, 185, 129, 0.12); color: #047857;"><i class="fas fa-users-viewfinder mr-1"></i> Comité Ouaga</span>
-                <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 45 min</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Notification Item 3 (Disbursement Ready) -->
-          <div class="notif-item unread notif-cat-DISBURSEMENT" onclick="App.handleNotificationClick(1, 'view-agent-inspections')">
-            <div class="notif-item-icon primary">
-              <i class="fas fa-money-bill-wave"></i>
-            </div>
-            <div class="notif-item-content">
-              <div class="notif-item-header">
-                <span class="notif-item-title">Garantie Terrain Contrôlée</span>
-                <span class="notif-unread-dot"></span>
-              </div>
-              <p class="notif-item-desc">Rapport de visite validé pour Fatou Ndiaye. Couverture réelle certifiée à 138%.</p>
-              <div class="notif-item-meta">
-                <span class="notif-item-tag" style="background: rgba(14, 165, 233, 0.12); color: #0284c7;"><i class="fas fa-shield-check mr-1"></i> Gage Stock Wax</span>
-                <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 2h</span>
-              </div>
-            </div>
-          </div>
+          <!-- Injected dynamically -->
         </div>
 
         <!-- Footer -->
         <div class="notif-dropdown-footer">
-          <button class="notif-footer-btn" onclick="App.switchView('view-audit-logs'); document.getElementById('notif-dropdown').style.display='none';">
-            <i class="fas fa-clock-rotate-left mr-1"></i> Consulter l'historique complet d'audit CIF
+          <button class="notif-footer-btn" id="notif-footer-action-btn" onclick="App.handleNotifFooterAction();">
+            <i class="fas fa-clock-rotate-left mr-1"></i> <span id="notif-footer-action-text">Consulter le journal d'activité</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Profile Icon with Dropbox -->
+    <!-- Profile Icon with Dropbox & Country Flag Overlay -->
     <div class="profile-dropdown-container" id="profile-dropdown-container">
       <button class="topbar-profile-btn" id="topbar-profile-btn" aria-haspopup="true" aria-expanded="false" title="Mon Profil & Paramètres">
-        <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
+        <div class="topbar-avatar-wrap">
+          <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
+          <span class="avatar-flag-badge" id="topbar-avatar-flag" title="Pays de l'utilisateur"></span>
+        </div>
         <div class="topbar-user-meta">
           <span id="topbar-user-name" class="topbar-user-name">Aminata Diallo</span>
           <span id="topbar-user-role" class="topbar-user-role">Analyste Risque</span>
@@ -166,7 +105,10 @@
       <!-- Dropdown Menu Box -->
       <div id="profile-dropdown-menu" class="profile-dropdown-menu">
         <div class="profile-dropdown-header">
-          <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
+          <div class="topbar-avatar-wrap">
+            <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
+            <span class="avatar-flag-badge lg" id="menu-avatar-flag" title="Pays de l'utilisateur"></span>
+          </div>
           <div class="menu-user-details">
             <h6 id="menu-user-name">Aminata Diallo</h6>
             <span id="menu-user-email" class="menu-user-email">aminata.diallo@cif-ao.org</span>
@@ -178,9 +120,15 @@
 
         <ul class="profile-menu-list">
           <li>
+            <a href="#" class="profile-menu-item" id="btn-edit-profile" onclick="App.openEditProfileModal(); return false;">
+              <i class="fas fa-user-pen text-primary"></i>
+              <span>Modifier mon Profil</span>
+            </a>
+          </li>
+          <li>
             <a href="#" class="profile-menu-item" id="btn-open-settings" onclick="App.openSettingsModal(); return false;">
-              <i class="fas fa-sliders-h text-primary"></i>
-              <span>Paramètres du Compte</span>
+              <i class="fas fa-sliders-h text-secondary"></i>
+              <span>Paramètres & Préférences</span>
             </a>
           </li>
           <li>
@@ -200,7 +148,7 @@
         <div class="profile-dropdown-divider"></div>
 
         <div class="profile-dropdown-footer">
-          <button class="btn btn-danger-subtle btn-sm btn-action-logout" style="width: 100%; justify-content: center;">
+          <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout" id="btn-topbar-logout" onclick="App.openLogoutConfirmModal(); return false;" style="width: 100%; justify-content: center;">
             <i class="fas fa-right-from-bracket mr-2"></i> Se Déconnecter
           </button>
         </div>

@@ -10,8 +10,8 @@
         </h3>
         <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Dakar, Sénégal • SN-DKR-008821</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
+      <div style="display: flex; align-items: center; gap: 0.75rem;" id="modal-header-actions">
+        <button class="btn btn-secondary btn-sm" id="modal-cold-start-btn" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
           <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
         </button>
         <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
@@ -30,14 +30,14 @@
             <div style="font-size: 0.78rem; color: var(--text-subtle);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
           </div>
           <div class="score-main-display" style="padding: 0.75rem 1.25rem;">
-            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 295deg; width: 70px; height: 70px;">
+            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 0deg; width: 70px; height: 70px;">
               <div class="score-gauge-inner" style="width: 54px; height: 54px;">
-                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">82</div>
+                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">0</div>
               </div>
             </div>
             <div>
               <div style="font-weight: 700; font-size: 0.95rem;">Score Explicable V2</div>
-              <div class="score-risk-tag">Risque Faible</div>
+              <div class="score-risk-tag" id="modal-score-risk-tag">Calcul en cours...</div>
             </div>
           </div>
         </div>
@@ -104,25 +104,27 @@
             <!-- Factors Rendered Dynamically -->
           </div>
 
-          <!-- Analyst Recommendation Box -->
-          <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
-            <div class="card-body" style="padding: 1rem;">
-              <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
-              <div class="form-group" style="margin-bottom: 0.75rem;">
-                <label class="form-label">Avis Consultatif</label>
-                <select id="analyst-reco-select" class="form-control">
-                  <option value="FAVORABLE">Favorable pour passage en Comité</option>
-                  <option value="RESERVE">Favorable sous réserve de compléments</option>
-                  <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
-                </select>
+          <!-- Role-Adapted Decision / Tracking Box -->
+          <div id="modal-role-action-container">
+            <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
+              <div class="card-body" style="padding: 1rem;">
+                <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Avis Consultatif</label>
+                  <select id="analyst-reco-select" class="form-control">
+                    <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                    <option value="RESERVE">Favorable sous réserve de compléments</option>
+                    <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Note d'analyse de synthèse</label>
+                  <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
+                </div>
+                <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
+                  <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
+                </button>
               </div>
-              <div class="form-group" style="margin-bottom: 0.75rem;">
-                <label class="form-label">Note d'analyse de synthèse</label>
-                <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
-              </div>
-              <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
-                <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
-              </button>
             </div>
           </div>
         </div>

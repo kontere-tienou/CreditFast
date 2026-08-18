@@ -1,0 +1,53 @@
+<!-- ====================================================================
+     [MODAL] ANIMATION DE SUCCÈS & VALIDATION TRANSACTIONS (GREEN CHECKMARK)
+     ==================================================================== -->
+<div id="modal-success-animation" class="modal" style="display: none; position: fixed; inset: 0; z-index: 2200; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);">
+  <div class="success-anim-dialog">
+    <!-- Animated Checkmark SVG -->
+    <div class="success-icon-wrapper">
+      <div class="success-icon-glow"></div>
+      <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h3 class="success-anim-title" id="success-modal-title">Demande Transmise avec Succès !</h3>
+    <p class="success-anim-subtitle" id="success-modal-subtitle">
+      Votre dossier a été horodaté et transmis avec succès aux services d'analyse de la Caisse CIF.
+    </p>
+
+    <!-- Details Card -->
+    <div class="success-details-card" id="success-modal-details-card">
+      <div class="success-detail-row">
+        <span class="success-detail-label">Référence :</span>
+        <span class="success-detail-val" id="success-detail-ref">REQ-2026-0895</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Montant :</span>
+        <span class="success-detail-val" id="success-detail-amount" style="color: var(--primary-700);">2 500 000 FCFA</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Mensualité Estimée :</span>
+        <span class="success-detail-val" id="success-detail-payment" style="color: var(--cif-emerald-600);">235 000 FCFA</span>
+      </div>
+      <div class="success-detail-row">
+        <span class="success-detail-label">Statut :</span>
+        <span class="badge badge-approved" id="success-detail-status" style="font-size: 0.7rem;">
+          <i class="fas fa-circle-check"></i> Enregistré & Conforme
+        </span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+      <button class="btn btn-success btn-lg" id="success-modal-primary-btn" onclick="App.closeSuccessModal()" style="width: 100%; justify-content: center;">
+        <i class="fas fa-arrow-right mr-1"></i> Poursuivre vers mon Espace
+      </button>
+      <button class="btn btn-secondary btn-sm" id="success-modal-secondary-btn" onclick="App.downloadSuccessReceipt()" style="width: 100%; justify-content: center;">
+        <i class="fas fa-file-arrow-down mr-1"></i> Télécharger le Récépissé Officiel (PDF)
+      </button>
+    </div>
+  </div>
+</div>

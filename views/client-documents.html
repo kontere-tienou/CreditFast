@@ -61,7 +61,7 @@
   <!-- Documents Grid -->
   <div class="grid-3" id="client-documents-grid">
     <!-- Doc Card 1: CNI ECOWAS -->
-    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('cni')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -80,14 +80,14 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du document CNI sécurisé...', 'info')">
-          <i class="fas fa-eye"></i> Aperçu
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('cni')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>
 
     <!-- Doc Card 2: Registre du Commerce (RCCM) -->
-    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('rccm')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -106,14 +106,14 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Certifié Conforme</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du RCCM...', 'info')">
-          <i class="fas fa-eye"></i> Aperçu
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('rccm')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>
 
     <!-- Doc Card 3: Facture Proforma Tissus Wax -->
-    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('proforma')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -132,14 +132,14 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-check-double"></i> Conforme au prêt</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du devis...', 'info')">
-          <i class="fas fa-download"></i> Télécharger
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('proforma')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>
 
     <!-- Doc Card 4: Quittance Électricité Senelec -->
-    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('senelec')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -158,14 +158,14 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Vérifié</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du justificatif Senelec...', 'info')">
-          <i class="fas fa-eye"></i> Aperçu
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('senelec')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>
 
     <!-- Doc Card 5: Acte de Nantissement Épargne CIF -->
-    <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('guarantee')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -184,14 +184,14 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-lock"></i> Actif & Enregistré</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'acte notarié...', 'info')">
-          <i class="fas fa-download"></i> Télécharger
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('guarantee')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>
 
     <!-- Doc Card 6: Contrat Cadre de Microcrédit -->
-    <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative;">
+    <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('contract')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
@@ -210,8 +210,8 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved"><i class="fas fa-certificate"></i> Signé & Scellé</span>
-        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de la copie légale du contrat...', 'info')">
-          <i class="fas fa-download"></i> Télécharger
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('contract')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
       </div>
     </div>

@@ -35,8 +35,11 @@ export function buildIndexHtml() {
   const modalCommittee = readView('modal-committee.html');
   const modalInspection = readView('modal-inspection.html');
   const modalSettings = readView('modal-settings.html');
+  const modalEditProfile = readView('modal-edit-profile.html');
   const modalClientPayment = readView('modal-client-payment.html');
   const modalQrScanner = readView('modal-qr-scanner.html');
+  const modalSuccessAnimation = readView('modal-success-animation.html');
+  const modalDocLightbox = readView('modal-doc-lightbox.html');
   const toasts = readView('toasts.html');
   const scripts = readView('layout/scripts.html');
 
@@ -113,9 +116,15 @@ ${modalInspection}
 
 ${modalSettings}
 
+${modalEditProfile}
+
 ${modalClientPayment}
 
 ${modalQrScanner}
+
+${modalSuccessAnimation}
+
+${modalDocLightbox}
 
 ${toasts}
 

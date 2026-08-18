@@ -4,11 +4,11 @@
 <aside id="sidebar">
   <div class="sidebar-header">
     <a href="#" class="brand-logo" onclick="App.switchView(APP_CONSTANTS.ROLES[App.currentRole].homeView)">
-      <div class="brand-icon">
+      <div class="brand-icon" title="Crédit Fast UEMOA">
         <i class="fas fa-hand-holding-dollar"></i>
       </div>
-      <div>
-        <span>CRÉDIT FAST</span>
+      <div class="brand-title-group">
+        <span class="brand-name">CRÉDIT FAST</span>
         <span class="brand-tag">CIF-WA+</span>
       </div>
     </a>
@@ -22,13 +22,13 @@
   <div class="sidebar-user-card">
     <div class="user-avatar-wrap">
       <img id="user-avatar-display" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
-      <span class="user-status-dot"></span>
+      <span class="avatar-flag-badge sidebar-flag" id="sidebar-avatar-flag" title="Pays de l'utilisateur"></span>
     </div>
     <div class="user-info">
       <div id="user-name-display" class="user-name">Aminata Diallo</div>
       <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
-      <div class="user-region-badge">
-        <i class="fas fa-location-dot"></i> UEMOA • DigiCoop-WA+
+      <div class="user-region-badge" id="sidebar-region-badge">
+        <i class="fas fa-location-dot"></i> <span id="sidebar-country-text">Burkina Faso (UEMOA)</span>
       </div>
     </div>
   </div>
@@ -38,16 +38,25 @@
     <!-- Injected Dynamically based on Authenticated Role -->
   </nav>
 
-  <!-- Sidebar Footer / Logout & Regional Strip -->
+  <!-- Sidebar Footer / Regional Strip & Circular Flags -->
   <div class="sidebar-footer">
-    <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;" title="Se Déconnecter">
-      <i class="fas fa-power-off text-danger"></i> <span>Se Déconnecter</span>
-    </button>
     <div class="digicoop-card">
-      <div class="digicoop-text">
-        <h6>Projet DigiCoop-WA+</h6>
-        <p>5 Pays : BF • TG • BJ • SN • ML</p>
+      <div class="digicoop-text" style="width: 100%;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <h6>Réseau Régional CIF</h6>
+          <span style="font-size: 0.62rem; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.15); padding: 1px 5px; border-radius: 4px;">UEMOA</span>
+        </div>
+        <div class="sidebar-flags-row">
+          <span class="sidebar-flag-circle" title="Burkina Faso (Ouagadougou)" onclick="App.updateUserCountry('BF'); App.showToast('Caisse active sélectionnée : Burkina Faso', 'info');"><span class="fi fi-bf fis"></span></span>
+          <span class="sidebar-flag-circle" title="Togo (Lomé)" onclick="App.updateUserCountry('TG'); App.showToast('Caisse active sélectionnée : Togo', 'info');"><span class="fi fi-tg fis"></span></span>
+          <span class="sidebar-flag-circle" title="Bénin (Cotonou)" onclick="App.updateUserCountry('BJ'); App.showToast('Caisse active sélectionnée : Bénin', 'info');"><span class="fi fi-bj fis"></span></span>
+          <span class="sidebar-flag-circle" title="Sénégal (Dakar)" onclick="App.updateUserCountry('SN'); App.showToast('Caisse active sélectionnée : Sénégal', 'info');"><span class="fi fi-sn fis"></span></span>
+          <span class="sidebar-flag-circle" title="Mali (Bamako)" onclick="App.updateUserCountry('ML'); App.showToast('Caisse active sélectionnée : Mali', 'info');"><span class="fi fi-ml fis"></span></span>
+        </div>
       </div>
     </div>
+    <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout sidebar-logout-btn" id="sidebar-logout-btn" onclick="App.openLogoutConfirmModal(); return false;" title="Se Déconnecter" style="margin-top: 0.65rem; width: 100%; justify-content: center; font-size: 0.8rem;">
+      <i class="fas fa-right-from-bracket mr-2"></i> <span>Se Déconnecter</span>
+    </button>
   </div>
 </aside>
