@@ -1,0 +1,400 @@
+/**
+ * CRÉDIT FAST - UI INTERACTIONS & WORKFLOW CONTROLLERS V2
+ * Intègre l'inspection 360°, le basculement Cold Start, les 10 sous-scores, et les délibérations du Comité
+ * Confédération des Institutions Financières d'Afrique de l'Ouest (CIF - DigiCoop-WA+)
+ */
+
+const AppInteractions = {
+  activeDossierId: 1,
+  activeColdStartOverride: null,
+
+  // Render Credit Requests Table (Vue Analyste)
+  renderRequestsTable(statusFilter = 'ALL', searchFilter = '') {
+    const tableBody = document.getElementById('requests-table-body');
+    if (!tableBody) return;
+
+    let items = DB.get('credit_requests');
+
+    if (statusFilter !== 'ALL') {
+      items = items.filter(req => req.status === statusFilter);
+    }
+
+    if (searchFilter.trim() !== '') {
+      const q = searchFilter.toLowerCase();
+      items = items.filter(req => 
+        (req.request_number && req.request_number.toLowerCase().includes(q)) ||
+        (req.client_name && req.client_name.toLowerCase().includes(q)) ||
+        (req.city && req.city.toLowerCase().includes(q)) ||
+        (req.purpose && req.purpose.toLowerCase().includes(q))
+      );
+    }
+
+    if (items.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+            <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+            Aucun dossier trouvé pour ces critères
+          </td>
+        </tr>`;
+      return;
+    }
+
+    tableBody.innerHTML = items.map(req => {
+      const evalData = CreditScoringEngine.evaluateDossier(req.id) || {};
+      const statusBadge = this.getStatusBadge(req.status);
+      const capacityBadge = req.repayment_capacity_status === 'SUFFICIENT'
+        ? `<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>`
+        : `<span class="badge badge-capacity-insufficient"><i class="fas fa-exclamation-circle"></i> Insuffisante</span>`;
+
+      const modeBadge = evalData.isColdStart
+        ? `<span class="badge badge-warning" style="font-size: 0.65rem;"><i class="fas fa-seedling"></i> Cold Start</span>`
+        : `<span class="badge badge-submitted" style="font-size: 0.65rem;"><i class="fas fa-history"></i> Standard</span>`;
+
+      return `
+        <tr>
+          <td>
+            <strong>${req.request_number}</strong>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(req.submitted_at || req.created_at).toLocaleDateString('fr-FR')}</div>
+          </td>
+          <td>
+            <div class="client-cell">
+              <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff" alt="${req.client_name}">
+              <div>
+                <div class="client-name">${req.client_name}</div>
+                <div class="client-sub">${req.city}, ${req.country}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="amount-cell">${CreditScoringEngine.formatFCFA(req.requested_amount)}</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.duration_months} mois</div>
+          </td>
+          <td>
+            <div style="max-width: 200px; font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${req.purpose}">
+              ${req.purpose}
+            </div>
+            <div style="margin-top: 2px;">${modeBadge}</div>
+          </td>
+          <td>${capacityBadge}</td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || '#4f46e5'};">${evalData.overallScore || req.score || 70}</span>
+              <span style="font-size: 0.7rem; color: var(--text-subtle);">/100</span>
+            </div>
+            <div style="font-size: 0.68rem; color: var(--cif-emerald-500); font-weight: 600;">
+              Confiance: ${evalData.confidenceScore || 90}%
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" onclick="AppInteractions.openDossierModal(${req.id})">
+              <i class="fas fa-magnifying-glass-chart"></i> Analyser 360°
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  getStatusBadge(status) {
+    const cfg = APP_CONSTANTS.STATUS_CONFIG[status] || { label: status, class: 'badge', color: '#64748b' };
+    return `<span class="badge ${cfg.class}">${cfg.label}</span>`;
+  },
+
+  // Open 360° Dossier Inspector Modal (avec gestion V2 Cold Start et 10 sous-scores)
+  openDossierModal(dossierId, forceColdStart = null) {
+    this.activeDossierId = dossierId;
+    this.activeColdStartOverride = forceColdStart;
+
+    const req = DB.findById('credit_requests', dossierId);
+    if (!req) return;
+
+    const modal = document.getElementById('dossier-modal');
+    if (!modal) return;
+
+    const client = DB.findById('clients', req.client_id) || {};
+    const docs = DB.get('documents').filter(d => d.credit_request_id == req.id);
+    const anomalies = DB.get('anomalies').filter(a => a.credit_request_id == req.id);
+
+    const evalData = CreditScoringEngine.evaluateDossier(dossierId, forceColdStart);
+
+    // Populate Header
+    document.getElementById('modal-dossier-ref').textContent = req.request_number;
+    document.getElementById('modal-client-name').textContent = req.client_name;
+    document.getElementById('modal-client-location').textContent = `${req.city}, ${req.country} • N° CIF : ${client.client_number || 'SN-DKR-008821'} • Zone : ${client.residential_zone || 'Urbaine'}`;
+
+    // Populate Financial Capacity
+    const cap = evalData.capacity;
+    document.getElementById('cap-income').textContent = CreditScoringEngine.formatFCFA(cap.totalIncome);
+    document.getElementById('cap-expenses').textContent = CreditScoringEngine.formatFCFA(cap.totalObligations);
+    document.getElementById('cap-disposable').textContent = CreditScoringEngine.formatFCFA(cap.disposableIncome);
+    document.getElementById('cap-installment').textContent = CreditScoringEngine.formatFCFA(cap.estimatedPayment);
+
+    const capBanner = document.getElementById('cap-banner');
+    if (capBanner) {
+      if (cap.isSufficient) {
+        capBanner.className = 'capacity-comparison pass';
+        capBanner.innerHTML = `
+          <div><i class="fas fa-check-circle mr-1"></i> <strong>Capacité Suffisante :</strong> Reste à vivre de ${CreditScoringEngine.formatFCFA(cap.disposableIncome)} couvre <strong>${cap.coverageRatio}x</strong> la mensualité estimée (${CreditScoringEngine.formatFCFA(cap.estimatedPayment)}).</div>
+        `;
+      } else {
+        capBanner.className = 'capacity-comparison fail';
+        capBanner.innerHTML = `
+          <div><i class="fas fa-exclamation-triangle mr-1"></i> <strong>Alerte Capacité Insuffisante :</strong> Reste à vivre net (${CreditScoringEngine.formatFCFA(cap.disposableIncome)}) insuffisant face à la mensualité requise de ${CreditScoringEngine.formatFCFA(cap.estimatedPayment)}.</div>
+        `;
+      }
+    }
+
+    // Populate Score & Gauge
+    const scoreValEl = document.getElementById('modal-score-val');
+    if (scoreValEl) scoreValEl.textContent = evalData.overallScore;
+    const scoreGauge = document.getElementById('modal-score-gauge');
+    if (scoreGauge) scoreGauge.style.setProperty('--score-deg', `${(evalData.overallScore / 100) * 360}deg`);
+
+    // Model & Cold Start Switch Bar
+    const modelBadge = document.getElementById('modal-model-badge');
+    if (modelBadge) {
+      modelBadge.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-card-subtle); padding: 6px 12px; border-radius: var(--radius-md); font-size: 0.76rem;">
+          <div>
+            <strong>Moteur Actif :</strong> ${evalData.model.name} (${evalData.model.version})
+            ${evalData.isColdStart ? '<span class="badge badge-warning ml-1"><i class="fas fa-seedling"></i> Cold Start Activé</span>' : '<span class="badge badge-submitted ml-1"><i class="fas fa-history"></i> Standard</span>'}
+          </div>
+          <div>
+            <span style="font-weight: 700; color: var(--cif-emerald-500);"><i class="fas fa-shield-check"></i> Indice de Confiance : ${evalData.confidenceScore}%</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Populate Factors
+    const factorsContainer = document.getElementById('modal-factors-list');
+    if (factorsContainer) {
+      factorsContainer.innerHTML = evalData.factors.map(f => `
+        <div class="factor-item">
+          <div class="factor-left">
+            <div class="factor-icon ${f.is_positive ? 'positive' : 'negative'}">
+              <i class="fas ${f.is_positive ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i>
+            </div>
+            <div>
+              <div class="factor-title">${f.name} <span style="font-size: 0.72rem; color: var(--text-subtle);">(${f.weight})</span></div>
+              <div class="factor-desc">${f.explanation}</div>
+            </div>
+          </div>
+          <div class="factor-points ${f.is_positive ? 'pos' : 'neg'}">
+            ${f.score}/100 <span style="font-size: 0.7rem; color: var(--text-subtle); font-weight: normal;">(+${f.contribution} pts)</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Populate Docs
+    this.renderModalDocuments(docs);
+
+    // Populate Anomalies
+    const anomaliesBox = document.getElementById('modal-anomalies-list');
+    if (anomaliesBox) {
+      if (anomalies.length === 0) {
+        anomaliesBox.innerHTML = `<div class="anomaly-item info"><i class="fas fa-check-circle anomaly-icon"></i><div class="anomaly-content"><h5>Aucune anomalie détectée</h5><p>Tous les contrôles automatisés de cohérence sont au vert.</p></div></div>`;
+      } else {
+        anomaliesBox.innerHTML = anomalies.map(a => `
+          <div class="anomaly-item ${a.severity === 'CRITICAL' ? 'critical' : 'warning'}">
+            <i class="fas ${a.severity === 'CRITICAL' ? 'fa-ban' : 'fa-triangle-exclamation'} anomaly-icon"></i>
+            <div class="anomaly-content">
+              <h5>${a.description}</h5>
+              <p style="margin-top: 2px;">Valeur détectée OCR : <strong>${a.detected_value || 'Incohérente'}</strong> • Attendu : <strong>${a.expected_value || 'Conforme'}</strong></p>
+              ${a.status === 'OPEN' 
+                ? `<button class="btn btn-secondary btn-sm" style="margin-top: 6px;" onclick="AppInteractions.resolveAnomaly(${a.id})">Marquer Résolu</button>` 
+                : '<span style="font-size: 0.7rem; color: #166534;"><i class="fas fa-check"></i> Résolu</span>'}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Render Radar Chart in Modal
+    setTimeout(() => {
+      AppCharts.renderScoreRadar('modal-radar-canvas', evalData.factors);
+    }, 200);
+
+    modal.classList.add('active');
+  },
+
+  toggleColdStartInModal() {
+    const current = this.activeColdStartOverride;
+    const next = current === null ? true : !current;
+    this.openDossierModal(this.activeDossierId, next);
+    window.App.showToast(`Simulation basculée en mode ${next ? 'COLD START' : 'STANDARD'}`, 'info');
+  },
+
+  renderModalDocuments(docs) {
+    const docsContainer = document.getElementById('modal-docs-list');
+    if (!docsContainer) return;
+
+    if (docs.length === 0) {
+      docsContainer.innerHTML = '<p style="color: var(--text-subtle); font-size: 0.8rem;">Aucun document téléversé</p>';
+      return;
+    }
+
+    docsContainer.innerHTML = docs.map(doc => {
+      const ext = DB.get('document_extractions').find(e => e.document_id == doc.id);
+      const val = DB.get('human_validations').find(v => v.document_id == doc.id);
+
+      return `
+        <div class="card" style="margin-bottom: 1rem; border-color: ${val ? 'var(--cif-emerald-100)' : 'var(--border-subtle)'};">
+          <div class="card-header" style="padding: 0.75rem 1rem;">
+            <div style="font-weight: 600; font-size: 0.84rem; display: flex; align-items: center; gap: 6px;">
+              <i class="fas fa-file-pdf text-primary"></i> ${doc.original_filename || doc.name}
+            </div>
+            <div>
+              ${val 
+                ? `<span class="badge badge-approved"><i class="fas fa-user-check"></i> ${val.decision || val.status}</span>` 
+                : `<span class="badge badge-verification">Validation Humaine Requise</span>`}
+            </div>
+          </div>
+          <div class="card-body" style="padding: 1rem;">
+            <div style="font-family: var(--font-family-code); font-size: 0.76rem; background: var(--surface-card-subtle); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem; white-space: pre-line;">
+              ${ext ? ext.extracted_text : 'Traitement OCR en cours...'}
+            </div>
+            <div class="human-validation-actions">
+              <button class="btn btn-success btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'VALIDATED')">
+                <i class="fas fa-check"></i> Valider Pièce
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'TO_COMPLETE')">
+                <i class="fas fa-rotate"></i> Demander Complément
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="AppInteractions.validateDocument(${doc.id}, 'REJECTED')">
+                <i class="fas fa-times"></i> Rejeter
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  validateDocument(docId, status) {
+    const comment = prompt(`Commentaire de validation (${status}) :`, status === 'VALIDATED' ? 'Pièce certifiée authentique par analyste' : 'Précisions nécessaires');
+    if (comment === null) return;
+
+    OCREngine.recordValidation(docId, 1, status, comment);
+    window.App.showToast(`Document #${docId} validé avec le statut '${status}'`, 'success');
+    
+    const req = DB.findById('credit_requests', this.activeDossierId);
+    const docs = DB.get('documents').filter(d => d.credit_request_id == req.id);
+    this.renderModalDocuments(docs);
+  },
+
+  resolveAnomaly(anomalyId) {
+    DB.update('anomalies', anomalyId, { status: 'RESOLVED', resolved_by: 1, resolution_comment: 'Vérification terrain concluante' });
+    window.App.showToast('Anomalie marquée comme résolue', 'info');
+    this.openDossierModal(this.activeDossierId, this.activeColdStartOverride);
+  },
+
+  submitAnalystReview() {
+    const notes = document.getElementById('analyst-notes-input').value;
+    const reco = document.getElementById('analyst-reco-select').value;
+
+    DB.insert('credit_reviews', {
+      credit_request_id: this.activeDossierId,
+      analyst_id: 1,
+      review_status: 'CONFORME',
+      recommendation: reco,
+      comment: notes,
+      reviewed_at: new Date().toISOString()
+    });
+
+    DB.update('credit_requests', this.activeDossierId, {
+      status: 'COMMITTEE'
+    });
+
+    DB.insert('credit_status_history', {
+      credit_request_id: this.activeDossierId,
+      changed_by: 1,
+      old_status: 'ANALYSIS',
+      new_status: 'COMMITTEE',
+      comment: `Recommandation transmise au comité : ${reco}. ${notes}`,
+      created_at: new Date().toISOString()
+    });
+
+    DB.addAuditLog(1, 'TRANSMIT_TO_COMMITTEE', 'credit_requests', this.activeDossierId, `Dossier #${this.activeDossierId} transmis au Comité de Crédit avec avis ${reco}`);
+
+    window.App.showToast('Dossier transmis avec succès au Comité de Crédit !', 'success');
+    this.closeModal('dossier-modal');
+    this.renderRequestsTable();
+  },
+
+  // Open Committee Deliberation Modal
+  openCommitteeModal(dossierId) {
+    this.activeDossierId = dossierId;
+    const req = DB.findById('credit_requests', dossierId);
+    if (!req) return;
+
+    const modal = document.getElementById('committee-modal');
+    if (!modal) return;
+
+    document.getElementById('com-dossier-num').textContent = req.request_number;
+    document.getElementById('com-client-name').textContent = `${req.client_name} (${req.city}, ${req.country})`;
+    document.getElementById('com-requested-amount').textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    document.getElementById('com-approved-amount').value = req.requested_amount;
+    document.getElementById('com-approved-duration').value = req.duration_months;
+
+    modal.classList.add('active');
+  },
+
+  submitCommitteeDecision(decision) {
+    const req = DB.findById('credit_requests', this.activeDossierId);
+    const approvedAmount = Number(document.getElementById('com-approved-amount')?.value || (req ? req.requested_amount : 1000000));
+    const approvedDuration = Number(document.getElementById('com-approved-duration')?.value || (req ? req.duration_months : 12));
+    const conditions = document.getElementById('com-conditions')?.value || 'Conforme aux délibérations';
+
+    const newStatus = decision === 'APPROVED' ? 'APPROVED' : (decision === 'REJECTED' ? 'REJECTED' : 'VERIFICATION_REQUIRED');
+
+    DB.update('credit_requests', this.activeDossierId, {
+      status: newStatus
+    });
+
+    DB.insert('credit_committee_decisions', {
+      credit_request_id: this.activeDossierId,
+      committee_member_id: 3,
+      decision: decision,
+      approved_amount: approvedAmount,
+      approved_duration_months: approvedDuration,
+      comment: conditions,
+      decided_at: new Date().toISOString()
+    });
+
+    if (decision === 'APPROVED' && req) {
+      DB.insert('loans', {
+        client_id: req.client_id,
+        credit_request_id: req.id,
+        principal_amount: approvedAmount,
+        interest_amount: Math.round(approvedAmount * 0.12),
+        total_amount: Math.round(approvedAmount * 1.12),
+        duration_months: approvedDuration,
+        monthly_payment: Math.round((approvedAmount * 1.12) / approvedDuration),
+        disbursed_at: new Date().toISOString().split('T')[0],
+        maturity_date: '2027-08-18',
+        outstanding_amount: Math.round(approvedAmount * 1.12),
+        status: 'ACTIVE'
+      });
+    }
+
+    DB.addAuditLog(3, 'COMMITTEE_DECISION', 'credit_committee_decisions', this.activeDossierId, `Comité de crédit : décision ${decision} pour le dossier #${this.activeDossierId} (Montant: ${CreditScoringEngine.formatFCFA(approvedAmount)})`);
+
+    window.App.showToast(`Décision du Comité enregistrée : ${decision}`, 'success');
+    this.closeModal('committee-modal');
+
+    if (window.App.currentRole === 'COMMITTEE') {
+      window.App.renderCommitteeDashboard();
+    }
+  },
+
+  closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('active');
+  }
+};
+
+window.AppInteractions = AppInteractions;

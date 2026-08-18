@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crédit Fast - Espaces Métiers Dédiés & Scoring V2 | CIF DigiCoop-WA+</title>
+  <meta name="description" content="Plateforme bancaire multi-rôles : Espaces dédiés Demandeur, Agent de Crédit, Analyste Risque V2, Comité de Crédit et Conformité LBC/FT/FP pour la CIF UEMOA.">
+  
+  <!-- FontAwesome 6 Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js 4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Centralized Design Tokens & Stylesheets -->
+  <link rel="stylesheet" href="css/constants.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dark.css">
+</head>
+<body>
+
+<!-- ==========================================================================
+     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVEC PROFILS DÉMO)
+     ========================================================================== -->
+<div id="auth-view">
+  <div class="auth-container">
+    <!-- Left Hero Showcase Pane -->
+    <div class="auth-hero-pane">
+      <div class="auth-brand">
+        <div class="auth-brand-logo">
+          <i class="fas fa-hand-holding-dollar"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0; color: white;">CRÉDIT FAST <span style="font-size: 0.75rem; background: var(--cif-gold-500); color: #78350f; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">V2</span></h3>
+          <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">PROJET DIGICOOP-WA+ • CIF</span>
+        </div>
+      </div>
+
+      <div class="auth-hero-content">
+        <h1 class="auth-hero-title">Plateforme d'Octroi, Scoring & Conformité</h1>
+        <p class="auth-hero-desc">
+          Une expérience sur mesure pour chaque acteur : <strong>Demandeur</strong> (suivi de prêt & échéancier), <strong>Agent de Crédit</strong> (collecte & inspections), <strong>Analyste Risque</strong> (dossier 360° & Cold Start), <strong>Comité</strong> (décision collégiale) et <strong>Conformité</strong> (filtrage PPE/LBC-FT).
+        </p>
+
+        <div class="auth-pillars-grid">
+          <div class="auth-pillar-card">
+            <i class="fas fa-user-tag" style="color: #34d399;"></i>
+            <h5>Espace Demandeur</h5>
+            <p>Mon crédit, mon échéancier, demande en 6 étapes et contact conseiller.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-user-tie" style="color: #38bdf8;"></i>
+            <h5>Agent de Crédit</h5>
+            <p>Guichet d'enregistrement, relances de pièces et inspections terrain.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-chart-pie" style="color: #a5b4fc;"></i>
+            <h5>Analyste Risque V2</h5>
+            <p>Rapprochement OCR, scoring explicable et simulateur Cold Start.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-scale-balanced" style="color: #f0abfc;"></i>
+            <h5>Comité & Conformité</h5>
+            <p>Délibérations, signatures de PV et filtrage des sanctions UEMOA.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-countries-strip">
+        <i class="fas fa-earth-africa"></i>
+        <span>Réseau CIF Régional : 🇧🇫 Burkina Faso • 🇹🇬 Togo • 🇧🇯 Bénin • 🇸🇳 Sénégal • 🇲🇱 Mali</span>
+      </div>
+    </div>
+
+    <!-- Right Login Form Pane -->
+    <div class="auth-form-pane">
+      <div class="auth-form-box">
+        <div class="auth-header">
+          <h2>Portail d'Accès Sécurisé</h2>
+          <p>Connectez-vous ou sélectionnez un rôle pour ouvrir son interface dédiée.</p>
+        </div>
+
+        <!-- 1-Click Demo Accounts Selector Section -->
+        <div class="demo-accounts-section">
+          <div class="demo-section-title">
+            <span><i class="fas fa-wand-magic-sparkles text-primary"></i> Choisissez votre Espace Métier (1 Clic)</span>
+          </div>
+
+          <div class="demo-personas-grid">
+            <!-- Persona 1: Demandeur (Client) -->
+            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+              <div class="demo-persona-info">
+                <h6>Fatou Ndiaye</h6>
+                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Client)</span>
+              </div>
+            </button>
+
+            <!-- Persona 2: Agent de Crédit -->
+            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+              <div class="demo-persona-info">
+                <h6>Kofi Mensah</h6>
+                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit</span>
+              </div>
+            </button>
+
+            <!-- Persona 3: Analyste Risque -->
+            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+              <div class="demo-persona-info">
+                <h6>Aminata Diallo</h6>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste Risque</span>
+              </div>
+            </button>
+
+            <!-- Persona 4: Comité de Crédit -->
+            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+              <div class="demo-persona-info">
+                <h6>Moussa Traoré</h6>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité de Crédit</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-divider">
+          <span>ou saisissez vos identifiants</span>
+        </div>
+
+        <!-- Standard Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Adresse Email Professionnelle ou N° Client</label>
+            <input type="text" id="login-email" class="form-control" value="aminata.diallo@cif-ao.org" required>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
+              <a href="#" style="font-size: 0.76rem;" onclick="App.showToast('Mot de passe démo : demo', 'info')">Aide connexion</a>
+            </div>
+            <input type="password" id="login-password" class="form-control" value="demo" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MAIN APPLICATION SHELL (AFTER AUTHENTICATION)
+     ========================================================================== -->
+<div id="app-wrapper" style="display: none;">
+  <!-- Mobile Sidebar Overlay Backdrop -->
+  <div id="sidebar-backdrop" class="modal-backdrop" style="display: none;"></div>
+
+  <!-- ==========================================================================
+       1. Left Vertical Sidebar (Rendu Dynamique selon le Rôle)
+       ========================================================================== -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="#" class="brand-logo" onclick="App.switchView(APP_CONSTANTS.ROLES[App.currentRole].homeView)">
+        <div class="brand-icon">
+          <i class="fas fa-hand-holding-dollar"></i>
+        </div>
+        <div>
+          <span>CRÉDIT FAST</span>
+          <span class="brand-tag">CIF-WA+</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- User Mini Profile -->
+    <div class="sidebar-user-card">
+      <div class="user-avatar-wrap">
+        <img id="user-avatar-display" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
+        <span class="user-status-dot"></span>
+      </div>
+      <div class="user-info">
+        <div id="user-name-display" class="user-name">Aminata Diallo</div>
+        <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
+        <div class="user-region-badge">
+          <i class="fas fa-location-dot"></i> UEMOA • DigiCoop-WA+
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Menu Container (Rempli par renderSidebarForRole) -->
+    <nav class="sidebar-menu" id="sidebar-menu-container">
+      <!-- Injected Dynamically based on Authenticated Role -->
+    </nav>
+
+    <!-- Sidebar Footer / Logout & Regional Strip -->
+    <div class="sidebar-footer">
+      <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;">
+        <i class="fas fa-power-off text-danger"></i> Se Déconnecter
+      </button>
+      <div class="digicoop-card">
+        <div class="digicoop-text">
+          <h6>Projet DigiCoop-WA+</h6>
+          <p>5 Pays : BF • TG • BJ • SN • ML</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       2. Main Content Wrapper
+       ========================================================================== -->
+  <div id="main-wrapper">
+    <!-- Top Navigation Bar -->
+    <header id="topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Basculer menu">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="global-search-input" class="search-input" placeholder="Rechercher dans mon espace...">
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Active Role Badge Pill -->
+        <span id="user-role-pill-badge" class="badge" style="background: rgba(79, 70, 229, 0.15); color: var(--cif-primary-500); border: 1px solid var(--cif-primary-500); font-size: 0.75rem; padding: 4px 10px;">
+          Analyste Risque
+        </span>
+
+        <!-- Fast Role Switcher (pour tester facilement) -->
+        <div class="role-selector-wrap" title="Changer d'espace métier">
+          <i class="fas fa-user-gear text-primary"></i>
+          <select id="global-role-select" class="role-select">
+            <option value="CLIENT">Demandeur (Client)</option>
+            <option value="CREDIT_OFFICER">Agent de Crédit</option>
+            <option value="ANALYST">Analyste Risque V2</option>
+            <option value="COMMITTEE">Comité de Crédit</option>
+            <option value="COMPLIANCE">Conformité LBC/FT</option>
+          </select>
+        </div>
+
+        <!-- Country Selector -->
+        <select id="country-lang-select" class="country-badge-selector">
+          <option value="SN">🇸🇳 Sénégal (Dakar)</option>
+          <option value="BF" selected>🇧🇫 Burkina Faso (Ouaga)</option>
+          <option value="BJ">🇧🇯 Bénin (Cotonou)</option>
+          <option value="TG">🇹🇬 Togo (Lomé)</option>
+          <option value="ML">🇲🇱 Mali (Bamako)</option>
+        </select>
+
+        <!-- Dark / Light Mode Toggle -->
+        <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <!-- Notifications Bell -->
+        <div style="position: relative;">
+          <button id="notif-bell-btn" class="topbar-action-btn" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="btn-badge">2</span>
+          </button>
+          <div id="notif-dropdown" class="modal-dialog" style="position: absolute; right: 0; top: 48px; width: 340px; display: none; z-index: 1000; box-shadow: var(--shadow-xl);">
+            <div class="modal-header" style="padding: 0.85rem 1rem;">
+              <h5 style="font-size: 0.88rem; margin: 0;">Notifications Système</h5>
+              <span class="badge badge-submitted">2 Récentes</span>
+            </div>
+            <div class="modal-body" style="padding: 0.75rem 1rem; max-height: 280px;">
+              <div class="anomaly-item warning" style="margin-bottom: 0.5rem;">
+                <i class="fas fa-triangle-exclamation anomaly-icon"></i>
+                <div class="anomaly-content">
+                  <h5>Anomalie Détectée</h5>
+                  <p>Facture expirée sur dossier REQ-2026-0893</p>
+                </div>
+              </div>
+              <div class="anomaly-item info">
+                <i class="fas fa-check-circle anomaly-icon"></i>
+                <div class="anomaly-content">
+                  <h5>Comité Convoqué</h5>
+                  <p>Dossier Amadou Sanogo prêt pour décision</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logout Action Button -->
+        <button class="topbar-action-btn btn-action-logout" title="Se Déconnecter">
+          <i class="fas fa-right-from-bracket text-danger"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==========================================================================
+         3. Dynamic Views Container
+         ========================================================================== -->
+    <main class="page-container">
+      
+      <!-- ====================================================================
+           [ESPACE 1] TABLEAU DE BORD DU DEMANDEUR (CLIENT EMPRUNTEUR)
+           ==================================================================== -->
+      <section id="view-role-client" class="app-view" style="display: none;">
+        <!-- Borrower Welcome Banner -->
+        <div class="borrower-welcome-banner">
+          <div>
+            <span class="badge badge-client" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); margin-bottom: 0.5rem;">
+              <i class="fas fa-id-badge"></i> Espace Demandeur & Emprunteur
+            </span>
+            <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem; color: white;">
+              Bienvenue, <span id="borrower-banner-name">Fatou Ndiaye</span>
+            </h2>
+            <p style="color: #cbd5e1; font-size: 0.85rem; max-width: 600px;">
+              N° Membre : <strong id="borrower-member-num">SN-DKR-008821</strong> • Caisse CIF Médina Dakar (Sénégal) • Activité : Commerce & Textile
+            </p>
+          </div>
+          <div>
+            <button class="btn btn-success btn-lg" onclick="App.switchView('view-client-wizard')">
+              <i class="fas fa-plus-circle"></i> Déposer une Nouvelle Demande
+            </button>
+          </div>
+        </div>
+
+        <!-- Borrower Financial Metrics (3 Cards) -->
+        <div class="borrower-metrics-grid">
+          <div class="borrower-metric-box">
+            <div class="borrower-metric-icon" style="background: var(--cif-primary-50); color: var(--cif-primary-600);">
+              <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Crédit Actif en Cours</div>
+              <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code);" id="borrower-active-amount">2 500 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">12 mensualités • Taux dégressif</div>
+            </div>
+          </div>
+
+          <div class="borrower-metric-box">
+            <div class="borrower-metric-icon" style="background: var(--cif-gold-50); color: var(--cif-gold-600);">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance à Régler</div>
+              <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-gold-700);">235 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">Échéance au 05/09/2026 (0 retard)</div>
+            </div>
+          </div>
+
+          <div class="borrower-metric-box">
+            <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600);">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Épargne Disponible CIF</div>
+              <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-emerald-700);">1 450 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-500);"><i class="fas fa-shield"></i> Garantie mobilisable</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Credit Request Tracking Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-route text-primary"></i> Suivi en Direct de votre Demande #<span id="borrower-active-ref">REQ-2026-0891</span></h3>
+              <p class="card-subtitle" id="borrower-active-purpose">Achat de stock tissus wax pour la fête de Tabaski</p>
+            </div>
+            <div id="borrower-active-status">
+              <span class="badge badge-analysis">Revue Analyste</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="loan-progress-stepper">
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">1. Demande Déposée</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
+              </div>
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">2. Extraction OCR Pièces</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
+              </div>
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">3. Reste à Vivre Calculé</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">12/08/2026</div>
+              </div>
+              <div class="loan-step-node active">
+                <div class="dot"><i class="fas fa-spinner fa-spin"></i></div>
+                <div class="label">4. Revue Finale Analyste</div>
+                <div style="font-size: 0.65rem; color: var(--cif-primary-600); font-weight: 700;">En Cours</div>
+              </div>
+              <div class="loan-step-node">
+                <div class="dot">5</div>
+                <div class="label">5. Décision Comité</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">À venir</div>
+              </div>
+              <div class="loan-step-node">
+                <div class="dot">6</div>
+                <div class="label">6. Déblocage Fonds</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">Final</div>
+              </div>
+            </div>
+
+            <div class="anomaly-item info" style="margin-top: 1rem;">
+              <i class="fas fa-circle-info anomaly-icon"></i>
+              <div class="anomaly-content">
+                <h5>Message de votre agence CIF :</h5>
+                <p>Votre analyste (Aminata Diallo) a certifié conforme vos factures proforma. Votre dossier est programmé pour passage en délibération au prochain comité.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Columns: Repayment Schedule & Assigned Advisor -->
+        <div class="grid-2">
+          <!-- Repayment Schedule Table -->
+          <div class="card" id="view-client-schedule">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-table-list text-primary"></i> Échéancier de Remboursement Réel</h3>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de votre reçu PDF...', 'info')">
+                <i class="fas fa-download"></i> Télécharger Quittance
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table-custom">
+                <thead>
+                  <tr>
+                    <th>Échéance</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Échéance N° 1</td>
+                    <td>05/07/2026</td>
+                    <td class="amount-cell">235 000 FCFA</td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé à l'heure</span></td>
+                  </tr>
+                  <tr>
+                    <td>Échéance N° 2</td>
+                    <td>05/08/2026</td>
+                    <td class="amount-cell">235 000 FCFA</td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé à l'heure</span></td>
+                  </tr>
+                  <tr style="background: var(--cif-gold-50);">
+                    <td><strong>Échéance N° 3</strong></td>
+                    <td><strong>05/09/2026</strong></td>
+                    <td class="amount-cell" style="color: var(--cif-gold-700);"><strong>235 000 FCFA</strong></td>
+                    <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochaine Échéance</span></td>
+                  </tr>
+                  <tr>
+                    <td>Échéance N° 4</td>
+                    <td>05/10/2026</td>
+                    <td class="amount-cell">235 000 FCFA</td>
+                    <td><span class="badge badge-submitted">À venir</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Assigned Credit Agent Card -->
+          <div class="card" id="view-client-advisor">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-user-tie text-emerald"></i> Votre Conseiller Attitré</h3>
+            </div>
+            <div class="card-body">
+              <div class="agent-contact-card" style="margin-bottom: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.85rem;">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Agent" class="user-avatar" style="width: 50px; height: 50px;">
+                  <div>
+                    <h5 style="font-size: 1rem; margin-bottom: 2px;">Kofi Mensah</h5>
+                    <div style="font-size: 0.78rem; color: var(--text-subtle);">Conseiller Microfinance Senior</div>
+                    <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">Agence CIF Médina Dakar</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.82rem; line-height: 1.6; color: var(--text-muted-dark); margin-bottom: 1.25rem;">
+                <div><i class="fas fa-phone mr-1 text-primary"></i> <strong>Ligne directe :</strong> +221 33 821 44 00</div>
+                <div><i class="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
+                <div><i class="fas fa-clock mr-1 text-primary"></i> <strong>Horaires d'agence :</strong> Lun - Ven : 08h00 - 17h00</div>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="App.showToast('Message direct transmis à votre conseiller', 'success')">
+                  <i class="fas fa-comment-dots"></i> Écrire un Message
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="App.showToast('Demande de rendez-vous transmise', 'info')">
+                  <i class="fas fa-calendar-plus"></i> Prendre RDV
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           [ESPACE 2] TABLEAU DE BORD DE L'AGENT DE CRÉDIT (TERRAIN & COLLECTE)
+           ==================================================================== -->
+      <section id="view-role-agent" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Espace Agent de Crédit • Pipeline de Collecte</h1>
+            <div class="page-breadcrumb">
+              <span>Opérations Guichet</span> <i class="fas fa-chevron-right"></i>
+              <span>Agence Assigamé (Lomé, Togo)</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+              <i class="fas fa-user-plus"></i> Enregistrer Nouvelle Demande
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 KPI Agent Cards -->
+        <div class="grid-4">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-inbox"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">42</div>
+              <div class="stat-label">Dossiers au Guichet</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8 cette semaine</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">8</div>
+              <div class="stat-label">Pré-inspections Garanties</div>
+              <div class="stat-trend down"><i class="fas fa-motorcycle"></i> À visiter sur le terrain</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap rose">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">12</div>
+              <div class="stat-label">Pièces Manquantes</div>
+              <div class="stat-trend down"><i class="fas fa-phone"></i> Relances nécessaires</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-circle-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">88%</div>
+              <div class="stat-label">Taux de Complétude</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> Objectif agence atteint</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent Pipeline Table -->
+        <div class="card" style="margin-top: 1.25rem;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list-check text-primary"></i> Pipeline des Demandes à Traiter par l'Agent</h3>
+            <span class="badge badge-submitted">Guichet & Terrain</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>N° Dossier</th>
+                  <th>Client Emprunteur</th>
+                  <th>Montant Demandé</th>
+                  <th>Objet du Prêt</th>
+                  <th>Statut</th>
+                  <th>Action Rapide</th>
+                </tr>
+              </thead>
+              <tbody id="agent-pipeline-table-body">
+                <!-- Injected Dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           [ESPACE 3] TABLEAU DE BORD DE L'ANALYSTE RISQUE (SCORING V2 & 360°)
+           ==================================================================== -->
+      <section id="view-role-analyst" class="app-view">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Supervision des Risques & Scoring Explicable V2</h1>
+            <div class="page-breadcrumb">
+              <span>CIF-WA+</span> <i class="fas fa-chevron-right"></i>
+              <a href="#">Supervision Microcrédit V2</a> <i class="fas fa-chevron-right"></i>
+              <span>Vue Régionale UEMOA</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="DB.reset(); App.init(); App.showToast('Données réinitialisées avec succès', 'info');">
+              <i class="fas fa-arrows-rotate"></i> Réinitialiser Données
+            </button>
+            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+              <i class="fas fa-plus"></i> Nouvelle Demande
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 KPI Stat Cards (Zoogler Style) -->
+        <div class="grid-4">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-folder-open"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">190</div>
+              <div class="stat-label">Demandes Actives</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12.5% ce mois</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">342.5 M</div>
+              <div class="stat-label">Encours Accordé (FCFA)</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8.2% vs N-1</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">96.8%</div>
+              <div class="stat-label">Taux de Recouvrement</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> Objectif UEMOA atteint</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap rose">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">14</div>
+              <div class="stat-label">Alertes & Anomalies</div>
+              <div class="stat-trend down"><i class="fas fa-shield-halved"></i> 2 Alertes PPE</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid (Main Spline + Risk Breakdown) -->
+        <div class="grid-dashboard-main">
+          <!-- Evolution Spline Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><i class="fas fa-chart-area text-primary"></i> Évolution des Octrois & Demandes</h3>
+                <p class="card-subtitle">Volume mensuel en Millions FCFA pour le réseau des coopératives CIF</p>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-secondary btn-sm" onclick="AppCharts.renderEvolutionChart('evolution-chart-canvas', 'year')">Année</button>
+                <button class="btn btn-secondary btn-sm" onclick="AppCharts.renderEvolutionChart('evolution-chart-canvas', 'month')">Mois</button>
+              </div>
+            </div>
+            <div class="card-body" style="height: 320px;">
+              <canvas id="evolution-chart-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Risk Distribution Doughnut -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><i class="fas fa-chart-pie text-emerald"></i> Profil de Risque</h3>
+                <p class="card-subtitle">Répartition basée sur le moteur de scoring explicable V2</p>
+              </div>
+            </div>
+            <div class="card-body" style="height: 320px;">
+              <canvas id="risk-doughnut-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Regional Performance + Recent Credit Requests -->
+        <div class="grid-dashboard-main" style="margin-top: 1.25rem;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-globe-africa text-primary"></i> Encours par Pays Membre (CIF-WA+)</h3>
+              <span class="badge badge-submitted">5 Pays UEMOA</span>
+            </div>
+            <div class="card-body" style="height: 280px;">
+              <canvas id="regional-chart-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Quick Compliance Watchlist Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-fingerprint text-danger"></i> Surveillance LBC / FT / FP</h3>
+              <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">Voir Tout</button>
+            </div>
+            <div class="card-body">
+              <div class="anomaly-item critical">
+                <i class="fas fa-ban anomaly-icon"></i>
+                <div class="anomaly-content">
+                  <h5>Sanction Régionale UEMOA</h5>
+                  <p>Ibrahim Ould Mohamed • Mali</p>
+                  <span class="badge badge-rejected" style="margin-top: 4px;">Blocage Opération</span>
+                </div>
+              </div>
+              <div class="anomaly-item warning">
+                <i class="fas fa-user-shield anomaly-icon"></i>
+                <div class="anomaly-content">
+                  <h5>Personne Politiquement Exposée</h5>
+                  <p>Ousmane Coulibaly • Bamako</p>
+                  <span class="badge badge-verification" style="margin-top: 4px;">Diligence Renforcée</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: ANALYST DOSSIERS MANAGEMENT -->
+      <section id="view-analyst-dossiers" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Dossiers à Instruire • Espace Analyste</h1>
+            <div class="page-breadcrumb">
+              <span>Analyse Risque</span> <i class="fas fa-chevron-right"></i>
+              <span>Pipeline & Cold Start</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.25rem;">
+          <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ALL')">Tous les dossiers</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ANALYSIS')">En Analyse</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('VERIFICATION_REQUIRED')">Vérif. Requise</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('COMMITTEE')">En Comité</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED')">Approuvés</button>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-subtle);">
+              <i class="fas fa-info-circle"></i> Cliquez sur <strong>Analyser 360°</strong> pour voir le Reste à Vivre, l'OCR et simuler le Cold Start.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>N° Dossier / Date</th>
+                  <th>Client Emprunteur</th>
+                  <th>Montant & Durée</th>
+                  <th>Objet & Mode</th>
+                  <th>Capacité Nette</th>
+                  <th>Score & Confiance</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="requests-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           [ESPACE 4] TABLEAU DE BORD DU COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
+           ==================================================================== -->
+      <section id="view-role-committee" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Séance de Délibération du Comité de Crédit</h1>
+            <div class="page-breadcrumb">
+              <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
+              <span>Délibérations Collégiales & Vote</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 KPI Committee Cards -->
+        <div class="grid-4">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap purple">
+              <i class="fas fa-scale-balanced"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">5</div>
+              <div class="stat-label">Dossiers en Séance</div>
+              <div class="stat-trend down"><i class="fas fa-gavel"></i> Délibération requise</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-vault"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">18.5 M</div>
+              <div class="stat-label">Volume Total Délibéré</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> 5 dossiers UEMOA</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-file-signature"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">84%</div>
+              <div class="stat-label">Taux d'Approbation</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux seuils CIF</div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-stopwatch"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">48 h</div>
+              <div class="stat-label">Délai Moyen Décision</div>
+              <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif &lt; 72h</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Committee Deliberation Table -->
+        <div class="card" style="margin-top: 1.25rem;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
+            <span class="badge badge-committee">Séance en cours</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>N° Dossier</th>
+                  <th>Client</th>
+                  <th>Montant Demandé</th>
+                  <th>Reste à Vivre</th>
+                  <th>Score Explicable</th>
+                  <th>Avis Analyste</th>
+                  <th>Décision</th>
+                </tr>
+              </thead>
+              <tbody id="committee-requests-table-body">
+                <!-- Dynamically Injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           [ESPACE 5] TABLEAU DE BORD DE CONFORMITÉ LBC / FT / FP (DIGICOOP-WA+)
+           ==================================================================== -->
+      <section id="view-role-compliance" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Console de Conformité LBC / FT / FP & Filtrage PPE</h1>
+            <div class="page-breadcrumb">
+              <span>DigiCoop-WA+</span> <i class="fas fa-chevron-right"></i>
+              <span>Lutte Blanchiment, Terrorisme & Prolifération (UEMOA)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Real-Time Screening Search Console -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-shield-virus text-primary"></i> Filtrage en Temps Réel (Sanctions & PPE)</h3>
+            </div>
+            <div class="card-body">
+              <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
+                Vérification instantanée des personnes physiques/morales contre les listes de sanctions régionales UEMOA, ONU, GAFI et la base des Personnes Politiquement Exposées (PPE).
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">Nom complet, Alias ou N° d'identification</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="screen-client-name" class="form-control" placeholder="Ex: Ibrahim Ould Mohamed ou Ousmane Coulibaly" value="Ibrahim Ould Mohamed">
+                  <button id="btn-screen-client" class="btn btn-primary">
+                    <i class="fas fa-magnifying-glass"></i> Filtrer
+                  </button>
+                </div>
+              </div>
+
+              <div id="screening-result-box">
+                <!-- Result Injected Dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-Account Consolidated Balance & Anomaly Monitor -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fas fa-network-wired text-emerald"></i> Consolidation Multi-Comptes Réseau CIF</h3>
+            </div>
+            <div class="card-body">
+              <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
+                Détermination du solde global agrégé des comptes détenus par un même client à travers les caisses membres du réseau CIF.
+              </p>
+
+              <div class="table-responsive">
+                <table class="table-custom">
+                  <thead>
+                    <tr>
+                      <th>Caisse / Pays</th>
+                      <th>N° Compte</th>
+                      <th>Type</th>
+                      <th>Solde</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>🇸🇳 Caisse Médina (Dakar)</td>
+                      <td>CPT-CIF-SN-00918</td>
+                      <td>Épargne Collectée</td>
+                      <td class="amount-cell">1 450 000 FCFA</td>
+                    </tr>
+                    <tr>
+                      <td>🇧🇫 Caisse Ouaga 2000</td>
+                      <td>CPT-CIF-BF-04421</td>
+                      <td>Courant Commercial</td>
+                      <td class="amount-cell">2 800 000 FCFA</td>
+                    </tr>
+                    <tr style="background: var(--cif-primary-50); font-weight: 700;">
+                      <td colspan="3">SOLDE GLOBAL CONSOLIDÉ UEMOA :</td>
+                      <td class="amount-cell" style="color: var(--cif-primary-700);">4 250 000 FCFA</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="margin-top: 1rem; font-size: 0.78rem; color: var(--text-muted-dark);">
+                <i class="fas fa-check-circle text-success"></i> Seuil d'alerte UEMOA (50 000 000 FCFA) non franchi.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: SCORING ENGINE ADMINISTRATION (MOTEURS & RÈGLES SCORING V2)
+           ==================================================================== -->
+      <section id="view-scoring-admin" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Administration des Modèles de Scoring V2</h1>
+            <div class="page-breadcrumb">
+              <span>Gouvernance des Algorithmes</span> <i class="fas fa-chevron-right"></i>
+              <span>Modèle Standard vs Cold Start (Inclusion)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Model 1: Standard UEMOA Model -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><i class="fas fa-code-branch text-primary"></i> Modèle Standard UEMOA (V2.1)</h3>
+                <p class="card-subtitle">Actif • Pour clients avec historique bancaire ou d'épargne</p>
+              </div>
+              <span class="badge badge-approved">ACTIF</span>
+            </div>
+            <div class="card-body">
+              <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
+                Ce modèle utilise l'intégralité des 10 sous-scores incluant la discipline d'épargne CIF et l'historique réel des remboursements.
+              </div>
+
+              <div class="table-responsive">
+                <table class="table-custom">
+                  <thead>
+                    <tr>
+                      <th>Facteur Évalué</th>
+                      <th>Type</th>
+                      <th>Pondération</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Capacité nette de remboursement (Reste à vivre)</td>
+                      <td><span class="badge badge-submitted">Financier</span></td>
+                      <td><strong>25%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Comportement crédits antérieurs (Remboursements)</td>
+                      <td><span class="badge badge-analysis">Comportement</span></td>
+                      <td><strong>20%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Discipline d'épargne CIF (Solde moyen)</td>
+                      <td><span class="badge badge-analysis">Comportement</span></td>
+                      <td><strong>15%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Stabilité & Ancienneté activité économique</td>
+                      <td><span class="badge badge-verification">Activité</span></td>
+                      <td><strong>15%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Couverture par garanties matérielles</td>
+                      <td><span class="badge badge-submitted">Garantie</span></td>
+                      <td><strong>10%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Rapprochement OCR & Intégrité justificatifs</td>
+                      <td><span class="badge badge-approved">Intégrité</span></td>
+                      <td><strong>10%</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Zone d'habitation & Enracinement</td>
+                      <td><span class="badge badge-verification">Contexte</span></td>
+                      <td><strong>5%</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model 2: Cold Start Model (Inclusion Financière) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title"><i class="fas fa-seedling text-emerald"></i> Modèle Cold Start Inclusion (V1.0)</h3>
+                <p class="card-subtitle">Actif • Pour primo-demandeurs sans antécédents financiers</p>
+              </div>
+              <span class="badge badge-approved">ACTIF</span>
+            </div>
+            <div class="card-body">
+              <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
+                <i class="fas fa-balance-scale text-primary"></i> <strong>Règle fondamentale :</strong> <em>Absence d'historique ≠ Mauvais historique</em>. Les poids sont redistribués sur la capacité nette, l'activité et les garanties/cautions solidaires.
+              </div>
+
+              <div class="table-responsive">
+                <table class="table-custom">
+                  <thead>
+                    <tr>
+                      <th>Facteur Évalué</th>
+                      <th>Type</th>
+                      <th>Pondération Adaptée</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="background: var(--cif-primary-50);">
+                      <td>Capacité nette de remboursement (Reste à vivre)</td>
+                      <td><span class="badge badge-submitted">Financier</span></td>
+                      <td><strong style="color: var(--cif-primary-700);">35% (+10%)</strong></td>
+                    </tr>
+                    <tr style="background: var(--cif-emerald-50);">
+                      <td>Stabilité & Ancienneté activité économique</td>
+                      <td><span class="badge badge-verification">Activité</span></td>
+                      <td><strong style="color: var(--cif-emerald-700);">25% (+10%)</strong></td>
+                    </tr>
+                    <tr style="background: var(--cif-gold-50);">
+                      <td>Garanties & Caution solidaire de pair</td>
+                      <td><span class="badge badge-submitted">Garantie</span></td>
+                      <td><strong style="color: var(--cif-gold-700);">20% (+10%)</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Zone d'habitation & Enracinement local</td>
+                      <td><span class="badge badge-verification">Contexte</span></td>
+                      <td><strong>10% (+5%)</strong></td>
+                    </tr>
+                    <tr>
+                      <td>Rapprochement OCR & Pièces d'identité</td>
+                      <td><span class="badge badge-approved">Intégrité</span></td>
+                      <td><strong>10%</strong></td>
+                    </tr>
+                    <tr style="opacity: 0.5;">
+                      <td><em>Historique crédit / épargne (Désactivé)</em></td>
+                      <td><em>Non applicable</em></td>
+                      <td><em>0% (Non pénalisé)</em></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: CLIENT 6-STEP WIZARD (OCTROI EN 6 ÉTAPES)
+           ==================================================================== -->
+      <section id="view-client-wizard" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Simulateur & Dépôt de Demande de Microcrédit</h1>
+            <div class="page-breadcrumb">
+              <span>Portail Membre</span> <i class="fas fa-chevron-right"></i>
+              <span>Parcours d'Origination en 6 Étapes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="max-width: 860px; margin: 0 auto;">
+          <div class="card-body">
+            <!-- 6-Step Wizard Indicator -->
+            <div class="wizard-nav">
+              <div class="wizard-step active" id="wstep-1">
+                <div class="wizard-step-circle">1</div>
+                <div class="wizard-step-label">Identité</div>
+              </div>
+              <div class="wizard-step" id="wstep-2">
+                <div class="wizard-step-circle">2</div>
+                <div class="wizard-step-label">Activité</div>
+              </div>
+              <div class="wizard-step" id="wstep-3">
+                <div class="wizard-step-circle">3</div>
+                <div class="wizard-step-label">Finances</div>
+              </div>
+              <div class="wizard-step" id="wstep-4">
+                <div class="wizard-step-circle">4</div>
+                <div class="wizard-step-label">Demande</div>
+              </div>
+              <div class="wizard-step" id="wstep-5">
+                <div class="wizard-step-circle">5</div>
+                <div class="wizard-step-label">Garantie</div>
+              </div>
+              <div class="wizard-step" id="wstep-6">
+                <div class="wizard-step-circle">6</div>
+                <div class="wizard-step-label">Justificatifs</div>
+              </div>
+            </div>
+
+            <!-- Step 1: Identité -->
+            <div id="wizard-step-1" class="wizard-step-content">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Nom et Prénom</label>
+                  <input type="text" id="wiz-fullname" class="form-control" value="Ibrahima Koné">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Numéro de Téléphone</label>
+                  <input type="tel" id="wiz-phone" class="form-control" value="+223 70 88 99 00">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Pays de Résidence (UEMOA)</label>
+                  <select id="wiz-country" class="form-control">
+                    <option value="Mali">Mali</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                    <option value="Sénégal">Sénégal</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Bénin">Bénin</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ville & Zone d'Habitation</label>
+                  <input type="text" id="wiz-city" class="form-control" value="Bamako - Faladié (Péri-urbaine)">
+                </div>
+              </div>
+              <div style="text-align: right; margin-top: 1.5rem;">
+                <button class="btn btn-primary" data-wizard-action="next">Suivant : Activité <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 2: Activité -->
+            <div id="wizard-step-2" class="wizard-step-content" style="display: none;">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-store text-primary mr-2"></i> Étape 2 : Activité Économique</h4>
+              <div class="form-group">
+                <label class="form-label">Secteur d'Activité</label>
+                <select id="wiz-sector" class="form-control">
+                  <option value="Artisanat & Menuiserie Bois">Artisanat & Menuiserie Bois</option>
+                  <option value="Transformation Agroalimentaire">Transformation Agroalimentaire</option>
+                  <option value="Commerce de Détail / Gros">Commerce de Détail / Gros</option>
+                  <option value="Aviculture & Élevage">Aviculture & Élevage</option>
+                  <option value="BTP & Quincaillerie">BTP & Quincaillerie</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Ancienneté de l'activité (Années)</label>
+                  <input type="number" id="wiz-seniority" class="form-control" value="2">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Emplacement Commercial</label>
+                  <input type="text" id="wiz-location" class="form-control" value="Atelier Faladié, Bamako">
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button class="btn btn-primary" data-wizard-action="next">Suivant : Finances <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 3: Finances -->
+            <div id="wizard-step-3" class="wizard-step-content" style="display: none;">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-calculator text-primary mr-2"></i> Étape 3 : Revenus, Charges & Capacité</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Revenu Mensuel Principal (FCFA)</label>
+                  <input type="number" id="wiz-income" class="form-control" value="400000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Charges Personnelles & Ménage (FCFA)</label>
+                  <input type="number" id="wiz-expenses" class="form-control" value="180000">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Mensualités de crédits existants (FCFA)</label>
+                  <input type="number" id="wiz-debt" class="form-control" value="0">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Personnes à charge</label>
+                  <input type="number" id="wiz-dependents" class="form-control" value="1">
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button class="btn btn-primary" data-wizard-action="next">Suivant : Demande <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 4: Demande -->
+            <div id="wizard-step-4" class="wizard-step-content" style="display: none;">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-money-bill-wave text-primary mr-2"></i> Étape 4 : Détails du Crédit & Simulation</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Montant Demandé (FCFA)</label>
+                  <input type="number" id="wiz-amount" class="form-control" value="800000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Durée Souhaitée (Mois)</label>
+                  <input type="number" id="wiz-duration" class="form-control" value="8">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Objet précis du financement</label>
+                <textarea id="wiz-purpose" class="form-control" rows="2">Achat de bois massif et outillage menuiserie</textarea>
+              </div>
+
+              <!-- Live Capacity Simulator Card -->
+              <div class="capacity-card" style="margin-top: 1rem;">
+                <h5 style="font-size: 0.85rem; color: var(--text-muted-dark); margin-bottom: 0.5rem;">Aperçu en Direct de la Capacité de Remboursement</h5>
+                <div class="capacity-equation">
+                  <div class="capacity-item">
+                    <div class="val" id="wiz-calc-disposable">220 000 FCFA</div>
+                    <div class="lbl">Reste à Vivre</div>
+                  </div>
+                  <div class="capacity-op">vs</div>
+                  <div class="capacity-item">
+                    <div class="val" id="wiz-calc-installment">107 000 FCFA</div>
+                    <div class="lbl">Échéance Estimée</div>
+                  </div>
+                  <div class="capacity-item">
+                    <span id="wiz-calc-status" class="badge badge-capacity-sufficient">Capacité Suffisante</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button class="btn btn-primary" data-wizard-action="next">Suivant : Garanties <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 5: Garanties -->
+            <div id="wizard-step-5" class="wizard-step-content" style="display: none;">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-shield-alt text-primary mr-2"></i> Étape 5 : Déclaration de Garantie</h4>
+              <div class="form-group">
+                <label class="form-label">Type de Garantie</label>
+                <select id="wiz-guarantee-type" class="form-control">
+                  <option value="CAUTION_SOLIDAIRE">Caution solidaire d'un maître artisan</option>
+                  <option value="STOCK_MARCHANDISE">Stock de marchandise / bois</option>
+                  <option value="EQUIPEMENT_MATERIEL">Équipement professionnel / Machines</option>
+                  <option value="PARCELLE_TERRAIN">Titre foncier / Attestation villageoise</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Valeur Déclarée Estimée (FCFA)</label>
+                  <input type="number" id="wiz-guarantee-val" class="form-control" value="1200000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Description de la caution / garantie</label>
+                  <input type="text" id="wiz-guarantee-desc" class="form-control" value="Caution solidaire du Maître Menuisier Faladié">
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button class="btn btn-primary" data-wizard-action="next">Suivant : Justificatifs & OCR <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 6: Justificatifs & OCR -->
+            <div id="wizard-step-6" class="wizard-step-content" style="display: none;">
+              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des Justificatifs & Traitement OCR</h4>
+              <div style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 2rem; text-align: center; background: var(--surface-card-subtle);">
+                <i class="fas fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--cif-primary-500); margin-bottom: 0.75rem;"></i>
+                <h5>Déposez votre Devis Proforma / Relevé d'Épargne</h5>
+                <p style="font-size: 0.78rem; color: var(--text-subtle);">PDF, JPG ou PNG (Extraction automatique par le moteur OCR Crédit Fast)</p>
+                <button class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;" onclick="App.showToast('Document factice chargé avec succès', 'success')">
+                  <i class="fas fa-file-lines"></i> Sélectionner Fichier (Facture_Bois_Mali.pdf)
+                </button>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; margin-top: 1.75rem;">
+                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button class="btn btn-success" data-wizard-action="submit">
+                  <i class="fas fa-paper-plane"></i> Soumettre la Demande au Réseau CIF
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: AUDIT TRAIL
+           ==================================================================== -->
+      <section id="view-audit-logs" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Piste d'Audit & Journal des Événements V2</h1>
+            <div class="page-breadcrumb">
+              <span>Traçabilité Réglementaire</span> <i class="fas fa-chevron-right"></i>
+              <span>Historique Immuable des Décisions</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Horodatage</th>
+                  <th>Action</th>
+                  <th>Entité Modifiée</th>
+                  <th>Détails de l'Opération</th>
+                  <th>Adresse IP</th>
+                </tr>
+              </thead>
+              <tbody id="audit-logs-table-body">
+                <!-- Dynamically Injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     4. MODAL: 360° RISK ANALYST & OCR INSPECTOR (SCORING V2 & COLD START)
+     ========================================================================== -->
+<div id="dossier-modal" class="modal-backdrop">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-folder-open text-primary mr-1"></i> Dossier <span id="modal-dossier-ref">REQ-2026-0891</span>
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Dakar, Sénégal • SN-DKR-008821</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
+          <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+        </button>
+        <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Active Model & Confidence Badge Bar -->
+      <div id="modal-model-badge" style="margin-bottom: 0.85rem;"></div>
+
+      <!-- Top Overview Bar -->
+      <div class="capacity-card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div>
+            <h4 id="modal-client-name" style="font-size: 1.2rem; color: var(--text-main);">Fatou Ndiaye</h4>
+            <div style="font-size: 0.78rem; color: var(--text-subtle);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
+          </div>
+          <div class="score-main-display" style="padding: 0.75rem 1.25rem;">
+            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 295deg; width: 70px; height: 70px;">
+              <div class="score-gauge-inner" style="width: 54px; height: 54px;">
+                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">82</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Score Explicable V2</div>
+              <div class="score-risk-tag">Risque Faible</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Capacity Breakdown Equation -->
+        <div class="capacity-equation">
+          <div class="capacity-item">
+            <div class="val" id="cap-income">800 000 FCFA</div>
+            <div class="lbl">Revenus Totaux</div>
+          </div>
+          <div class="capacity-op">-</div>
+          <div class="capacity-item">
+            <div class="val" id="cap-expenses">380 000 FCFA</div>
+            <div class="lbl">Charges & Dettes</div>
+          </div>
+          <div class="capacity-op">=</div>
+          <div class="capacity-item capacity-result">
+            <div class="val" id="cap-disposable">420 000 FCFA</div>
+            <div class="lbl">Reste à Vivre</div>
+          </div>
+          <div class="capacity-op">vs</div>
+          <div class="capacity-item">
+            <div class="val" id="cap-installment">235 000 FCFA</div>
+            <div class="lbl">Mensualité Prêt</div>
+          </div>
+        </div>
+
+        <div id="cap-banner" class="capacity-comparison pass">
+          <!-- Dynamically Injected -->
+        </div>
+      </div>
+
+      <!-- Main Tabs / 2-Column Inspector -->
+      <div class="ocr-grid">
+        <!-- Left: Supporting Docs & Human Verification -->
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">
+            <i class="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Extraction OCR
+          </h4>
+          <div id="modal-docs-list">
+            <!-- Documents Rendered Dynamically -->
+          </div>
+
+          <!-- Anomalies Detected -->
+          <h4 style="font-size: 0.95rem; margin: 1.25rem 0 0.75rem;">
+            <i class="fas fa-triangle-exclamation text-warning mr-1"></i> Contrôles Automatisés & Signaux
+          </h4>
+          <div id="modal-anomalies-list">
+            <!-- Anomalies Rendered Dynamically -->
+          </div>
+        </div>
+
+        <!-- Right: Explainable Multi-Factor Scoring & Recommendation -->
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">
+            <i class="fas fa-scale-balanced text-primary mr-1"></i> Décomposition des Facteurs (Scoring V2)
+          </h4>
+          
+          <div style="height: 180px; margin-bottom: 1rem;">
+            <canvas id="modal-radar-canvas"></canvas>
+          </div>
+
+          <div id="modal-factors-list" class="factors-list">
+            <!-- Factors Rendered Dynamically -->
+          </div>
+
+          <!-- Analyst Recommendation Box -->
+          <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
+            <div class="card-body" style="padding: 1rem;">
+              <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label class="form-label">Avis Consultatif</label>
+                <select id="analyst-reco-select" class="form-control">
+                  <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                  <option value="RESERVE">Favorable sous réserve de compléments</option>
+                  <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label class="form-label">Note d'analyse de synthèse</label>
+                <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
+              </div>
+              <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
+                <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     5. MODAL: COMITÉ DE CRÉDIT DÉCISION
+     ========================================================================== -->
+<div id="committee-modal" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-gavel text-primary mr-1"></i> Délibération Comité • Dossier <span id="com-dossier-num">REQ-2026-0892</span>
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="com-client-name">Amadou Sanogo</p>
+      </div>
+      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="committee-panel" style="margin-bottom: 1.25rem;">
+        <div style="font-size: 0.85rem; line-height: 1.6;">
+          <div><strong>Montant Demandé :</strong> <span id="com-requested-amount" class="amount-cell">5 000 000 FCFA</span></div>
+          <div><strong>Score Explicable & Risque :</strong> <span id="com-score" style="font-weight: 700; color: var(--cif-emerald-500);">88/100 (Faible)</span></div>
+          <div style="color: var(--cif-primary-600);"><i class="fas fa-check-circle"></i> <strong>Avis Analyste :</strong> Favorable (Capacité nette 730k FCFA vs Mensualité 320k FCFA).</div>
+        </div>
+      </div>
+
+      <h5 style="font-size: 0.88rem; margin-bottom: 0.75rem;">Ajustement des Termes Accordés par le Comité</h5>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Montant Final Accordé (FCFA)</label>
+          <input type="number" id="com-approved-amount" class="form-control" value="5000000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Durée Accordée (Mois)</label>
+          <input type="number" id="com-approved-duration" class="form-control" value="18">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Taux d'Intérêt Mensuel (%)</label>
+          <input type="number" step="0.05" id="com-interest-rate" class="form-control" value="1.25">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conditions Particulières</label>
+          <input type="text" id="com-conditions" class="form-control" value="Décaissement en 2 tranches après vérification broyeur">
+        </div>
+      </div>
+
+      <div class="committee-voting-grid">
+        <div class="vote-option-btn selected" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
+          <i class="fas fa-check-circle text-success"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-emerald-700);">Approuver</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Accorder le prêt</span>
+        </div>
+        <div class="vote-option-btn" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
+          <i class="fas fa-rotate text-warning"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-gold-700);">Complément</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Demande infos</span>
+        </div>
+        <div class="vote-option-btn reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
+          <i class="fas fa-times-circle text-danger"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-danger-700);">Rejeter</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Refus motivé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     6. Toast Feedback Container
+     ========================================================================== -->
+<div id="toast-container"></div>
+
+<!-- JavaScript Application Modules -->
+<script src="js/constants.js"></script>
+<script src="js/data.js"></script>
+<script src="js/credit-scoring.js"></script>
+<script src="js/ocr-engine.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
