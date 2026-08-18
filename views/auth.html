@@ -1,0 +1,133 @@
+<!-- ==========================================================================
+     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVEC PROFILS DÉMO)
+     ========================================================================== -->
+<div id="auth-view">
+  <div class="auth-container">
+    <!-- Left Hero Showcase Pane -->
+    <div class="auth-hero-pane">
+      <div class="auth-brand">
+        <div class="auth-brand-logo">
+          <i class="fas fa-hand-holding-dollar"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0; color: white;">CRÉDIT FAST <span style="font-size: 0.75rem; background: var(--cif-gold-500); color: #78350f; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">V2</span></h3>
+          <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">PROJET DIGICOOP-WA+ • CIF</span>
+        </div>
+      </div>
+
+      <div class="auth-hero-content">
+        <h1 class="auth-hero-title">Plateforme d'Octroi, Scoring & Conformité</h1>
+        <p class="auth-hero-desc">
+          Une expérience sur mesure pour chaque acteur : <strong>Demandeur</strong> (suivi de prêt & échéancier), <strong>Agent de Crédit</strong> (collecte & inspections), <strong>Analyste Risque</strong> (dossier 360° & Cold Start), <strong>Comité</strong> (décision collégiale) et <strong>Conformité</strong> (filtrage PPE/LBC-FT).
+        </p>
+
+        <div class="auth-pillars-grid">
+          <div class="auth-pillar-card">
+            <i class="fas fa-user-tag" style="color: #34d399;"></i>
+            <h5>Espace Demandeur</h5>
+            <p>Mon crédit, mon échéancier, demande en 6 étapes et contact conseiller.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-user-tie" style="color: #38bdf8;"></i>
+            <h5>Agent de Crédit</h5>
+            <p>Guichet d'enregistrement, relances de pièces et inspections terrain.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-chart-pie" style="color: #a5b4fc;"></i>
+            <h5>Analyste Risque V2</h5>
+            <p>Rapprochement OCR, scoring explicable et simulateur Cold Start.</p>
+          </div>
+          <div class="auth-pillar-card">
+            <i class="fas fa-scale-balanced" style="color: #f0abfc;"></i>
+            <h5>Comité & Conformité</h5>
+            <p>Délibérations, signatures de PV et filtrage des sanctions UEMOA.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-countries-strip">
+        <i class="fas fa-earth-africa"></i>
+        <span>Réseau CIF Régional : 🇧🇫 Burkina Faso • 🇹🇬 Togo • 🇧🇯 Bénin • 🇸🇳 Sénégal • 🇲🇱 Mali</span>
+      </div>
+    </div>
+
+    <!-- Right Login Form Pane -->
+    <div class="auth-form-pane">
+      <div class="auth-form-box">
+        <div class="auth-header">
+          <h2>Portail d'Accès Sécurisé</h2>
+          <p>Connectez-vous ou sélectionnez un rôle pour ouvrir son interface dédiée.</p>
+        </div>
+
+        <!-- 1-Click Demo Accounts Selector Section -->
+        <div class="demo-accounts-section">
+          <div class="demo-section-title">
+            <span><i class="fas fa-wand-magic-sparkles text-primary"></i> Choisissez votre Espace Métier (1 Clic)</span>
+          </div>
+
+          <div class="demo-personas-grid">
+            <!-- Persona 1: Demandeur (Client) -->
+            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
+              <div class="demo-persona-info">
+                <h6>Fatou Ndiaye</h6>
+                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Client)</span>
+              </div>
+            </button>
+
+            <!-- Persona 2: Agent de Crédit -->
+            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
+              <div class="demo-persona-info">
+                <h6>Kofi Mensah</h6>
+                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit</span>
+              </div>
+            </button>
+
+            <!-- Persona 3: Analyste Risque -->
+            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
+              <div class="demo-persona-info">
+                <h6>Aminata Diallo</h6>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste Risque</span>
+              </div>
+            </button>
+
+            <!-- Persona 4: Comité de Crédit -->
+            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
+              <div class="demo-persona-info">
+                <h6>Moussa Traoré</h6>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité de Crédit</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-divider">
+          <span>ou saisissez vos identifiants</span>
+        </div>
+
+        <!-- Standard Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Adresse Email Professionnelle ou N° Client</label>
+            <input type="text" id="login-email" class="form-control" value="aminata.diallo@cif-ao.org" required>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
+              <a href="#" style="font-size: 0.76rem;" onclick="App.showToast('Mot de passe démo : demo', 'info')">Aide connexion</a>
+            </div>
+            <input type="password" id="login-password" class="form-control" value="demo" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

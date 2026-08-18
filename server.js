@@ -1,9 +1,17 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { buildIndexHtml } from './build.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Build index.html from modular views on server start
+try {
+  buildIndexHtml();
+} catch (err) {
+  console.error('Error compiling index.html from views:', err);
+}
 
 const app = express();
 const PORT = 3000;
@@ -19,3 +27,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`CreditFast server running at http://0.0.0.0:${PORT}`);
 });
+

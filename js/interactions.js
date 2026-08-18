@@ -9,13 +9,30 @@ const AppInteractions = {
   activeColdStartOverride: null,
 
   // Render Credit Requests Table (Vue Analyste)
-  renderRequestsTable(statusFilter = 'ALL', searchFilter = '') {
+  renderRequestsTable(statusFilter = 'ALL', searchFilter = '', buttonEl = null) {
     const tableBody = document.getElementById('requests-table-body');
     if (!tableBody) return;
 
+    if (buttonEl) {
+      const parent = buttonEl.parentElement;
+      if (parent) {
+        parent.querySelectorAll('button').forEach(b => {
+          b.classList.remove('btn-primary');
+          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        });
+        buttonEl.classList.remove('btn-secondary');
+        buttonEl.classList.add('btn-primary');
+      }
+    }
+
     let items = DB.get('credit_requests');
 
-    if (statusFilter !== 'ALL') {
+    if (statusFilter === 'COLD_START') {
+      items = items.filter(req => {
+        const client = DB.findById('clients', req.client_id) || {};
+        return req.is_cold_start || client.is_cold_start;
+      });
+    } else if (statusFilter !== 'ALL') {
       items = items.filter(req => req.status === statusFilter);
     }
 
@@ -102,13 +119,28 @@ const AppInteractions = {
     return `<span class="badge ${cfg.class}">${cfg.label}</span>`;
   },
 
+  // Alias for 360° Dossier Inspector
+  openDossier360(dossierIdentifier, forceColdStart = null) {
+    this.openDossierModal(dossierIdentifier, forceColdStart);
+  },
+
   // Open 360° Dossier Inspector Modal (avec gestion V2 Cold Start et 10 sous-scores)
-  openDossierModal(dossierId, forceColdStart = null) {
+  openDossierModal(dossierIdentifier, forceColdStart = null) {
+    let req = null;
+    if (typeof dossierIdentifier === 'number' || (!isNaN(Number(dossierIdentifier)) && String(dossierIdentifier).trim() !== '')) {
+      req = DB.findById('credit_requests', Number(dossierIdentifier));
+    }
+    if (!req && typeof dossierIdentifier === 'string') {
+      req = DB.get('credit_requests').find(r => r.request_number === dossierIdentifier || r.id == dossierIdentifier);
+    }
+    if (!req) {
+      req = DB.get('credit_requests')[0];
+    }
+    if (!req) return;
+
+    const dossierId = req.id;
     this.activeDossierId = dossierId;
     this.activeColdStartOverride = forceColdStart;
-
-    const req = DB.findById('credit_requests', dossierId);
-    if (!req) return;
 
     const modal = document.getElementById('dossier-modal');
     if (!modal) return;
@@ -393,7 +425,14 @@ const AppInteractions = {
 
   closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        if (!modal.classList.contains('active')) {
+          modal.style.display = 'none';
+        }
+      }, 250);
+    }
   }
 };
 

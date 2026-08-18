@@ -1,0 +1,66 @@
+<!-- ==========================================================================
+     5. MODAL: COMITÉ DE CRÉDIT DÉCISION
+     ========================================================================== -->
+<div id="committee-modal" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-gavel text-primary mr-1"></i> Délibération Comité • Dossier <span id="com-dossier-num">REQ-2026-0892</span>
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="com-client-name">Amadou Sanogo</p>
+      </div>
+      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="committee-panel" style="margin-bottom: 1.25rem;">
+        <div style="font-size: 0.85rem; line-height: 1.6;">
+          <div><strong>Montant Demandé :</strong> <span id="com-requested-amount" class="amount-cell">5 000 000 FCFA</span></div>
+          <div><strong>Score Explicable & Risque :</strong> <span id="com-score" style="font-weight: 700; color: var(--cif-emerald-500);">88/100 (Faible)</span></div>
+          <div style="color: var(--cif-primary-600);"><i class="fas fa-check-circle"></i> <strong>Avis Analyste :</strong> Favorable (Capacité nette 730k FCFA vs Mensualité 320k FCFA).</div>
+        </div>
+      </div>
+
+      <h5 style="font-size: 0.88rem; margin-bottom: 0.75rem;">Ajustement des Termes Accordés par le Comité</h5>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Montant Final Accordé (FCFA)</label>
+          <input type="number" id="com-approved-amount" class="form-control" value="5000000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Durée Accordée (Mois)</label>
+          <input type="number" id="com-approved-duration" class="form-control" value="18">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Taux d'Intérêt Mensuel (%)</label>
+          <input type="number" step="0.05" id="com-interest-rate" class="form-control" value="1.25">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conditions Particulières</label>
+          <input type="text" id="com-conditions" class="form-control" value="Décaissement en 2 tranches après vérification broyeur">
+        </div>
+      </div>
+
+      <div class="committee-voting-grid">
+        <div class="vote-option-btn selected" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
+          <i class="fas fa-check-circle text-success"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-emerald-700);">Approuver</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Accorder le prêt</span>
+        </div>
+        <div class="vote-option-btn" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
+          <i class="fas fa-rotate text-warning"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-gold-700);">Complément</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Demande infos</span>
+        </div>
+        <div class="vote-option-btn reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
+          <i class="fas fa-times-circle text-danger"></i>
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-danger-700);">Rejeter</div>
+          <span style="font-size: 0.68rem; color: var(--text-subtle);">Refus motivé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

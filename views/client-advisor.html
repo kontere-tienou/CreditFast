@@ -1,0 +1,178 @@
+<!-- ====================================================================
+     [DEMANDEUR] MON CONSEILLER ATTITRÉ & AGENCE CIF
+     ==================================================================== -->
+<section id="view-client-advisor" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-headset text-primary mr-2"></i> Mon Conseiller Attitré & Agence CIF</h2>
+      <p class="page-subtitle">Échangez en direct avec votre chargé de clientèle et planifiez vos rendez-vous d'instruction</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" onclick="document.getElementById('appointment-section').scrollIntoView({behavior: 'smooth'})">
+        <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 1.5rem;">
+    <!-- Column 1: Advisor Profile Card -->
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+      <div style="position: relative; width: 84px; height: 84px; margin: 0 auto 1rem auto;">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi Mensah" class="user-avatar" style="width: 84px; height: 84px; border: 3px solid var(--primary-200); box-shadow: var(--shadow-md);">
+        <span style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: #10b981; border: 2px solid white; border-radius: 50%;" title="En ligne actuellement"></span>
+      </div>
+
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Kofi Mensah</h3>
+      <div style="font-size: 0.8rem; color: var(--primary-600); font-weight: 700; margin-bottom: 4px;">Conseiller Microfinance Senior</div>
+      <span class="badge badge-approved" style="font-size: 0.7rem; margin-bottom: 1.25rem;">
+        <i class="fas fa-circle-check"></i> Conseiller Attitré Actif
+      </span>
+
+      <div style="text-align: left; font-size: 0.8rem; line-height: 1.8; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; margin-bottom: 1.25rem;">
+        <div><i class="fas fa-phone text-primary mr-2"></i> <strong>Direct :</strong> +221 33 821 44 00</div>
+        <div><i class="fas fa-mobile-screen text-primary mr-2"></i> <strong>Mobile :</strong> +221 77 540 12 88</div>
+        <div><i class="fas fa-envelope text-primary mr-2"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
+        <div><i class="fas fa-language text-primary mr-2"></i> <strong>Langues :</strong> Français, Wolof, Bambara</div>
+      </div>
+
+      <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="App.showToast('Appel direct initié vers le poste de Kofi Mensah...', 'info')">
+        <i class="fas fa-phone-volume"></i> Appeler le Conseiller
+      </button>
+    </div>
+
+    <!-- Column 2 & 3: Live Messaging Thread -->
+    <div class="card" style="grid-column: span 2; display: flex; flex-direction: column; min-height: 480px;">
+      <div class="card-header" style="padding: 0.85rem 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></div>
+          <div>
+            <h4 style="font-size: 0.92rem; font-weight: 700; margin: 0;">Discussion Sécurisée Agence CIF</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Dossier REQ-2026-0891 (Tabaski Tissus Wax)</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Historique des échanges archivé au format PDF', 'info')">
+          <i class="fas fa-download"></i> Exporter
+        </button>
+      </div>
+
+      <!-- Messages Body -->
+      <div id="advisor-chat-messages" style="flex: 1; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: var(--bg-body);">
+        <!-- Advisor Message -->
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 11/08/2026 à 11:30</div>
+            <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+              Bonjour Madame Ndiaye, j'ai bien reçu votre demande de prêt de 2 500 000 FCFA pour le stock de tissus. Vos factures proforma sont bien lisibles et l'OCR a extrait les montants. Le dossier est en cours de validation scoring.
+            </div>
+          </div>
+        </div>
+
+        <!-- Borrower Message (Self) -->
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%; align-self: flex-end; flex-direction: row-reverse;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">
+            FN
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px; text-align: right;">Vous • 11/08/2026 à 14:12</div>
+            <div style="background: var(--primary-600); color: white; padding: 0.75rem 1rem; border-radius: var(--radius-lg); font-size: 0.82rem; line-height: 1.5;">
+              Merci Monsieur Mensah. Mon fournisseur à Lomé m'a confirmé la réservation du conteneur jusqu'au 22 août. Est-ce que le déblocage pourra se faire avant cette date si le comité valide ?
+            </div>
+          </div>
+        </div>
+
+        <!-- Advisor Message -->
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 12/08/2026 à 09:20</div>
+            <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+              Absolument ! Le comité se réunit le 20 août. Si la délibération est favorable, les fonds seront mis à disposition sur votre compte CIF ou virement Wave dès le 21 août au matin.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Input Form -->
+      <div style="padding: 0.85rem 1.25rem; background: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; gap: 0.5rem; align-items: center;">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()" title="Joindre un document ou une photo">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <input type="text" id="advisor-msg-input" class="form-control" placeholder="Écrivez votre message à Kofi Mensah..." style="flex: 1; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') App.sendAdvisorMessage()">
+        <button class="btn btn-primary btn-sm" onclick="App.sendAdvisorMessage()">
+          <i class="fas fa-paper-plane"></i> Envoyer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agency Details & Appointment Booking Section -->
+  <div class="grid-2" id="appointment-section">
+    <!-- Agency Location & Hours Card -->
+    <div class="card" style="padding: 1.25rem;">
+      <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
+        <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Mon Agence CIF de Rattachement</h3>
+      </div>
+      <div style="font-size: 0.84rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.25rem;">
+        <div><strong>Caisse :</strong> Caisse CIF Médina - Réseau DigiCoop-WA+</div>
+        <div><strong>Adresse :</strong> Boulevard du Général de Gaulle x Rue 22, Dakar (Sénégal)</div>
+        <div><strong>Guichet Caisse :</strong> Lun - Ven : 08h00 - 16h30 • Samedi : 08h30 - 12h30</div>
+        <div><strong>Téléphone Agence :</strong> +221 33 821 44 00 / +221 33 821 44 01</div>
+        <div><strong>GAB / Distributeur :</strong> Disponible 24h/24 (Carte GIM-UEMOA)</div>
+      </div>
+      <div style="background: var(--bg-body); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-map-location-dot text-emerald" style="font-size: 1.2rem;"></i>
+          <span style="font-size: 0.78rem; font-weight: 600;">Itinéraire & Localisation GPS</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="App.showToast('Coordonnées GPS transmises à votre application cartographique', 'info')">
+          <i class="fas fa-location-arrow"></i> Ouvrir Carte
+        </button>
+      </div>
+    </div>
+
+    <!-- Booking Form Card -->
+    <div class="card" style="padding: 1.25rem;">
+      <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
+        <h3 class="card-title"><i class="fas fa-calendar-check text-emerald"></i> Prendre Rendez-vous en Agence</h3>
+      </div>
+      <form onsubmit="App.handleBookAppointment(event)">
+        <div class="form-group" style="margin-bottom: 0.75rem;">
+          <label class="form-label" style="font-size: 0.78rem;">Motif du Rendez-vous *</label>
+          <select id="appt-reason" class="form-control" required style="font-size: 0.82rem;">
+            <option value="EXAM_DOSSIER">Instruction & Signature Dossier Crédit</option>
+            <option value="GUARANTEE_DROP">Dépôt physique de titres ou garanties</option>
+            <option value="SAVINGS_ADVICE">Conseil en Épargne & Gestion de Trésorerie</option>
+            <option value="OTHER">Autre question ou renseignement</option>
+          </select>
+        </div>
+
+        <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem;">Date souhaitée *</label>
+            <input type="date" id="appt-date" class="form-control" value="2026-08-21" required style="font-size: 0.82rem;">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem;">Créneau horaire *</label>
+            <select id="appt-time" class="form-control" required style="font-size: 0.82rem;">
+              <option value="09:00">09h00 - 09h45</option>
+              <option value="10:30">10h30 - 11h15</option>
+              <option value="14:00" selected>14h00 - 14h45</option>
+              <option value="15:30">15h30 - 16h15</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" style="font-size: 0.78rem;">Note complémentaire (facultatif)</label>
+          <input type="text" id="appt-notes" class="form-control" placeholder="Ex: Je viendrai accompagnée de ma caution solidaire" style="font-size: 0.82rem;">
+        </div>
+
+        <button type="submit" class="btn btn-success" style="width: 100%;">
+          <i class="fas fa-check-circle mr-1"></i> Confirmer le Rendez-vous avec Kofi Mensah
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

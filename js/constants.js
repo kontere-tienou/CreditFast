@@ -43,18 +43,25 @@ const APP_CONSTANTS = {
       homeView: 'view-role-client',
       navGroups: [
         {
-          title: 'Mon Espace Membre',
+          title: 'Mon Espace Crédit',
           items: [
             { id: 'nav-client-dash', target: 'view-role-client', icon: 'fa-house-user', label: 'Mon Tableau de Bord', badge: 'Actif', badgeClass: 'success' },
+            { id: 'nav-client-requests', target: 'view-client-requests', icon: 'fa-folder-tree', label: 'Mes Demandes en Cours', badge: '1 En attente', badgeClass: 'primary' },
             { id: 'nav-client-apply', target: 'view-client-wizard', icon: 'fa-file-circle-plus', label: 'Nouvelle Demande', badge: '6 Étapes', badgeClass: 'warning' },
+            { id: 'nav-client-simulator', target: 'view-client-simulator', icon: 'fa-calculator', label: 'Simulateur de Prêt' }
+          ]
+        },
+        {
+          title: 'Gestion & Paiements',
+          items: [
             { id: 'nav-client-schedule', target: 'view-client-schedule', icon: 'fa-calendar-days', label: 'Mon Échéancier Réel' },
             { id: 'nav-client-docs', target: 'view-client-documents', icon: 'fa-folder-closed', label: 'Mes Pièces & Devis' }
           ]
         },
         {
-          title: 'Assistance CIF',
+          title: 'Assistance & Agence',
           items: [
-            { id: 'nav-client-advisor', target: 'view-client-advisor', icon: 'fa-headset', label: 'Mon Conseiller Attitré' }
+            { id: 'nav-client-advisor', target: 'view-client-advisor', icon: 'fa-headset', label: 'Mon Conseiller & Agence', badge: 'En ligne', badgeClass: 'success' }
           ]
         }
       ]

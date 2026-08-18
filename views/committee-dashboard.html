@@ -1,0 +1,87 @@
+<!-- ====================================================================
+     [ESPACE 4] TABLEAU DE BORD DU COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
+     ==================================================================== -->
+<section id="view-role-committee" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Séance de Délibération du Comité de Crédit</h1>
+      <div class="page-breadcrumb">
+        <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
+        <span>Délibérations Collégiales & Vote</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 KPI Committee Cards -->
+  <div class="grid-4">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-scale-balanced"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Dossiers en Séance</div>
+        <div class="stat-trend down"><i class="fas fa-gavel"></i> Délibération requise</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-vault"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">18.5 M</div>
+        <div class="stat-label">Volume Total Délibéré</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> 5 dossiers UEMOA</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">84%</div>
+        <div class="stat-label">Taux d'Approbation</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux seuils CIF</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-stopwatch"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">48 h</div>
+        <div class="stat-label">Délai Moyen Décision</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif &lt; 72h</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Committee Deliberation Table -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
+      <span class="badge badge-committee">Séance en cours</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>N° Dossier</th>
+            <th>Client</th>
+            <th>Montant Demandé</th>
+            <th>Reste à Vivre</th>
+            <th>Score Explicable</th>
+            <th>Avis Analyste</th>
+            <th>Décision</th>
+          </tr>
+        </thead>
+        <tbody id="committee-requests-table-body">
+          <!-- Dynamically Injected -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

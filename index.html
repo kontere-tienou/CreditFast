@@ -11,12 +11,16 @@
   
   <!-- Chart.js 4 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Centralized Design Tokens & Stylesheets -->
+  
+  <!-- jsQR Barcode & QR Code Decoder CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  
+  <!-- Centralized Design System & Themes -->
   <link rel="stylesheet" href="css/constants.css">
-  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dark.css">
+  
 </head>
 <body>
 
@@ -154,6 +158,7 @@
   </div>
 </div>
 
+
 <!-- ==========================================================================
      MAIN APPLICATION SHELL (AFTER AUTHENTICATION)
      ========================================================================== -->
@@ -175,8 +180,12 @@
           <span class="brand-tag">CIF-WA+</span>
         </div>
       </a>
+      <!-- Close Drawer Button for Mobile / Tablet -->
+      <button id="sidebar-close-btn" class="sidebar-close-btn" title="Fermer le menu">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-
+  
     <!-- User Mini Profile -->
     <div class="sidebar-user-card">
       <div class="user-avatar-wrap">
@@ -191,16 +200,16 @@
         </div>
       </div>
     </div>
-
+  
     <!-- Dynamic Menu Container (Rempli par renderSidebarForRole) -->
     <nav class="sidebar-menu" id="sidebar-menu-container">
       <!-- Injected Dynamically based on Authenticated Role -->
     </nav>
-
+  
     <!-- Sidebar Footer / Logout & Regional Strip -->
     <div class="sidebar-footer">
-      <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;">
-        <i class="fas fa-power-off text-danger"></i> Se Déconnecter
+      <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;" title="Se Déconnecter">
+        <i class="fas fa-power-off text-danger"></i> <span>Se Déconnecter</span>
       </button>
       <div class="digicoop-card">
         <div class="digicoop-text">
@@ -210,98 +219,228 @@
       </div>
     </div>
   </aside>
+  
 
   <!-- ==========================================================================
        2. Main Content Wrapper
        ========================================================================== -->
   <div id="main-wrapper">
-    <!-- Top Navigation Bar -->
+    <!-- ==========================================================================
+         2. Top Navigation Bar
+         ========================================================================== -->
     <header id="topbar">
       <div class="topbar-left">
-        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Basculer menu">
+        <!-- Drawer / Sidebar Toggle Button -->
+        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Basculer le menu latéral (Drawer)">
           <i class="fas fa-bars"></i>
         </button>
-
-        <div class="search-container">
+    
+        <!-- Global Quick Search (Desktop & Expandable Mobile) -->
+        <div class="search-container" id="topbar-search-container">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" id="global-search-input" class="search-input" placeholder="Rechercher dans mon espace...">
+          <input type="text" id="global-search-input" class="search-input" placeholder="Rechercher...">
+          <button id="search-close-mobile-btn" class="search-close-mobile-btn" title="Fermer la recherche">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+    
+        <!-- Mobile Search Trigger Button (Only visible on small mobile screens) -->
+        <button id="mobile-search-trigger-btn" class="topbar-action-btn mobile-search-btn" title="Ouvrir la recherche rapide">
+          <i class="fas fa-search"></i>
+        </button>
+    
+        <!-- Live Date & Real-Time Clock Display -->
+        <div class="topbar-datetime" id="topbar-datetime" title="Heure locale réseau CIF / UEMOA">
+          <i class="far fa-clock"></i>
+          <span id="topbar-clock-display">Chargement...</span>
         </div>
       </div>
-
+    
       <div class="topbar-right">
+        <!-- Country Static Display Flag Badge -->
+        <div class="topbar-country-badge" id="topbar-country-badge" title="Réseau Régional CIF UEMOA">
+          <span class="country-flag" id="country-flag-icon">🇧🇫</span>
+          <span class="country-name" id="country-name-display">Burkina Faso (UEMOA)</span>
+        </div>
+    
         <!-- Active Role Badge Pill -->
-        <span id="user-role-pill-badge" class="badge" style="background: rgba(79, 70, 229, 0.15); color: var(--cif-primary-500); border: 1px solid var(--cif-primary-500); font-size: 0.75rem; padding: 4px 10px;">
+        <span id="user-role-pill-badge" class="badge user-role-pill">
           Analyste Risque
         </span>
-
-        <!-- Fast Role Switcher (pour tester facilement) -->
-        <div class="role-selector-wrap" title="Changer d'espace métier">
-          <i class="fas fa-user-gear text-primary"></i>
-          <select id="global-role-select" class="role-select">
-            <option value="CLIENT">Demandeur (Client)</option>
-            <option value="CREDIT_OFFICER">Agent de Crédit</option>
-            <option value="ANALYST">Analyste Risque V2</option>
-            <option value="COMMITTEE">Comité de Crédit</option>
-            <option value="COMPLIANCE">Conformité LBC/FT</option>
-          </select>
-        </div>
-
-        <!-- Country Selector -->
-        <select id="country-lang-select" class="country-badge-selector">
-          <option value="SN">🇸🇳 Sénégal (Dakar)</option>
-          <option value="BF" selected>🇧🇫 Burkina Faso (Ouaga)</option>
-          <option value="BJ">🇧🇯 Bénin (Cotonou)</option>
-          <option value="TG">🇹🇬 Togo (Lomé)</option>
-          <option value="ML">🇲🇱 Mali (Bamako)</option>
-        </select>
-
+    
         <!-- Dark / Light Mode Toggle -->
-        <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème">
+        <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème (Mode Sombre / Clair)">
           <i class="fas fa-moon"></i>
         </button>
-
+    
         <!-- Notifications Bell -->
-        <div style="position: relative;">
-          <button id="notif-bell-btn" class="topbar-action-btn" title="Notifications">
+        <div class="notif-dropdown-container" style="position: relative;">
+          <button id="notif-bell-btn" class="topbar-action-btn" title="Centre de Notifications" aria-label="Notifications">
             <i class="fas fa-bell"></i>
-            <span class="btn-badge">2</span>
+            <span class="btn-badge" id="topbar-notif-badge">3</span>
           </button>
-          <div id="notif-dropdown" class="modal-dialog" style="position: absolute; right: 0; top: 48px; width: 340px; display: none; z-index: 1000; box-shadow: var(--shadow-xl);">
-            <div class="modal-header" style="padding: 0.85rem 1rem;">
-              <h5 style="font-size: 0.88rem; margin: 0;">Notifications Système</h5>
-              <span class="badge badge-submitted">2 Récentes</span>
+          <div id="notif-dropdown" class="notif-dropdown-menu" style="display: none;">
+            <!-- Header -->
+            <div class="notif-dropdown-header">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <div class="notif-header-icon-box">
+                  <i class="fas fa-bell text-primary"></i>
+                </div>
+                <div>
+                  <h5 class="notif-header-title">Centre de Notifications</h5>
+                  <div class="notif-header-subtitle">Alertes Risque, Décisions & Pipeline CIF</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge badge-submitted" id="notif-unread-count-badge">3 Non Lues</span>
+                <button class="notif-mark-read-btn" onclick="App.markAllNotificationsRead()" title="Marquer toutes les notifications comme lues">
+                  <i class="fas fa-check-double"></i>
+                </button>
+              </div>
             </div>
-            <div class="modal-body" style="padding: 0.75rem 1rem; max-height: 280px;">
-              <div class="anomaly-item warning" style="margin-bottom: 0.5rem;">
-                <i class="fas fa-triangle-exclamation anomaly-icon"></i>
-                <div class="anomaly-content">
-                  <h5>Anomalie Détectée</h5>
-                  <p>Facture expirée sur dossier REQ-2026-0893</p>
+    
+            <!-- Filter Chips -->
+            <div class="notif-filter-bar" id="notif-filter-bar">
+              <button class="notif-chip active" onclick="App.filterNotifications('ALL', this)">Toutes (3)</button>
+              <button class="notif-chip" onclick="App.filterNotifications('RISK', this)">
+                <i class="fas fa-triangle-exclamation text-warning mr-1"></i> Risque
+              </button>
+              <button class="notif-chip" onclick="App.filterNotifications('COMMITTEE', this)">
+                <i class="fas fa-gavel text-emerald mr-1"></i> Comité
+              </button>
+              <button class="notif-chip" onclick="App.filterNotifications('DISBURSEMENT', this)">
+                <i class="fas fa-money-bill-transfer text-primary mr-1"></i> Décaissement
+              </button>
+            </div>
+    
+            <!-- Notification List -->
+            <div class="notif-list" id="notif-list-container">
+              <!-- Notification Item 1 (Risk / OCR Anomaly) -->
+              <div class="notif-item unread notif-cat-RISK" onclick="App.handleNotificationClick(3, 'view-analyst-dossiers')">
+                <div class="notif-item-icon warning">
+                  <i class="fas fa-triangle-exclamation"></i>
+                </div>
+                <div class="notif-item-content">
+                  <div class="notif-item-header">
+                    <span class="notif-item-title">Anomalie Documentaire Critique (OCR)</span>
+                    <span class="notif-unread-dot"></span>
+                  </div>
+                  <p class="notif-item-desc">Facture proforma expirée de 18 mois avec discordance de 600 000 FCFA sur le dossier Quincaillerie.</p>
+                  <div class="notif-item-meta">
+                    <span class="notif-item-tag"><i class="fas fa-folder-open mr-1"></i> #REQ-2026-0893</span>
+                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 12 min</span>
+                  </div>
                 </div>
               </div>
-              <div class="anomaly-item info">
-                <i class="fas fa-check-circle anomaly-icon"></i>
-                <div class="anomaly-content">
-                  <h5>Comité Convoqué</h5>
-                  <p>Dossier Amadou Sanogo prêt pour décision</p>
+    
+              <!-- Notification Item 2 (Committee Meeting) -->
+              <div class="notif-item unread notif-cat-COMMITTEE" onclick="App.handleNotificationClick(2, 'view-role-committee')">
+                <div class="notif-item-icon emerald">
+                  <i class="fas fa-gavel"></i>
+                </div>
+                <div class="notif-item-content">
+                  <div class="notif-item-header">
+                    <span class="notif-item-title">Comité de Crédit Convoqué</span>
+                    <span class="notif-unread-dot"></span>
+                  </div>
+                  <p class="notif-item-desc">Dossier Amadou Sanogo (8.5M FCFA) prêt avec quorum atteint. Vote électronique ouvert.</p>
+                  <div class="notif-item-meta">
+                    <span class="notif-item-tag" style="background: rgba(16, 185, 129, 0.12); color: #047857;"><i class="fas fa-users-viewfinder mr-1"></i> Comité Ouaga</span>
+                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 45 min</span>
+                  </div>
                 </div>
               </div>
+    
+              <!-- Notification Item 3 (Disbursement Ready) -->
+              <div class="notif-item unread notif-cat-DISBURSEMENT" onclick="App.handleNotificationClick(1, 'view-agent-inspections')">
+                <div class="notif-item-icon primary">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="notif-item-content">
+                  <div class="notif-item-header">
+                    <span class="notif-item-title">Garantie Terrain Contrôlée</span>
+                    <span class="notif-unread-dot"></span>
+                  </div>
+                  <p class="notif-item-desc">Rapport de visite validé pour Fatou Ndiaye. Couverture réelle certifiée à 138%.</p>
+                  <div class="notif-item-meta">
+                    <span class="notif-item-tag" style="background: rgba(14, 165, 233, 0.12); color: #0284c7;"><i class="fas fa-shield-check mr-1"></i> Gage Stock Wax</span>
+                    <span class="notif-item-time"><i class="far fa-clock mr-1"></i> Il y a 2h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Footer -->
+            <div class="notif-dropdown-footer">
+              <button class="notif-footer-btn" onclick="App.switchView('view-audit-logs'); document.getElementById('notif-dropdown').style.display='none';">
+                <i class="fas fa-clock-rotate-left mr-1"></i> Consulter l'historique complet d'audit CIF
+              </button>
             </div>
           </div>
         </div>
-
-        <!-- Logout Action Button -->
-        <button class="topbar-action-btn btn-action-logout" title="Se Déconnecter">
-          <i class="fas fa-right-from-bracket text-danger"></i>
-        </button>
+    
+        <!-- Profile Icon with Dropbox -->
+        <div class="profile-dropdown-container" id="profile-dropdown-container">
+          <button class="topbar-profile-btn" id="topbar-profile-btn" aria-haspopup="true" aria-expanded="false" title="Mon Profil & Paramètres">
+            <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
+            <div class="topbar-user-meta">
+              <span id="topbar-user-name" class="topbar-user-name">Aminata Diallo</span>
+              <span id="topbar-user-role" class="topbar-user-role">Analyste Risque</span>
+            </div>
+            <i class="fas fa-chevron-down profile-caret"></i>
+          </button>
+    
+          <!-- Dropdown Menu Box -->
+          <div id="profile-dropdown-menu" class="profile-dropdown-menu">
+            <div class="profile-dropdown-header">
+              <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
+              <div class="menu-user-details">
+                <h6 id="menu-user-name">Aminata Diallo</h6>
+                <span id="menu-user-email" class="menu-user-email">aminata.diallo@cif-ao.org</span>
+                <span id="menu-user-role-badge" class="badge badge-submitted" style="font-size: 0.68rem; margin-top: 4px;">Analyste Risque V2</span>
+              </div>
+            </div>
+    
+            <div class="profile-dropdown-divider"></div>
+    
+            <ul class="profile-menu-list">
+              <li>
+                <a href="#" class="profile-menu-item" id="btn-open-settings" onclick="App.openSettingsModal(); return false;">
+                  <i class="fas fa-sliders-h text-primary"></i>
+                  <span>Paramètres du Compte</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-menu-item" onclick="App.showToast('Sécurité du compte : Authentification 2FA active', 'info'); return false;">
+                  <i class="fas fa-shield-halved text-emerald"></i>
+                  <span>Sécurité & Clés d'Accès</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-menu-item" onclick="App.showToast('Support CIF DigiCoop-WA+ disponible 24/7', 'info'); return false;">
+                  <i class="fas fa-circle-question text-info"></i>
+                  <span>Centre d'Aide CIF</span>
+                </a>
+              </li>
+            </ul>
+    
+            <div class="profile-dropdown-divider"></div>
+    
+            <div class="profile-dropdown-footer">
+              <button class="btn btn-danger-subtle btn-sm btn-action-logout" style="width: 100%; justify-content: center;">
+                <i class="fas fa-right-from-bracket mr-2"></i> Se Déconnecter
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
+    
 
     <!-- ==========================================================================
          3. Dynamic Views Container
          ========================================================================== -->
     <main class="page-container">
-      
       <!-- ====================================================================
            [ESPACE 1] TABLEAU DE BORD DU DEMANDEUR (CLIENT EMPRUNTEUR)
            ==================================================================== -->
@@ -325,7 +464,7 @@
             </button>
           </div>
         </div>
-
+      
         <!-- Borrower Financial Metrics (3 Cards) -->
         <div class="borrower-metrics-grid">
           <div class="borrower-metric-box">
@@ -338,7 +477,7 @@
               <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">12 mensualités • Taux dégressif</div>
             </div>
           </div>
-
+      
           <div class="borrower-metric-box">
             <div class="borrower-metric-icon" style="background: var(--cif-gold-50); color: var(--cif-gold-600);">
               <i class="fas fa-calendar-check"></i>
@@ -349,7 +488,7 @@
               <div style="font-size: 0.72rem; color: var(--text-subtle);">Échéance au 05/09/2026 (0 retard)</div>
             </div>
           </div>
-
+      
           <div class="borrower-metric-box">
             <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600);">
               <i class="fas fa-piggy-bank"></i>
@@ -361,7 +500,7 @@
             </div>
           </div>
         </div>
-
+      
         <!-- Live Credit Request Tracking Card -->
         <div class="card" style="margin-bottom: 1.5rem;">
           <div class="card-header">
@@ -406,7 +545,7 @@
                 <div style="font-size: 0.65rem; color: var(--text-subtle);">Final</div>
               </div>
             </div>
-
+      
             <div class="anomaly-item info" style="margin-top: 1rem;">
               <i class="fas fa-circle-info anomaly-icon"></i>
               <div class="anomaly-content">
@@ -416,15 +555,66 @@
             </div>
           </div>
         </div>
-
-        <!-- 2 Columns: Repayment Schedule & Assigned Advisor -->
+      
+        <!-- Quick Services Access Grid (4 modules) -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-requests')" onmouseover="this.style.borderColor='var(--primary-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                <i class="fas fa-folder-tree"></i>
+              </div>
+              <div>
+                <div style="font-size: 0.82rem; font-weight: 700;">Mes Demandes</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">1 En attente • 2 Clôturées</div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-schedule')" onmouseover="this.style.borderColor='var(--cif-gold-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--cif-gold-50); color: var(--cif-gold-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                <i class="fas fa-calendar-days"></i>
+              </div>
+              <div>
+                <div style="font-size: 0.82rem; font-weight: 700;">Mon Échéancier</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Paiement Mobile Money</div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-documents')" onmouseover="this.style.borderColor='var(--cif-emerald-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--cif-emerald-50); color: var(--cif-emerald-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                <i class="fas fa-folder-closed"></i>
+              </div>
+              <div>
+                <div style="font-size: 0.82rem; font-weight: 700;">Mes Pièces & Devis</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">6 Justificatifs & Contrats</div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-simulator')" onmouseover="this.style.borderColor='var(--primary-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                <i class="fas fa-calculator"></i>
+              </div>
+              <div>
+                <div style="font-size: 0.82rem; font-weight: 700;">Simulateur de Prêt</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Calcul Reste à Vivre</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- 2 Columns: Repayment Schedule Summary & Assigned Advisor Summary -->
         <div class="grid-2">
-          <!-- Repayment Schedule Table -->
-          <div class="card" id="view-client-schedule">
+          <!-- Repayment Schedule Table Summary -->
+          <div class="card">
             <div class="card-header">
               <h3 class="card-title"><i class="fas fa-table-list text-primary"></i> Échéancier de Remboursement Réel</h3>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de votre reçu PDF...', 'info')">
-                <i class="fas fa-download"></i> Télécharger Quittance
+              <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-schedule')">
+                <i class="fas fa-arrow-right"></i> Voir Tout l'Échéancier
               </button>
             </div>
             <div class="table-responsive">
@@ -442,19 +632,19 @@
                     <td>Échéance N° 1</td>
                     <td>05/07/2026</td>
                     <td class="amount-cell">235 000 FCFA</td>
-                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé à l'heure</span></td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé</span></td>
                   </tr>
                   <tr>
                     <td>Échéance N° 2</td>
                     <td>05/08/2026</td>
                     <td class="amount-cell">235 000 FCFA</td>
-                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé à l'heure</span></td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé</span></td>
                   </tr>
                   <tr style="background: var(--cif-gold-50);">
                     <td><strong>Échéance N° 3</strong></td>
                     <td><strong>05/09/2026</strong></td>
                     <td class="amount-cell" style="color: var(--cif-gold-700);"><strong>235 000 FCFA</strong></td>
-                    <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochaine Échéance</span></td>
+                    <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochaine</span></td>
                   </tr>
                   <tr>
                     <td>Échéance N° 4</td>
@@ -466,11 +656,14 @@
               </table>
             </div>
           </div>
-
-          <!-- Assigned Credit Agent Card -->
-          <div class="card" id="view-client-advisor">
+      
+          <!-- Assigned Credit Agent Card Summary -->
+          <div class="card">
             <div class="card-header">
               <h3 class="card-title"><i class="fas fa-user-tie text-emerald"></i> Votre Conseiller Attitré</h3>
+              <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-advisor')">
+                <i class="fas fa-comment-dots"></i> Ouvrir Messagerie
+              </button>
             </div>
             <div class="card-body">
               <div class="agent-contact-card" style="margin-bottom: 1.25rem;">
@@ -483,18 +676,18 @@
                   </div>
                 </div>
               </div>
-
+      
               <div style="font-size: 0.82rem; line-height: 1.6; color: var(--text-muted-dark); margin-bottom: 1.25rem;">
                 <div><i class="fas fa-phone mr-1 text-primary"></i> <strong>Ligne directe :</strong> +221 33 821 44 00</div>
                 <div><i class="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
                 <div><i class="fas fa-clock mr-1 text-primary"></i> <strong>Horaires d'agence :</strong> Lun - Ven : 08h00 - 17h00</div>
               </div>
-
+      
               <div style="display: flex; gap: 0.75rem;">
-                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="App.showToast('Message direct transmis à votre conseiller', 'success')">
+                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="App.switchView('view-client-advisor')">
                   <i class="fas fa-comment-dots"></i> Écrire un Message
                 </button>
-                <button class="btn btn-secondary btn-sm" onclick="App.showToast('Demande de rendez-vous transmise', 'info')">
+                <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-advisor')">
                   <i class="fas fa-calendar-plus"></i> Prendre RDV
                 </button>
               </div>
@@ -502,6 +695,1045 @@
           </div>
         </div>
       </section>
+      
+
+      <!-- ====================================================================
+           [DEMANDEUR] MES DEMANDES DE CRÉDIT & SUIVI DE DOSSIER
+           ==================================================================== -->
+      <section id="view-client-requests" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title"><i class="fas fa-folder-tree text-primary mr-2"></i> Mes Demandes de Prêt & Dossiers</h2>
+            <p class="page-subtitle">Suivi en temps réel de l'état d'instruction de vos dossiers de microcrédit CIF</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+              <i class="fas fa-plus-circle"></i> Déposer une Nouvelle Demande
+            </button>
+          </div>
+        </div>
+      
+        <!-- Active Application Highlight Card -->
+        <div class="card" style="margin-bottom: 1.5rem; border-left: 4px solid var(--primary-500);">
+          <div class="card-header">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="borrower-metric-icon" style="background: var(--primary-50); color: var(--primary-600); width: 44px; height: 44px; font-size: 1.2rem;">
+                <i class="fas fa-hourglass-half"></i>
+              </div>
+              <div>
+                <h3 class="card-title" style="margin-bottom: 2px;">Dossier Actif : #REQ-2026-0891</h3>
+                <p class="card-subtitle">Achat de stock tissus wax pour la fête de Tabaski • Déposé le 11/08/2026</p>
+              </div>
+            </div>
+            <div>
+              <span class="badge badge-analysis" style="font-size: 0.8rem; padding: 6px 14px;">
+                <i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque
+              </span>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Financial Summary Grid -->
+            <div class="grid-4" style="margin-bottom: 1.5rem; background: var(--bg-body); padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Montant Demandé</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 500 000 FCFA</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Durée de Remboursement</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">12 Mois</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mensualité Estimée</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">235 000 FCFA</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Agence Instructrice</div>
+                <div style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Médina Dakar</div>
+              </div>
+            </div>
+      
+            <!-- Loan Progression Stepper -->
+            <div class="loan-progress-stepper" style="margin-bottom: 1.25rem;">
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">1. Demande Déposée</div>
+                <div style="font-size: 0.68rem; color: var(--text-subtle);">11/08/2026 à 10:14</div>
+              </div>
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">2. Contrôle Pièces & OCR</div>
+                <div style="font-size: 0.68rem; color: var(--text-subtle);">11/08/2026 à 14:30</div>
+              </div>
+              <div class="loan-step-node completed">
+                <div class="dot"><i class="fas fa-check"></i></div>
+                <div class="label">3. Reste à Vivre Conforme</div>
+                <div style="font-size: 0.68rem; color: var(--text-subtle);">12/08/2026 à 09:05</div>
+              </div>
+              <div class="loan-step-node active">
+                <div class="dot"><i class="fas fa-spinner fa-spin"></i></div>
+                <div class="label">4. Revue Finale Analyste</div>
+                <div style="font-size: 0.68rem; color: var(--primary-600); font-weight: 700;">En cours (Score: 78/100)</div>
+              </div>
+              <div class="loan-step-node">
+                <div class="dot">5</div>
+                <div class="label">5. Décision Comité</div>
+                <div style="font-size: 0.68rem; color: var(--text-subtle);">Prévu le 20/08/2026</div>
+              </div>
+              <div class="loan-step-node">
+                <div class="dot">6</div>
+                <div class="label">6. Déblocage & Quittance</div>
+                <div style="font-size: 0.68rem; color: var(--text-subtle);">Virement / Mobile Money</div>
+              </div>
+            </div>
+      
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+              <button class="btn btn-secondary btn-sm" onclick="App.openDossier360('REQ-2026-0891')">
+                <i class="fas fa-file-invoice"></i> Voir Récapitulatif 360°
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-documents')">
+                <i class="fas fa-paperclip"></i> Justificatifs Associés (4)
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="App.switchView('view-client-advisor')">
+                <i class="fas fa-comment-dots"></i> Poser une question à mon conseiller
+              </button>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Historical Applications Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-clock-rotate-left text-primary"></i> Historique de mes Demandes de Crédit</h3>
+              <p class="card-subtitle">Retrouvez l'ensemble de vos prêts antérieurs remboursés et clôturés auprès de la CIF</p>
+            </div>
+            <div>
+              <span class="badge badge-submitted">3 Dossiers enregistrés</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Réf. Dossier</th>
+                  <th>Date Dépôt</th>
+                  <th>Objet du Prêt</th>
+                  <th>Montant</th>
+                  <th>Durée</th>
+                  <th>Taux / Échéance</th>
+                  <th>Statut Final</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color: var(--primary-600); font-family: var(--font-family-code);">REQ-2026-0891</strong></td>
+                  <td>11/08/2026</td>
+                  <td>Achat de stock tissus wax Tabaski</td>
+                  <td class="amount-cell">2 500 000 FCFA</td>
+                  <td>12 mois</td>
+                  <td>235 000 FCFA/m</td>
+                  <td><span class="badge badge-analysis"><i class="fas fa-spinner fa-spin"></i> En cours d'analyse</span></td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="App.openDossier360('REQ-2026-0891')">
+                      <i class="fas fa-eye"></i> Suivre
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2025-0412</strong></td>
+                  <td>14/04/2025</td>
+                  <td>Équipement machine à coudre industrielle</td>
+                  <td class="amount-cell">1 200 000 FCFA</td>
+                  <td>10 mois</td>
+                  <td>132 000 FCFA/m</td>
+                  <td><span class="badge badge-approved"><i class="fas fa-check-double"></i> Remboursé & Clôturé</span></td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'attestation de solde pour REQ-2025-0412', 'success')">
+                      <i class="fas fa-certificate"></i> Attestation
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2024-0199</strong></td>
+                  <td>03/02/2024</td>
+                  <td>Fonds de roulement boutique Médina</td>
+                  <td class="amount-cell">800 000 FCFA</td>
+                  <td>6 mois</td>
+                  <td>140 000 FCFA/m</td>
+                  <td><span class="badge badge-approved"><i class="fas fa-check-double"></i> Remboursé & Clôturé</span></td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'attestation de solde pour REQ-2024-0199', 'success')">
+                      <i class="fas fa-certificate"></i> Attestation
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [DEMANDEUR] MON ÉCHÉANCIER RÉEL & PAIEMENT MOBILE MONEY
+           ==================================================================== -->
+      <section id="view-client-schedule" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
+            <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CIF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
+              <i class="fas fa-file-pdf text-danger"></i> Télécharger le Relevé PDF
+            </button>
+            <button class="btn btn-success" onclick="App.openClientPaymentModal()">
+              <i class="fas fa-wallet"></i> Payer une Échéance
+            </button>
+          </div>
+        </div>
+      
+        <!-- Loan Progress & Summary Metrics -->
+        <div class="grid-3" style="margin-bottom: 1.5rem;">
+          <!-- Metric 1: Capital Amorti vs Restant -->
+          <div class="card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Progression du Prêt</div>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
+              </div>
+              <span class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
+            </div>
+            <!-- Progress Bar -->
+            <div style="width: 100%; height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0.5rem;">
+              <div style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-subtle);">
+              <span>Remboursé : <strong>470 000 FCFA</strong></span>
+              <span>Restant : <strong>2 030 000 FCFA</strong></span>
+            </div>
+          </div>
+      
+          <!-- Metric 2: Prochaine Échéance -->
+          <div class="card" style="padding: 1.25rem; border-left: 4px solid var(--cif-gold-500);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance N° 3</div>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700); font-family: var(--font-family-code);">235 000 FCFA</div>
+                <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+                  <i class="far fa-calendar text-gold mr-1"></i> Date limite : <strong>05 Septembre 2026</strong>
+                </div>
+              </div>
+              <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+                <i class="fas fa-credit-card"></i> Régler
+              </button>
+            </div>
+          </div>
+      
+          <!-- Metric 3: Épargne Nantie / Caution Solidaire -->
+          <div class="card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Épargne Nantie Sécurisée</div>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+                <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+                  <i class="fas fa-lock text-emerald mr-1"></i> Garantie bloquée à 20% du prêt
+                </div>
+              </div>
+              <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem;">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Mobile Money Quick Pay Strip -->
+        <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(16, 185, 129, 0.04)); border: 1px solid rgba(79, 70, 229, 0.15);">
+          <div class="card-body" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                <i class="fas fa-mobile-screen-button"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Paiement instantané sans vous déplacer en agence • Quittance SMS immédiate</p>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: white; border-color: #ff7900;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: white; border-color: #1dc5d8;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: white; border-color: #005ba4;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: white; border-color: #ffcc00;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
+              </button>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Detailed 12-Month Schedule Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-list-ol text-primary"></i> Tableau d'Amortissement Détaillé (12 Mois)</h3>
+              <p class="card-subtitle">Montant emprunté : 2 500 000 FCFA • Taux effectif global : 12.0% annuel dégressif</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <span class="badge badge-approved"><i class="fas fa-circle-check"></i> 2 Réglées</span>
+              <span class="badge badge-verification"><i class="fas fa-clock"></i> 1 Exigible</span>
+              <span class="badge badge-submitted">9 À venir</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>N° Échéance</th>
+                  <th>Date d'Exigibilité</th>
+                  <th>Capital Amorti</th>
+                  <th>Intérêts CIF</th>
+                  <th>Assurance Prêt</th>
+                  <th>Total Mensualité</th>
+                  <th>Capital Restant Dû</th>
+                  <th>Statut</th>
+                  <th>Quittance / Reçu</th>
+                </tr>
+              </thead>
+              <tbody id="client-schedule-table-body">
+                <!-- Dynamically populated or rendered -->
+                <tr>
+                  <td><strong>Échéance N° 1</strong></td>
+                  <td>05/07/2026</td>
+                  <td>196 250 FCFA</td>
+                  <td>25 000 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
+                  <td>2 303 750 FCFA</td>
+                  <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 04/07 (Orange Money)</span></td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0704', 'success')">
+                      <i class="fas fa-file-invoice"></i> Reçu #1
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Échéance N° 2</strong></td>
+                  <td>05/08/2026</td>
+                  <td>198 212 FCFA</td>
+                  <td>23 038 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
+                  <td>2 105 538 FCFA</td>
+                  <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 05/08 (Wave)</span></td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0805', 'success')">
+                      <i class="fas fa-file-invoice"></i> Reçu #2
+                    </button>
+                  </td>
+                </tr>
+                <tr style="background: rgba(245, 158, 11, 0.08); font-weight: 600;">
+                  <td><strong style="color: var(--cif-gold-700);">Échéance N° 3</strong></td>
+                  <td><strong style="color: var(--cif-gold-700);">05/09/2026</strong></td>
+                  <td>200 195 FCFA</td>
+                  <td>21 055 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell" style="color: var(--cif-gold-700); font-weight: 800;">235 000 FCFA</td>
+                  <td>1 905 343 FCFA</td>
+                  <td><span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Prochaine)</span></td>
+                  <td>
+                    <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+                      <i class="fas fa-wallet"></i> Payer 235 000 F
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 4</td>
+                  <td>05/10/2026</td>
+                  <td>202 196 FCFA</td>
+                  <td>19 054 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>1 703 147 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 5</td>
+                  <td>05/11/2026</td>
+                  <td>204 218 FCFA</td>
+                  <td>17 032 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>1 498 929 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 6</td>
+                  <td>05/12/2026</td>
+                  <td>206 261 FCFA</td>
+                  <td>14 989 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>1 292 668 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 7</td>
+                  <td>05/01/2027</td>
+                  <td>208 323 FCFA</td>
+                  <td>12 927 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>1 084 345 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 8</td>
+                  <td>05/02/2027</td>
+                  <td>210 407 FCFA</td>
+                  <td>10 843 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>873 938 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 9</td>
+                  <td>05/03/2027</td>
+                  <td>212 511 FCFA</td>
+                  <td>8 739 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>661 427 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 10</td>
+                  <td>05/04/2027</td>
+                  <td>214 636 FCFA</td>
+                  <td>6 614 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>446 791 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 11</td>
+                  <td>05/05/2027</td>
+                  <td>216 782 FCFA</td>
+                  <td>4 468 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">235 000 FCFA</td>
+                  <td>230 009 FCFA</td>
+                  <td><span class="badge badge-submitted">À venir</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+                </tr>
+                <tr>
+                  <td>Échéance N° 12</td>
+                  <td>05/06/2027</td>
+                  <td>230 009 FCFA</td>
+                  <td>2 300 FCFA</td>
+                  <td>13 750 FCFA</td>
+                  <td class="amount-cell">246 059 FCFA</td>
+                  <td>0 FCFA</td>
+                  <td><span class="badge badge-submitted">Dernière échéance</span></td>
+                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Clôture prêt</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [DEMANDEUR] MES PIÈCES, JUSTIFICATIFS & DEVIS (GED CLIENT)
+           ==================================================================== -->
+      <section id="view-client-documents" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title"><i class="fas fa-folder-closed text-primary mr-2"></i> Mes Pièces Justificatives & Devis</h2>
+            <p class="page-subtitle">Espace sécurisé de gestion documentaire et vérification par Reconnaissance Optique de Caractères (OCR)</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="document.getElementById('client-file-input').click()">
+              <i class="fas fa-cloud-arrow-up"></i> Téléverser un Document
+            </button>
+            <input type="file" id="client-file-input" style="display: none;" onchange="App.handleClientDocUpload(event)" accept=".pdf,.jpg,.jpeg,.png">
+          </div>
+        </div>
+      
+        <!-- Document Status Alerts (Anomaly/Complements requested if any) -->
+        <div class="anomaly-item info" style="margin-bottom: 1.5rem; border-left: 4px solid var(--cif-emerald-500);">
+          <i class="fas fa-shield-check anomaly-icon" style="color: var(--cif-emerald-600);"></i>
+          <div class="anomaly-content">
+            <h5 style="color: var(--cif-emerald-700);">Dossier documentaire conforme aux normes UEMOA</h5>
+            <p>Vos 4 pièces principales pour la demande #REQ-2026-0891 ont été extraites avec succès et validées par le module d'intelligence artificielle OCR CIF.</p>
+          </div>
+        </div>
+      
+        <!-- Drag and Drop Upload Zone -->
+        <div class="card" style="margin-bottom: 1.5rem; border: 2px dashed var(--primary-300); background: var(--bg-surface);">
+          <div class="card-body" style="text-align: center; padding: 2rem 1.5rem;" ondragover="event.preventDefault(); this.style.borderColor='var(--primary-600)'" ondragleave="this.style.borderColor='var(--primary-300)'" ondrop="event.preventDefault(); this.style.borderColor='var(--primary-300)'; App.handleClientDocDrop(event)">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+              <i class="fas fa-file-arrow-up"></i>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Glissez-déposez vos nouveaux justificatifs ici</h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Formats acceptés : PDF, PNG, JPG (Factures proforma, quittances électricité/eau, contrat de bail, garanties). Max 10 Mo.</p>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()">
+              <i class="fas fa-arrow-up-from-bracket"></i> Parcourir mes fichiers locaux
+            </button>
+          </div>
+        </div>
+      
+        <!-- Document Filter Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;" id="doc-filter-buttons">
+          <button class="btn btn-primary btn-sm active" onclick="App.filterClientDocs('ALL', this)">
+            Tous les Documents (6)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('ID', this)">
+            <i class="fas fa-id-card"></i> Identité & Registre (2)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('INVOICE', this)">
+            <i class="fas fa-receipt"></i> Factures & Devis (2)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('GUARANTEE', this)">
+            <i class="fas fa-shield"></i> Garanties & Nantissement (1)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('CONTRACT', this)">
+            <i class="fas fa-file-contract"></i> Contrats Signés (1)
+          </button>
+        </div>
+      
+        <!-- Documents Grid -->
+        <div class="grid-3" id="client-documents-grid">
+          <!-- Doc Card 1: CNI ECOWAS -->
+          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-id-card"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">CNI Biométrique CEDEAO</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">CNI_Fatou_Ndiaye_recto_verso.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>N° Pièce :</strong> 1 756 1989 00412</div>
+              <div><strong>Validité :</strong> 14/03/2029 (En cours de validité)</div>
+              <div><strong>Ajouté le :</strong> 11/08/2026 à 10:15</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du document CNI sécurisé...', 'info')">
+                <i class="fas fa-eye"></i> Aperçu
+              </button>
+            </div>
+          </div>
+      
+          <!-- Doc Card 2: Registre du Commerce (RCCM) -->
+          <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-stamp"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Extrait RCCM / NINEA</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">RCCM_SN_DKR_2022_B_890.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>N° RCCM :</strong> SN.DKR.2022.B.890</div>
+              <div><strong>NINEA :</strong> 008923412 2A2</div>
+              <div><strong>Activité :</strong> Commerce Général & Confection</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Certifié Conforme</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du RCCM...', 'info')">
+                <i class="fas fa-eye"></i> Aperçu
+              </button>
+            </div>
+          </div>
+      
+          <!-- Doc Card 3: Facture Proforma Tissus Wax -->
+          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-receipt"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Facture Proforma Stock Wax</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Grossiste_Wax_Lome.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>Fournisseur :</strong> Éts Textile Assigamé Lomé</div>
+              <div><strong>Montant Total :</strong> 2 500 000 FCFA</div>
+              <div><strong>Date Devis :</strong> 08/08/2026 (Validité 30j)</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-check-double"></i> Conforme au prêt</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du devis...', 'info')">
+                <i class="fas fa-download"></i> Télécharger
+              </button>
+            </div>
+          </div>
+      
+          <!-- Doc Card 4: Quittance Électricité Senelec -->
+          <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-bolt"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Justificatif de Domicile</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Senelec_Juillet_2026.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>Organisme :</strong> Senelec Dakar Médina</div>
+              <div><strong>Adresse :</strong> Rue 22 x 15 Médina Dakar</div>
+              <div><strong>Statut :</strong> Payée (0 impayé)</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Vérifié</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du justificatif Senelec...', 'info')">
+                <i class="fas fa-eye"></i> Aperçu
+              </button>
+            </div>
+          </div>
+      
+          <!-- Doc Card 5: Acte de Nantissement Épargne CIF -->
+          <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-shield-halved"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Acte de Garantie & Nantissement</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Acte_Nantissement_Compte_CIF.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>Type :</strong> Nantissement Compte Épargne</div>
+              <div><strong>Montant Bloqué :</strong> 500 000 FCFA</div>
+              <div><strong>Bénéficiaire :</strong> Caisse CIF Médina</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-lock"></i> Actif & Enregistré</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'acte notarié...', 'info')">
+                <i class="fas fa-download"></i> Télécharger
+              </button>
+            </div>
+          </div>
+      
+          <!-- Doc Card 6: Contrat Cadre de Microcrédit -->
+          <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                  <i class="fas fa-signature"></i>
+                </div>
+                <div>
+                  <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Contrat de Prêt Cadre CIF</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Contrat_Signe_CIF_DKR_8821.pdf</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <div><strong>Signature :</strong> Électronique Certifiée (OTP)</div>
+              <div><strong>Date Signature :</strong> 11/08/2026</div>
+              <div><strong>Empreinte SHA-256 :</strong> 8f9a2e3...b71c</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span class="badge badge-approved"><i class="fas fa-certificate"></i> Signé & Scellé</span>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de la copie légale du contrat...', 'info')">
+                <i class="fas fa-download"></i> Télécharger
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [DEMANDEUR] MON CONSEILLER ATTITRÉ & AGENCE CIF
+           ==================================================================== -->
+      <section id="view-client-advisor" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title"><i class="fas fa-headset text-primary mr-2"></i> Mon Conseiller Attitré & Agence CIF</h2>
+            <p class="page-subtitle">Échangez en direct avec votre chargé de clientèle et planifiez vos rendez-vous d'instruction</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="document.getElementById('appointment-section').scrollIntoView({behavior: 'smooth'})">
+              <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
+            </button>
+          </div>
+        </div>
+      
+        <div class="grid-3" style="margin-bottom: 1.5rem;">
+          <!-- Column 1: Advisor Profile Card -->
+          <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div style="position: relative; width: 84px; height: 84px; margin: 0 auto 1rem auto;">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi Mensah" class="user-avatar" style="width: 84px; height: 84px; border: 3px solid var(--primary-200); box-shadow: var(--shadow-md);">
+              <span style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: #10b981; border: 2px solid white; border-radius: 50%;" title="En ligne actuellement"></span>
+            </div>
+      
+            <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Kofi Mensah</h3>
+            <div style="font-size: 0.8rem; color: var(--primary-600); font-weight: 700; margin-bottom: 4px;">Conseiller Microfinance Senior</div>
+            <span class="badge badge-approved" style="font-size: 0.7rem; margin-bottom: 1.25rem;">
+              <i class="fas fa-circle-check"></i> Conseiller Attitré Actif
+            </span>
+      
+            <div style="text-align: left; font-size: 0.8rem; line-height: 1.8; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; margin-bottom: 1.25rem;">
+              <div><i class="fas fa-phone text-primary mr-2"></i> <strong>Direct :</strong> +221 33 821 44 00</div>
+              <div><i class="fas fa-mobile-screen text-primary mr-2"></i> <strong>Mobile :</strong> +221 77 540 12 88</div>
+              <div><i class="fas fa-envelope text-primary mr-2"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
+              <div><i class="fas fa-language text-primary mr-2"></i> <strong>Langues :</strong> Français, Wolof, Bambara</div>
+            </div>
+      
+            <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="App.showToast('Appel direct initié vers le poste de Kofi Mensah...', 'info')">
+              <i class="fas fa-phone-volume"></i> Appeler le Conseiller
+            </button>
+          </div>
+      
+          <!-- Column 2 & 3: Live Messaging Thread -->
+          <div class="card" style="grid-column: span 2; display: flex; flex-direction: column; min-height: 480px;">
+            <div class="card-header" style="padding: 0.85rem 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></div>
+                <div>
+                  <h4 style="font-size: 0.92rem; font-weight: 700; margin: 0;">Discussion Sécurisée Agence CIF</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Dossier REQ-2026-0891 (Tabaski Tissus Wax)</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Historique des échanges archivé au format PDF', 'info')">
+                <i class="fas fa-download"></i> Exporter
+              </button>
+            </div>
+      
+            <!-- Messages Body -->
+            <div id="advisor-chat-messages" style="flex: 1; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: var(--bg-body);">
+              <!-- Advisor Message -->
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+                <div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 11/08/2026 à 11:30</div>
+                  <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+                    Bonjour Madame Ndiaye, j'ai bien reçu votre demande de prêt de 2 500 000 FCFA pour le stock de tissus. Vos factures proforma sont bien lisibles et l'OCR a extrait les montants. Le dossier est en cours de validation scoring.
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Borrower Message (Self) -->
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%; align-self: flex-end; flex-direction: row-reverse;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">
+                  FN
+                </div>
+                <div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px; text-align: right;">Vous • 11/08/2026 à 14:12</div>
+                  <div style="background: var(--primary-600); color: white; padding: 0.75rem 1rem; border-radius: var(--radius-lg); font-size: 0.82rem; line-height: 1.5;">
+                    Merci Monsieur Mensah. Mon fournisseur à Lomé m'a confirmé la réservation du conteneur jusqu'au 22 août. Est-ce que le déblocage pourra se faire avant cette date si le comité valide ?
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Advisor Message -->
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+                <div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 12/08/2026 à 09:20</div>
+                  <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+                    Absolument ! Le comité se réunit le 20 août. Si la délibération est favorable, les fonds seront mis à disposition sur votre compte CIF ou virement Wave dès le 21 août au matin.
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Message Input Form -->
+            <div style="padding: 0.85rem 1.25rem; background: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; gap: 0.5rem; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()" title="Joindre un document ou une photo">
+                <i class="fas fa-paperclip"></i>
+              </button>
+              <input type="text" id="advisor-msg-input" class="form-control" placeholder="Écrivez votre message à Kofi Mensah..." style="flex: 1; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') App.sendAdvisorMessage()">
+              <button class="btn btn-primary btn-sm" onclick="App.sendAdvisorMessage()">
+                <i class="fas fa-paper-plane"></i> Envoyer
+              </button>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Agency Details & Appointment Booking Section -->
+        <div class="grid-2" id="appointment-section">
+          <!-- Agency Location & Hours Card -->
+          <div class="card" style="padding: 1.25rem;">
+            <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
+              <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Mon Agence CIF de Rattachement</h3>
+            </div>
+            <div style="font-size: 0.84rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.25rem;">
+              <div><strong>Caisse :</strong> Caisse CIF Médina - Réseau DigiCoop-WA+</div>
+              <div><strong>Adresse :</strong> Boulevard du Général de Gaulle x Rue 22, Dakar (Sénégal)</div>
+              <div><strong>Guichet Caisse :</strong> Lun - Ven : 08h00 - 16h30 • Samedi : 08h30 - 12h30</div>
+              <div><strong>Téléphone Agence :</strong> +221 33 821 44 00 / +221 33 821 44 01</div>
+              <div><strong>GAB / Distributeur :</strong> Disponible 24h/24 (Carte GIM-UEMOA)</div>
+            </div>
+            <div style="background: var(--bg-body); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-map-location-dot text-emerald" style="font-size: 1.2rem;"></i>
+                <span style="font-size: 0.78rem; font-weight: 600;">Itinéraire & Localisation GPS</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Coordonnées GPS transmises à votre application cartographique', 'info')">
+                <i class="fas fa-location-arrow"></i> Ouvrir Carte
+              </button>
+            </div>
+          </div>
+      
+          <!-- Booking Form Card -->
+          <div class="card" style="padding: 1.25rem;">
+            <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
+              <h3 class="card-title"><i class="fas fa-calendar-check text-emerald"></i> Prendre Rendez-vous en Agence</h3>
+            </div>
+            <form onsubmit="App.handleBookAppointment(event)">
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label class="form-label" style="font-size: 0.78rem;">Motif du Rendez-vous *</label>
+                <select id="appt-reason" class="form-control" required style="font-size: 0.82rem;">
+                  <option value="EXAM_DOSSIER">Instruction & Signature Dossier Crédit</option>
+                  <option value="GUARANTEE_DROP">Dépôt physique de titres ou garanties</option>
+                  <option value="SAVINGS_ADVICE">Conseil en Épargne & Gestion de Trésorerie</option>
+                  <option value="OTHER">Autre question ou renseignement</option>
+                </select>
+              </div>
+      
+              <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div class="form-group" style="margin: 0;">
+                  <label class="form-label" style="font-size: 0.78rem;">Date souhaitée *</label>
+                  <input type="date" id="appt-date" class="form-control" value="2026-08-21" required style="font-size: 0.82rem;">
+                </div>
+                <div class="form-group" style="margin: 0;">
+                  <label class="form-label" style="font-size: 0.78rem;">Créneau horaire *</label>
+                  <select id="appt-time" class="form-control" required style="font-size: 0.82rem;">
+                    <option value="09:00">09h00 - 09h45</option>
+                    <option value="10:30">10h30 - 11h15</option>
+                    <option value="14:00" selected>14h00 - 14h45</option>
+                    <option value="15:30">15h30 - 16h15</option>
+                  </select>
+                </div>
+              </div>
+      
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" style="font-size: 0.78rem;">Note complémentaire (facultatif)</label>
+                <input type="text" id="appt-notes" class="form-control" placeholder="Ex: Je viendrai accompagnée de ma caution solidaire" style="font-size: 0.82rem;">
+              </div>
+      
+              <button type="submit" class="btn btn-success" style="width: 100%;">
+                <i class="fas fa-check-circle mr-1"></i> Confirmer le Rendez-vous avec Kofi Mensah
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [DEMANDEUR] SIMULATEUR DE PRÊT & CAPACITÉ D'EMPRUNT (CIF UEMOA)
+           ==================================================================== -->
+      <section id="view-client-simulator" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title"><i class="fas fa-calculator text-primary mr-2"></i> Simulateur de Crédit & Capacité d'Emprunt</h2>
+            <p class="page-subtitle">Estimez vos mensualités, vérifiez votre taux d'endettement et simulez votre reste à vivre en direct</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.applyFromSimulation()">
+              <i class="fas fa-paper-plane"></i> Postuler avec cette Simulation
+            </button>
+          </div>
+        </div>
+      
+        <div class="grid-2" style="margin-bottom: 1.5rem;">
+          <!-- Simulator Parameters Form -->
+          <div class="card" style="padding: 1.5rem;">
+            <div class="card-header" style="padding: 0 0 1rem 0; margin-bottom: 1.25rem;">
+              <h3 class="card-title"><i class="fas fa-sliders text-primary"></i> Paramètres du Microcrédit</h3>
+            </div>
+      
+            <!-- Amount Slider -->
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.84rem; font-weight: 700; color: var(--text-primary);">Montant du Prêt (FCFA)</label>
+                <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);" id="sim-amount-label">2 500 000 FCFA</span>
+              </div>
+              <input type="range" id="sim-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateClientSimulation()">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">
+                <span>200 000 FCFA</span>
+                <span>5 000 000 FCFA</span>
+                <span>10 000 000 FCFA</span>
+              </div>
+            </div>
+      
+            <!-- Duration Slider -->
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.84rem; font-weight: 700; color: var(--text-primary);">Durée de Remboursement</label>
+                <span style="font-size: 1.15rem; font-weight: 800; color: var(--primary-700);" id="sim-duration-label">12 Mois</span>
+              </div>
+              <input type="range" id="sim-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateClientSimulation()">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">
+                <span>3 Mois</span>
+                <span>12 Mois</span>
+                <span>24 Mois</span>
+                <span>36 Mois</span>
+              </div>
+            </div>
+      
+            <!-- Grace Period (Différé) & Product Type -->
+            <div class="grid-2" style="gap: 1rem; margin-bottom: 1.5rem;">
+              <div class="form-group" style="margin: 0;">
+                <label class="form-label" style="font-size: 0.78rem;">Différé de Remboursement</label>
+                <select id="sim-grace-select" class="form-control" style="font-size: 0.82rem;" onchange="App.updateClientSimulation()">
+                  <option value="0">Aucun différé (immédiat)</option>
+                  <option value="1">1 Mois de différé</option>
+                  <option value="2">2 Mois de différé</option>
+                  <option value="3">3 Mois de différé (Agricole)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label class="form-label" style="font-size: 0.78rem;">Type de Financement</label>
+                <select id="sim-product-select" class="form-control" style="font-size: 0.82rem;" onchange="App.updateClientSimulation()">
+                  <option value="COMMERCIAL">Crédit Commercial & Stock (12% dégressif)</option>
+                  <option value="AGRICULTURAL">Crédit Campagne Agricole (9.5% annuel)</option>
+                  <option value="EQUIPMENT">Équipement & Machines (11% annuel)</option>
+                  <option value="GROUP">Crédit Solidaire de Groupe (13.5% annuel)</option>
+                </select>
+              </div>
+            </div>
+      
+            <!-- Capacity & Debt Ratio Inputs -->
+            <div style="background: var(--bg-body); padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1rem;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
+                <i class="fas fa-coins text-gold"></i> Test d'Éligibilité & Reste à Vivre
+              </div>
+              <div class="grid-2" style="gap: 0.75rem;">
+                <div class="form-group" style="margin: 0;">
+                  <label class="form-label" style="font-size: 0.72rem;">Revenu Net Mensuel de l'Activité</label>
+                  <input type="number" id="sim-income-input" class="form-control" value="850000" style="font-size: 0.82rem;" oninput="App.updateClientSimulation()">
+                </div>
+                <div class="form-group" style="margin: 0;">
+                  <label class="form-label" style="font-size: 0.72rem;">Charges & Autres Crédits en Cours</label>
+                  <input type="number" id="sim-charges-input" class="form-control" value="180000" style="font-size: 0.82rem;" oninput="App.updateClientSimulation()">
+                </div>
+              </div>
+            </div>
+      
+            <!-- Cold Start Mode Toggle in Simulator -->
+            <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">
+                  <i class="fas fa-seedling"></i>
+                </div>
+                <div>
+                  <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);">Profil Primo-Demandeur (Cold Start)</div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle);">Pas d'historique bancaire exigé • Pondération d'inclusion CIF</div>
+                </div>
+              </div>
+              <label class="toggle-switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
+                <input type="checkbox" id="sim-cold-start-toggle" onchange="App.updateClientSimulation()" checked style="opacity: 0; width: 0; height: 0;">
+                <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #10b981; transition: .3s; border-radius: 24px;"></span>
+              </label>
+            </div>
+          </div>
+      
+          <!-- Simulator Results Summary Card -->
+          <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-body) 100%);">
+            <div>
+              <div class="card-header" style="padding: 0 0 1rem 0; margin-bottom: 1.25rem;">
+                <div>
+                  <h3 class="card-title"><i class="fas fa-receipt text-emerald"></i> Résultats de la Simulation</h3>
+                  <div style="font-size: 0.73rem; color: var(--emerald); font-weight: 600;" id="sim-scoring-mode-label">
+                    <i class="fas fa-seedling"></i> Modèle Cold Start UEMOA Appliqué
+                  </div>
+                </div>
+                <span class="badge badge-approved" id="sim-eligibility-badge"><i class="fas fa-circle-check"></i> Éligible CIF</span>
+              </div>
+      
+              <!-- Big Monthly Amount Highlight -->
+              <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: var(--radius-lg); border: 2px solid var(--primary-300); text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.05em;">Mensualité TTC Estimée</div>
+                <div style="font-size: 2.2rem; font-weight: 900; color: var(--primary-700); font-family: var(--font-family-code); margin: 0.25rem 0;" id="sim-monthly-output">222 250 FCFA</div>
+                <div style="font-size: 0.74rem; color: var(--text-muted);">Comprend Capital + Intérêts dégressifs + Assurance Décès/Invalidité</div>
+              </div>
+      
+              <!-- Breakdown List -->
+              <div style="font-size: 0.82rem; line-height: 2; color: var(--text-muted); margin-bottom: 1.25rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Capital Net Emprunté :</span>
+                  <strong style="color: var(--text-primary);" id="sim-capital-output">2 500 000 FCFA</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Total des Intérêts CIF :</span>
+                  <strong style="color: var(--text-primary);" id="sim-interest-output">167 000 FCFA</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Assurance & Frais de Dossier (1.5%) :</span>
+                  <strong style="color: var(--text-primary);" id="sim-fees-output">37 500 FCFA</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--border-color); padding-top: 4px; font-weight: 700;">
+                  <span style="color: var(--text-primary);">Coût Total du Crédit :</span>
+                  <strong style="color: var(--primary-700);" id="sim-total-cost-output">2 704 500 FCFA</strong>
+                </div>
+              </div>
+      
+              <!-- Debt Ratio & Rest-to-Live Meter -->
+              <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.78rem;">
+                  <span>Taux d'Endettement Projeté :</span>
+                  <strong id="sim-ratio-output" style="color: #047857;">26.1% (Norme UEMOA ≤ 33%)</strong>
+                </div>
+                <div style="width: 100%; height: 8px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.5rem;">
+                  <div id="sim-ratio-bar" style="width: 26.1%; height: 100%; background: #10b981; border-radius: var(--radius-full); transition: width 0.3s ease;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--text-muted);">
+                  <span>Reste à Vivre Estimé :</span>
+                  <strong id="sim-rest-to-live-output" style="color: #047857; font-family: var(--font-family-code);">447 750 FCFA / mois</strong>
+                </div>
+              </div>
+            </div>
+      
+            <button class="btn btn-success btn-lg" style="width: 100%; justify-content: center;" onclick="App.applyFromSimulation()">
+              <i class="fas fa-file-circle-check mr-2"></i> Déposer ma Demande avec cette Simulation
+            </button>
+          </div>
+        </div>
+      </section>
+      
 
       <!-- ====================================================================
            [ESPACE 2] TABLEAU DE BORD DE L'AGENT DE CRÉDIT (TERRAIN & COLLECTE)
@@ -515,16 +1747,38 @@
               <span>Agence Assigamé (Lomé, Togo)</span>
             </div>
           </div>
-          <div class="page-actions">
+          
+          <!-- Activity Trend Sparkline Widget (7 Days Submissions) -->
+          <div class="header-sparkline-widget" id="agent-activity-widget" title="Rythme de soumission des demandes sur les 7 derniers jours">
+            <div class="sparkline-meta">
+              <div class="sparkline-title">
+                <i class="fas fa-chart-line text-primary"></i>
+                <span>Tendance d'Activité</span>
+              </div>
+              <div class="sparkline-stat">
+                <span class="sparkline-val">23</span>
+                <span class="sparkline-sub">dossiers / 7j</span>
+                <span class="sparkline-trend"><i class="fas fa-arrow-trend-up"></i> +18%</span>
+              </div>
+            </div>
+            <div class="sparkline-canvas-container">
+              <canvas id="agent-activity-sparkline"></canvas>
+            </div>
+          </div>
+      
+          <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="App.openQrScannerModal('general')" title="Scanner le QR Code d'un document ou d'une pièce d'identité">
+              <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Document QR
+            </button>
             <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
               <i class="fas fa-user-plus"></i> Enregistrer Nouvelle Demande
             </button>
           </div>
         </div>
-
+      
         <!-- 4 KPI Agent Cards -->
         <div class="grid-4">
-          <div class="card stat-card">
+          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-role-agent')" title="Voir le pipeline complet">
             <div class="stat-icon-wrap primary">
               <i class="fas fa-inbox"></i>
             </div>
@@ -534,8 +1788,8 @@
               <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8 cette semaine</div>
             </div>
           </div>
-
-          <div class="card stat-card">
+      
+          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-inspections')" title="Accéder aux inspections garanties terrain">
             <div class="stat-icon-wrap amber">
               <i class="fas fa-clipboard-check"></i>
             </div>
@@ -545,8 +1799,8 @@
               <div class="stat-trend down"><i class="fas fa-motorcycle"></i> À visiter sur le terrain</div>
             </div>
           </div>
-
-          <div class="card stat-card">
+      
+          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-complements')" title="Accéder aux pièces manquantes et relances">
             <div class="stat-icon-wrap rose">
               <i class="fas fa-triangle-exclamation"></i>
             </div>
@@ -556,19 +1810,19 @@
               <div class="stat-trend down"><i class="fas fa-phone"></i> Relances nécessaires</div>
             </div>
           </div>
-
-          <div class="card stat-card">
+      
+          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-clients')" title="Consulter le portefeuille emprunteurs">
             <div class="stat-icon-wrap emerald">
-              <i class="fas fa-circle-check"></i>
+              <i class="fas fa-users"></i>
             </div>
             <div class="stat-content">
               <div class="stat-value">88%</div>
-              <div class="stat-label">Taux de Complétude</div>
-              <div class="stat-trend up"><i class="fas fa-check"></i> Objectif agence atteint</div>
+              <div class="stat-label">Portefeuille Sociétaires</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> 1 248 membres actifs</div>
             </div>
           </div>
         </div>
-
+      
         <!-- Agent Pipeline Table -->
         <div class="card" style="margin-top: 1.25rem;">
           <div class="card-header">
@@ -579,12 +1833,37 @@
             <table class="table-custom">
               <thead>
                 <tr>
-                  <th>N° Dossier</th>
-                  <th>Client Emprunteur</th>
-                  <th>Montant Demandé</th>
-                  <th>Objet du Prêt</th>
-                  <th>Statut</th>
-                  <th>Action Rapide</th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier">
+                    <div class="th-content">
+                      <span>N° Dossier</span>
+                      <i class="fas fa-sort sort-icon" id="sort-icon-request_number"></i>
+                    </div>
+                  </th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur">
+                    <div class="th-content">
+                      <span>Client Emprunteur</span>
+                      <i class="fas fa-sort sort-icon" id="sort-icon-client_name"></i>
+                    </div>
+                  </th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant">
+                    <div class="th-content">
+                      <span>Montant Demandé</span>
+                      <i class="fas fa-sort sort-icon" id="sort-icon-requested_amount"></i>
+                    </div>
+                  </th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('purpose')" title="Cliquer pour trier par Objet du prêt">
+                    <div class="th-content">
+                      <span>Objet du Prêt</span>
+                      <i class="fas fa-sort sort-icon" id="sort-icon-purpose"></i>
+                    </div>
+                  </th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut">
+                    <div class="th-content">
+                      <span>Statut</span>
+                      <i class="fas fa-sort sort-icon" id="sort-icon-status"></i>
+                    </div>
+                  </th>
+                  <th style="text-align: right;">Action Rapide</th>
                 </tr>
               </thead>
               <tbody id="agent-pipeline-table-body">
@@ -594,6 +1873,348 @@
           </div>
         </div>
       </section>
+      
+
+      <!-- ====================================================================
+           [ESPACE AGENT] INSPECTIONS DES GARANTIES & VISITES TERRAIN
+           ==================================================================== -->
+      <section id="view-agent-inspections" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title"><i class="fas fa-clipboard-check text-warning mr-2"></i> Inspections & Visites Terrain des Garanties</h1>
+            <div class="page-breadcrumb">
+              <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+              <span>Contrôle Physique & Valorisation des Actifs CIF</span>
+            </div>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="App.openQrScannerModal('guarantee')" title="Scanner le QR Code d'un certificat de gage ou d'une carte grise">
+              <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Gage QR
+            </button>
+            <button class="btn btn-primary" onclick="App.openNewInspectionModal()">
+              <i class="fas fa-plus-circle mr-1"></i> Planifier une Visite Terrain
+            </button>
+          </div>
+        </div>
+      
+        <!-- KPI Cards -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="insp-kpi-pending">3</div>
+              <div class="stat-label">Visites Terrain à Réaliser</div>
+              <div class="stat-trend down"><i class="fas fa-clock"></i> 2 prévues aujourd'hui</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="insp-kpi-verified">14.6M</div>
+              <div class="stat-label">Valeur Garanties Vérifiées</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% conformes UEMOA</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-scale-balanced"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="insp-kpi-ratio">138%</div>
+              <div class="stat-label">Couverture Moyenne / Prêt</div>
+              <div class="stat-trend up"><i class="fas fa-check-double"></i> Au-dessus du seuil (120%)</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap rose">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="insp-kpi-anomalies">1</div>
+              <div class="stat-label">Écart de Valorisation</div>
+              <div class="stat-trend down"><i class="fas fa-magnifying-glass"></i> À contre-expertiser</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Filter Buttons & Search -->
+        <div class="card" style="margin-bottom: 1.25rem;">
+          <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="insp-filter-buttons">
+              <button class="btn btn-primary btn-sm" onclick="App.filterInspections('ALL', this)">
+                Toutes les Inspections (<span id="insp-count-all">4</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('PENDING', this)">
+                <i class="fas fa-clock text-warning mr-1"></i> À Visiter / En Cours (<span id="insp-count-pending">1</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('VERIFIED', this)">
+                <i class="fas fa-check text-emerald mr-1"></i> Conformes & Validées (<span id="insp-count-verified">3</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('STOCK', this)">
+                <i class="fas fa-boxes-stacked mr-1"></i> Stocks & Marchandises
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('CAUTION', this)">
+                <i class="fas fa-user-shield mr-1"></i> Cautions Solidaires
+              </button>
+            </div>
+      
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <div style="position: relative; min-width: 240px;">
+                <input type="text" id="insp-search-input" class="form-control form-control-sm" placeholder="Rechercher dossier, emprunteur, localité..." oninput="App.searchInspections(this.value)" style="padding-left: 2rem;">
+                <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Inspections Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list text-primary mr-2"></i> Registre des Inspections Matérielles & Cautions Solidaires</h3>
+            <span class="badge badge-submitted">Mise à jour temps réel</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>N° Dossier & Emprunteur</th>
+                  <th>Type de Garantie</th>
+                  <th>Description & Localisation Terrain</th>
+                  <th>Valeur Déclarée</th>
+                  <th>Valeur Expertisée</th>
+                  <th>Statut Contrôle</th>
+                  <th style="text-align: right;">Action Agent</th>
+                </tr>
+              </thead>
+              <tbody id="agent-inspections-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [ESPACE AGENT] PORTEFEUILLE EMPRUNTEURS & FICHES MEMBRES CIF
+           ==================================================================== -->
+      <section id="view-agent-clients" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title"><i class="fas fa-users text-primary mr-2"></i> Portefeuille Emprunteurs & Sociétaires CIF</h1>
+            <div class="page-breadcrumb">
+              <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+              <span>Gestion Relation Client & Suivi des Engagements</span>
+            </div>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="App.exportClientsCsv()">
+              <i class="fas fa-file-excel text-emerald mr-1"></i> Exporter Portefeuille (CSV)
+            </button>
+            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+              <i class="fas fa-user-plus mr-1"></i> Enrôler un Nouveau Membre
+            </button>
+          </div>
+        </div>
+      
+        <!-- Summary Metric Stats -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-address-book"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="client-kpi-total">5</div>
+              <div class="stat-label">Clients Actifs dans l'Agence</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% Sociétaires CIF</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="client-kpi-savings">4.67M</div>
+              <div class="stat-label">Épargne CIF Mobilisée</div>
+              <div class="stat-trend up"><i class="fas fa-coins"></i> Solde moyen : 935 000 F</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="client-kpi-loans">9.3M</div>
+              <div class="stat-label">Encours Brut de Crédits</div>
+              <div class="stat-trend up"><i class="fas fa-chart-line"></i> PAR 30 : 0.0%</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap purple">
+              <i class="fas fa-seedling"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="client-kpi-coldstart">1</div>
+              <div class="stat-label">Primo-Demandeur (Cold Start)</div>
+              <div class="stat-trend up"><i class="fas fa-shield-heart"></i> Inclusion financière</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Filter & Search Bar -->
+        <div class="card" style="margin-bottom: 1.25rem;">
+          <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="clients-filter-buttons">
+              <button class="btn btn-primary btn-sm" onclick="App.filterClientPortfolio('ALL', this)">
+                Tous les Membres (<span id="clients-count-all">5</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('COLD_START', this)" style="border-color: #10b981; color: #047857; background: #f0fdf4;">
+                <i class="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('ACTIVE_LOAN', this)">
+                <i class="fas fa-file-invoice-dollar mr-1"></i> Crédit en Cours
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('VERIFIED', this)">
+                <i class="fas fa-check-circle text-emerald mr-1"></i> KYC Validé
+              </button>
+            </div>
+      
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <div style="position: relative; min-width: 250px;">
+                <input type="text" id="clients-search-input" class="form-control form-control-sm" placeholder="Recherche par nom, CIF, ville, activité..." oninput="App.searchClientPortfolio(this.value)" style="padding-left: 2rem;">
+                <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Clients Grid / Cards -->
+        <div class="grid-3" id="agent-clients-grid" style="gap: 1.25rem;">
+          <!-- Injected dynamically -->
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [ESPACE AGENT] PIÈCES MANQUANTES, RELANCES SMS & COMPLÉMENTS GED
+           ==================================================================== -->
+      <section id="view-agent-complements" class="app-view" style="display: none;">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title"><i class="fas fa-triangle-exclamation text-danger mr-2"></i> Pièces Manquantes & Relances Documentaires</h1>
+            <div class="page-breadcrumb">
+              <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+              <span>Collecte Terrain & Régularisation des Dossiers en Suspens</span>
+            </div>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="App.openQrScannerModal('general')" title="Scanner le QR Code d'un document ou justificatif">
+              <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Document Mobile
+            </button>
+            <button class="btn btn-primary" onclick="App.triggerBulkSmsReminder()">
+              <i class="fas fa-paper-plane mr-1"></i> Relance Groupée SMS / WhatsApp
+            </button>
+          </div>
+        </div>
+      
+        <!-- Alert Banner -->
+        <div class="anomaly-item warning" style="margin-bottom: 1.5rem; border-left: 4px solid var(--warning);">
+          <i class="fas fa-bell-concierge anomaly-icon" style="color: var(--warning-dark);"></i>
+          <div class="anomaly-content">
+            <h5 style="color: var(--warning-dark);">3 dossiers nécessitent une collecte complémentaire avant passage en Comité</h5>
+            <p>Certaines pièces présentent une anomalie OCR (date dépassée, montant discordant) ou n'ont pas encore été transmises par l'emprunteur.</p>
+          </div>
+        </div>
+      
+        <!-- Top Metrics -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap rose">
+              <i class="fas fa-file-circle-xmark"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="comp-kpi-missing">4</div>
+              <div class="stat-label">Pièces Manquantes ou Rejetées</div>
+              <div class="stat-trend down"><i class="fas fa-clock"></i> Bloquant l'instruction</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-comment-sms"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="comp-kpi-reminders">8</div>
+              <div class="stat-label">Relances Transmises (7j)</div>
+              <div class="stat-trend up"><i class="fas fa-paper-plane"></i> SMS & WhatsApp API</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-hourglass-half"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">1.8 j</div>
+              <div class="stat-label">Délai Moyen de Réponse Client</div>
+              <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif agence : &lt; 3 jours</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-shield-circle-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">91%</div>
+              <div class="stat-label">Taux de Régularisation</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux normes CIF</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Table of Missing / Incomplete Documents -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-list-check text-primary mr-2"></i> File d'Attente des Pièces à Collecter & Relancer</h3>
+              <p class="card-subtitle">Cliquez sur « Relancer Client » ou « Téléverser Pièce » pour régulariser le dossier</p>
+            </div>
+            <span class="badge badge-warning"><i class="fas fa-triangle-exclamation mr-1"></i> Actions Requises</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Dossier & Emprunteur</th>
+                  <th>Document Attendu</th>
+                  <th>Motif du Blocage / Anomalie</th>
+                  <th>Dernière Relance</th>
+                  <th>Statut GED</th>
+                  <th style="text-align: right;">Actions de l'Agent</th>
+                </tr>
+              </thead>
+              <tbody id="agent-complements-table-body">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
 
       <!-- ====================================================================
            [ESPACE 3] TABLEAU DE BORD DE L'ANALYSTE RISQUE (SCORING V2 & 360°)
@@ -617,7 +2238,7 @@
             </button>
           </div>
         </div>
-
+      
         <!-- 4 KPI Stat Cards (Zoogler Style) -->
         <div class="grid-4">
           <div class="card stat-card">
@@ -630,7 +2251,7 @@
               <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12.5% ce mois</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap emerald">
               <i class="fas fa-coins"></i>
@@ -641,7 +2262,7 @@
               <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8.2% vs N-1</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap amber">
               <i class="fas fa-shield-check"></i>
@@ -652,7 +2273,7 @@
               <div class="stat-trend up"><i class="fas fa-check"></i> Objectif UEMOA atteint</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap rose">
               <i class="fas fa-triangle-exclamation"></i>
@@ -664,7 +2285,7 @@
             </div>
           </div>
         </div>
-
+      
         <!-- Charts Grid (Main Spline + Risk Breakdown) -->
         <div class="grid-dashboard-main">
           <!-- Evolution Spline Chart -->
@@ -683,7 +2304,7 @@
               <canvas id="evolution-chart-canvas"></canvas>
             </div>
           </div>
-
+      
           <!-- Risk Distribution Doughnut -->
           <div class="card">
             <div class="card-header">
@@ -697,7 +2318,7 @@
             </div>
           </div>
         </div>
-
+      
         <!-- Bottom Row: Regional Performance + Recent Credit Requests -->
         <div class="grid-dashboard-main" style="margin-top: 1.25rem;">
           <div class="card">
@@ -709,7 +2330,7 @@
               <canvas id="regional-chart-canvas"></canvas>
             </div>
           </div>
-
+      
           <!-- Quick Compliance Watchlist Card -->
           <div class="card">
             <div class="card-header">
@@ -737,8 +2358,11 @@
           </div>
         </div>
       </section>
+      
 
-      <!-- VIEW: ANALYST DOSSIERS MANAGEMENT -->
+      <!-- ====================================================================
+           VIEW: ANALYST DOSSIERS MANAGEMENT (DOSSIERS À INSTRUIRE)
+           ==================================================================== -->
       <section id="view-analyst-dossiers" class="app-view" style="display: none;">
         <div class="page-header">
           <div class="page-title-group">
@@ -749,22 +2373,25 @@
             </div>
           </div>
         </div>
-
+      
         <div class="card" style="margin-bottom: 1.25rem;">
           <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ALL')">Tous les dossiers</button>
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ANALYSIS')">En Analyse</button>
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('VERIFICATION_REQUIRED')">Vérif. Requise</button>
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('COMMITTEE')">En Comité</button>
-              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED')">Approuvés</button>
+              <button class="btn btn-primary btn-sm" id="btn-filter-all" onclick="AppInteractions.renderRequestsTable('ALL', '', this)">Tous les dossiers</button>
+              <button class="btn btn-secondary btn-sm" id="btn-filter-coldstart" onclick="AppInteractions.renderRequestsTable('COLD_START', '', this)" style="border-color: #10b981; color: #047857; background: #f0fdf4;">
+                <i class="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ANALYSIS', '', this)">En Analyse</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('VERIFICATION_REQUIRED', '', this)">Vérif. Requise</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('COMMITTEE', '', this)">En Comité</button>
+              <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED', '', this)">Approuvés</button>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-subtle);">
               <i class="fas fa-info-circle"></i> Cliquez sur <strong>Analyser 360°</strong> pour voir le Reste à Vivre, l'OCR et simuler le Cold Start.
             </div>
           </div>
         </div>
-
+      
         <div class="card">
           <div class="table-responsive">
             <table class="table-custom">
@@ -787,6 +2414,7 @@
           </div>
         </div>
       </section>
+      
 
       <!-- ====================================================================
            [ESPACE 4] TABLEAU DE BORD DU COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
@@ -801,7 +2429,7 @@
             </div>
           </div>
         </div>
-
+      
         <!-- 4 KPI Committee Cards -->
         <div class="grid-4">
           <div class="card stat-card">
@@ -814,7 +2442,7 @@
               <div class="stat-trend down"><i class="fas fa-gavel"></i> Délibération requise</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap primary">
               <i class="fas fa-vault"></i>
@@ -825,7 +2453,7 @@
               <div class="stat-trend up"><i class="fas fa-check"></i> 5 dossiers UEMOA</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap emerald">
               <i class="fas fa-file-signature"></i>
@@ -836,7 +2464,7 @@
               <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux seuils CIF</div>
             </div>
           </div>
-
+      
           <div class="card stat-card">
             <div class="stat-icon-wrap amber">
               <i class="fas fa-stopwatch"></i>
@@ -848,7 +2476,7 @@
             </div>
           </div>
         </div>
-
+      
         <!-- Committee Deliberation Table -->
         <div class="card" style="margin-top: 1.25rem;">
           <div class="card-header">
@@ -875,6 +2503,7 @@
           </div>
         </div>
       </section>
+      
 
       <!-- ====================================================================
            [ESPACE 5] TABLEAU DE BORD DE CONFORMITÉ LBC / FT / FP (DIGICOOP-WA+)
@@ -889,7 +2518,7 @@
             </div>
           </div>
         </div>
-
+      
         <div class="grid-2">
           <!-- Real-Time Screening Search Console -->
           <div class="card">
@@ -900,7 +2529,7 @@
               <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
                 Vérification instantanée des personnes physiques/morales contre les listes de sanctions régionales UEMOA, ONU, GAFI et la base des Personnes Politiquement Exposées (PPE).
               </p>
-
+      
               <div class="form-group">
                 <label class="form-label">Nom complet, Alias ou N° d'identification</label>
                 <div style="display: flex; gap: 0.5rem;">
@@ -910,13 +2539,13 @@
                   </button>
                 </div>
               </div>
-
+      
               <div id="screening-result-box">
                 <!-- Result Injected Dynamically -->
               </div>
             </div>
           </div>
-
+      
           <!-- Multi-Account Consolidated Balance & Anomaly Monitor -->
           <div class="card">
             <div class="card-header">
@@ -926,7 +2555,7 @@
               <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
                 Détermination du solde global agrégé des comptes détenus par un même client à travers les caisses membres du réseau CIF.
               </p>
-
+      
               <div class="table-responsive">
                 <table class="table-custom">
                   <thead>
@@ -957,7 +2586,7 @@
                   </tbody>
                 </table>
               </div>
-
+      
               <div style="margin-top: 1rem; font-size: 0.78rem; color: var(--text-muted-dark);">
                 <i class="fas fa-check-circle text-success"></i> Seuil d'alerte UEMOA (50 000 000 FCFA) non franchi.
               </div>
@@ -965,6 +2594,7 @@
           </div>
         </div>
       </section>
+      
 
       <!-- ====================================================================
            VIEW: SCORING ENGINE ADMINISTRATION (MOTEURS & RÈGLES SCORING V2)
@@ -979,7 +2609,7 @@
             </div>
           </div>
         </div>
-
+      
         <div class="grid-2">
           <!-- Model 1: Standard UEMOA Model -->
           <div class="card">
@@ -994,7 +2624,7 @@
               <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
                 Ce modèle utilise l'intégralité des 10 sous-scores incluant la discipline d'épargne CIF et l'historique réel des remboursements.
               </div>
-
+      
               <div class="table-responsive">
                 <table class="table-custom">
                   <thead>
@@ -1045,7 +2675,7 @@
               </div>
             </div>
           </div>
-
+      
           <!-- Model 2: Cold Start Model (Inclusion Financière) -->
           <div class="card">
             <div class="card-header">
@@ -1059,7 +2689,7 @@
               <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
                 <i class="fas fa-balance-scale text-primary"></i> <strong>Règle fondamentale :</strong> <em>Absence d'historique ≠ Mauvais historique</em>. Les poids sont redistribués sur la capacité nette, l'activité et les garanties/cautions solidaires.
               </div>
-
+      
               <div class="table-responsive">
                 <table class="table-custom">
                   <thead>
@@ -1106,7 +2736,86 @@
             </div>
           </div>
         </div>
+      
+        <!-- Interactive Live Cold Start vs Standard Comparative Simulator -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-microchip text-primary"></i> Banc d'Essai Interactif : Modèle Standard vs Cold Start</h3>
+              <p class="card-subtitle">Testez en direct l'impact de la redistribution des pondérations pour un emprunteur primo-demandeur sans antécédents</p>
+            </div>
+            <span class="badge badge-warning"><i class="fas fa-bolt"></i> Calcul Temps Réel</span>
+          </div>
+          <div class="card-body">
+            <div class="grid-2" style="gap: 1.5rem; align-items: center;">
+              <!-- Controls -->
+              <div>
+                <!-- Factor 1: Reste à vivre -->
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Capacité Nette (Reste à vivre / Mensualité) :</span>
+                    <span id="cs-sim-cap-val" style="color: var(--primary-700);">2.2x (Très Bon)</span>
+                  </div>
+                  <input type="range" id="cs-sim-cap" min="0.5" max="3.5" step="0.1" value="2.2" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+                </div>
+      
+                <!-- Factor 2: Ancienneté Activité -->
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Ancienneté & Stabilité du Commerce :</span>
+                    <span id="cs-sim-act-val" style="color: var(--primary-700);">4 ans d'activité</span>
+                  </div>
+                  <input type="range" id="cs-sim-act" min="0.5" max="10" step="0.5" value="4" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+                </div>
+      
+                <!-- Factor 3: Caution & Garanties -->
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Couverture Caution Solidaire / Matériel :</span>
+                    <span id="cs-sim-gar-val" style="color: var(--primary-700);">100% de couverture</span>
+                  </div>
+                  <input type="range" id="cs-sim-gar" min="0" max="150" step="10" value="100" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+                </div>
+      
+                <!-- Factor 4: OCR & CNI -->
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Conformité KYC & Rapprochement OCR :</span>
+                    <span id="cs-sim-ocr-val" style="color: var(--primary-700);">95% (CNI Certifiée)</span>
+                  </div>
+                  <input type="range" id="cs-sim-ocr" min="40" max="100" step="5" value="95" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+                </div>
+              </div>
+      
+              <!-- Comparative Output Display -->
+              <div style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+                  <!-- Standard Engine Result -->
+                  <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+                    <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-subtle); font-weight: 700;">Modèle Standard (Sans Antécédents)</div>
+                    <div style="font-size: 2.2rem; font-weight: 900; color: #ef4444; margin: 0.3rem 0;" id="cs-sim-std-score">48<span style="font-size: 1rem; color: var(--text-subtle);">/100</span></div>
+                    <span class="badge badge-rejected" id="cs-sim-std-badge">Pénalisé (Zéro antécédent)</span>
+                    <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 6px;">Poids crédit & épargne = 0 pts</div>
+                  </div>
+      
+                  <!-- Cold Start Result -->
+                  <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 2px solid #10b981; text-align: center;">
+                    <div style="font-size: 0.72rem; text-transform: uppercase; color: #047857; font-weight: 700;">Modèle Cold Start (Inclusion)</div>
+                    <div style="font-size: 2.2rem; font-weight: 900; color: #10b981; margin: 0.3rem 0;" id="cs-sim-cs-score">78<span style="font-size: 1rem; color: var(--text-subtle);">/100</span></div>
+                    <span class="badge badge-approved" id="cs-sim-cs-badge"><i class="fas fa-check"></i> Éligible Comité</span>
+                    <div style="font-size: 0.7rem; color: #047857; font-weight: 600; margin-top: 6px;" id="cs-sim-gain-badge">+30 pts d'Inclusion</div>
+                  </div>
+                </div>
+      
+                <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.74rem; color: var(--text-muted-dark);">
+                  <strong>Démonstration d'équité algorithmique :</strong> En désactivant la pénalisation d'absence d'historique et en accordant une prime au Reste à Vivre certifié et aux cautions de proximité, le candidat accède au financement sans dégrader le risque global.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
+      
 
       <!-- ====================================================================
            VIEW: CLIENT 6-STEP WIZARD (OCTROI EN 6 ÉTAPES)
@@ -1121,7 +2830,7 @@
             </div>
           </div>
         </div>
-
+      
         <div class="card" style="max-width: 860px; margin: 0 auto;">
           <div class="card-body">
             <!-- 6-Step Wizard Indicator -->
@@ -1151,10 +2860,28 @@
                 <div class="wizard-step-label">Justificatifs</div>
               </div>
             </div>
-
+      
             <!-- Step 1: Identité -->
             <div id="wizard-step-1" class="wizard-step-content">
-              <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h4 style="margin: 0;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
+                <button type="button" class="btn btn-primary-subtle btn-sm" id="btn-wizard-scan-cni" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
+                  <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+                </button>
+              </div>
+      
+              <!-- Verified QR Document Banner (Shown when QR identity is scanned) -->
+              <div id="wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
+                <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
+                <div class="anomaly-content">
+                  <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
+                  <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+                </div>
+                <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
+                  <i class="fas fa-rotate"></i> Re-scanner
+                </button>
+              </div>
+      
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">Nom et Prénom</label>
@@ -1181,11 +2908,48 @@
                   <input type="text" id="wiz-city" class="form-control" value="Bamako - Faladié (Péri-urbaine)">
                 </div>
               </div>
+      
+              <!-- Profil d'Éligibilité & Cold Start (Inclusion Financière) -->
+              <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                  <label class="form-label" style="margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">
+                    <i class="fas fa-seedling text-emerald mr-1"></i> Profil d'Inclusion & Antécédents Financiers
+                  </label>
+                  <span class="badge badge-warning" id="wiz-cold-start-indicator" style="font-size: 0.7rem;">
+                    <i class="fas fa-check"></i> Mode Cold Start Activé
+                  </span>
+                </div>
+      
+                <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <label style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--bg-surface); transition: all 0.2s;" id="label-profile-standard">
+                    <input type="radio" name="wiz-profile-mode" id="wiz-profile-standard" value="STANDARD" onchange="App.handleWizardProfileModeChange('STANDARD')" style="margin-top: 3px;">
+                    <div>
+                      <strong style="font-size: 0.82rem; color: var(--text-primary); display: block;">Membre Existant</strong>
+                      <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Déjà client CIF avec historique bancaire ou compte d'épargne régulier.</span>
+                    </div>
+                  </label>
+      
+                  <label style="border: 2px solid var(--primary-600); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--cif-emerald-50, #f0fdf4); transition: all 0.2s;" id="label-profile-coldstart">
+                    <input type="radio" name="wiz-profile-mode" id="wiz-profile-coldstart" value="COLD_START" checked onchange="App.handleWizardProfileModeChange('COLD_START')" style="margin-top: 3px;">
+                    <div>
+                      <strong style="font-size: 0.82rem; color: var(--emerald, #047857); display: block;">
+                        <i class="fas fa-seedling"></i> Primo-Demandeur (Cold Start)
+                      </strong>
+                      <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Nouveau bénéficiaire sans antécédent bancaire : évaluation par solvabilité réelle.</span>
+                    </div>
+                  </label>
+                </div>
+      
+                <div id="wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
+                  <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CIF UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
+                </div>
+              </div>
+      
               <div style="text-align: right; margin-top: 1.5rem;">
                 <button class="btn btn-primary" data-wizard-action="next">Suivant : Activité <i class="fas fa-arrow-right"></i></button>
               </div>
             </div>
-
+      
             <!-- Step 2: Activité -->
             <div id="wizard-step-2" class="wizard-step-content" style="display: none;">
               <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-store text-primary mr-2"></i> Étape 2 : Activité Économique</h4>
@@ -1214,7 +2978,7 @@
                 <button class="btn btn-primary" data-wizard-action="next">Suivant : Finances <i class="fas fa-arrow-right"></i></button>
               </div>
             </div>
-
+      
             <!-- Step 3: Finances -->
             <div id="wizard-step-3" class="wizard-step-content" style="display: none;">
               <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-calculator text-primary mr-2"></i> Étape 3 : Revenus, Charges & Capacité</h4>
@@ -1243,7 +3007,7 @@
                 <button class="btn btn-primary" data-wizard-action="next">Suivant : Demande <i class="fas fa-arrow-right"></i></button>
               </div>
             </div>
-
+      
             <!-- Step 4: Demande -->
             <div id="wizard-step-4" class="wizard-step-content" style="display: none;">
               <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-money-bill-wave text-primary mr-2"></i> Étape 4 : Détails du Crédit & Simulation</h4>
@@ -1261,7 +3025,7 @@
                 <label class="form-label">Objet précis du financement</label>
                 <textarea id="wiz-purpose" class="form-control" rows="2">Achat de bois massif et outillage menuiserie</textarea>
               </div>
-
+      
               <!-- Live Capacity Simulator Card -->
               <div class="capacity-card" style="margin-top: 1rem;">
                 <h5 style="font-size: 0.85rem; color: var(--text-muted-dark); margin-bottom: 0.5rem;">Aperçu en Direct de la Capacité de Remboursement</h5>
@@ -1280,13 +3044,13 @@
                   </div>
                 </div>
               </div>
-
+      
               <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
                 <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
                 <button class="btn btn-primary" data-wizard-action="next">Suivant : Garanties <i class="fas fa-arrow-right"></i></button>
               </div>
             </div>
-
+      
             <!-- Step 5: Garanties -->
             <div id="wizard-step-5" class="wizard-step-content" style="display: none;">
               <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-shield-alt text-primary mr-2"></i> Étape 5 : Déclaration de Garantie</h4>
@@ -1314,33 +3078,69 @@
                 <button class="btn btn-primary" data-wizard-action="next">Suivant : Justificatifs & OCR <i class="fas fa-arrow-right"></i></button>
               </div>
             </div>
-
+      
             <!-- Step 6: Justificatifs & OCR -->
             <div id="wizard-step-6" class="wizard-step-content" style="display: none;">
               <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des Justificatifs & Traitement OCR</h4>
-              <div style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 2rem; text-align: center; background: var(--surface-card-subtle);">
-                <i class="fas fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--cif-primary-500); margin-bottom: 0.75rem;"></i>
-                <h5>Déposez votre Devis Proforma / Relevé d'Épargne</h5>
-                <p style="font-size: 0.78rem; color: var(--text-subtle);">PDF, JPG ou PNG (Extraction automatique par le moteur OCR Crédit Fast)</p>
-                <button class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;" onclick="App.showToast('Document factice chargé avec succès', 'success')">
-                  <i class="fas fa-file-lines"></i> Sélectionner Fichier (Facture_Bois_Mali.pdf)
-                </button>
+              
+              <div class="grid-2" style="gap: 1rem; margin-bottom: 1.25rem;">
+                <!-- Option A: Scanner via Appareil Photo / QR Code -->
+                <div style="border: 2px dashed var(--primary-300); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                  <div>
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem;">
+                      <i class="fas fa-camera"></i>
+                    </div>
+                    <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Scanner en Direct (Caméra)</h5>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
+                      Scannez le QR Code de sécurité d'une facture normalisée DGI, d'un registre RCCM ou d'une attestation foncière.
+                    </p>
+                  </div>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="App.openQrScannerModal('document')" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-qrcode mr-2"></i> Lancer la Caméra & Scanner QR
+                  </button>
+                </div>
+      
+                <!-- Option B: Fichier Classique -->
+                <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                  <div>
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--bg-surface); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem; border: 1px solid var(--border-color);">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Sélectionner un Fichier PDF / Image</h5>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
+                      Formats acceptés : PDF, JPEG, PNG (Moteur OCR Crédit Fast automatique).
+                    </p>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document factice chargé avec succès (Facture_Bois_Mali.pdf)', 'success')" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
+                  </button>
+                </div>
               </div>
-
+      
+              <!-- Scanned Document Banner if available -->
+              <div id="wizard-doc-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
+                <i class="fas fa-file-circle-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
+                <div class="anomaly-content">
+                  <h5 style="color: var(--emerald); font-weight: 700;">Document Officiel Vérifié par QR Code</h5>
+                  <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée DGI / UEMOA attachée avec succès au dossier.</p>
+                </div>
+              </div>
+      
               <div style="display: flex; justify-content: space-between; margin-top: 1.75rem;">
-                <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
-                <button class="btn btn-success" data-wizard-action="submit">
+                <button type="button" class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+                <button type="button" class="btn btn-success" data-wizard-action="submit">
                   <i class="fas fa-paper-plane"></i> Soumettre la Demande au Réseau CIF
                 </button>
               </div>
             </div>
-
+      
           </div>
         </div>
       </section>
+      
 
       <!-- ====================================================================
-           VIEW: AUDIT TRAIL
+           VIEW: AUDIT TRAIL (PISTE D'AUDIT & JOURNAL DES ÉVÉNEMENTS V2)
            ==================================================================== -->
       <section id="view-audit-logs" class="app-view" style="display: none;">
         <div class="page-header">
@@ -1352,7 +3152,7 @@
             </div>
           </div>
         </div>
-
+      
         <div class="card">
           <div class="table-responsive">
             <table class="table-custom">
@@ -1372,7 +3172,7 @@
           </div>
         </div>
       </section>
-
+      
     </main>
   </div>
 </div>
@@ -1510,6 +3310,7 @@
   </div>
 </div>
 
+
 <!-- ==========================================================================
      5. MODAL: COMITÉ DE CRÉDIT DÉCISION
      ========================================================================== -->
@@ -1577,10 +3378,399 @@
   </div>
 </div>
 
+
+<!-- ====================================================================
+     MODAL RAPPORT D'INSPECTION TERRAIN DES GARANTIES (AGENT DE CRÉDIT)
+     ==================================================================== -->
+<div id="modal-inspection" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog" style="max-width: 650px;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" id="modal-insp-title">Rapport d'Inspection Terrain</h3>
+          <div style="font-size: 0.75rem; color: var(--text-subtle);" id="modal-insp-subtitle">Contrôle physique, valorisation et solvabilité locale</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="App.closeModal('modal-inspection')">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="insp-guarantee-id" value="">
+      
+      <!-- Guarantee info banner -->
+      <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);" id="insp-client-name">Fatou Ndiaye • #REQ-2026-0891</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);" id="insp-guarantee-type">Stock de Marchandises (Rouleaux Wax)</div>
+          </div>
+          <span class="badge badge-warning" id="insp-status-badge">À Visiter</span>
+        </div>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">Valeur Déclarée (FCFA)</label>
+          <input type="text" id="insp-declared-val" class="form-control" readonly style="background: var(--bg-body); font-weight: 600;">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--primary-700);">Valeur Expertisée / Retenue (FCFA) *</label>
+          <input type="number" id="insp-verified-val" class="form-control" placeholder="ex: 3400000" style="font-weight: 700; color: var(--primary-700); border-color: var(--primary-400);">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" style="font-size: 0.8rem;">Localisation & Zone Visité Terrain *</label>
+        <input type="text" id="insp-location" class="form-control" placeholder="ex: Dakar Médina, Rue 22 (Boutique physique)">
+      </div>
+
+      <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">État Physique & Conservabilité *</label>
+          <select id="insp-condition" class="form-control">
+            <option value="EXCELLENT">Excellent état / Neuf ou sous emballage</option>
+            <option value="BON" selected>Bon état / Rotation rapide de stock</option>
+            <option value="MOYEN">État moyen / Vétusté partielle</option>
+            <option value="MAUVAIS">Mauvais état / Risque de dépréciation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">Avis Enquête de Voisinage & Moralité *</label>
+          <select id="insp-reputation" class="form-control">
+            <option value="TRES_FAVORABLE" selected>Très favorable (Bonne notoriété au marché)</option>
+            <option value="FAVORABLE">Favorable (Activité régulière constatée)</option>
+            <option value="RESERVE">Réserves (Activité récente ou intermittente)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" style="font-size: 0.8rem;">Observations Détaillées de l'Agent *</label>
+        <textarea id="insp-notes" class="form-control" rows="3" placeholder="Constats effectués sur place, vérification physique des stocks/machines, concordance avec le registre de commerce..."></textarea>
+      </div>
+
+      <!-- Photo upload / mock -->
+      <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; text-align: center; background: var(--bg-body); margin-bottom: 1rem;">
+        <i class="fas fa-camera text-primary" style="font-size: 1.4rem; margin-bottom: 0.25rem;"></i>
+        <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">Photos & Justificatifs Terrain</div>
+        <div style="font-size: 0.7rem; color: var(--text-subtle);">2 photos géolocalisées enregistrées par l'application mobile CIF</div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+      <button class="btn btn-secondary" onclick="App.closeModal('modal-inspection')">Annuler</button>
+      <button class="btn btn-primary" onclick="App.saveInspectionReport()">
+        <i class="fas fa-check-circle mr-1"></i> Valider le Contrôle Terrain
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==========================================================================
+     7. MODAL: PARAMÈTRES & PRÉFÉRENCES UTILISATEUR (SETTINGS)
+     ========================================================================== -->
+<div id="settings-modal" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-sliders-h text-primary mr-1"></i> Paramètres & Préférences
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);">Personnalisez votre environnement de travail CIF</p>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeSettingsModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Section 1: Thème & Apparence -->
+      <div class="settings-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-palette text-primary mr-1"></i> Apparence & Thème
+        </label>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+          <div class="settings-theme-option" id="opt-theme-light" onclick="App.setTheme('light')" style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+            <i class="fas fa-sun text-warning" style="font-size: 1.4rem; margin-bottom: 0.35rem; display: block;"></i>
+            <span style="font-weight: 600; font-size: 0.82rem;">Mode Clair</span>
+          </div>
+          <div class="settings-theme-option" id="opt-theme-dark" onclick="App.setTheme('dark')" style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+            <i class="fas fa-moon text-primary" style="font-size: 1.4rem; margin-bottom: 0.35rem; display: block;"></i>
+            <span style="font-weight: 600; font-size: 0.82rem;">Mode Sombre</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Fuseau Horaire & Région UEMOA -->
+      <div class="settings-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-globe-africa text-emerald mr-1"></i> Fuseau Horaire & Pays par Défaut
+        </label>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Pays / Caisse d'attache</label>
+            <select id="setting-country" class="form-control" onchange="App.updateUserCountry(this.value)">
+              <option value="BF">🇧🇫 Burkina Faso (Ouagadougou)</option>
+              <option value="SN">🇸🇳 Sénégal (Dakar)</option>
+              <option value="TG">🇹🇬 Togo (Lomé)</option>
+              <option value="BJ">🇧🇯 Bénin (Cotonou)</option>
+              <option value="ML">🇲🇱 Mali (Bamako)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Fuseau Horaire</label>
+            <input type="text" class="form-control" value="GMT+00:00 (Heure UEMOA)" readonly style="background: var(--bg-surface-secondary);">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Notifications & Alertes -->
+      <div class="settings-group">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-bell text-warning mr-1"></i> Préférences de Notification
+        </label>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; cursor: pointer;">
+            <input type="checkbox" id="setting-notif-alerts" checked style="accent-color: var(--primary-500); width: 16px; height: 16px;">
+            <span>Alertes en temps réel sur détection d'anomalies OCR</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; cursor: pointer;">
+            <input type="checkbox" id="setting-notif-sound" checked style="accent-color: var(--primary-500); width: 16px; height: 16px;">
+            <span>Notification sonore discrète lors de la convocation au comité</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" onclick="App.closeSettingsModal()">Fermer</button>
+      <button class="btn btn-primary btn-sm" onclick="App.saveSettings()">
+        <i class="fas fa-check mr-1"></i> Enregistrer Préférences
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====================================================================
+     [MODAL] PAIEMENT D'ÉCHÉANCE MOBILE MONEY (DEMANDEUR CIF)
+     ==================================================================== -->
+<div id="client-payment-modal" class="modal" style="display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
+  <div class="modal-dialog" style="max-width: 500px; width: 92%; background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl); border: 1px solid var(--border-color); overflow: hidden;">
+    
+    <!-- Modal Header -->
+    <div class="modal-header" style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, var(--cif-emerald-500), var(--cif-emerald-600)); color: white;">
+      <div>
+        <h4 style="font-size: 1.1rem; font-weight: 800; margin: 0; color: white;">
+          <i class="fas fa-mobile-screen mr-2"></i> Règlement d'Échéance CIF
+        </h4>
+        <span style="font-size: 0.76rem; color: #d1fae5;">Paiement sécurisé par passerelle Mobile Money UEMOA</span>
+      </div>
+      <button class="modal-close-btn" style="color: white; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="App.closeClientPaymentModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body" style="padding: 1.5rem;">
+      <form id="client-payment-form" onsubmit="App.submitClientPayment(event)">
+        <!-- Summary Box -->
+        <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px;">
+            <span>Prêt Concerné :</span>
+            <strong style="color: var(--text-primary);">REQ-2025-0412 (Tissus Wax)</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px;">
+            <span>Échéance visée :</span>
+            <strong style="color: var(--cif-gold-700);" id="payment-modal-due-label">Échéance N° 3 (05/09/2026)</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border-color); padding-top: 6px; margin-top: 6px;">
+            <span style="font-weight: 700; font-size: 0.85rem;">Montant à Débiter :</span>
+            <strong style="font-size: 1.35rem; color: var(--primary-700); font-family: var(--font-family-code);" id="payment-modal-amount-label">235 000 FCFA</strong>
+          </div>
+        </div>
+
+        <!-- Provider Selection -->
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 700;">Sélectionnez votre moyen de paiement *</label>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;" id="momo-provider-buttons">
+            <label class="momo-option-btn active" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border: 2px solid #ff7900; background: rgba(255, 121, 0, 0.06); border-radius: var(--radius-md); cursor: pointer;">
+              <input type="radio" name="momo_provider" value="Orange Money" checked style="accent-color: #ff7900;">
+              <span style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Orange Money</span>
+            </label>
+            <label class="momo-option-btn" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); background: var(--bg-surface); border-radius: var(--radius-md); cursor: pointer;">
+              <input type="radio" name="momo_provider" value="Wave" style="accent-color: #1dc5d8;">
+              <span style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Wave Sénégal</span>
+            </label>
+            <label class="momo-option-btn" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); background: var(--bg-surface); border-radius: var(--radius-md); cursor: pointer;">
+              <input type="radio" name="momo_provider" value="Moov Money" style="accent-color: #005ba4;">
+              <span style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Moov Money</span>
+            </label>
+            <label class="momo-option-btn" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); background: var(--bg-surface); border-radius: var(--radius-md); cursor: pointer;">
+              <input type="radio" name="momo_provider" value="MTN MoMo" style="accent-color: #ffcc00;">
+              <span style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">MTN MoMo</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" style="font-size: 0.8rem;">Numéro de Compte Mobile Money *</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <span style="padding: 0.5rem 0.75rem; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700;">+221</span>
+            <input type="tel" id="payment-phone-number" class="form-control" value="77 540 88 12" required style="font-size: 0.9rem; font-weight: 600;">
+          </div>
+          <span style="font-size: 0.72rem; color: var(--text-subtle); margin-top: 4px; display: block;">Une demande de confirmation USSD / Push vous sera transmise sur votre téléphone.</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="btn-confirm-momo-pay" class="btn btn-success btn-lg" style="width: 100%; justify-content: center;">
+          <i class="fas fa-lock mr-2"></i> Confirmer le Paiement de 235 000 FCFA
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====================================================================
+     MODAL: SCANNER APPAREIL PHOTO & DÉTECTEUR QR CODES DOCUMENTS OFFICIELS UEMOA
+     ==================================================================== -->
+<div id="modal-qr-scanner" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog modal-dialog-lg qr-scanner-modal-dialog">
+    <div class="modal-header">
+      <div class="modal-header-title">
+        <i class="fas fa-camera text-primary mr-2"></i>
+        <div>
+          <h4 style="margin: 0; font-size: 1.05rem;">Scanner de QR Code Officiel UEMOA</h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Extraction automatique & Vérification d'authenticité de document</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="App.closeQrScannerModal()" title="Fermer le scanner">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 1.25rem;">
+      <!-- Main Scanning View -->
+      <div id="qr-camera-viewport-container" class="qr-viewport-container">
+        <!-- Live Camera Video -->
+        <video id="qr-video-feed" class="qr-video-element" playsinline autoplay muted></video>
+        <canvas id="qr-canvas-buffer" style="display: none;"></canvas>
+
+        <!-- Viewfinder Overlay Box -->
+        <div class="qr-viewfinder-overlay" id="qr-viewfinder-overlay">
+          <div class="qr-viewfinder-box">
+            <div class="corner-border top-left"></div>
+            <div class="corner-border top-right"></div>
+            <div class="corner-border bottom-left"></div>
+            <div class="corner-border bottom-right"></div>
+            <div class="qr-laser-line" id="qr-laser-line"></div>
+          </div>
+          <div class="qr-viewfinder-status" id="qr-scanner-status-text">
+            <i class="fas fa-circle-notch fa-spin mr-1"></i> Initialisation de la caméra...
+          </div>
+        </div>
+
+        <!-- Fallback Message if camera is denied or unavailable -->
+        <div id="qr-camera-error-banner" class="qr-error-overlay" style="display: none;">
+          <i class="fas fa-video-slash" style="font-size: 2.2rem; color: var(--warning); margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.25rem;">Accès Caméra Non Disponible</h5>
+          <p id="qr-camera-error-desc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem; max-width: 320px; text-align: center;">
+            Veuillez autoriser l'accès à la caméra dans les permissions du navigateur ou importer un fichier image.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+            <button class="btn btn-primary btn-sm" onclick="App.startCameraFeed()">
+              <i class="fas fa-rotate-right"></i> Réessayer
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('qr-file-fallback-input').click()">
+              <i class="fas fa-image"></i> Importer Image
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls Toolbar -->
+      <div class="qr-controls-toolbar">
+        <div class="qr-controls-left">
+          <button class="btn btn-secondary btn-sm" id="btn-qr-switch-camera" onclick="App.switchCameraFacingMode()" title="Changer d'objectif (Avant / Arrière)">
+            <i class="fas fa-camera-rotate"></i> <span>Changer Caméra</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-qr-toggle-torch" onclick="App.toggleCameraTorch()" title="Allumer la lampe torche / Flash">
+            <i class="fas fa-bolt"></i> <span>Flash</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('qr-file-fallback-input').click()" title="Analyser une image enregistrée">
+            <i class="fas fa-upload"></i> <span>Importer Fichier</span>
+          </button>
+          <input type="file" id="qr-file-fallback-input" accept="image/*" style="display: none;" onchange="App.handleQrImageUpload(event)">
+        </div>
+
+        <div class="qr-controls-right">
+          <span class="badge badge-submitted" id="qr-camera-status-badge">
+            <i class="fas fa-satellite-dish mr-1"></i> Mode Direct
+          </span>
+        </div>
+      </div>
+
+      <!-- Demo One-Click Test Presets -->
+      <div class="qr-demo-presets-card">
+        <div class="qr-demo-presets-title">
+          <i class="fas fa-flask text-primary mr-1"></i>
+          <span>Simulateur d'échantillons officiels UEMOA (Test instantané) :</span>
+        </div>
+        <div class="qr-demo-presets-buttons">
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('cni')">
+            <i class="fas fa-id-card text-emerald"></i> CNI Biométrique NINA
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('invoice')">
+            <i class="fas fa-receipt text-primary"></i> Facture Normalisée DGI
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('rccm')">
+            <i class="fas fa-certificate text-amber"></i> Registre RCCM & Activité
+          </button>
+        </div>
+      </div>
+
+      <!-- Decoded Result Verification Box (Displayed when a QR is scanned) -->
+      <div id="qr-scan-result-card" class="qr-scan-result-card" style="display: none;">
+        <div class="qr-result-header">
+          <div class="qr-result-status-badge success">
+            <i class="fas fa-shield-check"></i>
+            <span>Signature Cryptographique Certifiée UEMOA / BCEAO</span>
+          </div>
+          <span class="badge badge-submitted" id="qr-doc-type-badge">CNI Biométrique</span>
+        </div>
+
+        <div class="qr-result-body">
+          <div class="qr-extracted-grid" id="qr-extracted-fields-container">
+            <!-- Dynamic Key-Value Pairs populated via JS -->
+          </div>
+        </div>
+
+        <div class="qr-result-actions">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.resetQrScannerState()">
+            <i class="fas fa-arrows-rotate"></i> Scanner un autre document
+          </button>
+          <button type="button" class="btn btn-success" id="btn-apply-qr-data" onclick="App.applyQrScanData()">
+            <i class="fas fa-check-double"></i> Appliquer les données au dossier
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ==========================================================================
      6. Toast Feedback Container
      ========================================================================== -->
 <div id="toast-container"></div>
+
 
 <!-- JavaScript Application Modules -->
 <script src="js/constants.js"></script>
@@ -1590,6 +3780,7 @@
 <script src="js/charts.js"></script>
 <script src="js/interactions.js"></script>
 <script src="js/app.js"></script>
+
 
 </body>
 </html>

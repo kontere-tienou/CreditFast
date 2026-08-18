@@ -224,6 +224,72 @@ const AppCharts = {
         }
       }
     });
+  },
+
+  // 5. Activity Trend Sparkline Chart (7-day Submission Rate for Agent Header)
+  renderActivitySparkline(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    if (this.instances[canvasId]) {
+      this.instances[canvasId].destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 42);
+    gradient.addColorStop(0, 'rgba(79, 70, 229, 0.45)');
+    gradient.addColorStop(1, 'rgba(79, 70, 229, 0.02)');
+
+    // 7 days submission progression (12 Aug to 18 Aug)
+    const labels = ['12 Août', '13 Août', '14 Août', '15 Août', '16 Août', '17 Août', '18 Août (Auj.)'];
+    const dataPoints = [2, 3, 5, 2, 1, 4, 6];
+
+    this.instances[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: dataPoints,
+          borderColor: '#4f46e5',
+          borderWidth: 2.5,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.38,
+          pointRadius: [0, 0, 0, 0, 0, 0, 3.5],
+          pointBackgroundColor: '#4f46e5',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#4f46e5',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: { top: 4, bottom: 2, left: 4, right: 4 }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            displayColors: false,
+            padding: 8,
+            cornerRadius: 6,
+            callbacks: {
+              title: (items) => items[0].label,
+              label: (context) => ` ${context.raw} dossier(s) déposé(s)`
+            }
+          }
+        },
+        scales: {
+          x: { display: false },
+          y: { display: false, min: 0 }
+        }
+      }
+    });
   }
 };
 

@@ -1,0 +1,53 @@
+<!-- ==========================================================================
+     1. Left Vertical Sidebar (Rendu Dynamique selon le Rôle)
+     ========================================================================== -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <a href="#" class="brand-logo" onclick="App.switchView(APP_CONSTANTS.ROLES[App.currentRole].homeView)">
+      <div class="brand-icon">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </div>
+      <div>
+        <span>CRÉDIT FAST</span>
+        <span class="brand-tag">CIF-WA+</span>
+      </div>
+    </a>
+    <!-- Close Drawer Button for Mobile / Tablet -->
+    <button id="sidebar-close-btn" class="sidebar-close-btn" title="Fermer le menu">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- User Mini Profile -->
+  <div class="sidebar-user-card">
+    <div class="user-avatar-wrap">
+      <img id="user-avatar-display" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
+      <span class="user-status-dot"></span>
+    </div>
+    <div class="user-info">
+      <div id="user-name-display" class="user-name">Aminata Diallo</div>
+      <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
+      <div class="user-region-badge">
+        <i class="fas fa-location-dot"></i> UEMOA • DigiCoop-WA+
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Menu Container (Rempli par renderSidebarForRole) -->
+  <nav class="sidebar-menu" id="sidebar-menu-container">
+    <!-- Injected Dynamically based on Authenticated Role -->
+  </nav>
+
+  <!-- Sidebar Footer / Logout & Regional Strip -->
+  <div class="sidebar-footer">
+    <button class="btn btn-secondary btn-sm btn-action-logout" style="width: 100%; margin-bottom: 0.75rem;" title="Se Déconnecter">
+      <i class="fas fa-power-off text-danger"></i> <span>Se Déconnecter</span>
+    </button>
+    <div class="digicoop-card">
+      <div class="digicoop-text">
+        <h6>Projet DigiCoop-WA+</h6>
+        <p>5 Pays : BF • TG • BJ • SN • ML</p>
+      </div>
+    </div>
+  </div>
+</aside>

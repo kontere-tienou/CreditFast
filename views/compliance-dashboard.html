@@ -1,0 +1,89 @@
+<!-- ====================================================================
+     [ESPACE 5] TABLEAU DE BORD DE CONFORMITÉ LBC / FT / FP (DIGICOOP-WA+)
+     ==================================================================== -->
+<section id="view-role-compliance" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Console de Conformité LBC / FT / FP & Filtrage PPE</h1>
+      <div class="page-breadcrumb">
+        <span>DigiCoop-WA+</span> <i class="fas fa-chevron-right"></i>
+        <span>Lutte Blanchiment, Terrorisme & Prolifération (UEMOA)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Real-Time Screening Search Console -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-shield-virus text-primary"></i> Filtrage en Temps Réel (Sanctions & PPE)</h3>
+      </div>
+      <div class="card-body">
+        <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
+          Vérification instantanée des personnes physiques/morales contre les listes de sanctions régionales UEMOA, ONU, GAFI et la base des Personnes Politiquement Exposées (PPE).
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Nom complet, Alias ou N° d'identification</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="screen-client-name" class="form-control" placeholder="Ex: Ibrahim Ould Mohamed ou Ousmane Coulibaly" value="Ibrahim Ould Mohamed">
+            <button id="btn-screen-client" class="btn btn-primary">
+              <i class="fas fa-magnifying-glass"></i> Filtrer
+            </button>
+          </div>
+        </div>
+
+        <div id="screening-result-box">
+          <!-- Result Injected Dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Account Consolidated Balance & Anomaly Monitor -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-network-wired text-emerald"></i> Consolidation Multi-Comptes Réseau CIF</h3>
+      </div>
+      <div class="card-body">
+        <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
+          Détermination du solde global agrégé des comptes détenus par un même client à travers les caisses membres du réseau CIF.
+        </p>
+
+        <div class="table-responsive">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Caisse / Pays</th>
+                <th>N° Compte</th>
+                <th>Type</th>
+                <th>Solde</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🇸🇳 Caisse Médina (Dakar)</td>
+                <td>CPT-CIF-SN-00918</td>
+                <td>Épargne Collectée</td>
+                <td class="amount-cell">1 450 000 FCFA</td>
+              </tr>
+              <tr>
+                <td>🇧🇫 Caisse Ouaga 2000</td>
+                <td>CPT-CIF-BF-04421</td>
+                <td>Courant Commercial</td>
+                <td class="amount-cell">2 800 000 FCFA</td>
+              </tr>
+              <tr style="background: var(--cif-primary-50); font-weight: 700;">
+                <td colspan="3">SOLDE GLOBAL CONSOLIDÉ UEMOA :</td>
+                <td class="amount-cell" style="color: var(--cif-primary-700);">4 250 000 FCFA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 1rem; font-size: 0.78rem; color: var(--text-muted-dark);">
+          <i class="fas fa-check-circle text-success"></i> Seuil d'alerte UEMOA (50 000 000 FCFA) non franchi.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
