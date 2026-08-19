@@ -48,12 +48,7 @@ const App = {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('APP_THEME', theme);
 
-    // Update icons in topbar and auth page
-    const authIcon = document.getElementById('auth-theme-icon');
-    if (authIcon) {
-      authIcon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-moon';
-    }
-
+    // Update icons in topbar
     const topbarThemeBtn = document.getElementById('theme-toggle-btn');
     if (topbarThemeBtn) {
       const topbarIcon = topbarThemeBtn.querySelector('i');
