@@ -35,8 +35,100 @@ const App = {
     }
   },
 
+  // 0. Theme Manager (Light / Dark Mode)
+  currentTheme: 'light',
+
+  initTheme() {
+    const savedTheme = localStorage.getItem('APP_THEME') || 'light';
+    this.setTheme(savedTheme);
+  },
+
+  setTheme(theme) {
+    this.currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('APP_THEME', theme);
+
+    // Update icons in topbar and auth page
+    const authIcon = document.getElementById('auth-theme-icon');
+    if (authIcon) {
+      authIcon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-moon';
+    }
+
+    const topbarThemeBtn = document.getElementById('theme-toggle-btn');
+    if (topbarThemeBtn) {
+      const topbarIcon = topbarThemeBtn.querySelector('i');
+      if (topbarIcon) {
+        topbarIcon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-moon';
+      }
+    }
+  },
+
+  toggleTheme() {
+    const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    this.setTheme(newTheme);
+    this.showToast(`Mode ${newTheme === 'dark' ? 'Sombre' : 'Clair'} activé`, 'info');
+  },
+
   // 1. Authentication & Session Manager
+  switchAuthTab(tab) {
+    const tabExpress = document.getElementById('auth-tab-express');
+    const tabManual = document.getElementById('auth-tab-manual');
+    const contentExpress = document.getElementById('auth-tab-content-express');
+    const contentManual = document.getElementById('auth-tab-content-manual');
+
+    if (tab === 'express') {
+      if (tabExpress) tabExpress.classList.add('active');
+      if (tabManual) tabManual.classList.remove('active');
+      if (contentExpress) contentExpress.classList.add('active');
+      if (contentManual) contentManual.classList.remove('active');
+    } else {
+      if (tabManual) tabManual.classList.add('active');
+      if (tabExpress) tabExpress.classList.remove('active');
+      if (contentManual) contentManual.classList.add('active');
+      if (contentExpress) contentExpress.classList.remove('active');
+      
+      const emailInput = document.getElementById('login-email');
+      if (emailInput) setTimeout(() => emailInput.focus(), 50);
+    }
+  },
+
+  togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!input) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      if (icon) {
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    } else {
+      input.type = 'password';
+      if (icon) {
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  },
+
+  showDemoCredentialsHelp() {
+    const accounts = APP_CONSTANTS.DEMO_ACCOUNTS;
+    let helpMsg = 'Comptes Démo (Mot de passe universel: "demo") :\n';
+    accounts.forEach(a => {
+      helpMsg += `• ${a.name} (${a.badge}) : ${a.email}${a.clientNumber ? ' ou ' + a.clientNumber : ''}\n`;
+    });
+    this.showToast('4 profils de test disponibles dans l\'onglet Accès Express ou par email/identifiant (mot de passe: "demo")', 'info');
+  },
+
   initAuth() {
+    // Restore remembered identifier if present
+    const rememberedId = localStorage.getItem('REMEMBER_ME_CRED');
+    const emailInput = document.getElementById('login-email');
+    if (rememberedId && emailInput) {
+      emailInput.value = rememberedId;
+    }
+
     // 1-Click Demo Account Buttons
     const demoBtns = document.querySelectorAll('.demo-persona-btn');
     demoBtns.forEach(btn => {
@@ -44,8 +136,10 @@ const App = {
         const personaId = btn.getAttribute('data-demo-id');
         const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.id === personaId);
         if (persona) {
-          document.getElementById('login-email').value = persona.email;
-          document.getElementById('login-password').value = persona.password;
+          const emailInput = document.getElementById('login-email');
+          const pwdInput = document.getElementById('login-password');
+          if (emailInput) emailInput.value = persona.email;
+          if (pwdInput) pwdInput.value = persona.password;
           
           demoBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
@@ -60,12 +154,39 @@ const App = {
     if (loginForm) {
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('login-email').value.trim();
+        const rawInput = document.getElementById('login-email') ? document.getElementById('login-email').value.trim() : '';
+        const rawInputLower = rawInput.toLowerCase();
+        const rememberCheckbox = document.getElementById('remember-me-checkbox');
 
-        const match = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.email.toLowerCase() === email.toLowerCase()) 
-          || APP_CONSTANTS.DEMO_ACCOUNTS[2]; // Default to Analyst
+        if (rememberCheckbox && rememberCheckbox.checked && rawInput) {
+          localStorage.setItem('REMEMBER_ME_CRED', rawInput);
+        } else {
+          localStorage.removeItem('REMEMBER_ME_CRED');
+        }
 
-        this.login(match);
+        // Multi-field smart matching: email, clientNumber, phone, partial name
+        const match = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => 
+          (a.email && a.email.toLowerCase() === rawInputLower) ||
+          (a.clientNumber && a.clientNumber.toLowerCase() === rawInputLower) ||
+          (a.phone && a.phone.replace(/\s+/g, '') === rawInput.replace(/\s+/g, '')) ||
+          (a.name && a.name.toLowerCase().includes(rawInputLower))
+        ) || APP_CONSTANTS.DEMO_ACCOUNTS[2]; // Default to Analyst
+
+        const submitBtn = document.getElementById('btn-submit-login');
+        const btnContent = document.getElementById('login-btn-content');
+
+        if (submitBtn && btnContent) {
+          submitBtn.disabled = true;
+          btnContent.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Authentification sécurisée...';
+        }
+
+        setTimeout(() => {
+          if (submitBtn && btnContent) {
+            submitBtn.disabled = false;
+            btnContent.innerHTML = '<i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace';
+          }
+          this.login(match);
+        }, 350);
       });
     }
 
@@ -115,6 +236,9 @@ const App = {
     if (modal) {
       modal.style.display = 'flex';
       setTimeout(() => modal.classList.add('active'), 10);
+    } else {
+      // Fallback: If modal container is not found, logout directly
+      this.logout();
     }
   },
 
@@ -122,9 +246,7 @@ const App = {
     const modal = document.getElementById('modal-confirm-logout');
     if (modal) {
       modal.classList.remove('active');
-      setTimeout(() => {
-        modal.style.display = 'none';
-      }, 150);
+      modal.style.display = 'none';
     }
   },
 
@@ -241,10 +363,11 @@ const App = {
           ? `<span class="nav-badge ${item.badgeClass || ''}">${item.badge}</span>` 
           : '';
         const tooltipText = item.badge ? `${item.label} • ${item.badge}` : item.label;
+        const isCurrentActive = this.currentView === item.target;
 
         html += `
-          <li class="nav-item">
-            <a class="nav-link" data-view-target="${item.target}" data-nav-title="${tooltipText}" title="${item.label}">
+          <li class="nav-item ${isCurrentActive ? 'active' : ''}">
+            <a class="nav-link" href="javascript:void(0)" onclick="App.switchView('${item.target}'); return false;" data-view-target="${item.target}" data-nav-title="${tooltipText}" title="${item.label}">
               <i class="fas ${item.icon}"></i>
               <span class="nav-link-text">${item.label}</span>
               ${badgeHtml}
@@ -257,12 +380,14 @@ const App = {
 
     container.innerHTML = html;
 
-    // Attach click events on new links
+    // Attach click events on new links for extra safety
     container.querySelectorAll('[data-view-target]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetView = link.getAttribute('data-view-target');
-        this.switchView(targetView);
+        if (targetView) {
+          this.switchView(targetView);
+        }
 
         // Auto close drawer on mobile screens
         if (window.innerWidth <= 992) {
@@ -276,6 +401,37 @@ const App = {
         }
       });
     });
+  },
+
+  // Helper to switch active role dynamically and re-render sidebar + view
+  switchRole(roleCode) {
+    const roleConfig = APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
+    this.currentRole = roleConfig.code;
+    
+    // Find matching demo persona or update currentUser
+    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.role === roleConfig.code) || {
+      id: `user-${roleConfig.code.toLowerCase()}`,
+      name: roleConfig.name,
+      role: roleConfig.code,
+      email: `${roleConfig.code.toLowerCase()}@cif-ao.org`,
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      title: roleConfig.shortName
+    };
+
+    this.currentUser = persona;
+    localStorage.setItem('AUTH_USER', JSON.stringify(persona));
+
+    // Update Topbar and User Header
+    this.updateUserHeader(persona);
+
+    // Re-render role-specific sidebar
+    this.renderSidebarForRole(roleConfig.code);
+
+    // Re-render role notifications
+    this.renderNotificationsForRole(roleConfig.code);
+
+    // Switch to role default home view
+    this.switchView(roleConfig.homeView);
   },
 
   // 3. SPA Navigation Router with Role-Based Access Control (RBAC Guard)
@@ -325,6 +481,8 @@ const App = {
       this.renderAgentComplements();
     } else if (viewId === 'view-role-analyst' || viewId === 'view-analyst-dossiers') {
       this.renderAnalystDashboard();
+    } else if (viewId === 'view-analyst-anomalies') {
+      this.renderAnalystAnomalies();
     } else if (viewId === 'view-role-committee' || viewId === 'view-committee-signed') {
       this.renderCommitteeDashboard();
     } else if (viewId === 'view-role-compliance' || viewId === 'view-compliance-screening') {
@@ -1063,6 +1221,319 @@ const App = {
     AppInteractions.renderRequestsTable();
   },
 
+  // [ROLE 3 - PAGE 2] DÉTECTION DES ANOMALIES & CONTRÔLES RISQUES
+  analystAnomFilter: 'ALL',
+  analystAnomSearch: '',
+
+  renderAnalystAnomalies() {
+    const tbody = document.getElementById('analyst-anomalies-table-body');
+    if (!tbody) return;
+
+    const anomalies = DB.get('anomalies');
+    const requests = DB.get('credit_requests');
+    const clients = DB.get('clients');
+
+    // Enrich anomaly items
+    const enriched = anomalies.map(a => {
+      const req = requests.find(r => r.id === a.credit_request_id) || {};
+      const client = clients.find(c => c.id === req.client_id) || {};
+      return {
+        ...a,
+        request_number: req.request_number || `REQ-2026-000${a.credit_request_id || 1}`,
+        client_name: req.client_name || 'Client CIF',
+        country: req.country || 'Sénégal',
+        city: req.city || 'Dakar',
+        category: a.category || (a.anomaly_type?.includes('OCR') || a.document_id ? 'OCR' : (a.anomaly_type?.includes('MULTI') || a.anomaly_type?.includes('CAUTION') ? 'NETWORK' : 'FINANCIAL')),
+        rule_name: a.rule_name || a.anomaly_type || 'Règle de Contrôle Automatisé',
+        engine: a.engine || (a.document_id ? 'Moteur OCR Tesseract V2.2' : 'Calculateur Risque & Solvabilité V2')
+      };
+    });
+
+    // Update KPI counters
+    const totalActive = enriched.filter(a => a.status === 'OPEN').length;
+    const critCount = enriched.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
+    const ocrCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'OCR').length;
+    const finCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'FINANCIAL').length;
+    const multiCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'NETWORK').length;
+
+    const kpiTotal = document.getElementById('anom-kpi-total');
+    const kpiOcr = document.getElementById('anom-kpi-ocr');
+    const kpiFin = document.getElementById('anom-kpi-fin');
+    const kpiMulti = document.getElementById('anom-kpi-multi');
+    const countAll = document.getElementById('anom-count-all');
+    const countCrit = document.getElementById('anom-count-crit');
+
+    if (kpiTotal) kpiTotal.textContent = totalActive;
+    if (kpiOcr) kpiOcr.textContent = ocrCount;
+    if (kpiFin) kpiFin.textContent = finCount;
+    if (kpiMulti) kpiMulti.textContent = multiCount;
+    if (countAll) countAll.textContent = enriched.length;
+    if (countCrit) countCrit.textContent = critCount;
+
+    // Render Centerpiece Circular Chart.js Chart
+    if (window.AppCharts && typeof window.AppCharts.renderAnomaliesDonut === 'function') {
+      window.AppCharts.renderAnomaliesDonut('anomalies-distribution-chart', {
+        critical: critCount,
+        ocr: ocrCount,
+        financial: finCount,
+        network: multiCount,
+        total: totalActive
+      });
+    }
+
+    // Apply Filter
+    let filtered = [...enriched];
+    if (this.analystAnomFilter === 'CRITICAL') {
+      filtered = filtered.filter(a => a.severity === 'CRITICAL');
+    } else if (this.analystAnomFilter === 'OCR') {
+      filtered = filtered.filter(a => a.category === 'OCR');
+    } else if (this.analystAnomFilter === 'FINANCIAL') {
+      filtered = filtered.filter(a => a.category === 'FINANCIAL');
+    } else if (this.analystAnomFilter === 'NETWORK') {
+      filtered = filtered.filter(a => a.category === 'NETWORK');
+    } else if (this.analystAnomFilter === 'RESOLVED') {
+      filtered = filtered.filter(a => a.status === 'RESOLVED');
+    }
+
+    // Apply Search
+    if (this.analystAnomSearch) {
+      const q = this.analystAnomSearch.toLowerCase();
+      filtered = filtered.filter(a =>
+        a.request_number.toLowerCase().includes(q) ||
+        a.client_name.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q) ||
+        a.rule_name.toLowerCase().includes(q) ||
+        a.city.toLowerCase().includes(q) ||
+        a.country.toLowerCase().includes(q)
+      );
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+            <i class="fas fa-shield-check" style="font-size: 2rem; color: var(--cif-emerald-500); margin-bottom: 0.75rem; display: block;"></i>
+            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">Aucune anomalie ne correspond aux filtres appliqués</div>
+            <div style="font-size: 0.8rem; margin-top: 0.25rem;">Tous les dossiers sous ces critères sont intègres ou déjà traités.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(item => {
+      const isCritical = item.severity === 'CRITICAL';
+      const isWarning = item.severity === 'WARNING';
+      const isOpen = item.status === 'OPEN';
+
+      const sevBadge = isCritical
+        ? `<span class="badge badge-rejected" style="font-weight: 700;"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>`
+        : (isWarning
+          ? `<span class="badge badge-warning"><i class="fas fa-triangle-exclamation mr-1"></i> Élevé</span>`
+          : `<span class="badge badge-submitted"><i class="fas fa-info-circle mr-1"></i> Informatif</span>`);
+
+      const statusBadge = isOpen
+        ? `<span class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>`
+        : `<span class="badge badge-approved"><i class="fas fa-check mr-1"></i> Résolu</span>`;
+
+      const typeIcon = item.category === 'OCR'
+        ? 'fa-file-lines text-primary'
+        : (item.category === 'NETWORK' ? 'fa-network-wired text-purple' : 'fa-calculator text-warning');
+
+      return `
+        <tr id="anomaly-row-${item.id}" class="anomaly-table-row ${!isOpen ? 'anomaly-row-resolved' : ''}">
+          <td>
+            <a href="javascript:void(0)" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" style="font-weight: 700; color: var(--cif-primary-600); text-decoration: none;">
+              ${item.request_number} <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 2px;"></i>
+            </a>
+            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${item.client_name}</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">
+              <i class="fas fa-location-dot mr-1"></i> ${item.city}, ${item.country}
+            </div>
+          </td>
+          <td>${sevBadge}</td>
+          <td>
+            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">
+              <i class="fas ${typeIcon} mr-1"></i> ${item.rule_name}
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-subtle); font-family: var(--font-mono);">${item.anomaly_type}</div>
+          </td>
+          <td>
+            <div style="font-size: 0.8rem; color: var(--text-primary); max-width: 280px; line-height: 1.4;">
+              ${item.description}
+            </div>
+          </td>
+          <td>
+            <div style="font-size: 0.78rem;">
+              <div style="color: ${isCritical ? '#b91c1c' : '#b45309'}; font-weight: 600;">
+                <i class="fas fa-xmark text-danger mr-1"></i> ${item.detected_value || 'N/A'}
+              </div>
+              <div style="color: #047857; font-size: 0.72rem; margin-top: 2px;">
+                <i class="fas fa-check text-emerald mr-1"></i> ${item.expected_value || 'Conforme'}
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge" style="background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.3); font-size: 0.72rem;">
+              <i class="fas fa-microchip mr-1"></i> ${item.engine}
+            </span>
+          </td>
+          <td>${statusBadge}</td>
+          <td style="text-align: right;">
+            <div style="display: flex; gap: 0.35rem; justify-content: flex-end; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-sm" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" title="Inspecter le dossier à 360°">
+                <i class="fas fa-magnifying-glass mr-1"></i> 360°
+              </button>
+              ${isOpen ? `
+                <button class="btn btn-secondary btn-sm" onclick="App.resolveAnomaly(${item.id})" title="Lever cette anomalie après vérification manuelle">
+                  <i class="fas fa-check text-emerald"></i> Lever
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="App.requestFieldCheckForAnomaly(${item.id})" title="Demander une contre-expertise terrain à l'Agent">
+                  <i class="fas fa-motorcycle text-warning"></i> Terrain
+                </button>
+              ` : `
+                <button class="btn btn-secondary btn-sm" onclick="App.reopenAnomaly(${item.id})" title="Rouvrir le signalement">
+                  <i class="fas fa-rotate text-muted"></i> Rouvrir
+                </button>
+              `}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  filterAnalystAnomalies(category, btn) {
+    this.analystAnomFilter = category;
+    if (btn) {
+      const container = document.getElementById('anom-filter-buttons');
+      if (container) {
+        container.querySelectorAll('button').forEach(b => {
+          b.classList.remove('btn-primary');
+          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        });
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-primary');
+      }
+    }
+    this.renderAnalystAnomalies();
+  },
+
+  searchAnalystAnomalies(query) {
+    this.analystAnomSearch = query;
+    this.renderAnalystAnomalies();
+  },
+
+  resolveAnomaly(anomalyId) {
+    const a = DB.findById('anomalies', anomalyId);
+    if (!a) return;
+
+    const row = document.getElementById(`anomaly-row-${anomalyId}`);
+    if (row) {
+      row.classList.add('resolving');
+      // Déclenche l'animation de transition en fondu sortant
+      setTimeout(() => {
+        row.classList.add('resolving-fade-out');
+      }, 40);
+    }
+
+    setTimeout(() => {
+      DB.update('anomalies', anomalyId, {
+        status: 'RESOLVED',
+        resolved_by: (this.currentUser ? this.currentUser.id : 1),
+        resolved_at: new Date().toISOString(),
+        resolution_comment: 'Anomalie contrôlée et levée par l\'analyste risque après revue contradictoire.'
+      });
+
+      DB.addAuditLog(
+        (this.currentUser ? this.currentUser.id : 1),
+        'ANOMALIE_LEVEE_ANALYSTE',
+        'anomalies',
+        anomalyId,
+        `Anomalie #${anomalyId} (${a.anomaly_type}) levée avec succès.`
+      );
+
+      this.showToast(`Anomalie #${anomalyId} levée avec succès. Dossier réévalué.`, 'success');
+      this.renderAnalystAnomalies();
+
+      // Effet lumineux sur la ligne mise à jour si toujours présente
+      const updatedRow = document.getElementById(`anomaly-row-${anomalyId}`);
+      if (updatedRow) {
+        updatedRow.classList.add('resolved-flash');
+      }
+    }, 450);
+  },
+
+  reopenAnomaly(anomalyId) {
+    const row = document.getElementById(`anomaly-row-${anomalyId}`);
+    if (row) {
+      row.classList.add('resolving');
+    }
+
+    setTimeout(() => {
+      DB.update('anomalies', anomalyId, {
+        status: 'OPEN',
+        resolved_by: null,
+        resolved_at: null,
+        resolution_comment: null
+      });
+
+      this.showToast(`Anomalie #${anomalyId} rouverte pour surveillance active.`, 'info');
+      this.renderAnalystAnomalies();
+
+      const updatedRow = document.getElementById(`anomaly-row-${anomalyId}`);
+      if (updatedRow) {
+        updatedRow.classList.add('resolved-flash');
+      }
+    }, 200);
+  },
+
+  requestFieldCheckForAnomaly(anomalyId) {
+    const a = DB.findById('anomalies', anomalyId);
+    if (!a) return;
+
+    const req = DB.findById('credit_requests', a.credit_request_id) || {};
+    
+    DB.addAuditLog(
+      (this.currentUser ? this.currentUser.id : 1),
+      'DEMANDE_VERIFICATION_TERRAIN',
+      'credit_requests',
+      a.credit_request_id,
+      `Mission de contre-expertise terrain transmise à l'Agent de Crédit pour l'anomalie : ${a.description}`
+    );
+
+    this.showToast(`Ordre de mission terrain transmis à l'Agent pour le dossier ${req.request_number || 'en cours'}.`, 'success');
+  },
+
+  runFullAnomalyScan() {
+    this.showToast('Scan algorithmique global et rapprochement OCR en cours...', 'info');
+    setTimeout(() => {
+      this.renderAnalystAnomalies();
+      this.showToast('Scan terminé : 5 signaux analysés, base d\'intégrité 100% synchronisée.', 'success');
+    }, 450);
+  },
+
+  exportAnomaliesCsv() {
+    const anomalies = DB.get('anomalies');
+    const requests = DB.get('credit_requests');
+
+    let csv = 'ID;Numero_Dossier;Client;Gravite;Type_Anomalie;Description;Valeur_Detectee;Valeur_Attendue;Statut;Date_Detection\n';
+    anomalies.forEach(a => {
+      const req = requests.find(r => r.id === a.credit_request_id) || {};
+      csv += `"${a.id}";"${req.request_number || ''}";"${req.client_name || ''}";"${a.severity}";"${a.anomaly_type}";"${(a.description || '').replace(/"/g, '""')}";"${(a.detected_value || '').replace(/"/g, '""')}";"${(a.expected_value || '').replace(/"/g, '""')}";"${a.status}";"${a.created_at || ''}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Registre_Anomalies_CIF_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.showToast('Export CSV du registre des anomalies téléchargé avec succès', 'success');
+  },
+
   // [ROLE 4] COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
   renderCommitteeDashboard() {
     const tbody = document.getElementById('committee-requests-table-body');
@@ -1626,10 +2097,16 @@ const App = {
     const notifs = this.currentRoleNotifications || [];
     const unreadCount = notifs.filter(n => n.unread).length;
 
-    // Update Topbar badge
+    // Update Topbar badge & bell pulse animation
+    const notifBtn = document.getElementById('notif-bell-btn');
     if (badgeTop) {
       badgeTop.textContent = unreadCount;
       badgeTop.style.display = unreadCount > 0 ? 'flex' : 'none';
+      badgeTop.classList.toggle('pulse', unreadCount > 0);
+    }
+    if (notifBtn) {
+      notifBtn.classList.toggle('has-unread', unreadCount > 0);
+      notifBtn.classList.toggle('bell-pulse', unreadCount > 0);
     }
 
     // Update Dropdown header badge
@@ -1901,22 +2378,22 @@ const App = {
     const nameInput = document.getElementById('screen-client-name');
     const resultBox = document.getElementById('screening-result-box');
 
-    if (screenBtn && nameInput && resultBox) {
-      screenBtn.addEventListener('click', () => {
-        const query = nameInput.value.trim().toLowerCase();
-        if (!query) {
-          this.showToast('Veuillez saisir un nom ou matricule client', 'warning');
-          return;
-        }
+    const performScreen = (inputEl, targetBox) => {
+      const query = inputEl ? inputEl.value.trim().toLowerCase() : '';
+      if (!query) {
+        this.showToast('Veuillez saisir un nom ou matricule client', 'warning');
+        return;
+      }
 
-        const watchlist = DB.get('sanctions_watchlist');
-        const match = watchlist.find(item => 
-          item.full_name.toLowerCase().includes(query) || 
-          item.aliases.toLowerCase().includes(query)
-        );
+      const watchlist = DB.get('sanctions_watchlist');
+      const match = watchlist.find(item => 
+        item.full_name.toLowerCase().includes(query) || 
+        item.aliases.toLowerCase().includes(query)
+      );
 
-        if (match) {
-          resultBox.innerHTML = `
+      if (match) {
+        if (targetBox) {
+          targetBox.innerHTML = `
             <div class="anomaly-item critical" style="margin-top: 1rem;">
               <i class="fas fa-shield-halved anomaly-icon"></i>
               <div class="anomaly-content">
@@ -1924,7 +2401,7 @@ const App = {
                 <p><strong>Cible :</strong> ${match.full_name} (${match.country})</p>
                 <p><strong>Catégorie :</strong> ${match.category}</p>
                 <p><strong>Motif de signalement :</strong> ${match.match_reason}</p>
-                <div style="margin-top: 6px;">
+                <div style="margin-top: 6px; display: flex; gap: 0.5rem;">
                   <button class="btn btn-danger btn-sm" onclick="App.showToast('Gel préventif appliqué et signalement transmis à la cellule LBC', 'danger')">
                     <i class="fas fa-lock"></i> Bloquer Opération
                   </button>
@@ -1935,18 +2412,40 @@ const App = {
               </div>
             </div>
           `;
-          this.showToast('Alerte LBC/FT détectée sur la liste de surveillance !', 'danger');
-        } else {
-          resultBox.innerHTML = `
+        }
+        this.showToast('Alerte LBC/FT détectée sur la liste de surveillance !', 'danger');
+      } else {
+        if (targetBox) {
+          targetBox.innerHTML = `
             <div class="anomaly-item info" style="margin-top: 1rem;">
-              <i class="fas fa-check-shield anomaly-icon"></i>
+              <i class="fas fa-circle-check anomaly-icon" style="color: #10b981;"></i>
               <div class="anomaly-content">
                 <h5>Contrôle Négatif - Aucun Signalement</h5>
-                <p>Le client '<strong>${nameInput.value}</strong>' ne figure sur aucune liste de sanctions UEMOA/ONU/GAFI et ne présente pas d'alerte PPE bloquante.</p>
+                <p>Le client '<strong>${inputEl ? inputEl.value : ''}</strong>' ne figure sur aucune liste de sanctions UEMOA/ONU/GAFI et ne présente pas d'alerte PPE bloquante.</p>
               </div>
             </div>
           `;
-          this.showToast('Filtrage conforme : Aucun risque détecté', 'success');
+        }
+        this.showToast('Filtrage conforme : Aucun risque détecté', 'success');
+      }
+    };
+
+    if (screenBtn && nameInput) {
+      screenBtn.addEventListener('click', () => performScreen(nameInput, resultBox));
+      nameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performScreen(nameInput, resultBox);
+        }
+      });
+    }
+
+    const altInput = document.getElementById('screening-full-name-input');
+    if (altInput) {
+      altInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.showToast('Contrôle approfondi exécuté : Diligence conforme', 'success');
         }
       });
     }
@@ -3626,6 +4125,10 @@ window.App = App;
 window.openEditProfileModal = () => App.openEditProfileModal && App.openEditProfileModal();
 window.closeEditProfileModal = () => App.closeEditProfileModal && App.closeEditProfileModal();
 window.saveUserProfile = () => App.saveUserProfile && App.saveUserProfile();
+window.openLogoutConfirmModal = () => App.openLogoutConfirmModal && App.openLogoutConfirmModal();
+window.closeLogoutConfirmModal = () => App.closeLogoutConfirmModal && App.closeLogoutConfirmModal();
+window.confirmLogout = () => App.confirmLogout && App.confirmLogout();
+window.logout = () => App.logout && App.logout();
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init();

@@ -290,6 +290,73 @@ const AppCharts = {
         }
       }
     });
+  },
+
+  // 6. Circular Breakdown Chart for Detected Anomalies (Chart.js)
+  renderAnomaliesDonut(canvasId, counts = { critical: 2, ocr: 2, financial: 1, network: 1 }) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    if (this.instances[canvasId]) {
+      this.instances[canvasId].destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const total = (counts.critical || 0) + (counts.ocr || 0) + (counts.financial || 0) + (counts.network || 0) || 1;
+
+    this.instances[canvasId] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Critiques (Blocage / Falsification)',
+          'Discordances OCR & Pièces',
+          'Solvabilité & Ratios Financiers',
+          'Réseau & Multi-Caisses'
+        ],
+        datasets: [{
+          data: [
+            counts.critical || 0,
+            counts.ocr || 0,
+            counts.financial || 0,
+            counts.network || 0
+          ],
+          backgroundColor: [
+            '#ef4444', // Rouge vif - Critiques
+            '#0ea5e9', // Bleu ciel - OCR & Pièces
+            '#f59e0b', // Ambre - Financières
+            '#8b5cf6'  // Violet - Réseau & Cautions
+          ],
+          borderWidth: 2,
+          borderColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 12,
+              usePointStyle: true,
+              padding: 14,
+              font: { size: 12, weight: '600', family: "'Plus Jakarta Sans', sans-serif" }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const val = context.raw || 0;
+                const pct = Math.round((val / total) * 100);
+                return ` ${context.label}: ${val} (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 };
 

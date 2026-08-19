@@ -28,7 +28,7 @@
 <body>
 
 <!-- ==========================================================================
-     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVEC PROFILS DÉMO)
+     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVANCÉE V2)
      ========================================================================== -->
 <div id="auth-view">
   <div class="auth-container">
@@ -39,22 +39,25 @@
           <i class="fas fa-hand-holding-dollar"></i>
         </div>
         <div>
-          <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0; color: white;">CRÉDIT FAST <span style="font-size: 0.75rem; background: var(--cif-gold-500); color: #78350f; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">V2</span></h3>
+          <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0; color: white;">CRÉDIT FAST <span style="font-size: 0.75rem; background: var(--cif-gold-500, #f59e0b); color: #78350f; padding: 2px 6px; border-radius: 4px; vertical-align: middle; font-weight: 800;">V2</span></h3>
           <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">PROJET DIGICOOP-WA+ • CIF</span>
         </div>
       </div>
 
       <div class="auth-hero-content">
+        <div class="auth-hero-badge">
+          <i class="fas fa-shield-halved"></i> Système Prudentiel Bancaire UEMOA / BCEAO
+        </div>
         <h1 class="auth-hero-title">Plateforme d'Octroi, Scoring & Conformité</h1>
         <p class="auth-hero-desc">
-          Une expérience sur mesure pour chaque acteur : <strong>Demandeur</strong> (suivi de prêt & échéancier), <strong>Agent de Crédit</strong> (collecte & inspections), <strong>Analyste Risque</strong> (dossier 360° & Cold Start), <strong>Comité</strong> (décision collégiale) et <strong>Conformité</strong> (filtrage PPE/LBC-FT).
+          Une infrastructure unifiée pour les 4 acteurs clés : <strong>Demandeur</strong> (suivi & échéancier), <strong>Agent de Crédit</strong> (collecte & terrain), <strong>Analyste Risque</strong> (dossier 360° & Cold Start) et <strong>Comité & Conformité</strong> (décision collégiale & filtrage PPE).
         </p>
 
         <div class="auth-pillars-grid">
           <div class="auth-pillar-card">
             <i class="fas fa-user-tag" style="color: #34d399;"></i>
             <h5>Espace Demandeur</h5>
-            <p>Mon crédit, mon échéancier, demande en 6 étapes et contact conseiller.</p>
+            <p>Suivi de crédit, échéancier réel, demande en 6 étapes & contact conseiller.</p>
           </div>
           <div class="auth-pillar-card">
             <i class="fas fa-user-tie" style="color: #38bdf8;"></i>
@@ -82,21 +85,40 @@
 
     <!-- Right Login Form Pane -->
     <div class="auth-form-pane">
+      <!-- Top Utilities Bar: Security Badge & Theme Switcher -->
+      <div class="auth-top-controls">
+        <div class="auth-security-pill" title="Connexion chiffrée SSL/TLS 256 bits conforme BCEAO">
+          <i class="fas fa-lock text-success"></i>
+          <span>Protocole Sécurisé TLS 1.3 • Chiffrement SHA-256</span>
+        </div>
+        <button type="button" class="auth-theme-btn" id="auth-theme-toggle" onclick="App.toggleTheme()" title="Basculer le thème clair / sombre">
+          <i class="fas fa-moon" id="auth-theme-icon"></i>
+        </button>
+      </div>
+
       <div class="auth-form-box">
         <div class="auth-header">
           <h2>Portail d'Accès Sécurisé</h2>
-          <p>Connectez-vous ou sélectionnez un rôle pour ouvrir son interface dédiée.</p>
+          <p>Identifiez-vous pour ouvrir votre espace de travail ou sélectionnez un profil démo.</p>
         </div>
 
-        <!-- 1-Click Demo Accounts Selector Section -->
-        <div class="demo-accounts-section">
-          <div class="demo-section-title">
-            <span><i class="fas fa-wand-magic-sparkles text-primary"></i> Choisissez votre Espace Métier (1 Clic)</span>
-          </div>
+        <!-- Auth Tabs Navigation: 1-Clic Personas vs Saisie Manuelle -->
+        <div class="auth-nav-tabs" role="tablist">
+          <button type="button" class="auth-tab-btn active" id="auth-tab-express" onclick="App.switchAuthTab('express')">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <span>Accès Express (4 Rôles)</span>
+          </button>
+          <button type="button" class="auth-tab-btn" id="auth-tab-manual" onclick="App.switchAuthTab('manual')">
+            <i class="fas fa-id-card-clip"></i>
+            <span>Identifiants & N° Client</span>
+          </button>
+        </div>
 
+        <!-- Tab Content 1: Express 1-Click Persona Cards -->
+        <div id="auth-tab-content-express" class="auth-tab-content active">
           <div class="demo-personas-grid">
             <!-- Persona 1: Demandeur (Client - Sénégal) -->
-            <button class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur (Sénégal)">
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur (Sénégal)">
               <div class="demo-persona-avatar-wrap">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
                 <span class="avatar-flag-badge demo-flag" title="Sénégal"><span class="fi fi-sn fis"></span></span>
@@ -104,11 +126,15 @@
               <div class="demo-persona-info">
                 <h6>Fatou Ndiaye</h6>
                 <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Sénégal)</span>
+                <small class="persona-sub">Caisse Médina Dakar • N° SN-008821</small>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-right"></i>
               </div>
             </button>
 
             <!-- Persona 2: Agent de Crédit (Togo) -->
-            <button class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit (Togo)">
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit (Togo)">
               <div class="demo-persona-avatar-wrap">
                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
                 <span class="avatar-flag-badge demo-flag" title="Togo"><span class="fi fi-tg fis"></span></span>
@@ -116,11 +142,15 @@
               <div class="demo-persona-info">
                 <h6>Kofi Mensah</h6>
                 <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit (Togo)</span>
+                <small class="persona-sub">Agence Assigamé Lomé</small>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-right"></i>
               </div>
             </button>
 
             <!-- Persona 3: Analyste Risque (Burkina Faso) -->
-            <button class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque (Burkina Faso)">
+            <button type="button" class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque (Burkina Faso)">
               <div class="demo-persona-avatar-wrap">
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
                 <span class="avatar-flag-badge demo-flag" title="Burkina Faso"><span class="fi fi-bf fis"></span></span>
@@ -128,62 +158,127 @@
               <div class="demo-persona-info">
                 <h6>Aminata Diallo</h6>
                 <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina Faso)</span>
+                <small class="persona-sub">Siège Régional CIF Ouaga</small>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-right"></i>
               </div>
             </button>
 
-            <!-- Persona 4: Comité de Crédit (Mali) -->
-            <button class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision (Mali)">
+            <!-- Persona 4: Comité de Crédit & Conformité (Mali) -->
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision & Conformité LBC/FT (Mali)">
               <div class="demo-persona-avatar-wrap">
                 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
                 <span class="avatar-flag-badge demo-flag" title="Mali"><span class="fi fi-ml fis"></span></span>
               </div>
               <div class="demo-persona-info">
                 <h6>Moussa Traoré</h6>
-                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité (Mali)</span>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité & Conformité</span>
+                <small class="persona-sub">Caisse Bamako • Sanctions UEMOA</small>
               </div>
-            </button>
-
-            <!-- Persona 5: Conformité LBC/FT (Bénin) -->
-            <button class="demo-persona-btn" data-demo-id="demo-compliance" title="Ouvrir l'espace Conformité LBC/FT (Bénin)">
-              <div class="demo-persona-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Conformité">
-                <span class="avatar-flag-badge demo-flag" title="Bénin"><span class="fi fi-bj fis"></span></span>
-              </div>
-              <div class="demo-persona-info">
-                <h6>Bakary Sanou</h6>
-                <span style="color: #ef4444;"><i class="fas fa-shield-halved"></i> Conformité (Bénin)</span>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-right"></i>
               </div>
             </button>
           </div>
-        </div>
 
-        <div class="auth-divider">
-          <span>ou saisissez vos identifiants</span>
-        </div>
-
-        <!-- Standard Login Form -->
-        <form id="login-form">
-          <div class="form-group">
-            <label class="form-label" for="login-email">Adresse Email Professionnelle ou N° Client</label>
-            <input type="text" id="login-email" class="form-control" value="aminata.diallo@cif-ao.org" required>
+          <div class="auth-express-tip">
+            <i class="fas fa-circle-info text-primary"></i>
+            <span>Cliquez sur l'un des 4 profils pour vous connecter instantanément dans son espace de travail.</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
-              <a href="#" style="font-size: 0.76rem;" onclick="App.showToast('Mot de passe démo : demo', 'info')">Aide connexion</a>
+        <!-- Tab Content 2: Standard Login Form -->
+        <div id="auth-tab-content-manual" class="auth-tab-content">
+          <form id="login-form" novalidate>
+            <!-- Identifier Field (Email, Phone or Client Number) -->
+            <div class="form-group">
+              <label class="form-label" for="login-email">
+                Identifiant, Email ou N° Client UEMOA
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-user-check input-prefix-icon"></i>
+                <input 
+                  type="text" 
+                  id="login-email" 
+                  class="form-control" 
+                  placeholder="ex: aminata.diallo@cif-ao.org ou SN-DKR-008821" 
+                  value="aminata.diallo@cif-ao.org" 
+                  autocomplete="username"
+                  required
+                >
+              </div>
+              <small class="form-hint">Supporte les adresses email, N° de téléphone (+221...) et codes membres.</small>
             </div>
-            <input type="password" id="login-password" class="form-control" value="demo" required>
-          </div>
 
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-            <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
-          </button>
-        </form>
+            <!-- Password Field with Visibility Toggle -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
+                <button type="button" class="auth-link-btn" onclick="App.showDemoCredentialsHelp()">
+                  <i class="fas fa-key mr-1"></i> Aide identifiants
+                </button>
+              </div>
+              <div class="input-with-icon input-with-suffix">
+                <i class="fas fa-lock input-prefix-icon"></i>
+                <input 
+                  type="password" 
+                  id="login-password" 
+                  class="form-control" 
+                  value="demo" 
+                  placeholder="Saisissez votre mot de passe"
+                  autocomplete="current-password"
+                  required
+                >
+                <button 
+                  type="button" 
+                  class="password-toggle-btn" 
+                  id="btn-toggle-password" 
+                  onclick="App.togglePasswordVisibility('login-password', 'icon-toggle-password')"
+                  title="Afficher ou masquer le mot de passe"
+                  aria-label="Afficher ou masquer le mot de passe"
+                >
+                  <i class="fas fa-eye" id="icon-toggle-password"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me & Security Options -->
+            <div class="auth-options-row">
+              <label class="auth-checkbox-label" for="remember-me-checkbox">
+                <input type="checkbox" id="remember-me-checkbox" checked>
+                <span>Mémoriser ma session sur ce terminal</span>
+              </label>
+              <a href="javascript:void(0)" class="auth-link-subtle" onclick="App.showToast('En environnement démo, tout mot de passe est accepté.', 'info')">
+                Mot de passe oublié ?
+              </a>
+            </div>
+
+            <!-- Submit Button with Loading State -->
+            <button type="submit" id="btn-submit-login" class="btn btn-primary btn-lg auth-submit-btn">
+              <span id="login-btn-content">
+                <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Security and Regulatory Footer Strip -->
+        <div class="auth-footer-trust">
+          <div class="auth-trust-item">
+            <i class="fas fa-building-columns"></i>
+            <span>Conforme aux normes prudentielles <strong>BCEAO / UEMOA</strong></span>
+          </div>
+          <div class="auth-trust-item">
+            <i class="fas fa-fingerprint"></i>
+            <span>Traçabilité & Journalisation intégrale des accès</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 
 
 <!-- ==========================================================================
@@ -2366,14 +2461,14 @@
             </div>
           </div>
       
-          <div class="card stat-card">
+          <div class="card stat-card" onclick="App.switchView('view-analyst-anomalies')" style="cursor: pointer;" title="Accéder au Registre des Anomalies & Discordances">
             <div class="stat-icon-wrap rose">
               <i class="fas fa-triangle-exclamation"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-value">14</div>
+              <div class="stat-value">5</div>
               <div class="stat-label">Alertes & Anomalies</div>
-              <div class="stat-trend down"><i class="fas fa-shield-halved"></i> 2 Alertes PPE</div>
+              <div class="stat-trend down"><i class="fas fa-shield-halved"></i> 2 Critiques • Cliquez pour ouvrir</div>
             </div>
           </div>
         </div>
@@ -2509,7 +2604,211 @@
       
 
       <!-- ====================================================================
-           [ESPACE 4] TABLEAU DE BORD DU COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
+           [ESPACE 3 - PAGE 2] DÉTECTION DES ANOMALIES & CONTRÔLES RISQUES
+           ==================================================================== -->
+      <section id="view-analyst-anomalies" class="app-view" style="display: none;" role="region" aria-label="Détection des Anomalies et Contrôles Risques">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title"><i class="fas fa-triangle-exclamation text-danger mr-2"></i> Détection des Anomalies & Contrôles Risques V2</h1>
+            <div class="page-breadcrumb">
+              <span>Espace Analyste Risque</span> <i class="fas fa-chevron-right"></i>
+              <span>Audit Algorithmique & Rapprochement Automatisé (UEMOA)</span>
+            </div>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="App.runFullAnomalyScan()" title="Lancer un scan global des règles et de l'OCR" aria-label="Lancer le scan automatisé en temps réel">
+              <i class="fas fa-arrows-rotate text-primary mr-1"></i> Scan Automatisé Temps Réel
+            </button>
+            <button class="btn btn-primary" onclick="App.exportAnomaliesCsv()" title="Télécharger le registre complet des anomalies en CSV" aria-label="Exporter le registre en CSV">
+              <i class="fas fa-file-csv mr-1"></i> Exporter Registre CSV
+            </button>
+          </div>
+        </div>
+      
+        <!-- 4 Top KPI Stat Cards -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card stat-card" role="region" aria-label="Compteur Anomalies Actives">
+            <div class="stat-icon-wrap rose">
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="anom-kpi-total">5</div>
+              <div class="stat-label">Anomalies Actives Détectées</div>
+              <div class="stat-trend down"><i class="fas fa-shield-halved"></i> Surveillance Risque V2</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card" role="region" aria-label="Compteur Discordances OCR">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-file-lines"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="anom-kpi-ocr">2</div>
+              <div class="stat-label">Discordances OCR & Pièces</div>
+              <div class="stat-trend down"><i class="fas fa-receipt"></i> Dates / Montants / Devis</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card" role="region" aria-label="Compteur Solvabilité et Ratios">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-calculator"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="anom-kpi-fin">1</div>
+              <div class="stat-label">Solvabilité & Ratios</div>
+              <div class="stat-trend down"><i class="fas fa-coins"></i> Reste à vivre sous seuil</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card" role="region" aria-label="Compteur Réseau et Multi-Caisses">
+            <div class="stat-icon-wrap purple">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="anom-kpi-multi">1</div>
+              <div class="stat-label">Réseau & Multi-Caisses</div>
+              <div class="stat-trend down"><i class="fas fa-handshake"></i> Cumul engagements CIF</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- CENTERPIECE: Circular Chart.js Breakdown Card -->
+        <div class="card" style="margin-bottom: 1.5rem;" role="region" aria-label="Graphique de répartition des anomalies">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <h3 class="card-title"><i class="fas fa-chart-pie text-primary mr-2"></i> Répartition des Types d'Anomalies Détectées (Chart.js)</h3>
+              <p class="card-subtitle">Visualisation circulaire dynamique de la cartographie des risques détectés par les moteurs automatisés</p>
+            </div>
+            <span class="badge badge-primary" style="font-size: 0.75rem;"><i class="fas fa-microchip mr-1"></i> Rapprochement IA & Règles Métier</span>
+          </div>
+          <div class="card-body">
+            <div class="grid-2" style="gap: 2rem; align-items: center;">
+              <!-- Left Column: Circular Chart.js Canvas -->
+              <div style="position: relative; height: 290px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="anomalies-distribution-chart" aria-label="Graphique circulaire de répartition des anomalies"></canvas>
+              </div>
+      
+              <!-- Right Column: Visual Breakdown & Diagnostic Insights -->
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.85rem;">
+                  <i class="fas fa-stethoscope text-primary mr-1"></i> Synthèse des Moteurs de Détection
+                </h4>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem;">
+                  <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.8rem;">
+                    <div style="font-weight: 700; color: #b91c1c; display: flex; justify-content: space-between;">
+                      <span><i class="fas fa-circle-exclamation text-danger mr-1"></i> Anomalies Critiques (40%)</span>
+                      <span class="badge badge-rejected" style="font-size: 0.68rem;">Blocage Instruction</span>
+                    </div>
+                    <span style="color: var(--text-muted-dark); font-size: 0.75rem;">Discordance de date de validité CNI et falsification potentielle de facture proforma.</span>
+                  </div>
+      
+                  <div style="background: rgba(14, 165, 233, 0.08); border-left: 3px solid #0ea5e9; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.8rem;">
+                    <div style="font-weight: 700; color: #0369a1; display: flex; justify-content: space-between;">
+                      <span><i class="fas fa-file-lines text-primary mr-1"></i> Discordances OCR & Pièces (40%)</span>
+                      <span class="badge badge-submitted" style="font-size: 0.68rem;">Moteur Tesseract V2.2</span>
+                    </div>
+                    <span style="color: var(--text-muted-dark); font-size: 0.75rem;">Écarts entre montants demandés et devis fournisseurs numérisés en agence.</span>
+                  </div>
+      
+                  <div style="background: rgba(245, 158, 11, 0.08); border-left: 3px solid #f59e0b; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.8rem;">
+                    <div style="font-weight: 700; color: #b45309; display: flex; justify-content: space-between;">
+                      <span><i class="fas fa-calculator text-warning mr-1"></i> Solvabilité & Ratios Financiers (20%)</span>
+                      <span class="badge badge-warning" style="font-size: 0.68rem;">Reste à Vivre</span>
+                    </div>
+                    <span style="color: var(--text-muted-dark); font-size: 0.75rem;">Charge de remboursement excédant le ratio prudentiel de 33% du revenu net.</span>
+                  </div>
+      
+                  <div style="background: rgba(139, 92, 246, 0.08); border-left: 3px solid #8b5cf6; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.8rem;">
+                    <div style="font-weight: 700; color: #6d28d9; display: flex; justify-content: space-between;">
+                      <span><i class="fas fa-network-wired text-purple mr-1"></i> Réseau & Cautions Multi-Caisses (20%)</span>
+                      <span class="badge badge-analysis" style="font-size: 0.68rem;">Base Fédérale CIF</span>
+                    </div>
+                    <span style="color: var(--text-muted-dark); font-size: 0.75rem;">Caution solidaire déjà engagée sur un dossier actif dans une autre caisse UEMOA.</span>
+                  </div>
+                </div>
+      
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                  <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('CRITICAL', document.querySelector('#anom-filter-buttons button:nth-child(2)'))">
+                    <i class="fas fa-filter text-danger mr-1"></i> Filtrer les Critiques
+                  </button>
+                  <button class="btn btn-primary btn-sm" onclick="App.filterAnalystAnomalies('ALL', document.querySelector('#anom-filter-buttons button:first-child'))">
+                    <i class="fas fa-list-check mr-1"></i> Voir Toutes les Lignes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Filter & Search Bar -->
+        <div class="card" style="margin-bottom: 1.25rem;">
+          <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="anom-filter-buttons" role="group" aria-label="Filtres par type d'anomalie">
+              <button class="btn btn-primary btn-sm" onclick="App.filterAnalystAnomalies('ALL', this)">
+                Toutes (<span id="anom-count-all">5</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('CRITICAL', this)" style="border-color: #ef4444; color: #b91c1c; background: #fef2f2;">
+                <i class="fas fa-circle-exclamation text-danger mr-1"></i> Critiques (<span id="anom-count-crit">2</span>)
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('OCR', this)">
+                <i class="fas fa-file-lines text-primary mr-1"></i> OCR & Justificatifs
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('FINANCIAL', this)">
+                <i class="fas fa-calculator text-warning mr-1"></i> Solvabilité & Ratios
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('NETWORK', this)">
+                <i class="fas fa-network-wired text-purple mr-1"></i> Cautions & Multi-Caisses
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="App.filterAnalystAnomalies('RESOLVED', this)">
+                <i class="fas fa-check-double text-emerald mr-1"></i> Historique Résolues
+              </button>
+            </div>
+      
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <div style="position: relative; min-width: 260px;">
+                <input type="text" id="anom-search-input" class="form-control form-control-sm" placeholder="Recherche par dossier, client, règle..." oninput="App.searchAnalystAnomalies(this.value)" style="padding-left: 2rem;" aria-label="Recherche dans le registre des anomalies">
+                <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Table of Detected Anomalies -->
+        <div class="card" role="region" aria-label="Registre Opérationnel des Anomalies">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title"><i class="fas fa-list-check text-primary mr-2"></i> Registre Opérationnel des Signaux & Anomalies</h3>
+              <p class="card-subtitle">Cliquez sur « 360° » pour inspecter le dossier ou sur « Lever » après contrôle contradictoire</p>
+            </div>
+            <span class="badge badge-warning"><i class="fas fa-shield-halved mr-1"></i> Contrôles Prudentiels</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom" aria-label="Tableau des anomalies détectées">
+              <thead>
+                <tr>
+                  <th scope="col">Dossier & Emprunteur</th>
+                  <th scope="col">Gravité</th>
+                  <th scope="col">Règle & Type</th>
+                  <th scope="col">Description & Diagnostic</th>
+                  <th scope="col">Constat vs Attendu</th>
+                  <th scope="col">Moteur Détecteur</th>
+                  <th scope="col">Statut</th>
+                  <th scope="col" style="text-align: right;">Actions Analyste</th>
+                </tr>
+              </thead>
+              <tbody id="analyst-anomalies-table-body">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+
+      <!-- ====================================================================
+           [COMITÉ] VUE 1 : SÉANCE DE DÉLIBÉRATION DU COMITÉ DE CRÉDIT
            ==================================================================== -->
       <section id="view-role-committee" class="app-view" style="display: none;">
         <div class="page-header">
@@ -2517,8 +2816,19 @@
             <h1>Séance de Délibération du Comité de Crédit</h1>
             <div class="page-breadcrumb">
               <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
-              <span>Délibérations Collégiales & Vote</span>
+              <span>Délibérations Collégiales, Vote & Conformité LBC/FT</span>
             </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')">
+              <i class="fas fa-file-signature"></i> Décisions Signées
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">
+              <i class="fas fa-shield-halved"></i> Console Conformité
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-reports')">
+              <i class="fas fa-chart-pie"></i> Rapports d'Octroi
+            </button>
           </div>
         </div>
       
@@ -2596,17 +2906,271 @@
         </div>
       </section>
       
+      <!-- ====================================================================
+           [COMITÉ] VUE 2 : DÉCISIONS SIGNÉES & PROCÈS-VERBAUX NUMÉRIQUES
+           ==================================================================== -->
+      <section id="view-committee-signed" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Registre des Décisions & Procès-Verbaux Signés</h1>
+            <div class="page-breadcrumb">
+              <span>Gouvernance Régionale</span> <i class="fas fa-chevron-right"></i>
+              <span>Historique des Actes de Décision Scellés</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+              <i class="fas fa-arrow-left"></i> Séance en Cours
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.showToast('Extraction du registre des procès-verbaux scellés réussie', 'success')">
+              <i class="fas fa-file-pdf"></i> Télécharger PV Scellé
+            </button>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-file-signature text-emerald"></i> Procès-Verbaux Validés & Notifiés aux Agences</h3>
+            <span class="badge badge-approved">Certifiés SHA-256</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Réf. PV / Dossier</th>
+                  <th>Emprunteur</th>
+                  <th>Montant Accordé</th>
+                  <th>Taux & Durée</th>
+                  <th>Date Signature</th>
+                  <th>Signataires</th>
+                  <th>Empreinte SHA-256</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>PV-2026-0889</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0889</div>
+                  </td>
+                  <td><strong>Seydou Keita</strong><br><small style="color: var(--text-muted);"><span class="fi fi-ml"></span> Bamako, Mali</small></td>
+                  <td><strong class="amount-cell" style="color: #059669;">3 000 000 FCFA</strong></td>
+                  <td>9.5% • 18 mois</td>
+                  <td>18/08/2026</td>
+                  <td><span class="badge badge-approved">3/3 Signatures</span></td>
+                  <td><code style="font-size: 0.68rem; color: var(--text-muted);">9a8f...4e12</code></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>PV-2026-0884</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0884</div>
+                  </td>
+                  <td><strong>Aïssatou Ba</strong><br><small style="color: var(--text-muted);"><span class="fi fi-sn"></span> Thiès, Sénégal</small></td>
+                  <td><strong class="amount-cell" style="color: #059669;">1 800 000 FCFA</strong></td>
+                  <td>10.0% • 12 mois</td>
+                  <td>17/08/2026</td>
+                  <td><span class="badge badge-approved">3/3 Signatures</span></td>
+                  <td><code style="font-size: 0.68rem; color: var(--text-muted);">bc72...8901</code></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>PV-2026-0878</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0878</div>
+                  </td>
+                  <td><strong>Mahamadou Ouedraogo</strong><br><small style="color: var(--text-muted);"><span class="fi fi-bf"></span> Bobo, Burkina Faso</small></td>
+                  <td><strong class="amount-cell" style="color: #ef4444;">REJET COLLÉGIAL</strong></td>
+                  <td>Reste à vivre insuffisant</td>
+                  <td>15/08/2026</td>
+                  <td><span class="badge badge-rejected">Rejet Acté</span></td>
+                  <td><code style="font-size: 0.68rem; color: var(--text-muted);">df14...aa33</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ====================================================================
+           [COMITÉ] VUE 3 : RAPPORTS D'OCTROI & STATISTIQUES CIF RÉGIONALES
+           ==================================================================== -->
+      <section id="view-committee-reports" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Rapports d'Octroi & Gouvernance CIF Régionale</h1>
+            <div class="page-breadcrumb">
+              <span>Pilotage Stratégique</span> <i class="fas fa-chevron-right"></i>
+              <span>Indicateurs de Portefeuille & Respect des Normes Prudentielles</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+              <i class="fas fa-arrow-left"></i> Séance du Comité
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.showToast('Génération du rapport prudentiel UEMOA au format PDF...', 'info')">
+              <i class="fas fa-file-lines"></i> Rapport Prudentiel UEMOA
+            </button>
+          </div>
+        </div>
+      
+        <div class="grid-3" style="margin-bottom: 1.25rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">142 M</div>
+              <div class="stat-label">Volume Octroyé Q3 2026</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12% vs Q2</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">1.8%</div>
+              <div class="stat-label">Taux de PAR 30 Jours</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> Sous la norme BCEAO (&lt;3%)</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-users-viewfinder"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">420</div>
+              <div class="stat-label">Crédits en Cours de Remboursement</div>
+              <div class="stat-trend up"><i class="fas fa-bolt"></i> Taux de recouvrement : 98.4%</div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-earth-africa text-primary"></i> Répartition des Crédits par Pays & Caisses Membres CIF</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Caisse / Pays</th>
+                  <th>Nombre de Crédits</th>
+                  <th>Encours Total</th>
+                  <th>Score Risque Moyen</th>
+                  <th>Taux de Sinistralité</th>
+                  <th>Statut Conformité</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="fi fi-sn mr-1"></span> <strong>Sénégal (Dakar & Médina)</strong></td>
+                  <td>145 dossiers</td>
+                  <td class="amount-cell">54 200 000 FCFA</td>
+                  <td><strong>82 / 100</strong></td>
+                  <td><span style="color: #059669; font-weight: 600;">1.4%</span></td>
+                  <td><span class="badge badge-approved">100% Conforme</span></td>
+                </tr>
+                <tr>
+                  <td><span class="fi fi-bf mr-1"></span> <strong>Burkina Faso (Ouagadougou)</strong></td>
+                  <td>118 dossiers</td>
+                  <td class="amount-cell">41 500 000 FCFA</td>
+                  <td><strong>79 / 100</strong></td>
+                  <td><span style="color: #059669; font-weight: 600;">1.9%</span></td>
+                  <td><span class="badge badge-approved">100% Conforme</span></td>
+                </tr>
+                <tr>
+                  <td><span class="fi fi-ml mr-1"></span> <strong>Mali (Bamako & Ségou)</strong></td>
+                  <td>92 dossiers</td>
+                  <td class="amount-cell">32 800 000 FCFA</td>
+                  <td><strong>84 / 100</strong></td>
+                  <td><span style="color: #059669; font-weight: 600;">1.7%</span></td>
+                  <td><span class="badge badge-approved">100% Conforme</span></td>
+                </tr>
+                <tr>
+                  <td><span class="fi fi-tg mr-1"></span> <strong>Togo (Lomé & Assigamé)</strong></td>
+                  <td>65 dossiers</td>
+                  <td class="amount-cell">13 500 000 FCFA</td>
+                  <td><strong>81 / 100</strong></td>
+                  <td><span style="color: #059669; font-weight: 600;">2.1%</span></td>
+                  <td><span class="badge badge-approved">100% Conforme</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      
 
       <!-- ====================================================================
-           [ESPACE 5] TABLEAU DE BORD DE CONFORMITÉ LBC / FT / FP (DIGICOOP-WA+)
+           [CONFORMITÉ] VUE 1 : CONSOLE GÉNÉRALE DE CONFORMITÉ & LBC/FT
            ==================================================================== -->
       <section id="view-role-compliance" class="app-view" style="display: none;">
         <div class="page-header">
           <div class="page-title-group">
-            <h1>Console de Conformité LBC / FT / FP & Filtrage PPE</h1>
+            <h1>Console de Surveillance Conformité LBC / FT / FP</h1>
             <div class="page-breadcrumb">
               <span>DigiCoop-WA+</span> <i class="fas fa-chevron-right"></i>
-              <span>Lutte Blanchiment, Terrorisme & Prolifération (UEMOA)</span>
+              <span>Dispositif de Lutte Anti-Blanchiment & Financement du Terrorisme (UEMOA)</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-compliance-screening')">
+              <i class="fas fa-magnifying-glass"></i> Filtrage PPE & Sanctions
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-compliance-multi')">
+              <i class="fas fa-network-wired"></i> Multi-Comptes CIF
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.switchView('view-audit-logs')">
+              <i class="fas fa-file-contract"></i> Registre Réglementaire
+            </button>
+          </div>
+        </div>
+      
+        <!-- KPI Compliance Row -->
+        <div class="grid-4" style="margin-bottom: 1.25rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap danger">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">2</div>
+              <div class="stat-label">Alertes Sanctions Actives</div>
+              <div class="stat-trend down"><i class="fas fa-triangle-exclamation"></i> 1 Blocage conservatoire</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap amber">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">4</div>
+              <div class="stat-label">Diligences PPE / PEP</div>
+              <div class="stat-trend up"><i class="fas fa-clock"></i> Examen renforcé requis</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-check-double"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">124</div>
+              <div class="stat-label">Filtrages Automatisés</div>
+              <div class="stat-trend up"><i class="fas fa-bolt"></i> 100% Conforme UEMOA</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-building-columns"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">5 Pays</div>
+              <div class="stat-label">Périmètre CIF Couvert</div>
+              <div class="stat-trend up"><i class="fas fa-earth-africa"></i> SN, BF, ML, TG, BJ</div>
             </div>
           </div>
         </div>
@@ -2615,7 +3179,7 @@
           <!-- Real-Time Screening Search Console -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><i class="fas fa-shield-virus text-primary"></i> Filtrage en Temps Réel (Sanctions & PPE)</h3>
+              <h3 class="card-title"><i class="fas fa-shield-virus text-primary"></i> Filtrage Instantané (Listes Sanctions & PPE)</h3>
             </div>
             <div class="card-body">
               <p style="font-size: 0.8rem; color: var(--text-subtle); margin-bottom: 1rem;">
@@ -2686,6 +3250,216 @@
           </div>
         </div>
       </section>
+      
+      <!-- ====================================================================
+           [CONFORMITÉ] VUE 2 : FILTRAGE APPROFONDI DES LISTES PPE & ONU
+           ==================================================================== -->
+      <section id="view-compliance-screening" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Filtrage des Listes PPE, Sanctions ONU & UEMOA</h1>
+            <div class="page-breadcrumb">
+              <span>Conformité & Contrôle</span> <i class="fas fa-chevron-right"></i>
+              <span>Vérification Réglementaire Anti-Blanchiment</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">
+              <i class="fas fa-arrow-left"></i> Console Conformité
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.showToast('Base des sanctions ONU & UEMOA synchronisée avec succès', 'success')">
+              <i class="fas fa-rotate"></i> Synchroniser Listes
+            </button>
+          </div>
+        </div>
+      
+        <div class="card" style="margin-bottom: 1.25rem;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-magnifying-glass text-primary"></i> Recherche Directe dans le Registre des Sanctions</h3>
+          </div>
+          <div class="card-body">
+            <div class="grid-3" style="gap: 1rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Nom ou Raison Sociale</label>
+                <input type="text" id="screening-full-name-input" class="form-control" placeholder="Nom complet..." value="Ousmane Coulibaly">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Pays d'Origine / Nationalité</label>
+                <select class="form-control" id="screening-country-select">
+                  <option value="ALL">Tous les pays UEMOA</option>
+                  <option value="ML">Mali</option>
+                  <option value="BF">Burkina Faso</option>
+                  <option value="SN">Sénégal</option>
+                  <option value="TG">Togo</option>
+                  <option value="BJ">Bénin</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; align-items: flex-end;">
+                <button class="btn btn-primary w-full" onclick="App.showToast('Vérification effectuée : Signalement PPE identifié (Diligence renforcée)', 'warning')">
+                  <i class="fas fa-shield-halved"></i> Lancer le Contrôle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list-check text-warning"></i> Historique Récent des Contrôles & Signalements</h3>
+            <span class="badge badge-verification">5 Derniers Contrôles</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Date & Heure</th>
+                  <th>Personne Contrôlée</th>
+                  <th>Pays</th>
+                  <th>Type de Liste</th>
+                  <th>Résultat</th>
+                  <th>Mesure Prise</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Aujourd'hui 09:42</td>
+                  <td><strong>Ibrahim Ould Mohamed</strong></td>
+                  <td><span class="fi fi-ml mr-1"></span> Mali</td>
+                  <td><span class="badge badge-rejected">Sanctions UEMOA / ONU</span></td>
+                  <td><strong style="color: #ef4444;"><i class="fas fa-circle-xmark"></i> Correspondance 98%</strong></td>
+                  <td><span class="badge badge-rejected">Blocage Conservatoire</span></td>
+                </tr>
+                <tr>
+                  <td>Aujourd'hui 08:15</td>
+                  <td><strong>Ousmane Coulibaly</strong></td>
+                  <td><span class="fi fi-bf mr-1"></span> Burkina Faso</td>
+                  <td><span class="badge badge-warning">Base PPE Régionale</span></td>
+                  <td><strong style="color: #f59e0b;"><i class="fas fa-triangle-exclamation"></i> Personne Exposée (PPE)</strong></td>
+                  <td><span class="badge badge-warning">Diligence Renforcée</span></td>
+                </tr>
+                <tr>
+                  <td>Hier 16:30</td>
+                  <td><strong>Fatou Ndiaye</strong></td>
+                  <td><span class="fi fi-sn mr-1"></span> Sénégal</td>
+                  <td><span class="badge badge-submitted">Base Globale GAFI</span></td>
+                  <td><strong style="color: #10b981;"><i class="fas fa-circle-check"></i> Aucun Signalement</strong></td>
+                  <td><span class="badge badge-approved">Autorisé sans Réserve</span></td>
+                </tr>
+                <tr>
+                  <td>Hier 14:10</td>
+                  <td><strong>Koffi Mensah</strong></td>
+                  <td><span class="fi fi-tg mr-1"></span> Togo</td>
+                  <td><span class="badge badge-submitted">Base Globale GAFI</span></td>
+                  <td><strong style="color: #10b981;"><i class="fas fa-circle-check"></i> Aucun Signalement</strong></td>
+                  <td><span class="badge badge-approved">Autorisé sans Réserve</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ====================================================================
+           [CONFORMITÉ] VUE 3 : CONSOLIDATION MULTI-COMPTES RÉSEAU CIF
+           ==================================================================== -->
+      <section id="view-compliance-multi" class="app-view" style="display: none;">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Consolidation Multi-Comptes & Encours Globaux CIF</h1>
+            <div class="page-breadcrumb">
+              <span>Surveillance Transfrontalière</span> <i class="fas fa-chevron-right"></i>
+              <span>Agrégation des Soldes & Détection des Engagements Cumulés</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">
+              <i class="fas fa-arrow-left"></i> Console Conformité
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="App.showToast('Export consolidé des encours transfrontaliers téléchargé', 'success')">
+              <i class="fas fa-file-export"></i> Exporter la Synthèse
+            </button>
+          </div>
+        </div>
+      
+        <div class="grid-3" style="margin-bottom: 1.25rem;">
+          <div class="card stat-card">
+            <div class="stat-icon-wrap emerald">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">4.25 M</div>
+              <div class="stat-label">Solde Cumulé Détecté</div>
+              <div class="stat-trend up"><i class="fas fa-shield"></i> Inférieur au plafond</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap primary">
+              <i class="fas fa-building-columns"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">2 Caisses</div>
+              <div class="stat-label">Comptes Transfrontaliers</div>
+              <div class="stat-trend up"><i class="fas fa-location-dot"></i> Sénégal & Burkina</div>
+            </div>
+          </div>
+      
+          <div class="card stat-card">
+            <div class="stat-icon-wrap purple">
+              <i class="fas fa-scale-balanced"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">50 M</div>
+              <div class="stat-label">Seuil Réglementaire UEMOA</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> Marge disponible : 45.75M</div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-network-wired text-primary"></i> Détail des Comptes Détenus par le Demandeur dans le Réseau CIF</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Pays & Caisse Membre</th>
+                  <th>Numéro de Compte</th>
+                  <th>Nature du Compte</th>
+                  <th>Date d'Ouverture</th>
+                  <th>Solde Actuel</th>
+                  <th>Statut du Compte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="fi fi-sn mr-1"></span> Caisse Médina (Dakar, Sénégal)</td>
+                  <td><code>CPT-CIF-SN-00918</code></td>
+                  <td>Épargne sur Livret CIF</td>
+                  <td>12/03/2021</td>
+                  <td class="amount-cell">1 450 000 FCFA</td>
+                  <td><span class="badge badge-approved">Actif & Régulier</span></td>
+                </tr>
+                <tr>
+                  <td><span class="fi fi-bf mr-1"></span> Caisse Ouaga 2000 (Burkina Faso)</td>
+                  <td><code>CPT-CIF-BF-04421</code></td>
+                  <td>Compte Courant Commercial</td>
+                  <td>18/09/2023</td>
+                  <td class="amount-cell">2 800 000 FCFA</td>
+                  <td><span class="badge badge-approved">Actif & Régulier</span></td>
+                </tr>
+                <tr style="background: rgba(79, 70, 229, 0.06); font-weight: 700;">
+                  <td colspan="4">TOTAL CONSOLIDÉ CIF :</td>
+                  <td class="amount-cell" style="color: var(--primary-700); font-size: 1.05rem;">4 250 000 FCFA</td>
+                  <td><span class="badge badge-approved"><i class="fas fa-check"></i> Sans Dépassement</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
       
 
       <!-- ====================================================================
@@ -3406,71 +4180,212 @@
 
 
 <!-- ==========================================================================
-     5. MODAL: COMITÉ DE CRÉDIT DÉCISION
+     MODAL: COMITÉ DE CRÉDIT & CONFORMITÉ - DÉLIBÉRATION COLLÉGIALE
      ========================================================================== -->
-<div id="committee-modal" class="modal-backdrop">
-  <div class="modal-dialog">
-    <div class="modal-header">
-      <div>
-        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
-          <i class="fas fa-gavel text-primary mr-1"></i> Délibération Comité • Dossier <span id="com-dossier-num">REQ-2026-0892</span>
-        </h3>
-        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="com-client-name">Amadou Sanogo</p>
+<div id="committee-modal" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog committee-modal-dialog" style="max-width: 820px; width: 94%;">
+    
+    <!-- Modal Header with Identity & Quorum -->
+    <div class="modal-header" style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.04) 0%, rgba(139, 92, 246, 0.08) 100%); border-bottom: 1px solid var(--border-color);">
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: var(--shadow-sm);">
+          <i class="fas fa-gavel"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+              Délibération du Comité de Crédit
+            </h3>
+            <span class="badge badge-submitted" id="com-dossier-num" style="font-family: var(--font-mono); font-weight: 700;">#REQ-2026-0891</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">
+            <span id="com-client-name"><i class="fas fa-user mr-1"></i> Fatou Ndiaye (Dakar, Sénégal)</span>
+            <span>•</span>
+            <span style="color: #059669; font-weight: 600;"><i class="fas fa-users-viewfinder mr-1"></i> Quorum 3/3 Membres Atteint</span>
+          </div>
+        </div>
       </div>
-      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')">&times;</button>
+      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')" title="Fermer la délibération">&times;</button>
     </div>
-    <div class="modal-body">
-      <div class="committee-panel" style="margin-bottom: 1.25rem;">
-        <div style="font-size: 0.85rem; line-height: 1.6;">
-          <div><strong>Montant Demandé :</strong> <span id="com-requested-amount" class="amount-cell">5 000 000 FCFA</span></div>
-          <div><strong>Score Explicable & Risque :</strong> <span id="com-score" style="font-weight: 700; color: var(--cif-emerald-500);">88/100 (Faible)</span></div>
-          <div style="color: var(--cif-primary-600);"><i class="fas fa-check-circle"></i> <strong>Avis Analyste :</strong> Favorable (Capacité nette 730k FCFA vs Mensualité 320k FCFA).</div>
+
+    <!-- Modal Body -->
+    <div class="modal-body" style="padding: 1.5rem;">
+      
+      <!-- 1. Dossier Synthesis Cards (3 Columns) -->
+      <div class="grid-3" style="gap: 1rem; margin-bottom: 1.25rem;">
+        
+        <!-- Montant & Échéance -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Montant Demandé
+          </div>
+          <div id="com-requested-amount" class="amount-cell" style="font-size: 1.2rem; font-weight: 800; color: var(--primary-700);">
+            2 500 000 FCFA
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            Durée : <strong id="com-requested-duration">12 mois</strong> • Crédit Spot
+          </div>
+        </div>
+
+        <!-- Score Risque -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Score & Risque IA
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 0.35rem;">
+            <span id="com-score-value" style="font-size: 1.25rem; font-weight: 800; color: #059669;">88</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">/100</span>
+            <span class="badge badge-approved" id="com-risk-level" style="margin-left: auto; font-size: 0.7rem;">Faible</span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            <i class="fas fa-shield-check text-emerald"></i> Modèle Cold Start UEMOA
+          </div>
+        </div>
+
+        <!-- Capacité & Reste à Vivre -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Capacité de Remboursement
+          </div>
+          <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary);" id="com-disposable-income">
+            730 000 FCFA
+          </div>
+          <div style="font-size: 0.75rem; color: #059669; font-weight: 600; margin-top: 2px;">
+            <i class="fas fa-circle-check"></i> Reste à vivre largement suffisant
+          </div>
         </div>
       </div>
 
-      <h5 style="font-size: 0.88rem; margin-bottom: 0.75rem;">Ajustement des Termes Accordés par le Comité</h5>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Montant Final Accordé (FCFA)</label>
-          <input type="number" id="com-approved-amount" class="form-control" value="5000000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Durée Accordée (Mois)</label>
-          <input type="number" id="com-approved-duration" class="form-control" value="18">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Taux d'Intérêt Mensuel (%)</label>
-          <input type="number" step="0.05" id="com-interest-rate" class="form-control" value="1.25">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Conditions Particulières</label>
-          <input type="text" id="com-conditions" class="form-control" value="Décaissement en 2 tranches après vérification broyeur">
+      <!-- 2. Avis de Synthèse de l'Analyste & Surveillance LBC -->
+      <div style="background: rgba(79, 70, 229, 0.05); border-left: 4px solid var(--primary-600); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+        <i class="fas fa-file-signature text-primary" style="font-size: 1.1rem; margin-top: 2px;"></i>
+        <div style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); flex: 1;">
+          <div style="font-weight: 700; color: var(--primary-800); margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+            <span>Avis Favorable de l'Analyste Risque</span>
+            <span class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-shield-halved"></i> Filtrage LBC/FT : RAS</span>
+          </div>
+          <span id="com-analyst-notes">
+            « Capacité nette vérifiée (730k FCFA vs mensualité 235k FCFA), stocks de tissus nantis à 140% et antécédents de paiement irréprochables sur la Caisse Médina. »
+          </span>
         </div>
       </div>
 
-      <div class="committee-voting-grid">
-        <div class="vote-option-btn selected" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
-          <i class="fas fa-check-circle text-success"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-emerald-700);">Approuver</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Accorder le prêt</span>
+      <!-- 3. Ajustement des Termes Accordés -->
+      <div class="card" style="padding: 1.25rem; background: var(--bg-surface-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+            <i class="fas fa-sliders text-primary mr-1"></i> Paramètres du Prêt Validés par le Comité
+          </h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Ajustables en séance</span>
         </div>
-        <div class="vote-option-btn" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
-          <i class="fas fa-rotate text-warning"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-gold-700);">Complément</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Demande infos</span>
+
+        <div class="grid-3" style="gap: 1rem; margin-bottom: 1rem;">
+          <!-- Montant Accordé -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Montant Accordé (FCFA)</label>
+            <input type="number" id="com-approved-amount" class="form-control" value="2500000" step="50000" style="font-weight: 700; font-size: 0.95rem; color: var(--primary-700);">
+          </div>
+
+          <!-- Durée -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Durée Validée (Mois)</label>
+            <select id="com-approved-duration" class="form-control" style="font-weight: 600;">
+              <option value="6">6 Mois (Court terme)</option>
+              <option value="12" selected>12 Mois (Standard)</option>
+              <option value="18">18 Mois (Moyen terme)</option>
+              <option value="24">24 Mois (Investissement)</option>
+            </select>
+          </div>
+
+          <!-- Taux d'Intérêt -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Taux Dégressif Annuel (%)</label>
+            <input type="number" step="0.1" id="com-interest-rate" class="form-control" value="11.5" style="font-weight: 600;">
+          </div>
         </div>
-        <div class="vote-option-btn reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
-          <i class="fas fa-times-circle text-danger"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-danger-700);">Rejeter</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Refus motivé</span>
+
+        <!-- Live Recalculation Bar -->
+        <div style="background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <i class="fas fa-calculator text-primary"></i>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">Échéance Mensuelle Estimée :</span>
+            <strong id="com-live-monthly-payment" style="font-size: 1.05rem; color: #059669;">221 600 FCFA / mois</strong>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">
+            Taux d'effort ajusté : <strong id="com-live-effort-ratio" style="color: #059669;">26.1%</strong> (Plafond UEMOA ≤ 33%)
+          </div>
+        </div>
+
+        <!-- Conditions Particulières -->
+        <div class="form-group" style="margin-top: 1rem; margin-bottom: 0;">
+          <label class="form-label" style="font-weight: 600; font-size: 0.8rem;">Conditions Particulières / Réserves éventuelles</label>
+          <input type="text" id="com-conditions" class="form-control" value="Décaissement direct après mise en place de la garantie sur stock." placeholder="Ex: Décaissement en 2 tranches, caution solidaire exigée...">
         </div>
       </div>
+
+      <!-- 4. Décision Finale Collégiale (3 Cartes Intuitives) -->
+      <div style="margin-top: 1.5rem;">
+        <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; text-align: center;">
+          Vote & Décision Finale du Comité
+        </h4>
+
+        <div class="grid-3 committee-decision-cards-grid" style="gap: 1rem;">
+          
+          <!-- Option 1: Approuver -->
+          <div class="committee-action-card approve" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
+                <i class="fas fa-circle-check"></i>
+              </div>
+              <div class="action-title" style="color: #047857;">Approuver le Crédit</div>
+            </div>
+            <p class="action-desc">
+              Accorder le prêt aux conditions validées et sceller le procès-verbal avec signature SHA-256.
+            </p>
+            <button class="btn btn-success w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-signature mr-1"></i> Valider & Sceller
+            </button>
+          </div>
+
+          <!-- Option 2: Complément / Réserve -->
+          <div class="committee-action-card reserve" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">
+                <i class="fas fa-rotate"></i>
+              </div>
+              <div class="action-title" style="color: #b45309;">Complément Requis</div>
+            </div>
+            <p class="action-desc">
+              Suspendre la décision pour demander des garanties additionnelles ou pièces à l'analyste.
+            </p>
+            <button class="btn btn-warning w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-comment-dots mr-1"></i> Demander Infos
+            </button>
+          </div>
+
+          <!-- Option 3: Rejeter -->
+          <div class="committee-action-card reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(239, 68, 68, 0.15); color: #dc2626;">
+                <i class="fas fa-circle-xmark"></i>
+              </div>
+              <div class="action-title" style="color: #b91c1c;">Rejeter le Dossier</div>
+            </div>
+            <p class="action-desc">
+              Refuser la demande pour dépassement de seuils prudentiels ou risque d'impayé avéré.
+            </p>
+            <button class="btn btn-danger w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-ban mr-1"></i> Acter le Rejet
+            </button>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+
 
 
 <!-- ====================================================================

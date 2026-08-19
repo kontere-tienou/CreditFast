@@ -1,5 +1,5 @@
 <!-- ====================================================================
-     [ESPACE 4] TABLEAU DE BORD DU COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
+     [COMITÉ] VUE 1 : SÉANCE DE DÉLIBÉRATION DU COMITÉ DE CRÉDIT
      ==================================================================== -->
 <section id="view-role-committee" class="app-view" style="display: none;">
   <div class="page-header">
@@ -7,8 +7,19 @@
       <h1>Séance de Délibération du Comité de Crédit</h1>
       <div class="page-breadcrumb">
         <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
-        <span>Délibérations Collégiales & Vote</span>
+        <span>Délibérations Collégiales, Vote & Conformité LBC/FT</span>
       </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')">
+        <i class="fas fa-file-signature"></i> Décisions Signées
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">
+        <i class="fas fa-shield-halved"></i> Console Conformité
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-reports')">
+        <i class="fas fa-chart-pie"></i> Rapports d'Octroi
+      </button>
     </div>
   </div>
 
@@ -85,3 +96,199 @@
     </div>
   </div>
 </section>
+
+<!-- ====================================================================
+     [COMITÉ] VUE 2 : DÉCISIONS SIGNÉES & PROCÈS-VERBAUX NUMÉRIQUES
+     ==================================================================== -->
+<section id="view-committee-signed" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Registre des Décisions & Procès-Verbaux Signés</h1>
+      <div class="page-breadcrumb">
+        <span>Gouvernance Régionale</span> <i class="fas fa-chevron-right"></i>
+        <span>Historique des Actes de Décision Scellés</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance en Cours
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.showToast('Extraction du registre des procès-verbaux scellés réussie', 'success')">
+        <i class="fas fa-file-pdf"></i> Télécharger PV Scellé
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-file-signature text-emerald"></i> Procès-Verbaux Validés & Notifiés aux Agences</h3>
+      <span class="badge badge-approved">Certifiés SHA-256</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>Réf. PV / Dossier</th>
+            <th>Emprunteur</th>
+            <th>Montant Accordé</th>
+            <th>Taux & Durée</th>
+            <th>Date Signature</th>
+            <th>Signataires</th>
+            <th>Empreinte SHA-256</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>PV-2026-0889</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0889</div>
+            </td>
+            <td><strong>Seydou Keita</strong><br><small style="color: var(--text-muted);"><span class="fi fi-ml"></span> Bamako, Mali</small></td>
+            <td><strong class="amount-cell" style="color: #059669;">3 000 000 FCFA</strong></td>
+            <td>9.5% • 18 mois</td>
+            <td>18/08/2026</td>
+            <td><span class="badge badge-approved">3/3 Signatures</span></td>
+            <td><code style="font-size: 0.68rem; color: var(--text-muted);">9a8f...4e12</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PV-2026-0884</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0884</div>
+            </td>
+            <td><strong>Aïssatou Ba</strong><br><small style="color: var(--text-muted);"><span class="fi fi-sn"></span> Thiès, Sénégal</small></td>
+            <td><strong class="amount-cell" style="color: #059669;">1 800 000 FCFA</strong></td>
+            <td>10.0% • 12 mois</td>
+            <td>17/08/2026</td>
+            <td><span class="badge badge-approved">3/3 Signatures</span></td>
+            <td><code style="font-size: 0.68rem; color: var(--text-muted);">bc72...8901</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PV-2026-0878</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0878</div>
+            </td>
+            <td><strong>Mahamadou Ouedraogo</strong><br><small style="color: var(--text-muted);"><span class="fi fi-bf"></span> Bobo, Burkina Faso</small></td>
+            <td><strong class="amount-cell" style="color: #ef4444;">REJET COLLÉGIAL</strong></td>
+            <td>Reste à vivre insuffisant</td>
+            <td>15/08/2026</td>
+            <td><span class="badge badge-rejected">Rejet Acté</span></td>
+            <td><code style="font-size: 0.68rem; color: var(--text-muted);">df14...aa33</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     [COMITÉ] VUE 3 : RAPPORTS D'OCTROI & STATISTIQUES CIF RÉGIONALES
+     ==================================================================== -->
+<section id="view-committee-reports" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Rapports d'Octroi & Gouvernance CIF Régionale</h1>
+      <div class="page-breadcrumb">
+        <span>Pilotage Stratégique</span> <i class="fas fa-chevron-right"></i>
+        <span>Indicateurs de Portefeuille & Respect des Normes Prudentielles</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance du Comité
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.showToast('Génération du rapport prudentiel UEMOA au format PDF...', 'info')">
+        <i class="fas fa-file-lines"></i> Rapport Prudentiel UEMOA
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 1.25rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">142 M</div>
+        <div class="stat-label">Volume Octroyé Q3 2026</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12% vs Q2</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-shield-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1.8%</div>
+        <div class="stat-label">Taux de PAR 30 Jours</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> Sous la norme BCEAO (&lt;3%)</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-users-viewfinder"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">420</div>
+        <div class="stat-label">Crédits en Cours de Remboursement</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Taux de recouvrement : 98.4%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-earth-africa text-primary"></i> Répartition des Crédits par Pays & Caisses Membres CIF</h3>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>Caisse / Pays</th>
+            <th>Nombre de Crédits</th>
+            <th>Encours Total</th>
+            <th>Score Risque Moyen</th>
+            <th>Taux de Sinistralité</th>
+            <th>Statut Conformité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="fi fi-sn mr-1"></span> <strong>Sénégal (Dakar & Médina)</strong></td>
+            <td>145 dossiers</td>
+            <td class="amount-cell">54 200 000 FCFA</td>
+            <td><strong>82 / 100</strong></td>
+            <td><span style="color: #059669; font-weight: 600;">1.4%</span></td>
+            <td><span class="badge badge-approved">100% Conforme</span></td>
+          </tr>
+          <tr>
+            <td><span class="fi fi-bf mr-1"></span> <strong>Burkina Faso (Ouagadougou)</strong></td>
+            <td>118 dossiers</td>
+            <td class="amount-cell">41 500 000 FCFA</td>
+            <td><strong>79 / 100</strong></td>
+            <td><span style="color: #059669; font-weight: 600;">1.9%</span></td>
+            <td><span class="badge badge-approved">100% Conforme</span></td>
+          </tr>
+          <tr>
+            <td><span class="fi fi-ml mr-1"></span> <strong>Mali (Bamako & Ségou)</strong></td>
+            <td>92 dossiers</td>
+            <td class="amount-cell">32 800 000 FCFA</td>
+            <td><strong>84 / 100</strong></td>
+            <td><span style="color: #059669; font-weight: 600;">1.7%</span></td>
+            <td><span class="badge badge-approved">100% Conforme</span></td>
+          </tr>
+          <tr>
+            <td><span class="fi fi-tg mr-1"></span> <strong>Togo (Lomé & Assigamé)</strong></td>
+            <td>65 dossiers</td>
+            <td class="amount-cell">13 500 000 FCFA</td>
+            <td><strong>81 / 100</strong></td>
+            <td><span style="color: #059669; font-weight: 600;">2.1%</span></td>
+            <td><span class="badge badge-approved">100% Conforme</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+

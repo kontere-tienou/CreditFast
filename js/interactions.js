@@ -645,12 +645,92 @@ const AppInteractions = {
     const modal = document.getElementById('committee-modal');
     if (!modal) return;
 
-    document.getElementById('com-dossier-num').textContent = req.request_number;
-    document.getElementById('com-client-name').textContent = `${req.client_name} (${req.city}, ${req.country})`;
-    document.getElementById('com-requested-amount').textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
-    document.getElementById('com-approved-amount').value = req.requested_amount;
-    document.getElementById('com-approved-duration').value = req.duration_months;
+    const evalData = CreditScoringEngine.evaluateDossier(dossierId) || {};
+    const client = DB.findById('clients', req.client_id) || {};
+    const review = DB.get('credit_reviews').find(r => r.credit_request_id == req.id) || {};
 
+    const dossierNumEl = document.getElementById('com-dossier-num');
+    const clientNameEl = document.getElementById('com-client-name');
+    const reqAmountEl = document.getElementById('com-requested-amount');
+    const reqDurEl = document.getElementById('com-requested-duration');
+    const scoreValEl = document.getElementById('com-score-value');
+    const riskLevelEl = document.getElementById('com-risk-level');
+    const dispIncomeEl = document.getElementById('com-disposable-income');
+    const analystNotesEl = document.getElementById('com-analyst-notes');
+
+    if (dossierNumEl) dossierNumEl.textContent = req.request_number || `#REQ-2026-${req.id}`;
+    if (clientNameEl) clientNameEl.innerHTML = `<i class="fas fa-user mr-1"></i> ${req.client_name} (${req.city || client.city || 'UEMOA'}, ${req.country || 'UEMOA'})`;
+    if (reqAmountEl) reqAmountEl.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    if (reqDurEl) reqDurEl.textContent = `${req.duration_months} mois`;
+
+    if (scoreValEl) {
+      scoreValEl.textContent = evalData.overallScore || req.score || 85;
+      scoreValEl.style.color = evalData.riskColor || '#059669';
+    }
+
+    if (riskLevelEl) {
+      riskLevelEl.className = `badge ${evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved')}`;
+      riskLevelEl.textContent = evalData.riskLevel === 'FAIBLE' ? 'Risque Faible' : (evalData.riskLevel === 'MODERE' ? 'Risque Modéré' : evalData.riskLevel || 'Faible');
+    }
+
+    if (dispIncomeEl) {
+      dispIncomeEl.textContent = CreditScoringEngine.formatFCFA(req.disposable_income || client.declared_monthly_income || 730000);
+    }
+
+    if (analystNotesEl) {
+      analystNotesEl.textContent = review.comment ? `« ${review.comment} »` : `« Capacité nette vérifiée (${CreditScoringEngine.formatFCFA(req.disposable_income || 730000)}), garanties contrôlées et profil conforme aux directives de crédit CIF. »`;
+    }
+
+    const appAmountInput = document.getElementById('com-approved-amount');
+    const appDurSelect = document.getElementById('com-approved-duration');
+    const interestInput = document.getElementById('com-interest-rate');
+
+    if (appAmountInput) appAmountInput.value = req.requested_amount;
+    if (appDurSelect) appDurSelect.value = req.duration_months || 12;
+    if (interestInput) interestInput.value = 11.5;
+
+    const updateLiveCalc = () => {
+      const amount = Number(appAmountInput?.value || req.requested_amount);
+      const months = Number(appDurSelect?.value || req.duration_months || 12);
+      const rateAnnual = (Number(interestInput?.value || 11.5)) / 100;
+      const rateMonthly = rateAnnual / 12;
+
+      let monthlyPayment = 0;
+      if (rateMonthly > 0 && months > 0) {
+        monthlyPayment = Math.round((amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -months)));
+      } else if (months > 0) {
+        monthlyPayment = Math.round(amount / months);
+      }
+
+      const clientIncome = Number(client.declared_monthly_income || req.declared_monthly_income || 850000);
+      const effortRatio = clientIncome > 0 ? ((monthlyPayment / clientIncome) * 100).toFixed(1) : '25.0';
+
+      const livePaymentEl = document.getElementById('com-live-monthly-payment');
+      const liveRatioEl = document.getElementById('com-live-effort-ratio');
+
+      if (livePaymentEl) livePaymentEl.textContent = `${CreditScoringEngine.formatFCFA(monthlyPayment)} / mois`;
+      if (liveRatioEl) {
+        liveRatioEl.textContent = `${effortRatio}%`;
+        liveRatioEl.style.color = Number(effortRatio) <= 33 ? '#059669' : '#b45309';
+      }
+    };
+
+    if (appAmountInput && !appAmountInput._bound) {
+      appAmountInput.addEventListener('input', updateLiveCalc);
+      appAmountInput._bound = true;
+    }
+    if (appDurSelect && !appDurSelect._bound) {
+      appDurSelect.addEventListener('change', updateLiveCalc);
+      appDurSelect._bound = true;
+    }
+    if (interestInput && !interestInput._bound) {
+      interestInput.addEventListener('input', updateLiveCalc);
+      interestInput._bound = true;
+    }
+
+    updateLiveCalc();
+
+    modal.style.display = 'flex';
     modal.classList.add('active');
   },
 

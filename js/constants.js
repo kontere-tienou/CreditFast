@@ -112,7 +112,7 @@ const APP_CONSTANTS = {
         {
           title: 'Contrôles & Audit',
           items: [
-            { id: 'nav-analyst-anomalies', target: 'view-analyst-anomalies', icon: 'fa-triangle-exclamation', label: 'Anomalies Détectées' },
+            { id: 'nav-analyst-anomalies', target: 'view-analyst-anomalies', icon: 'fa-triangle-exclamation', label: 'Anomalies Détectées', badge: '5', badgeClass: 'danger' },
             { id: 'nav-analyst-audit', target: 'view-audit-logs', icon: 'fa-clock-rotate-left', label: 'Journal d’Audit' }
           ]
         }
@@ -121,8 +121,8 @@ const APP_CONSTANTS = {
 
     COMMITTEE: {
       code: 'COMMITTEE',
-      name: 'Membre du Comité de Crédit',
-      shortName: 'Comité de Crédit',
+      name: 'Comité de Crédit & Conformité LBC/FT',
+      shortName: 'Comité & Conformité',
       badgeColor: '#8b5cf6',
       badgeBg: 'rgba(139, 92, 246, 0.15)',
       homeView: 'view-role-committee',
@@ -135,24 +135,7 @@ const APP_CONSTANTS = {
           ]
         },
         {
-          title: 'Rapports & Gouvernance',
-          items: [
-            { id: 'nav-com-reports', target: 'view-committee-reports', icon: 'fa-chart-pie', label: 'Rapports d’Octroi CIF' }
-          ]
-        }
-      ]
-    },
-
-    COMPLIANCE: {
-      code: 'COMPLIANCE',
-      name: 'Responsable Conformité LBC / FT / FP',
-      shortName: 'Conformité LBC/FT',
-      badgeColor: '#ef4444',
-      badgeBg: 'rgba(239, 68, 68, 0.15)',
-      homeView: 'view-role-compliance',
-      navGroups: [
-        {
-          title: 'Surveillance & Sanctions',
+          title: 'Surveillance Conformité & LBC/FT',
           items: [
             { id: 'nav-comp-dash', target: 'view-role-compliance', icon: 'fa-shield-halved', label: 'Console Conformité', badge: '2 Alertes', badgeClass: 'danger' },
             { id: 'nav-comp-screening', target: 'view-compliance-screening', icon: 'fa-magnifying-glass', label: 'Filtrage Listes PPE & ONU' },
@@ -160,16 +143,17 @@ const APP_CONSTANTS = {
           ]
         },
         {
-          title: 'Traçabilité Réglementaire',
+          title: 'Rapports & Traçabilité',
           items: [
-            { id: 'nav-comp-audit', target: 'view-audit-logs', icon: 'fa-file-contract', label: 'Déclarations de Soupçon' }
+            { id: 'nav-com-reports', target: 'view-committee-reports', icon: 'fa-chart-pie', label: 'Rapports d’Octroi CIF' },
+            { id: 'nav-com-audit', target: 'view-audit-logs', icon: 'fa-file-contract', label: 'Déclarations & Journal d’Audit' }
           ]
         }
       ]
     }
   },
 
-  // Profils démo prêt à l'emploi
+  // Profils démo prêt à l'emploi (4 Profils Métiers)
   DEMO_ACCOUNTS: [
     {
       id: 'demo-client',
@@ -230,32 +214,15 @@ const APP_CONSTANTS = {
       phone: '+223 76 54 32 10',
       password: 'demo',
       name: 'Moussa Traoré',
-      title: 'Président du Comité de Crédit',
+      title: 'Président Comité & Conformité LBC/FT',
       location: 'Bamako, Mali (Caisse Régionale)',
       countryCode: 'ML',
       countryName: 'Mali (Bamako)',
       countryFlag: 'ml',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-      badge: 'Comité',
+      badge: 'Comité & Conformité',
       badgeColor: '#8b5cf6',
-      description: 'Délibérez en séance collégiale, ajustez les montants/durées accordés et signez numériquement les procès-verbaux.'
-    },
-    {
-      id: 'demo-compliance',
-      role: 'COMPLIANCE',
-      email: 'bakary.sanou@cif-ao.org',
-      phone: '+229 97 11 22 33',
-      password: 'demo',
-      name: 'Bakary Sanou',
-      title: 'Officier Conformité LBC / FT / FP',
-      location: 'Cotonou, Bénin (Direction UEMOA)',
-      countryCode: 'BJ',
-      countryName: 'Bénin (Cotonou)',
-      countryFlag: 'bj',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
-      badge: 'Conformité LBC',
-      badgeColor: '#ef4444',
-      description: 'Supervisez le filtrage PPE, les sanctions régionales UEMOA/ONU et la consolidation des comptes.'
+      description: 'Délibérez en séance collégiale, signez les décisions et pilotez la conformité LBC/FT (filtrage PPE/ONU, multi-comptes).'
     }
   ],
 
@@ -291,15 +258,14 @@ const APP_CONSTANTS = {
     ANALYST: [
       'view-role-analyst',
       'view-analyst-dossiers',
+      'view-analyst-anomalies',
       'view-scoring-admin',
       'view-audit-logs'
     ],
     COMMITTEE: [
       'view-role-committee',
       'view-committee-signed',
-      'view-audit-logs'
-    ],
-    COMPLIANCE: [
+      'view-committee-reports',
       'view-role-compliance',
       'view-compliance-screening',
       'view-compliance-multi',
@@ -452,21 +418,6 @@ const APP_CONSTANTS = {
         unread: true
       },
       {
-        id: 403,
-        category: 'AUDIT',
-        title: 'Procès-Verbal Scellé Cryptographiquement',
-        desc: 'Les décisions de la séance précédente ont été scellées par empreinte SHA-256.',
-        tag: 'Traçabilité',
-        time: 'Hier',
-        icon: 'fa-file-signature',
-        iconType: 'warning',
-        targetView: 'view-audit-logs',
-        unread: false
-      }
-    ],
-
-    COMPLIANCE: [
-      {
         id: 501,
         category: 'SANCTIONS',
         title: 'Alerte Sanctions Régionales UEMOA / ONU',
@@ -491,14 +442,14 @@ const APP_CONSTANTS = {
         unread: true
       },
       {
-        id: 503,
-        category: 'AUDIT_LOG',
-        title: 'Registre Réglementaire UEMOA Synchronisé',
-        desc: '124 vérifications d’antécédents journalisées dans le registre d’audit immuable.',
-        tag: 'Conformité',
-        time: 'Il y a 3h',
-        icon: 'fa-clock-rotate-left',
-        iconType: 'emerald',
+        id: 403,
+        category: 'AUDIT',
+        title: 'Procès-Verbal Scellé Cryptographiquement',
+        desc: 'Les décisions de la séance précédente ont été scellées par empreinte SHA-256.',
+        tag: 'Traçabilité',
+        time: 'Hier',
+        icon: 'fa-file-signature',
+        iconType: 'warning',
         targetView: 'view-audit-logs',
         unread: false
       }
@@ -529,13 +480,8 @@ const APP_CONSTANTS = {
       { key: 'ALL', label: 'Toutes' },
       { key: 'SESSION', label: 'Séance', icon: 'fa-scale-balanced' },
       { key: 'DELIBERATION', label: 'Dossiers', icon: 'fa-gavel' },
-      { key: 'AUDIT', label: 'PV Signés', icon: 'fa-file-signature' }
-    ],
-    COMPLIANCE: [
-      { key: 'ALL', label: 'Toutes' },
-      { key: 'SANCTIONS', label: 'Sanctions', icon: 'fa-shield-halved' },
-      { key: 'PEP', label: 'PPE', icon: 'fa-user-shield' },
-      { key: 'AUDIT_LOG', label: 'Audit Trail', icon: 'fa-clock-rotate-left' }
+      { key: 'SANCTIONS', label: 'Sanctions & PPE', icon: 'fa-shield-halved' },
+      { key: 'AUDIT', label: 'PV & Registre', icon: 'fa-file-signature' }
     ]
   }
 };

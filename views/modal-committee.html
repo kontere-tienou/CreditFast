@@ -1,66 +1,207 @@
 <!-- ==========================================================================
-     5. MODAL: COMITÉ DE CRÉDIT DÉCISION
+     MODAL: COMITÉ DE CRÉDIT & CONFORMITÉ - DÉLIBÉRATION COLLÉGIALE
      ========================================================================== -->
-<div id="committee-modal" class="modal-backdrop">
-  <div class="modal-dialog">
-    <div class="modal-header">
-      <div>
-        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
-          <i class="fas fa-gavel text-primary mr-1"></i> Délibération Comité • Dossier <span id="com-dossier-num">REQ-2026-0892</span>
-        </h3>
-        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="com-client-name">Amadou Sanogo</p>
+<div id="committee-modal" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog committee-modal-dialog" style="max-width: 820px; width: 94%;">
+    
+    <!-- Modal Header with Identity & Quorum -->
+    <div class="modal-header" style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.04) 0%, rgba(139, 92, 246, 0.08) 100%); border-bottom: 1px solid var(--border-color);">
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: var(--shadow-sm);">
+          <i class="fas fa-gavel"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+              Délibération du Comité de Crédit
+            </h3>
+            <span class="badge badge-submitted" id="com-dossier-num" style="font-family: var(--font-mono); font-weight: 700;">#REQ-2026-0891</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">
+            <span id="com-client-name"><i class="fas fa-user mr-1"></i> Fatou Ndiaye (Dakar, Sénégal)</span>
+            <span>•</span>
+            <span style="color: #059669; font-weight: 600;"><i class="fas fa-users-viewfinder mr-1"></i> Quorum 3/3 Membres Atteint</span>
+          </div>
+        </div>
       </div>
-      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')">&times;</button>
+      <button class="modal-close-btn" onclick="AppInteractions.closeModal('committee-modal')" title="Fermer la délibération">&times;</button>
     </div>
-    <div class="modal-body">
-      <div class="committee-panel" style="margin-bottom: 1.25rem;">
-        <div style="font-size: 0.85rem; line-height: 1.6;">
-          <div><strong>Montant Demandé :</strong> <span id="com-requested-amount" class="amount-cell">5 000 000 FCFA</span></div>
-          <div><strong>Score Explicable & Risque :</strong> <span id="com-score" style="font-weight: 700; color: var(--cif-emerald-500);">88/100 (Faible)</span></div>
-          <div style="color: var(--cif-primary-600);"><i class="fas fa-check-circle"></i> <strong>Avis Analyste :</strong> Favorable (Capacité nette 730k FCFA vs Mensualité 320k FCFA).</div>
+
+    <!-- Modal Body -->
+    <div class="modal-body" style="padding: 1.5rem;">
+      
+      <!-- 1. Dossier Synthesis Cards (3 Columns) -->
+      <div class="grid-3" style="gap: 1rem; margin-bottom: 1.25rem;">
+        
+        <!-- Montant & Échéance -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Montant Demandé
+          </div>
+          <div id="com-requested-amount" class="amount-cell" style="font-size: 1.2rem; font-weight: 800; color: var(--primary-700);">
+            2 500 000 FCFA
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            Durée : <strong id="com-requested-duration">12 mois</strong> • Crédit Spot
+          </div>
+        </div>
+
+        <!-- Score Risque -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Score & Risque IA
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 0.35rem;">
+            <span id="com-score-value" style="font-size: 1.25rem; font-weight: 800; color: #059669;">88</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">/100</span>
+            <span class="badge badge-approved" id="com-risk-level" style="margin-left: auto; font-size: 0.7rem;">Faible</span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            <i class="fas fa-shield-check text-emerald"></i> Modèle Cold Start UEMOA
+          </div>
+        </div>
+
+        <!-- Capacité & Reste à Vivre -->
+        <div class="card" style="padding: 0.9rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem;">
+            Capacité de Remboursement
+          </div>
+          <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary);" id="com-disposable-income">
+            730 000 FCFA
+          </div>
+          <div style="font-size: 0.75rem; color: #059669; font-weight: 600; margin-top: 2px;">
+            <i class="fas fa-circle-check"></i> Reste à vivre largement suffisant
+          </div>
         </div>
       </div>
 
-      <h5 style="font-size: 0.88rem; margin-bottom: 0.75rem;">Ajustement des Termes Accordés par le Comité</h5>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Montant Final Accordé (FCFA)</label>
-          <input type="number" id="com-approved-amount" class="form-control" value="5000000">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Durée Accordée (Mois)</label>
-          <input type="number" id="com-approved-duration" class="form-control" value="18">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Taux d'Intérêt Mensuel (%)</label>
-          <input type="number" step="0.05" id="com-interest-rate" class="form-control" value="1.25">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Conditions Particulières</label>
-          <input type="text" id="com-conditions" class="form-control" value="Décaissement en 2 tranches après vérification broyeur">
+      <!-- 2. Avis de Synthèse de l'Analyste & Surveillance LBC -->
+      <div style="background: rgba(79, 70, 229, 0.05); border-left: 4px solid var(--primary-600); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+        <i class="fas fa-file-signature text-primary" style="font-size: 1.1rem; margin-top: 2px;"></i>
+        <div style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); flex: 1;">
+          <div style="font-weight: 700; color: var(--primary-800); margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+            <span>Avis Favorable de l'Analyste Risque</span>
+            <span class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-shield-halved"></i> Filtrage LBC/FT : RAS</span>
+          </div>
+          <span id="com-analyst-notes">
+            « Capacité nette vérifiée (730k FCFA vs mensualité 235k FCFA), stocks de tissus nantis à 140% et antécédents de paiement irréprochables sur la Caisse Médina. »
+          </span>
         </div>
       </div>
 
-      <div class="committee-voting-grid">
-        <div class="vote-option-btn selected" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
-          <i class="fas fa-check-circle text-success"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-emerald-700);">Approuver</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Accorder le prêt</span>
+      <!-- 3. Ajustement des Termes Accordés -->
+      <div class="card" style="padding: 1.25rem; background: var(--bg-surface-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+            <i class="fas fa-sliders text-primary mr-1"></i> Paramètres du Prêt Validés par le Comité
+          </h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Ajustables en séance</span>
         </div>
-        <div class="vote-option-btn" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
-          <i class="fas fa-rotate text-warning"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-gold-700);">Complément</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Demande infos</span>
+
+        <div class="grid-3" style="gap: 1rem; margin-bottom: 1rem;">
+          <!-- Montant Accordé -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Montant Accordé (FCFA)</label>
+            <input type="number" id="com-approved-amount" class="form-control" value="2500000" step="50000" style="font-weight: 700; font-size: 0.95rem; color: var(--primary-700);">
+          </div>
+
+          <!-- Durée -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Durée Validée (Mois)</label>
+            <select id="com-approved-duration" class="form-control" style="font-weight: 600;">
+              <option value="6">6 Mois (Court terme)</option>
+              <option value="12" selected>12 Mois (Standard)</option>
+              <option value="18">18 Mois (Moyen terme)</option>
+              <option value="24">24 Mois (Investissement)</option>
+            </select>
+          </div>
+
+          <!-- Taux d'Intérêt -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.8rem;">Taux Dégressif Annuel (%)</label>
+            <input type="number" step="0.1" id="com-interest-rate" class="form-control" value="11.5" style="font-weight: 600;">
+          </div>
         </div>
-        <div class="vote-option-btn reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
-          <i class="fas fa-times-circle text-danger"></i>
-          <div style="font-weight: 700; font-size: 0.85rem; color: var(--cif-danger-700);">Rejeter</div>
-          <span style="font-size: 0.68rem; color: var(--text-subtle);">Refus motivé</span>
+
+        <!-- Live Recalculation Bar -->
+        <div style="background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <i class="fas fa-calculator text-primary"></i>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">Échéance Mensuelle Estimée :</span>
+            <strong id="com-live-monthly-payment" style="font-size: 1.05rem; color: #059669;">221 600 FCFA / mois</strong>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">
+            Taux d'effort ajusté : <strong id="com-live-effort-ratio" style="color: #059669;">26.1%</strong> (Plafond UEMOA ≤ 33%)
+          </div>
+        </div>
+
+        <!-- Conditions Particulières -->
+        <div class="form-group" style="margin-top: 1rem; margin-bottom: 0;">
+          <label class="form-label" style="font-weight: 600; font-size: 0.8rem;">Conditions Particulières / Réserves éventuelles</label>
+          <input type="text" id="com-conditions" class="form-control" value="Décaissement direct après mise en place de la garantie sur stock." placeholder="Ex: Décaissement en 2 tranches, caution solidaire exigée...">
         </div>
       </div>
+
+      <!-- 4. Décision Finale Collégiale (3 Cartes Intuitives) -->
+      <div style="margin-top: 1.5rem;">
+        <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; text-align: center;">
+          Vote & Décision Finale du Comité
+        </h4>
+
+        <div class="grid-3 committee-decision-cards-grid" style="gap: 1rem;">
+          
+          <!-- Option 1: Approuver -->
+          <div class="committee-action-card approve" onclick="AppInteractions.submitCommitteeDecision('APPROVED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
+                <i class="fas fa-circle-check"></i>
+              </div>
+              <div class="action-title" style="color: #047857;">Approuver le Crédit</div>
+            </div>
+            <p class="action-desc">
+              Accorder le prêt aux conditions validées et sceller le procès-verbal avec signature SHA-256.
+            </p>
+            <button class="btn btn-success w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-signature mr-1"></i> Valider & Sceller
+            </button>
+          </div>
+
+          <!-- Option 2: Complément / Réserve -->
+          <div class="committee-action-card reserve" onclick="AppInteractions.submitCommitteeDecision('RESERVED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">
+                <i class="fas fa-rotate"></i>
+              </div>
+              <div class="action-title" style="color: #b45309;">Complément Requis</div>
+            </div>
+            <p class="action-desc">
+              Suspendre la décision pour demander des garanties additionnelles ou pièces à l'analyste.
+            </p>
+            <button class="btn btn-warning w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-comment-dots mr-1"></i> Demander Infos
+            </button>
+          </div>
+
+          <!-- Option 3: Rejeter -->
+          <div class="committee-action-card reject" onclick="AppInteractions.submitCommitteeDecision('REJECTED')">
+            <div class="action-card-header">
+              <div class="action-icon-wrap" style="background: rgba(239, 68, 68, 0.15); color: #dc2626;">
+                <i class="fas fa-circle-xmark"></i>
+              </div>
+              <div class="action-title" style="color: #b91c1c;">Rejeter le Dossier</div>
+            </div>
+            <p class="action-desc">
+              Refuser la demande pour dépassement de seuils prudentiels ou risque d'impayé avéré.
+            </p>
+            <button class="btn btn-danger w-full" style="font-weight: 700; margin-top: auto;">
+              <i class="fas fa-ban mr-1"></i> Acter le Rejet
+            </button>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+

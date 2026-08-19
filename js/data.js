@@ -8,13 +8,12 @@
 const STORAGE_KEY = 'CREDIT_FAST_DATABASE_V2';
 
 const DEFAULT_DATABASE = {
-  // 1. Roles
+  // 1. Roles (4 Profils Métiers)
   roles: [
     { id: 1, name: 'Analyste Risque', description: 'Analyse détaillée, OCR, anomalies et scoring explicable V2' },
     { id: 2, name: 'Chargé de Crédit', description: 'Gestion du pipeline, premières vérifications, compléments terrain' },
-    { id: 3, name: 'Membre du Comité', description: 'Décision collégiale, ajustement montants/durées et signature' },
-    { id: 4, name: 'Client Emprunteur', description: 'Parcours d’octroi, pièces, suivi en direct et échéancier' },
-    { id: 5, name: 'Conformité LBC/FT/FP', description: 'Filtrage PPE, sanctions UEMOA/ONU, détection atypique' }
+    { id: 3, name: 'Comité de Crédit & Conformité', description: 'Décision collégiale, ajustement montants/durées, signature et conformité LBC/FT' },
+    { id: 4, name: 'Client Emprunteur', description: 'Parcours d’octroi, pièces, suivi en direct et échéancier' }
   ],
 
   // 2. Users
@@ -354,10 +353,13 @@ const DEFAULT_DATABASE = {
       credit_request_id: 3,
       document_id: 4,
       anomaly_type: 'DATE_INCOHERENTE',
+      category: 'OCR',
       severity: 'CRITICAL',
-      description: 'La date extraite par OCR sur la facture (12/01/2025) est antérieure de plus de 18 mois à la demande.',
-      detected_value: '2025-01-12',
-      expected_value: 'Moins de 30 jours',
+      rule_name: 'Validité Temporelle Pièce Proforma',
+      description: 'La date extraite par OCR sur la facture d’outillage (12/01/2025) est antérieure de plus de 18 mois au dépôt du dossier.',
+      detected_value: '12/01/2025',
+      expected_value: 'Moins de 30 jours (< 16/07/2026)',
+      engine: 'Moteur OCR Tesseract V2.2',
       status: 'OPEN',
       resolved_by: null,
       resolved_at: null,
@@ -369,15 +371,72 @@ const DEFAULT_DATABASE = {
       credit_request_id: 3,
       document_id: 4,
       anomaly_type: 'MONTANT_DISCORDANT',
+      category: 'OCR',
       severity: 'WARNING',
-      description: 'Le montant de la facture OCR (1 200 000 FCFA) est inférieur au montant demandé (1 800 000 FCFA).',
+      rule_name: 'Concordance Devis vs Demande',
+      description: 'Le montant extrait de la facture (1 200 000 FCFA) est significativement inférieur au montant de crédit sollicité (1 800 000 FCFA).',
       detected_value: '1 200 000 FCFA',
-      expected_value: '1 800 000 FCFA',
+      expected_value: '1 800 000 FCFA (Écart -600 000 F)',
+      engine: 'Rapprochement Automatique GED',
       status: 'OPEN',
       resolved_by: null,
       resolved_at: null,
       resolution_comment: null,
       created_at: '2026-08-14T11:12:00Z'
+    },
+    {
+      id: 3,
+      credit_request_id: 3,
+      document_id: null,
+      anomaly_type: 'CAPACITE_INSUFFISANTE',
+      category: 'FINANCIAL',
+      severity: 'CRITICAL',
+      rule_name: 'Ratio Reste à Vivre / Échéance',
+      description: 'Le reste à vivre calculé (100 000 FCFA) ne couvre pas l’échéance mensuelle estimée du crédit (195 000 FCFA). Ratio critique de 0.51x.',
+      detected_value: '100 000 F vs 195 000 F (0.51x)',
+      expected_value: 'Ratio ≥ 1.30x (Reste à vivre > 253 500 F)',
+      engine: 'Moteur Solvabilité V2',
+      status: 'OPEN',
+      resolved_by: null,
+      resolved_at: null,
+      resolution_comment: null,
+      created_at: '2026-08-14T11:15:00Z'
+    },
+    {
+      id: 4,
+      credit_request_id: 1,
+      document_id: null,
+      anomaly_type: 'MULTI_COMPTE_RESEAU',
+      category: 'NETWORK',
+      severity: 'WARNING',
+      rule_name: 'Consolidation Multi-Caisses UEMOA',
+      description: 'Détection d’un compte d’épargne inactif supplémentaire à la caisse de Thiès (Sénégal) sans déclaration initiale dans la fiche KYC.',
+      detected_value: 'Caisse Thiès (Solde: 180 000 FCFA)',
+      expected_value: 'Déclaration centralisée CIF',
+      engine: 'Passerelle Régionale CIF-WA+',
+      status: 'OPEN',
+      resolved_by: null,
+      resolved_at: null,
+      resolution_comment: null,
+      created_at: '2026-08-12T09:30:00Z'
+    },
+    {
+      id: 5,
+      credit_request_id: 5,
+      document_id: null,
+      anomaly_type: 'PRIMO_DEMANDEUR_COLD_START',
+      category: 'FINANCIAL',
+      severity: 'INFO',
+      rule_name: 'Signalement Inclusion Cold Start',
+      description: 'Absence d’antécédents bancaires et d’épargne historique. Basculement automatique vers le modèle de pondération Cold Start.',
+      detected_value: '0 mois d’historique bancaire',
+      expected_value: 'Actif en Mode Cold Start (+30 pts)',
+      engine: 'Sélecteur de Modèle V2',
+      status: 'RESOLVED',
+      resolved_by: 1,
+      resolved_at: '2026-08-17T10:15:00Z',
+      resolution_comment: 'Dossier qualifié pour le modèle Cold Start avec caution solidaire de maître artisan validée.',
+      created_at: '2026-08-17T10:00:00Z'
     }
   ],
 
