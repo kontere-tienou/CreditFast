@@ -1,0 +1,126 @@
+<!-- ====================================================================
+     [ESPACE AGENT] INSPECTIONS DES GARANTIES & VISITES TERRAIN
+     ==================================================================== -->
+<section id="view-agent-inspections" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title"><i class="fas fa-clipboard-check text-warning mr-2"></i> Inspections & Visites Terrain des Garanties</h1>
+      <div class="page-breadcrumb">
+        <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+        <span>Contrôle Physique & Valorisation des Actifs CIF</span>
+      </div>
+    </div>
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="App.openQrScannerModal('guarantee')" title="Scanner le QR Code d'un certificat de gage ou d'une carte grise">
+        <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Gage QR
+      </button>
+      <button class="btn btn-primary" onclick="App.openNewInspectionModal()">
+        <i class="fas fa-plus-circle mr-1"></i> Planifier une Visite Terrain
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid-4" style="margin-bottom: 1.5rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-motorcycle"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="insp-kpi-pending">3</div>
+        <div class="stat-label">Visites Terrain à Réaliser</div>
+        <div class="stat-trend down"><i class="fas fa-clock"></i> 2 prévues aujourd'hui</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-shield-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="insp-kpi-verified">14.6M</div>
+        <div class="stat-label">Valeur Garanties Vérifiées</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% conformes UEMOA</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-scale-balanced"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="insp-kpi-ratio">138%</div>
+        <div class="stat-label">Couverture Moyenne / Prêt</div>
+        <div class="stat-trend up"><i class="fas fa-check-double"></i> Au-dessus du seuil (120%)</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="insp-kpi-anomalies">1</div>
+        <div class="stat-label">Écart de Valorisation</div>
+        <div class="stat-trend down"><i class="fas fa-magnifying-glass"></i> À contre-expertiser</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Buttons & Search -->
+  <div class="card" style="margin-bottom: 1.25rem;">
+    <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="insp-filter-buttons">
+        <button class="btn btn-primary btn-sm" onclick="App.filterInspections('ALL', this)">
+          Toutes les Inspections (<span id="insp-count-all">4</span>)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('PENDING', this)">
+          <i class="fas fa-clock text-warning mr-1"></i> À Visiter / En Cours (<span id="insp-count-pending">1</span>)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('VERIFIED', this)">
+          <i class="fas fa-check text-emerald mr-1"></i> Conformes & Validées (<span id="insp-count-verified">3</span>)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('STOCK', this)">
+          <i class="fas fa-boxes-stacked mr-1"></i> Stocks & Marchandises
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterInspections('CAUTION', this)">
+          <i class="fas fa-user-shield mr-1"></i> Cautions Solidaires
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="position: relative; min-width: 240px;">
+          <input type="text" id="insp-search-input" class="form-control form-control-sm" placeholder="Rechercher dossier, emprunteur, localité..." oninput="App.searchInspections(this.value)" style="padding-left: 2rem;">
+          <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspections Table -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-list text-primary mr-2"></i> Registre des Inspections Matérielles & Cautions Solidaires</h3>
+      <span class="badge badge-submitted">Mise à jour temps réel</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>N° Dossier & Emprunteur</th>
+            <th>Type de Garantie</th>
+            <th>Description & Localisation Terrain</th>
+            <th>Valeur Déclarée</th>
+            <th>Valeur Expertisée</th>
+            <th>Statut Contrôle</th>
+            <th style="text-align: right;">Action Agent</th>
+          </tr>
+        </thead>
+        <tbody id="agent-inspections-table-body">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

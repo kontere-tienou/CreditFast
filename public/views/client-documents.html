@@ -1,0 +1,219 @@
+<!-- ====================================================================
+     [DEMANDEUR] MES PIÈCES, JUSTIFICATIFS & DEVIS (GED CLIENT)
+     ==================================================================== -->
+<section id="view-client-documents" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-folder-closed text-primary mr-2"></i> Mes Pièces Justificatives & Devis</h2>
+      <p class="page-subtitle">Espace sécurisé de gestion documentaire et vérification par Reconnaissance Optique de Caractères (OCR)</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" onclick="document.getElementById('client-file-input').click()">
+        <i class="fas fa-cloud-arrow-up"></i> Téléverser un Document
+      </button>
+      <input type="file" id="client-file-input" style="display: none;" onchange="App.handleClientDocUpload(event)" accept=".pdf,.jpg,.jpeg,.png">
+    </div>
+  </div>
+
+  <!-- Document Status Alerts (Anomaly/Complements requested if any) -->
+  <div class="anomaly-item info" style="margin-bottom: 1.5rem; border-left: 4px solid var(--cif-emerald-500);">
+    <i class="fas fa-shield-check anomaly-icon" style="color: var(--cif-emerald-600);"></i>
+    <div class="anomaly-content">
+      <h5 style="color: var(--cif-emerald-700);">Dossier documentaire conforme aux normes UEMOA</h5>
+      <p>Vos 4 pièces principales pour la demande #REQ-2026-0891 ont été extraites avec succès et validées par le module d'intelligence artificielle OCR CIF.</p>
+    </div>
+  </div>
+
+  <!-- Drag and Drop Upload Zone -->
+  <div class="card" style="margin-bottom: 1.5rem; border: 2px dashed var(--primary-300); background: var(--bg-surface);">
+    <div class="card-body" style="text-align: center; padding: 2rem 1.5rem;" ondragover="event.preventDefault(); this.style.borderColor='var(--primary-600)'" ondragleave="this.style.borderColor='var(--primary-300)'" ondrop="event.preventDefault(); this.style.borderColor='var(--primary-300)'; App.handleClientDocDrop(event)">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+        <i class="fas fa-file-arrow-up"></i>
+      </div>
+      <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Glissez-déposez vos nouveaux justificatifs ici</h4>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Formats acceptés : PDF, PNG, JPG (Factures proforma, quittances électricité/eau, contrat de bail, garanties). Max 10 Mo.</p>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()">
+        <i class="fas fa-arrow-up-from-bracket"></i> Parcourir mes fichiers locaux
+      </button>
+    </div>
+  </div>
+
+  <!-- Document Filter Tabs -->
+  <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;" id="doc-filter-buttons">
+    <button class="btn btn-primary btn-sm active" onclick="App.filterClientDocs('ALL', this)">
+      Tous les Documents (6)
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('ID', this)">
+      <i class="fas fa-id-card"></i> Identité & Registre (2)
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('INVOICE', this)">
+      <i class="fas fa-receipt"></i> Factures & Devis (2)
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('GUARANTEE', this)">
+      <i class="fas fa-shield"></i> Garanties & Nantissement (1)
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('CONTRACT', this)">
+      <i class="fas fa-file-contract"></i> Contrats Signés (1)
+    </button>
+  </div>
+
+  <!-- Documents Grid -->
+  <div class="grid-3" id="client-documents-grid">
+    <!-- Doc Card 1: CNI ECOWAS -->
+    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('cni')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">CNI Biométrique CEDEAO</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">CNI_Fatou_Ndiaye_recto_verso.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>N° Pièce :</strong> 1 756 1989 00412</div>
+        <div><strong>Validité :</strong> 14/03/2029 (En cours de validité)</div>
+        <div><strong>Ajouté le :</strong> 11/08/2026 à 10:15</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('cni')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+
+    <!-- Doc Card 2: Registre du Commerce (RCCM) -->
+    <div class="card doc-card-item" data-category="ID" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('rccm')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-stamp"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Extrait RCCM / NINEA</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">RCCM_SN_DKR_2022_B_890.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>N° RCCM :</strong> SN.DKR.2022.B.890</div>
+        <div><strong>NINEA :</strong> 008923412 2A2</div>
+        <div><strong>Activité :</strong> Commerce Général & Confection</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Certifié Conforme</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('rccm')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+
+    <!-- Doc Card 3: Facture Proforma Tissus Wax -->
+    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('proforma')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Facture Proforma Stock Wax</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Grossiste_Wax_Lome.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>Fournisseur :</strong> Éts Textile Assigamé Lomé</div>
+        <div><strong>Montant Total :</strong> 2 500 000 FCFA</div>
+        <div><strong>Date Devis :</strong> 08/08/2026 (Validité 30j)</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-check-double"></i> Conforme au prêt</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('proforma')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+
+    <!-- Doc Card 4: Quittance Électricité Senelec -->
+    <div class="card doc-card-item" data-category="INVOICE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('senelec')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Justificatif de Domicile</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Senelec_Juillet_2026.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>Organisme :</strong> Senelec Dakar Médina</div>
+        <div><strong>Adresse :</strong> Rue 22 x 15 Médina Dakar</div>
+        <div><strong>Statut :</strong> Payée (0 impayé)</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-check-circle"></i> Vérifié</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('senelec')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+
+    <!-- Doc Card 5: Acte de Nantissement Épargne CIF -->
+    <div class="card doc-card-item" data-category="GUARANTEE" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('guarantee')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Acte de Garantie & Nantissement</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Acte_Nantissement_Compte_CIF.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>Type :</strong> Nantissement Compte Épargne</div>
+        <div><strong>Montant Bloqué :</strong> 500 000 FCFA</div>
+        <div><strong>Bénéficiaire :</strong> Caisse CIF Médina</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-lock"></i> Actif & Enregistré</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('guarantee')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+
+    <!-- Doc Card 6: Contrat Cadre de Microcrédit -->
+    <div class="card doc-card-item" data-category="CONTRACT" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('contract')">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i class="fas fa-signature"></i>
+          </div>
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Contrat de Prêt Cadre CIF</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Contrat_Signe_CIF_DKR_8821.pdf</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <div><strong>Signature :</strong> Électronique Certifiée (OTP)</div>
+        <div><strong>Date Signature :</strong> 11/08/2026</div>
+        <div><strong>Empreinte SHA-256 :</strong> 8f9a2e3...b71c</div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved"><i class="fas fa-certificate"></i> Signé & Scellé</span>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('contract')">
+          <i class="fas fa-eye"></i> Aperçu Sécurisé
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -139,7 +139,37 @@ ${scripts}
 
   const outputPath = path.join(__dirname, 'index.html');
   fs.writeFileSync(outputPath, outputHtml, 'utf-8');
-  console.log('Successfully compiled index.html from modular views.');
+
+  // Copy build artifacts and assets to 'public' and 'dist' for Vercel / Netlify / static hosts
+  const copyDir = (src, dest) => {
+    if (!fs.existsSync(src)) return;
+    if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        copyDir(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
+    }
+  };
+
+  const targetDirs = ['public', 'dist'];
+  targetDirs.forEach((targetDir) => {
+    const targetPath = path.join(__dirname, targetDir);
+    if (!fs.existsSync(targetPath)) {
+      fs.mkdirSync(targetPath, { recursive: true });
+    }
+    fs.writeFileSync(path.join(targetPath, 'index.html'), outputHtml, 'utf-8');
+    copyDir(path.join(__dirname, 'css'), path.join(targetPath, 'css'));
+    copyDir(path.join(__dirname, 'js'), path.join(targetPath, 'js'));
+    copyDir(path.join(__dirname, 'data'), path.join(targetPath, 'data'));
+    copyDir(path.join(__dirname, 'views'), path.join(targetPath, 'views'));
+  });
+
+  console.log('Successfully compiled index.html and generated public/ & dist/ directories for Vercel deployment.');
 }
 
 if (process.argv[1] === __filename) {

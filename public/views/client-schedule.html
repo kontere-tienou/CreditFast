@@ -1,0 +1,282 @@
+<!-- ====================================================================
+     [DEMANDEUR] MON ÉCHÉANCIER RÉEL & PAIEMENT MOBILE MONEY
+     ==================================================================== -->
+<section id="view-client-schedule" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
+      <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CIF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
+        <i class="fas fa-file-pdf text-danger"></i> Télécharger le Relevé PDF
+      </button>
+      <button class="btn btn-success" onclick="App.openClientPaymentModal()">
+        <i class="fas fa-wallet"></i> Payer une Échéance
+      </button>
+    </div>
+  </div>
+
+  <!-- Loan Progress & Summary Metrics -->
+  <div class="grid-3" style="margin-bottom: 1.5rem;">
+    <!-- Metric 1: Capital Amorti vs Restant -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Progression du Prêt</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
+        </div>
+        <span class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
+      </div>
+      <!-- Progress Bar -->
+      <div style="width: 100%; height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0.5rem;">
+        <div style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-subtle);">
+        <span>Remboursé : <strong>470 000 FCFA</strong></span>
+        <span>Restant : <strong>2 030 000 FCFA</strong></span>
+      </div>
+    </div>
+
+    <!-- Metric 2: Prochaine Échéance -->
+    <div class="card" style="padding: 1.25rem; border-left: 4px solid var(--cif-gold-500);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance N° 3</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700); font-family: var(--font-family-code);">235 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="far fa-calendar text-gold mr-1"></i> Date limite : <strong>05 Septembre 2026</strong>
+          </div>
+        </div>
+        <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+          <i class="fas fa-credit-card"></i> Régler
+        </button>
+      </div>
+    </div>
+
+    <!-- Metric 3: Épargne Nantie / Caution Solidaire -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Épargne Nantie Sécurisée</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="fas fa-lock text-emerald mr-1"></i> Garantie bloquée à 20% du prêt
+          </div>
+        </div>
+        <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem;">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Money Quick Pay Strip -->
+  <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(16, 185, 129, 0.04)); border: 1px solid rgba(79, 70, 229, 0.15);">
+    <div class="card-body" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+          <i class="fas fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Paiement instantané sans vous déplacer en agence • Quittance SMS immédiate</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: white; border-color: #ff7900;">
+          <span style="display: inline-block; width: 10px; height: 10px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: white; border-color: #1dc5d8;">
+          <span style="display: inline-block; width: 10px; height: 10px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: white; border-color: #005ba4;">
+          <span style="display: inline-block; width: 10px; height: 10px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: white; border-color: #ffcc00;">
+          <span style="display: inline-block; width: 10px; height: 10px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed 12-Month Schedule Table -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-list-ol text-primary"></i> Tableau d'Amortissement Détaillé (12 Mois)</h3>
+        <p class="card-subtitle">Montant emprunté : 2 500 000 FCFA • Taux effectif global : 12.0% annuel dégressif</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <span class="badge badge-approved"><i class="fas fa-circle-check"></i> 2 Réglées</span>
+        <span class="badge badge-verification"><i class="fas fa-clock"></i> 1 Exigible</span>
+        <span class="badge badge-submitted">9 À venir</span>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>N° Échéance</th>
+            <th>Date d'Exigibilité</th>
+            <th>Capital Amorti</th>
+            <th>Intérêts CIF</th>
+            <th>Assurance Prêt</th>
+            <th>Total Mensualité</th>
+            <th>Capital Restant Dû</th>
+            <th>Statut</th>
+            <th>Quittance / Reçu</th>
+          </tr>
+        </thead>
+        <tbody id="client-schedule-table-body">
+          <!-- Dynamically populated or rendered -->
+          <tr>
+            <td><strong>Échéance N° 1</strong></td>
+            <td>05/07/2026</td>
+            <td>196 250 FCFA</td>
+            <td>25 000 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
+            <td>2 303 750 FCFA</td>
+            <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 04/07 (Orange Money)</span></td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0704', 'success')">
+                <i class="fas fa-file-invoice"></i> Reçu #1
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Échéance N° 2</strong></td>
+            <td>05/08/2026</td>
+            <td>198 212 FCFA</td>
+            <td>23 038 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
+            <td>2 105 538 FCFA</td>
+            <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 05/08 (Wave)</span></td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0805', 'success')">
+                <i class="fas fa-file-invoice"></i> Reçu #2
+              </button>
+            </td>
+          </tr>
+          <tr style="background: rgba(245, 158, 11, 0.08); font-weight: 600;">
+            <td><strong style="color: var(--cif-gold-700);">Échéance N° 3</strong></td>
+            <td><strong style="color: var(--cif-gold-700);">05/09/2026</strong></td>
+            <td>200 195 FCFA</td>
+            <td>21 055 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell" style="color: var(--cif-gold-700); font-weight: 800;">235 000 FCFA</td>
+            <td>1 905 343 FCFA</td>
+            <td><span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Prochaine)</span></td>
+            <td>
+              <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+                <i class="fas fa-wallet"></i> Payer 235 000 F
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>Échéance N° 4</td>
+            <td>05/10/2026</td>
+            <td>202 196 FCFA</td>
+            <td>19 054 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>1 703 147 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 5</td>
+            <td>05/11/2026</td>
+            <td>204 218 FCFA</td>
+            <td>17 032 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>1 498 929 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 6</td>
+            <td>05/12/2026</td>
+            <td>206 261 FCFA</td>
+            <td>14 989 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>1 292 668 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 7</td>
+            <td>05/01/2027</td>
+            <td>208 323 FCFA</td>
+            <td>12 927 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>1 084 345 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 8</td>
+            <td>05/02/2027</td>
+            <td>210 407 FCFA</td>
+            <td>10 843 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>873 938 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 9</td>
+            <td>05/03/2027</td>
+            <td>212 511 FCFA</td>
+            <td>8 739 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>661 427 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 10</td>
+            <td>05/04/2027</td>
+            <td>214 636 FCFA</td>
+            <td>6 614 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>446 791 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 11</td>
+            <td>05/05/2027</td>
+            <td>216 782 FCFA</td>
+            <td>4 468 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">235 000 FCFA</td>
+            <td>230 009 FCFA</td>
+            <td><span class="badge badge-submitted">À venir</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
+          </tr>
+          <tr>
+            <td>Échéance N° 12</td>
+            <td>05/06/2027</td>
+            <td>230 009 FCFA</td>
+            <td>2 300 FCFA</td>
+            <td>13 750 FCFA</td>
+            <td class="amount-cell">246 059 FCFA</td>
+            <td>0 FCFA</td>
+            <td><span class="badge badge-submitted">Dernière échéance</span></td>
+            <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Clôture prêt</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
