@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset="utf-8">
+  <title>Guide de Presentation - Credit Fast UEMOA</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    body {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #1e293b;
+      margin: 2.5cm;
+    }
+    h1 {
+      color: #1e1b4b;
+      font-size: 22pt;
+      font-weight: bold;
+      border-bottom: 2pt solid #4f46e5;
+      padding-bottom: 6pt;
+      margin-top: 0;
+      margin-bottom: 12pt;
+    }
+    h2 {
+      color: #3730a3;
+      font-size: 15pt;
+      font-weight: bold;
+      border-bottom: 1pt solid #cbd5e1;
+      padding-bottom: 4pt;
+      margin-top: 18pt;
+      margin-bottom: 8pt;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: #0f172a;
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 12pt;
+      margin-bottom: 4pt;
+      page-break-after: avoid;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 6pt;
+      text-align: justify;
+    }
+    .header-box {
+      background-color: #f8fafc;
+      border: 1pt solid #e2e8f0;
+      border-left: 4pt solid #4f46e5;
+      padding: 10pt 14pt;
+      margin-bottom: 18pt;
+    }
+    .header-box p {
+      margin: 0;
+      font-size: 10pt;
+      color: #475569;
+    }
+    .highlight-box {
+      background-color: #f0fdf4;
+      border: 1pt solid #bbf7d0;
+      border-left: 4pt solid #16a34a;
+      padding: 8pt 12pt;
+      margin: 10pt 0;
+      font-size: 10.5pt;
+    }
+    .quote-box {
+      background-color: #eef2ff;
+      border: 1pt solid #c7d2fe;
+      border-left: 4pt solid #6366f1;
+      padding: 8pt 12pt;
+      margin: 10pt 0;
+      font-style: italic;
+      color: #312e81;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12pt 0;
+      font-size: 10pt;
+    }
+    th, td {
+      border: 1pt solid #cbd5e1;
+      padding: 6pt 8pt;
+      text-align: left;
+    }
+    th {
+      background-color: #1e1b4b;
+      color: #ffffff;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    ul, ol {
+      margin-top: 2pt;
+      margin-bottom: 8pt;
+      padding-left: 18pt;
+    }
+    li {
+      margin-bottom: 3pt;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2pt 6pt;
+      font-size: 8.5pt;
+      font-weight: bold;
+      border-radius: 3pt;
+      background-color: #e0e7ff;
+      color: #3730a3;
+    }
+    .footer-doc {
+      margin-top: 24pt;
+      padding-top: 8pt;
+      border-top: 1pt solid #e2e8f0;
+      font-size: 9pt;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-box">
+    <p><strong>DOCUMENT DE PRÉSENTATION & SUPPORT COMMERCIAL</strong></p>
+    <p>Projet : <strong>Crédit Fast • UEMOA</strong> | Version 2.4 | Réseau CIF Régional</p>
+    <p>Conformité : <strong>Normes Prudentielles BCEAO & Réglementation LBC/FT</strong></p>
+  </div>
+
+  <h1>CRÉDIT FAST — Guide & Logique de Présentation</h1>
+
+  <h2>1. Pitch d'Introduction & Vision Stratégique</h2>
+  <div class="quote-box">
+    « Crédit Fast est la plateforme régionale d'octroi et de gestion de microcrédit conçue pour les institutions financières et réseaux mutualistes de la zone UEMOA (Sénégal, Togo, Côte d'Ivoire, Burkina Faso, Bénin, Mali). Elle digitalise l'intégralité du cycle de vie du prêt — de la demande client jusqu'à la délibération du comité et la conformité BCEAO — réduisant les délais d'octroi de 15 jours à moins de 48 heures tout en garantissant un risque maîtrisé. »
+  </div>
+
+  <h2>2. Logique Fonctionnelle Écran par Écran</h2>
+
+  <h3>Écran 1 : Portail d'Accès Sécurisé (Authentification)</h3>
+  <p><strong>Objectif :</strong> Établir immédiatement le cadre réglementaire, la sécurité des données et fluidifier les démonstrations grâce au commutateur de profils instantané.</p>
+  <ul>
+    <li><strong>Accès Express 1-Clic :</strong> 4 profils pré-configurés (Demandeur, Agent Terrain, Analyste Risque, Comité de Crédit) permettant une navigation fluide pendant la présentation.</li>
+    <li><strong>Gages de Sécurité :</strong> Chiffrement TLS 1.3 / SHA-256 et badge d'ancrage territorial UEMOA / BCEAO.</li>
+    <li><strong>Ergonomie Réactive :</strong> Formulaire centré sans défilement sur poste de bureau et tablette pour un usage moderne en agence.</li>
+  </ul>
+
+  <h3>Écran 2 : Espace Demandeur / Emprunteur (Fatou Ndiaye - Sénégal)</h3>
+  <p><strong>Objectif :</strong> Offrir une autonomie complète et une clarté totale au client final, levant les freins d'accès au crédit formel.</p>
+  <ul>
+    <li><strong>Tableau de Bord Emprunteur :</strong> Synthèse de l'encours, de la jauge de progression du dossier et du montant disponible.</li>
+    <li><strong>Assistant de Demande en 4 Étapes (Wizard) :</strong>
+      <ul>
+        <li><em>Étape 1 - Profil :</em> Informations d'identité certifiées.</li>
+        <li><em>Étape 2 - Projet :</em> Montant demandé, durée et affectation des fonds.</li>
+        <li><em>Étape 3 - OCR & Justificatifs :</em> Dépôt de la CNI et des bulletins avec extraction automatique des données financières.</li>
+        <li><em>Étape 4 - Signature :</em> Récapitulatif et engagement contractuel en ligne.</li>
+      </ul>
+    </li>
+    <li><strong>Simulateur de Crédit :</strong> Calcul instantané des mensualités selon le Taux Effectif Global (TEG) et tableau d'amortissement dynamique.</li>
+    <li><strong>Échéancier & Remboursement Mobile Money :</strong> Paiement sécurisé des traites via Wave, Orange Money, Free Money ou Moov sans déplacement en agence.</li>
+    <li><strong>Messagerie Conseiller :</strong> Canal d'échange direct avec le chargé de compte pour le suivi des compléments.</li>
+  </ul>
+
+  <h3>Écran 3 : Espace Agent de Crédit / Terrain (Koffi Mensah - Togo)</h3>
+  <p><strong>Objectif :</strong> Digitaliser la collecte terrain, étape fondamentale de l'évaluation du risque en microfinance.</p>
+  <ul>
+    <li><strong>Gestion du Portefeuille :</strong> Suivi des dossiers assignés, taux de recouvrement et alertes préventives d'impayés.</li>
+    <li><strong>Module Visites Terrain (Inspection) :</strong>
+      <ul>
+        <li>Enregistrement des rapports de visite avec géolocalisation GPS certifiée.</li>
+        <li>Prise et téléversement de photographies sur site (stocks, magasin, garanties).</li>
+        <li>Estimation et validation du chiffre d'affaires réel constaté sur le terrain.</li>
+      </ul>
+    </li>
+    <li><strong>Demandes de Compléments Documentaires :</strong> Relance client en un clic pour pièces manquantes ou illisibles.</li>
+  </ul>
+
+  <h3>Écran 4 : Espace Analyste Risques (Aminata Traoré - Côte d'Ivoire)</h3>
+  <p><strong>Objectif :</strong> Transformer les informations brutes en une décision financière rigoureuse, objective et documentée.</p>
+  <ul>
+    <li><strong>Moteur de Scoring Automatisé (BCEAO) :</strong>
+      <ul>
+        <li>Score composite sur 100 points basé sur le taux d'endettement (plafond normatif de 33%), la stabilité des revenus, l'historique bancaire et les garanties.</li>
+        <li>Recommandation décisionnelle instantanée : <em>Favorable</em>, <em>À Débattre</em>, ou <em>Défavorable</em>.</li>
+      </ul>
+    </li>
+    <li><strong>Dossier 360° Interactif :</strong> Vue holistique centralisant pièces d'identité, rapports terrain, ratios financiers et antécédents.</li>
+    <li><strong>Détection d'Anomalies & Fraudes :</strong> Contrôle automatique des faux bulletins, détection de doublons de CNI et vérification de cohérence des flux.</li>
+    <li><strong>Note de Synthèse Comité :</strong> Génération assistée du mémo d'analyse pour présentation en séance délibérative.</li>
+  </ul>
+
+  <h3>Écran 5 : Espace Comité de Crédit & Direction (Moussa Diop - Burkina Faso)</h3>
+  <p><strong>Objectif :</strong> Assurer une gouvernance collégiale, transparente et juridiquement conforme pour les décisions engageant l'institution.</p>
+  <ul>
+    <li><strong>Salle de Délibération Virtuelle :</strong> Liste des dossiers soumis à approbation avec montant total engagé et exposition au risque.</li>
+    <li><strong>Quorum & Vote Collégial :</strong> Vote des membres (Direction Générale, Direction des Risques, Chef d'Agence) avec décompte automatique du quorum requis.</li>
+    <li><strong>Procès-Verbal (PV) Numérisé :</strong> Génération instantanée du PV de décision d'octroi numéroté, horodaté et signé électroniquement.</li>
+  </ul>
+
+  <h3>Modules Transversaux : Conformité LBC/FT & Piste d'Audit</h3>
+  <p><strong>Objectif :</strong> Répondre aux obligations strictes de la BCEAO et des cellules nationales de renseignement financier (CENTIF).</p>
+  <ul>
+    <li><strong>Filtrage LBC/FT/FP :</strong> Vérification automatique contre les listes de Personnes Politiquement Exposées (PEP) et les listes de sanctions internationales.</li>
+    <li><strong>Journal d'Audit Immuable (Audit Logs) :</strong> Traçabilité exhaustive de chaque connexion, consultation de pièce, vote ou modification de scoring pour les audits de la Commission Bancaire.</li>
+    <li><strong>Administration du Scoring :</strong> Ajustement paramétrique des pondérations de risque selon la politique de crédit de l'institution.</li>
+  </ul>
+
+  <h2>3. Déroulé Conseillé de la Démonstration Orale (Scénario en 4 Actes)</h2>
+  <div class="highlight-box">
+    <p><strong>Scénario narratif : « L'histoire d'un prêt de 1 500 000 FCFA traité en moins de 48h »</strong></p>
+    <ol>
+      <li><strong>Acte 1 (Le Client - Fatou Ndiaye) :</strong> Connexion en 1 clic. Démonstration du simulateur, lancement de la demande en 4 étapes et simulation d'un dépôt de justificatif avec extraction automatique des données.</li>
+      <li><strong>Acte 2 (L'Agent Terrain - Koffi Mensah) :</strong> Bascule de rôle. Démonstration de la validation de visite terrain avec géolocalisation GPS et photos du commerce.</li>
+      <li><strong>Acte 3 (L'Analyste - Aminata Traoré) :</strong> Ouverture du Dossier 360°, explication du calcul de la note de scoring BCEAO (taux d'endettement à 28%), et transmission avec avis favorable.</li>
+      <li><strong>Acte 4 (Le Comité - Moussa Diop) :</strong> Vote collégial en direct, validation du quorum et génération du Procès-Verbal d'octroi horodaté.</li>
+    </ol>
+  </div>
+
+  <h2>4. Synthèse des Bénéfices & Métriques Clés</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Axe Stratégique</th>
+        <th style="width: 40%;">Avant Crédit Fast (Processus Traditionnel)</th>
+        <th style="width: 35%;">Avec Crédit Fast (Solution Digitale)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Délai de Traitement</strong></td>
+        <td>10 à 20 jours ouvrés (dossier papier circulant entre agences)</td>
+        <td><strong>Moins de 48 heures</strong> (circuit entièrement dématérialisé)</td>
+      </tr>
+      <tr>
+        <td><strong>Gestion du Risque</strong></td>
+        <td>Évaluation subjective, dossiers incomplets, risque de fraude</td>
+        <td><strong>Scoring normé BCEAO</strong> + Détection d'anomalies OCR</td>
+      </tr>
+      <tr>
+        <td><strong>Expérience Emprunteur</strong></td>
+        <td>Multiples déplacements physiques, opacité sur l'avancement</td>
+        <td><strong>Suivi en temps réel</strong> + Remboursement Mobile Money</td>
+      </tr>
+      <tr>
+        <td><strong>Conformité & Audit</strong></td>
+        <td>Archivage papier volumineux, traçabilité complexe lors des contrôles</td>
+        <td><strong>Piste d'audit horodatée</strong> conforme aux normes UEMOA</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-doc">
+    <p>Crédit Fast • Solution d'Origination et de Scoring de Microcrédit UEMOA • Document Confidentiel</p>
+  </div>
+
+</body>
+</html>
