@@ -1,0 +1,85 @@
+<!-- ==========================================================================
+     7. MODAL: PARAMÈTRES & PRÉFÉRENCES UTILISATEUR (SETTINGS)
+     ========================================================================== -->
+<div id="settings-modal" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-sliders-h text-primary mr-1"></i> Paramètres & Préférences
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);">Personnalisez votre environnement de travail CIF</p>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeSettingsModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Section 1: Thème & Apparence -->
+      <div class="settings-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-palette text-primary mr-1"></i> Apparence & Thème
+        </label>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+          <div class="settings-theme-option" id="opt-theme-light" onclick="App.setTheme('light')" style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+            <i class="fas fa-sun text-warning" style="font-size: 1.4rem; margin-bottom: 0.35rem; display: block;"></i>
+            <span style="font-weight: 600; font-size: 0.82rem;">Mode Clair</span>
+          </div>
+          <div class="settings-theme-option" id="opt-theme-dark" onclick="App.setTheme('dark')" style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+            <i class="fas fa-moon text-primary" style="font-size: 1.4rem; margin-bottom: 0.35rem; display: block;"></i>
+            <span style="font-weight: 600; font-size: 0.82rem;">Mode Sombre</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Fuseau Horaire & Région UEMOA -->
+      <div class="settings-group" style="margin-bottom: 1.25rem;">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-globe-africa text-emerald mr-1"></i> Fuseau Horaire & Pays par Défaut
+        </label>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Pays / Caisse d'attache</label>
+            <select id="setting-country" class="form-control" onchange="App.updateUserCountry(this.value)">
+              <option value="BF">Burkina Faso (Ouagadougou)</option>
+              <option value="SN">Sénégal (Dakar)</option>
+              <option value="TG">Togo (Lomé)</option>
+              <option value="BJ">Bénin (Cotonou)</option>
+              <option value="ML">Mali (Bamako)</option>
+              <option value="CI">Côte d'Ivoire (Abidjan)</option>
+              <option value="NE">Niger (Niamey)</option>
+              <option value="GW">Guinée-Bissau (Bissau)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Fuseau Horaire</label>
+            <input type="text" class="form-control" value="GMT+00:00 (Heure UEMOA)" readonly style="background: var(--bg-surface-secondary);">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Notifications & Alertes -->
+      <div class="settings-group">
+        <label class="form-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">
+          <i class="fas fa-bell text-warning mr-1"></i> Préférences de Notification
+        </label>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; cursor: pointer;">
+            <input type="checkbox" id="setting-notif-alerts" checked style="accent-color: var(--primary-500); width: 16px; height: 16px;">
+            <span>Alertes en temps réel sur détection d'anomalies OCR</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; cursor: pointer;">
+            <input type="checkbox" id="setting-notif-sound" checked style="accent-color: var(--primary-500); width: 16px; height: 16px;">
+            <span>Notification sonore discrète lors de la convocation au comité</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" onclick="App.closeSettingsModal()">Fermer</button>
+      <button class="btn btn-primary btn-sm" onclick="App.saveSettings()">
+        <i class="fas fa-check mr-1"></i> Enregistrer Préférences
+      </button>
+    </div>
+  </div>
+</div>

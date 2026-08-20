@@ -49,10 +49,10 @@ const AppInteractions = {
     if (searchFilter.trim() !== '') {
       const q = searchFilter.toLowerCase();
       items = items.filter(req => 
-        (req.request_number && req.request_number.toLowerCase().includes(q)) ||
-        (req.client_name && req.client_name.toLowerCase().includes(q)) ||
-        (req.city && req.city.toLowerCase().includes(q)) ||
-        (req.purpose && req.purpose.toLowerCase().includes(q))
+        (req.request_number && String(req.request_number).toLowerCase().includes(q)) ||
+        (req.client_name && String(req.client_name).toLowerCase().includes(q)) ||
+        (req.city && String(req.city).toLowerCase().includes(q)) ||
+        (req.purpose && String(req.purpose).toLowerCase().includes(q))
       );
     }
 
@@ -122,6 +122,110 @@ const AppInteractions = {
         </tr>
       `;
     }).join('');
+  },
+
+  // =========================================================================
+  // MON ÉCHÉANCIER DE REMBOURSEMENT - GESTION DES FILTRES & TIROIR LATÉRAL
+  // =========================================================================
+
+  /**
+   * Filtre le tableau d'échéancier et bascule entre 'ALL', 'PAID', 'DUE', et 'UPCOMING'
+   * @param {string} filterStatus 'ALL' | 'PAID' | 'DUE' | 'UPCOMING'
+   * @param {HTMLElement|null} buttonEl Élément bouton cliqué optionnel
+   */
+  filterScheduleTable(filterStatus = 'ALL', buttonEl = null) {
+    const normalizedFilter = String(filterStatus || 'ALL').toUpperCase();
+
+    // 1. Mise à jour de l'état actif des boutons
+    const filterKeyMap = {
+      'ALL': 'all',
+      'PAID': 'paid',
+      'DUE': 'due',
+      'UPCOMING': 'upcoming'
+    };
+
+    ['all', 'paid', 'due', 'upcoming'].forEach(key => {
+      const btn = document.getElementById(`filter-sched-${key}`);
+      if (btn) {
+        if (key === filterKeyMap[normalizedFilter]) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+    });
+
+    if (buttonEl && buttonEl.parentElement) {
+      buttonEl.parentElement.querySelectorAll('button').forEach(b => {
+        b.classList.remove('active');
+      });
+      buttonEl.classList.add('active');
+    }
+
+    // 2. Mise à jour du filtre courant et ré-affichage des données
+    if (window.App) {
+      window.App.currentScheduleFilter = normalizedFilter;
+      if (typeof window.App.renderClientSchedule === 'function') {
+        window.App.renderClientSchedule(normalizedFilter);
+      }
+    } else {
+      this.renderScheduleTable(normalizedFilter);
+    }
+  },
+
+  /**
+   * Rendu de secours pour le tableau d'échéances
+   */
+  renderScheduleTable(filterStatus = 'ALL') {
+    if (window.App && typeof window.App.renderClientSchedule === 'function') {
+      window.App.renderClientSchedule(filterStatus);
+      return;
+    }
+  },
+
+  /**
+   * Ouvre le tiroir latéral pour une échéance
+   */
+  openScheduleDrawer(installmentNumber) {
+    if (window.App && typeof window.App.openScheduleDrawer === 'function') {
+      window.App.openScheduleDrawer(installmentNumber);
+    }
+  },
+
+  /**
+   * Ferme le tiroir latéral
+   */
+  closeScheduleDrawer() {
+    if (window.App && typeof window.App.closeScheduleDrawer === 'function') {
+      window.App.closeScheduleDrawer();
+    } else {
+      const backdrop = document.getElementById('schedule-drawer-backdrop');
+      if (backdrop) backdrop.classList.remove('active');
+    }
+  },
+
+  /**
+   * Ouvre la modale de prise de rendez-vous avec le conseiller
+   */
+  openAppointmentModal() {
+    if (window.App && typeof window.App.openAppointmentModal === 'function') {
+      window.App.openAppointmentModal();
+    } else {
+      const modal = document.getElementById('client-appointment-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+  },
+
+  /**
+   * Ferme la modale de prise de rendez-vous
+   */
+  closeAppointmentModal() {
+    if (window.App && typeof window.App.closeAppointmentModal === 'function') {
+      window.App.closeAppointmentModal();
+    } else {
+      const modal = document.getElementById('client-appointment-modal');
+      if (modal) modal.style.display = 'none';
+    }
   },
 
   getStatusBadge(status) {

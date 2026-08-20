@@ -1,0 +1,325 @@
+<!-- ==========================================================================
+     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVANCÉE V2 - FULL HERO IMAGE)
+     ========================================================================== -->
+<div id="auth-view">
+  <div class="auth-container">
+    <!-- Left Hero Showcase Pane (Full-Bleed Cover Image, No Enclosed Box) -->
+    <div class="auth-hero-pane" id="auth-hero-pane" onmouseenter="App.pauseAuthSlider()" onmouseleave="App.resumeAuthSlider()">
+      
+      <!-- 100% Full-Bleed Background Slider Track -->
+      <div class="auth-hero-slider full-bleed" id="auth-hero-slider">
+        <div class="auth-slider-track">
+          <!-- SLIDE 1 : Financement d'Activité -->
+          <div class="auth-slide active" data-slide="0">
+            <img src="images/slide4.png" alt="Financement TPE & Particuliers" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide4.png');"></div>
+            <div class="auth-slide-overlay"></div>
+            
+            <!-- Floating Highlights on Slide 1 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-circle-check text-success"></i>
+              <span>Accord de principe <strong>immédiat</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-coins" style="color: #fbbf24;"></i>
+              <span>De <strong>100 000</strong> à <strong>5 000 000 FCFA</strong></span>
+            </div>
+          </div>
+
+          <!-- SLIDE 2 : Rapidité & Déblocage < 48h -->
+          <div class="auth-slide" data-slide="1">
+            <img src="images/slide5.png" alt="Déblocage rapide < 48h" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide5.png');"></div>
+            <div class="auth-slide-overlay"></div>
+
+            <!-- Floating Highlights on Slide 2 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-bolt" style="color: #fbbf24;"></i>
+              <span>Fonds disponibles en <strong>&lt; 48 heures</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-bell text-info"></i>
+              <span>Notifications <strong>SMS & WhatsApp</strong></span>
+            </div>
+          </div>
+
+          <!-- SLIDE 3 : Paiement Mobile Money & Quittances -->
+          <div class="auth-slide" data-slide="2">
+            <img src="images/slide3.jpg" alt="Paiement Mobile Money flexible" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide3.jpg');"></div>
+            <div class="auth-slide-overlay"></div>
+
+            <!-- Floating Highlights on Slide 3 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-mobile-screen-button text-success"></i>
+              <span><strong>Wave • Orange • Moov • Free</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-calendar-check" style="color: #c084fc;"></i>
+              <span><strong>0 déplacement</strong> en agence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlaid Foreground Content (Spans Entire Full-Image Left Panel) -->
+      <div class="auth-hero-foreground">
+        
+        <!-- Top: Logo & Platform Identity -->
+        <div class="auth-hero-top">
+          <div class="auth-brand">
+            <div class="auth-brand-logo">
+              <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 1.4rem; font-weight: 800; margin: 0; color: white; letter-spacing: -0.02em;">CreditFast</h3>
+              <span style="font-size: 0.74rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">Scoring & octroi de microcrédit</span>
+            </div>
+          </div>
+
+          <div class="auth-hero-badge">
+            <i class="fas fa-shield-halved"></i> Plateforme Agréée • Zone UEMOA
+          </div>
+        </div>
+
+        <!-- Center: Dynamic Slider Text & Messages per Slide -->
+        <div class="auth-hero-center">
+          <!-- Slide 1 Text Content -->
+          <div class="auth-slide-text-block active" data-slide-text="0">
+            <span class="auth-slide-tag-pill tag-emerald">
+              <i class="fas fa-shop"></i> 1. Financement sur-mesure
+            </span>
+            <h1 class="auth-hero-title">Financez vos projets et développez votre activité</h1>
+            <p class="auth-hero-desc">
+              Une solution 100% digitale pour concrétiser vos ambitions : simulation de crédit en direct, constitution de dossier simplifiée et obtention d'une offre claire adaptée à votre trésorerie.
+            </p>
+          </div>
+
+          <!-- Slide 2 Text Content -->
+          <div class="auth-slide-text-block" data-slide-text="1">
+            <span class="auth-slide-tag-pill tag-sky">
+              <i class="fas fa-bolt"></i> 2. Décision & Déblocage Rapide
+            </span>
+            <h1 class="auth-hero-title">Votre argent disponible sans attente inutile</h1>
+            <p class="auth-hero-desc">
+              Suivez l'avancement de votre dossier 24h/24 depuis votre téléphone. Après validation par nos analystes et le comité, vos fonds sont mis à votre disposition en moins de 48 heures.
+            </p>
+          </div>
+
+          <!-- Slide 3 Text Content -->
+          <div class="auth-slide-text-block" data-slide-text="2">
+            <span class="auth-slide-tag-pill tag-purple">
+              <i class="fas fa-wallet"></i> 3. Paiement Mobile Flexible
+            </span>
+            <h1 class="auth-hero-title">Remboursez vos mensualités en toute tranquillité</h1>
+            <p class="auth-hero-desc">
+              Payez vos échéances directement par Mobile Money (Wave, Orange Money, Moov Money, Free Money), consultez votre solde en temps réel et téléchargez vos quittances officielles.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bottom: Interactive Slider Controls & Regional Network Strip -->
+        <div class="auth-hero-bottom">
+          <!-- Slider Navigation Bar -->
+          <div class="auth-hero-nav-bar">
+            <!-- Dots Indicators -->
+            <div class="auth-slider-dots-bar" id="auth-slider-dots">
+              <button type="button" class="auth-slider-dot active" onclick="App.setAuthSlide(0)" aria-label="Slide 1 : Financement d'activité" title="Financement d'activité"></button>
+              <button type="button" class="auth-slider-dot" onclick="App.setAuthSlide(1)" aria-label="Slide 2 : Déblocage rapide" title="Déblocage en < 48h"></button>
+              <button type="button" class="auth-slider-dot" onclick="App.setAuthSlide(2)" aria-label="Slide 3 : Remboursement Mobile Money" title="Remboursement Mobile Money"></button>
+            </div>
+
+            <!-- Prev / Next Controls -->
+            <div class="auth-slider-controls">
+              <button type="button" class="auth-slider-btn" onclick="App.prevAuthSlide()" aria-label="Photo précédente" title="Précédent">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button type="button" class="auth-slider-btn" onclick="App.nextAuthSlide()" aria-label="Photo suivante" title="Suivant">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Countries Footnote -->
+          <div class="auth-countries-strip">
+            <i class="fas fa-earth-africa"></i>
+            <span>Réseau CIF Régional : <span class="fi fi-bf"></span> Burkina Faso • <span class="fi fi-tg"></span> Togo • <span class="fi fi-bj"></span> Bénin • <span class="fi fi-sn"></span> Sénégal • <span class="fi fi-ml"></span> Mali</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right Login Form Pane -->
+    <div class="auth-form-pane">
+      <div class="auth-form-box">
+
+        <!-- Mobile/Tablet Brand Header (visible when hero pane is hidden) -->
+        <div class="auth-mobile-brand">
+          <div class="auth-brand-logo">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div>
+            <h4 class="m-0 fw-bold" style="color: var(--primary-700, #3730a3); font-size: 1.15rem; line-height: 1.2;">Crédit Fast</h4>
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Plateforme Régionale CIF • UEMOA</span>
+          </div>
+        </div>
+
+        <div class="auth-header">
+          <h2>Portail d'Accès Sécurisé</h2>
+          <p>Saisissez vos identifiants ou cliquez sur un profil démo ci-dessous pour remplir automatiquement le formulaire.</p>
+        </div>
+
+        <!-- Standard Login Form -->
+        <form id="login-form" novalidate>
+          <!-- Identifier Field (Email, Phone or Client Number) -->
+          <div class="form-group">
+            <label class="form-label" for="login-email">
+              Identifiant, ou Numéro de Téléphone
+            </label>
+            <div class="input-with-icon">
+              <i class="fas fa-user-check input-prefix-icon"></i>
+              <input 
+                type="text" 
+                id="login-email" 
+                class="form-control" 
+                placeholder="ex: ali.diallo@cif-ao.org ou +223 70 12 34 56" 
+                value="ali.diallo@cif-ao.org" 
+                autocomplete="username"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Password Field with Visibility Toggle -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
+              <button type="button" class="auth-link-btn" onclick="App.showDemoCredentialsHelp()">
+                <i class="fas fa-key mr-1"></i> Aide identifiants
+              </button>
+            </div>
+            <div class="input-with-icon input-with-suffix">
+              <i class="fas fa-lock input-prefix-icon"></i>
+              <input 
+                type="password" 
+                id="login-password" 
+                class="form-control" 
+                value="demo" 
+                placeholder="Saisissez votre mot de passe"
+                autocomplete="current-password"
+                required
+              >
+              <button 
+                type="button" 
+                class="password-toggle-btn" 
+                id="btn-toggle-password" 
+                onclick="App.togglePasswordVisibility('login-password', 'icon-toggle-password')"
+                title="Afficher ou masquer le mot de passe"
+                aria-label="Afficher ou masquer le mot de passe"
+              >
+                <i class="fas fa-eye" id="icon-toggle-password"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Security Options -->
+          <div class="auth-options-row">
+            <label class="auth-checkbox-label" for="remember-me-checkbox">
+              <input type="checkbox" id="remember-me-checkbox" checked>
+              <span>Mémoriser ma session</span>
+            </label>
+            <a href="javascript:void(0)" class="auth-link-subtle" onclick="App.showToast('En environnement démo, tout mot de passe est accepté.', 'info')">
+              Mot de passe oublié ?
+            </a>
+          </div>
+
+          <!-- Submit Button with Loading State -->
+          <button type="submit" id="btn-submit-login" class="btn btn-primary btn-lg auth-submit-btn">
+            <span id="login-btn-content">
+              <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
+            </span>
+          </button>
+        </form>
+
+        <!-- Demo Accounts Quick Fill Buttons Section -->
+        <div class="auth-demo-section">
+          <div class="auth-demo-divider">
+            <span>Ou pré-remplir avec un profil démo (1 clic)</span>
+          </div>
+
+          <div class="demo-personas-grid">
+            <!-- Persona 1: Demandeur (Client - Sénégal) -->
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-client" onclick="App.fillDemoCredentials('demo-client')" title="Pré-remplir avec Fatou Ndiaye (Demandeur - Sénégal)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="images/profil/profil01-02.jpg" class="demo-persona-avatar" alt="Client">
+              </div>
+              <div class="demo-persona-info">
+                <h6>Faratigi Ndiaye</h6>
+                <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Sénégal)</span>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-turn-up"></i>
+              </div>
+            </button>
+
+            <!-- Persona 2: Agent de Crédit (Togo) -->
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-agent" onclick="App.fillDemoCredentials('demo-agent')" title="Pré-remplir avec Adama Traore (Agent de Crédit - Togo)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="images/profil/profil01-03.jpg" class="demo-persona-avatar" alt="Agent">
+              </div>
+              <div class="demo-persona-info">
+                <h6>Adama Traore</h6>
+                <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit (Togo)</span>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-turn-up"></i>
+              </div>
+            </button>
+
+            <!-- Persona 3: Analyste Risque (Burkina Faso) -->
+            <button type="button" class="demo-persona-btn active" data-demo-id="demo-analyst" onclick="App.fillDemoCredentials('demo-analyst')" title="Pré-remplir avec Ali Diallo (Analyste Risque - Burkina Faso)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="images/profil/profil01-04.jpg" class="demo-persona-avatar" alt="Analyste">
+              </div>
+              <div class="demo-persona-info">
+                <h6>Ali Diallo</h6>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina)</span>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-turn-up"></i>
+              </div>
+            </button>
+
+            <!-- Persona 4: Comité de Crédit & Conformité (Mali) -->
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-committee" onclick="App.fillDemoCredentials('demo-committee')" title="Pré-remplir avec Moussa Keita (Comité & Conformité - Mali)">
+              <div class="demo-persona-avatar-wrap">
+                <img src="images/profil/profil01-01.jpg" class="demo-persona-avatar" alt="Comité">
+              </div>
+              <div class="demo-persona-info">
+                <h6>Mariam Keita</h6>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité (Mali)</span>
+              </div>
+              <div class="persona-action-arrow">
+                <i class="fas fa-arrow-turn-up"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Security and Regulatory Footer Strip -->
+        <div class="auth-footer-trust">
+          <div class="auth-trust-item">
+            <i class="fas fa-building-columns"></i>
+            <span>Conforme aux normes prudentielles <strong>BCEAO / UEMOA</strong></span>
+          </div>
+          <div class="auth-trust-item">
+            <i class="fas fa-fingerprint"></i>
+            <span>Traçabilité & Journalisation intégrale des accès</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

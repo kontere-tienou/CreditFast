@@ -8,6 +8,8 @@ const App = {
   currentUser: null,
   currentRole: 'ANALYST',
   currentView: 'view-role-analyst',
+  currentAuthSlide: 0,
+  authSliderTimer: null,
 
   init() {
     this.initTheme();
@@ -108,15 +110,107 @@ const App = {
   },
 
   showDemoCredentialsHelp() {
-    const accounts = APP_CONSTANTS.DEMO_ACCOUNTS;
-    let helpMsg = 'Comptes Démo (Mot de passe universel: "demo") :\n';
-    accounts.forEach(a => {
-      helpMsg += `• ${a.name} (${a.badge}) : ${a.email}${a.clientNumber ? ' ou ' + a.clientNumber : ''}\n`;
+    this.showToast('Cliquez sur l\'un des 4 boutons en bas pour insérer instantanément les identifiants (mot de passe universel: "demo")', 'info');
+  },
+
+  fillDemoCredentials(personaId) {
+    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.id === personaId);
+    if (!persona) return;
+
+    const emailInput = document.getElementById('login-email');
+    const pwdInput = document.getElementById('login-password');
+    
+    if (emailInput) {
+      emailInput.value = persona.email;
+      emailInput.classList.add('input-highlight-pulse');
+      setTimeout(() => emailInput.classList.remove('input-highlight-pulse'), 800);
+    }
+    if (pwdInput) {
+      pwdInput.value = persona.password || 'demo';
+      pwdInput.classList.add('input-highlight-pulse');
+      setTimeout(() => pwdInput.classList.remove('input-highlight-pulse'), 800);
+    }
+
+    const demoBtns = document.querySelectorAll('.demo-persona-btn');
+    demoBtns.forEach(b => {
+      if (b.getAttribute('data-demo-id') === personaId) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
     });
-    this.showToast('4 profils de test disponibles dans l\'onglet Accès Express ou par email/identifiant (mot de passe: "demo")', 'info');
+
+    this.showToast(`Identifiants de ${persona.name} (${persona.badge}) insérés !`, 'info');
+  },
+
+  // Interactive 3-Photo Hero Slider Controls
+  initAuthSlider() {
+    this.currentAuthSlide = 0;
+    this.resumeAuthSlider();
+  },
+
+  setAuthSlide(idx) {
+    const slides = document.querySelectorAll('#auth-hero-slider .auth-slide');
+    const dots = document.querySelectorAll('#auth-slider-dots .auth-slider-dot');
+    if (!slides.length) return;
+
+    const total = slides.length;
+    this.currentAuthSlide = ((idx % total) + total) % total;
+
+    slides.forEach((slide, i) => {
+      if (i === this.currentAuthSlide) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+
+    const textBlocks = document.querySelectorAll('.auth-slide-text-block');
+    textBlocks.forEach((block, i) => {
+      if (i === this.currentAuthSlide) {
+        block.classList.add('active');
+      } else {
+        block.classList.remove('active');
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      if (i === this.currentAuthSlide) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  },
+
+  nextAuthSlide() {
+    this.setAuthSlide(this.currentAuthSlide + 1);
+  },
+
+  prevAuthSlide() {
+    this.setAuthSlide(this.currentAuthSlide - 1);
+  },
+
+  pauseAuthSlider() {
+    if (this.authSliderTimer) {
+      clearInterval(this.authSliderTimer);
+      this.authSliderTimer = null;
+    }
+  },
+
+  resumeAuthSlider() {
+    this.pauseAuthSlider();
+    const sliderElem = document.getElementById('auth-hero-slider');
+    if (!sliderElem) return;
+
+    this.authSliderTimer = setInterval(() => {
+      this.nextAuthSlide();
+    }, 4500);
   },
 
   initAuth() {
+    this.initAuthSlider();
+
     // Restore remembered identifier if present
     const rememberedId = localStorage.getItem('REMEMBER_ME_CRED');
     const emailInput = document.getElementById('login-email');
@@ -124,23 +218,12 @@ const App = {
       emailInput.value = rememberedId;
     }
 
-    // 1-Click Demo Account Buttons
+    // Demo Account Buttons (Pre-fills credentials on click)
     const demoBtns = document.querySelectorAll('.demo-persona-btn');
     demoBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const personaId = btn.getAttribute('data-demo-id');
-        const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.id === personaId);
-        if (persona) {
-          const emailInput = document.getElementById('login-email');
-          const pwdInput = document.getElementById('login-password');
-          if (emailInput) emailInput.value = persona.email;
-          if (pwdInput) pwdInput.value = persona.password;
-          
-          demoBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-
-          this.login(persona);
-        }
+        this.fillDemoCredentials(personaId);
       });
     });
 
@@ -161,10 +244,10 @@ const App = {
 
         // Multi-field smart matching: email, clientNumber, phone, partial name
         const match = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => 
-          (a.email && a.email.toLowerCase() === rawInputLower) ||
-          (a.clientNumber && a.clientNumber.toLowerCase() === rawInputLower) ||
-          (a.phone && a.phone.replace(/\s+/g, '') === rawInput.replace(/\s+/g, '')) ||
-          (a.name && a.name.toLowerCase().includes(rawInputLower))
+          (a.email && String(a.email).toLowerCase() === rawInputLower) ||
+          (a.clientNumber && String(a.clientNumber).toLowerCase() === rawInputLower) ||
+          (a.phone && String(a.phone).replace(/\s+/g, '') === rawInput.replace(/\s+/g, '')) ||
+          (a.name && String(a.name).toLowerCase().includes(rawInputLower))
         ) || APP_CONSTANTS.DEMO_ACCOUNTS[2]; // Default to Analyst
 
         const submitBtn = document.getElementById('btn-submit-login');
@@ -409,7 +492,7 @@ const App = {
       name: roleConfig.name,
       role: roleConfig.code,
       email: `${roleConfig.code.toLowerCase()}@cif-ao.org`,
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      avatar: 'images/profil/profil01-04.jpg',
       title: roleConfig.shortName
     };
 
@@ -436,7 +519,7 @@ const App = {
     const allowedViews = (APP_CONSTANTS.ROLE_PERMITTED_VIEWS && APP_CONSTANTS.ROLE_PERMITTED_VIEWS[userRole]) || [];
     
     // Strict RBAC Guard: If target view is not allowed for current role, redirect to role home
-    if (allowedViews.length > 0 && !allowedViews.includes(viewId)) {
+    if (Array.isArray(allowedViews) && allowedViews.length > 0 && viewId && !allowedViews.includes(viewId)) {
       const roleConfig = APP_CONSTANTS.ROLES[userRole] || APP_CONSTANTS.ROLES.ANALYST;
       const targetFallback = roleConfig.homeView || 'view-role-analyst';
       this.showToast(`Accès restreint : cette page est réservée à l'espace ${roleConfig.name}`, 'warning');
@@ -462,8 +545,10 @@ const App = {
     }
 
     // Execute role-specific initializers
-    if (viewId === 'view-role-client' || viewId === 'view-client-schedule' || viewId === 'view-client-requests') {
+    if (viewId === 'view-role-client' || viewId === 'view-client-requests') {
       this.renderBorrowerDashboard();
+    } else if (viewId === 'view-client-schedule') {
+      this.renderClientSchedule();
     } else if (viewId === 'view-client-simulator') {
       this.updateClientSimulation();
     } else if (viewId === 'view-role-agent') {
@@ -551,6 +636,36 @@ const App = {
     this.renderAgentDashboard(true);
   },
 
+  currentAgentPipelineFilter: 'ALL',
+
+  filterAgentPipeline(filter = 'ALL', buttonEl = null) {
+    this.currentAgentPipelineFilter = filter;
+
+    const filterBtns = {
+      'ALL': 'filter-agent-all',
+      'SUBMITTED': 'filter-agent-submitted',
+      'REVIEW': 'filter-agent-review',
+      'APPROVED': 'filter-agent-approved'
+    };
+
+    Object.entries(filterBtns).forEach(([key, id]) => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        if (key === filter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+    });
+
+    this.renderAgentDashboard();
+  },
+
+  renderAgentPipeline(animated = false) {
+    return this.renderAgentDashboard(animated);
+  },
+
   renderAgentDashboard(animated = false) {
     AppCharts.setupDefaults();
     AppCharts.renderActivitySparkline('agent-activity-sparkline');
@@ -578,7 +693,35 @@ const App = {
       }
     });
 
-    let requests = [...DB.get('credit_requests')];
+    const allRequests = DB.get('credit_requests') || [];
+
+    // Calculate filter tab counters
+    const countAll = allRequests.length;
+    const countSubmitted = allRequests.filter(r => r.status === 'SUBMITTED').length;
+    const countReview = allRequests.filter(r => ['ANALYSIS', 'VERIFICATION_REQUIRED', 'CREDIT_REVIEW'].includes(r.status)).length;
+    const countApproved = allRequests.filter(r => ['COMMITTEE', 'APPROVED', 'DISBURSED'].includes(r.status)).length;
+
+    const elCountAll = document.getElementById('agent-filter-count-all');
+    const elCountSubmitted = document.getElementById('agent-filter-count-submitted');
+    const elCountReview = document.getElementById('agent-filter-count-review');
+    const elCountApproved = document.getElementById('agent-filter-count-approved');
+
+    if (elCountAll) elCountAll.textContent = countAll;
+    if (elCountSubmitted) elCountSubmitted.textContent = countSubmitted;
+    if (elCountReview) elCountReview.textContent = countReview;
+    if (elCountApproved) elCountApproved.textContent = countApproved;
+
+    let requests = [...allRequests];
+
+    // Apply Filter
+    const activeFilter = this.currentAgentPipelineFilter || 'ALL';
+    if (activeFilter === 'SUBMITTED') {
+      requests = requests.filter(r => r.status === 'SUBMITTED');
+    } else if (activeFilter === 'REVIEW') {
+      requests = requests.filter(r => ['ANALYSIS', 'VERIFICATION_REQUIRED', 'CREDIT_REVIEW'].includes(r.status));
+    } else if (activeFilter === 'APPROVED') {
+      requests = requests.filter(r => ['COMMITTEE', 'APPROVED', 'DISBURSED'].includes(r.status));
+    }
 
     if (this.agentSortKey) {
       const key = this.agentSortKey;
@@ -604,28 +747,276 @@ const App = {
 
     const rowClass = animated ? 'sort-row-animated' : '';
 
-    tbody.innerHTML = requests.map(r => `
-      <tr class="${rowClass}">
-        <td><strong>${r.request_number}</strong><div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(r.created_at).toLocaleDateString('fr-FR')}</div></td>
-        <td>
-          <div class="client-cell">
-            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(r.client_name)}&background=0ea5e9&color=fff" alt="">
-            <div>
-              <div class="client-name">${r.client_name}</div>
-              <div class="client-sub">${r.city}, ${r.country}</div>
+    if (requests.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+            <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--text-muted);"></i>
+            <div style="font-weight: 600; color: var(--text-primary);">Aucune demande ne correspond à ce filtre.</div>
+            <div style="font-size: 0.76rem; margin-top: 4px;">Sélectionnez l'onglet "Toutes" pour revoir l'ensemble des dossiers.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = requests.map(r => {
+      const capacityBadge = r.repayment_capacity_status === 'SUFFICIENT'
+        ? `<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle mr-1"></i> Suffisante</span>`
+        : `<span class="badge badge-capacity-insufficient"><i class="fas fa-triangle-exclamation mr-1"></i> Insuffisante</span>`;
+
+      return `
+        <tr class="schedule-table-row ${rowClass}" onclick="App.openAgentDrawer(${r.id})">
+          <td>
+            <strong>${r.request_number}</strong>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(r.created_at).toLocaleDateString('fr-FR')}</div>
+          </td>
+          <td>
+            <div class="client-cell">
+              <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(r.client_name)}&background=0ea5e9&color=fff" alt="" class="user-avatar" style="width: 32px; height: 32px; border-radius: var(--radius-md);">
+              <div>
+                <div class="client-name" style="font-weight: 600;">${r.client_name}</div>
+                <div class="client-sub" style="font-size: 0.72rem; color: var(--text-subtle);"><i class="fas fa-location-dot mr-1"></i>${r.city}, ${r.country}</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td><span class="amount-cell">${CreditScoringEngine.formatFCFA(r.requested_amount)}</span></td>
-        <td>${r.purpose}</td>
-        <td>${AppInteractions.getStatusBadge(r.status)}</td>
-        <td style="text-align: right;">
-          <button class="btn btn-secondary btn-sm" onclick="App.showToast('Demande de pièces complémentaires envoyée par SMS au client', 'info')">
-            <i class="fas fa-paper-plane"></i> Relancer Pièces
-          </button>
-        </td>
-      </tr>
-    `).join('');
+          </td>
+          <td>
+            <div>
+              <strong class="amount-cell" style="font-family: var(--font-mono);">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.duration_months} mois</div>
+            </div>
+          </td>
+          <td class="schedule-col-hide-mobile">
+            <div style="max-width: 220px; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${r.purpose || ''}">
+              ${r.purpose || 'Financement d\'activité'}
+            </div>
+          </td>
+          <td class="schedule-col-hide-tablet">
+            ${capacityBadge}
+          </td>
+          <td>${AppInteractions.getStatusBadge(r.status)}</td>
+          <td style="text-align: right;">
+            <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openAgentDrawer(${r.id})" title="Voir le volet détail">
+                <i class="fas fa-sidebar"></i> <span class="hide-xs">Détails</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.triggerDocReminder(${r.id}, '${r.client_name.replace(/'/g, "\\'")}', 'Demande de justificatifs complémentaires')" title="Relancer par SMS">
+                <i class="fas fa-comment-sms text-primary"></i> <span class="hide-xs">SMS</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  openAgentDrawer(requestId) {
+    const allRequests = DB.get('credit_requests') || [];
+    const req = allRequests.find(r => r.id == requestId) || allRequests[0];
+    if (!req) return;
+
+    const client = DB.findById('clients', req.client_id) || {};
+    const user = DB.findById('users', client.user_id) || {};
+    const activity = (DB.get('activities') || []).find(a => a.client_id == req.client_id || a.id == req.activity_id) || {};
+    const financialProfile = (DB.get('financial_profiles') || []).find(fp => fp.client_id == req.client_id) || {};
+    const guarantees = (DB.get('guarantees') || []).filter(g => g.credit_request_id == req.id);
+    const documents = (DB.get('documents') || []).filter(d => d.credit_request_id == req.id);
+    const evalData = CreditScoringEngine.evaluateDossier(req.id) || {};
+
+    // Header elements
+    const titleEl = document.getElementById('agent-drawer-title');
+    const dateEl = document.getElementById('agent-drawer-date');
+    if (titleEl) titleEl.textContent = `Dossier N° ${req.request_number || 'REQ-2026-0000'}`;
+    if (dateEl) {
+      const subDate = new Date(req.submitted_at || req.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+      dateEl.textContent = `Déposé le ${subDate} • Agence ${req.city || client.city || 'Assigamé'}`;
+    }
+
+    // Hero amount & badges
+    const heroAmount = document.getElementById('agent-drawer-hero-amount');
+    const heroStatusContainer = document.getElementById('agent-drawer-hero-status-container');
+    const heroMode = document.getElementById('agent-drawer-hero-mode');
+    const heroScoreBadge = document.getElementById('agent-drawer-hero-score-badge');
+
+    if (heroAmount) heroAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    if (heroStatusContainer) {
+      heroStatusContainer.innerHTML = AppInteractions.getStatusBadge(req.status);
+    }
+    if (heroMode) {
+      const isCold = req.is_cold_start || client.is_cold_start;
+      heroMode.className = isCold ? 'badge badge-warning' : 'badge badge-submitted';
+      heroMode.innerHTML = isCold ? '<i class="fas fa-seedling"></i> Mode Cold Start' : '<i class="fas fa-history"></i> Mode Standard';
+    }
+
+    const score = evalData.overallScore || req.score || 84;
+    const confidence = evalData.confidenceScore || req.confidence_score || 94;
+    if (heroScoreBadge) {
+      heroScoreBadge.innerHTML = `<i class="fas fa-microchip"></i> Score IA : ${score}/100`;
+      heroScoreBadge.className = score >= 75 ? 'badge badge-approved' : (score >= 60 ? 'badge badge-warning' : 'badge badge-rejected');
+    }
+
+    // Borrower card
+    const clientNumberEl = document.getElementById('agent-drawer-client-number');
+    const clientAvatarEl = document.getElementById('agent-drawer-client-avatar');
+    const clientNameEl = document.getElementById('agent-drawer-client-name');
+    const clientOccEl = document.getElementById('agent-drawer-client-occupation');
+    const clientLocEl = document.getElementById('agent-drawer-client-location');
+    const clientPhoneEl = document.getElementById('agent-drawer-client-phone');
+    const clientEmailEl = document.getElementById('agent-drawer-client-email');
+    const clientKycEl = document.getElementById('agent-drawer-client-kyc');
+    const btnSms = document.getElementById('agent-drawer-btn-sms');
+    const btnCall = document.getElementById('agent-drawer-btn-call');
+
+    if (clientNumberEl) clientNumberEl.textContent = client.client_number || 'SN-DKR-008821';
+    if (clientAvatarEl) clientAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
+    if (clientNameEl) clientNameEl.textContent = req.client_name;
+    if (clientOccEl) clientOccEl.textContent = client.occupation || activity.sector || 'Commerçant / Entrepreneur';
+    if (clientLocEl) clientLocEl.textContent = `${req.city || client.city || 'Dakar'}, ${req.country || 'Sénégal'} (${client.residential_zone || 'Zone Urbaine'})`;
+    if (clientPhoneEl) clientPhoneEl.textContent = user.phone || '+221 77 450 88 21';
+    if (clientEmailEl) clientEmailEl.textContent = user.email || 'fatou.ndiaye@gmail.com';
+    if (clientKycEl) {
+      const isKycOk = client.kyc_status === 'VERIFIED';
+      clientKycEl.className = isKycOk ? 'badge badge-approved' : 'badge badge-warning';
+      clientKycEl.innerHTML = isKycOk ? '<i class="fas fa-check-circle"></i> Conforme' : '<i class="fas fa-clock"></i> En Attente Pièces';
+    }
+    if (btnSms) {
+      btnSms.setAttribute('onclick', `App.triggerDocReminder(${req.id}, '${req.client_name.replace(/'/g, "\\'")}', 'Relance de justificatifs')`);
+    }
+    if (btnCall) {
+      btnCall.setAttribute('onclick', `App.showToast('Appel direct initié vers ${user.phone || '+221 77 450 88 21'}', 'info')`);
+    }
+
+    // Financial capacity card
+    const durationEl = document.getElementById('agent-drawer-duration');
+    const monthlyPaymentEl = document.getElementById('agent-drawer-monthly-payment');
+    const incomeEl = document.getElementById('agent-drawer-income');
+    const expensesEl = document.getElementById('agent-drawer-expenses');
+    const disposableEl = document.getElementById('agent-drawer-disposable');
+    const capacityBadgeEl = document.getElementById('agent-drawer-capacity-badge');
+
+    const estPayment = req.estimated_monthly_payment || Math.round(req.requested_amount / (req.duration_months || 12));
+    const incomeVal = req.declared_monthly_income || financialProfile.monthly_income || 1450000;
+    const expensesVal = req.declared_monthly_expenses || financialProfile.monthly_expenses || 670000;
+    const disposableVal = req.disposable_income || financialProfile.disposable_income || (incomeVal - expensesVal);
+
+    if (durationEl) durationEl.textContent = `${req.duration_months || 12} Mois`;
+    if (monthlyPaymentEl) monthlyPaymentEl.textContent = `${CreditScoringEngine.formatFCFA(estPayment)} / mois`;
+    if (incomeEl) incomeEl.textContent = CreditScoringEngine.formatFCFA(incomeVal);
+    if (expensesEl) expensesEl.textContent = CreditScoringEngine.formatFCFA(expensesVal);
+    if (disposableEl) disposableEl.textContent = CreditScoringEngine.formatFCFA(disposableVal);
+    if (capacityBadgeEl) {
+      const isSufficient = req.repayment_capacity_status === 'SUFFICIENT';
+      capacityBadgeEl.innerHTML = isSufficient 
+        ? '<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>'
+        : '<span class="badge badge-capacity-insufficient"><i class="fas fa-triangle-exclamation"></i> Insuffisante</span>';
+    }
+
+    // Purpose & Guarantee card
+    const purposeEl = document.getElementById('agent-drawer-purpose');
+    const guarTypeEl = document.getElementById('agent-drawer-guarantee-type');
+    const guarStatusEl = document.getElementById('agent-drawer-guarantee-status');
+    const guarDescEl = document.getElementById('agent-drawer-guarantee-desc');
+    const guarDeclaredEl = document.getElementById('agent-drawer-guarantee-declared');
+    const guarVerifiedEl = document.getElementById('agent-drawer-guarantee-verified');
+
+    if (purposeEl) purposeEl.textContent = req.purpose || 'Financement de fonds de roulement et acquisition matériel';
+
+    if (guarantees.length > 0) {
+      const g = guarantees[0];
+      const isVerified = g.verification_status === 'VERIFIED';
+      if (guarTypeEl) guarTypeEl.textContent = g.guarantee_type || 'Stock Marchandises & Équipements';
+      if (guarStatusEl) {
+        guarStatusEl.className = isVerified ? 'badge badge-approved' : 'badge badge-warning';
+        guarStatusEl.innerHTML = isVerified ? '<i class="fas fa-check"></i> Inspecté sur terrain' : '<i class="fas fa-motorcycle"></i> À Visiter sur terrain';
+      }
+      if (guarDescEl) guarDescEl.textContent = g.description || 'Garantie matérielle vérifiée';
+      if (guarDeclaredEl) guarDeclaredEl.textContent = CreditScoringEngine.formatFCFA(g.declared_value || 0);
+      if (guarVerifiedEl) guarVerifiedEl.textContent = isVerified ? CreditScoringEngine.formatFCFA(g.verified_value || 0) : 'Non expertisé';
+    } else {
+      if (guarTypeEl) guarTypeEl.textContent = 'Caution Solidaire';
+      if (guarStatusEl) {
+        guarStatusEl.className = 'badge badge-submitted';
+        guarStatusEl.innerHTML = 'Caution validée';
+      }
+      if (guarDescEl) guarDescEl.textContent = 'Engagement solidaire du groupement sociétaire';
+      if (guarDeclaredEl) guarDeclaredEl.textContent = 'N/A';
+      if (guarVerifiedEl) guarVerifiedEl.textContent = 'N/A';
+    }
+
+    // Documents & OCR card
+    const docsCountEl = document.getElementById('agent-drawer-docs-count');
+    const docsListEl = document.getElementById('agent-drawer-docs-list');
+    if (docsCountEl) docsCountEl.textContent = `${documents.length} document(s)`;
+    if (docsListEl) {
+      if (documents.length === 0) {
+        docsListEl.innerHTML = '<div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Aucun document rattaché.</div>';
+      } else {
+        docsListEl.innerHTML = documents.map(doc => {
+          const isValidated = doc.status === 'VALIDATED';
+          const isFlagged = doc.status === 'FLAGGED';
+          const docBadge = isValidated
+            ? '<span class="badge badge-approved" style="font-size: 0.65rem;"><i class="fas fa-check"></i> OCR Conforme</span>'
+            : (isFlagged ? '<span class="badge badge-rejected" style="font-size: 0.65rem;"><i class="fas fa-triangle-exclamation"></i> Anomalie</span>' : '<span class="badge badge-submitted" style="font-size: 0.65rem;">En Attente</span>');
+
+          return `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.65rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; min-width: 0;">
+                <i class="fas fa-file-lines text-primary" style="font-size: 0.85rem; flex-shrink: 0;"></i>
+                <div style="font-size: 0.78rem; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                  ${doc.original_filename || doc.document_type}
+                </div>
+              </div>
+              <div style="flex-shrink: 0; margin-left: 0.5rem;">${docBadge}</div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Risk Score & Scoring V2 card
+    const scoreValEl = document.getElementById('agent-drawer-score-val');
+    const confValEl = document.getElementById('agent-drawer-confidence-val');
+    const scoreLabelEl = document.getElementById('agent-drawer-score-label');
+    const scoreBarEl = document.getElementById('agent-drawer-score-progress');
+
+    if (scoreValEl) {
+      scoreValEl.textContent = score;
+      scoreValEl.style.color = evalData.riskColor || (score >= 75 ? '#059669' : (score >= 60 ? '#d97706' : '#dc2626'));
+    }
+    if (confValEl) confValEl.textContent = `${confidence}%`;
+    if (scoreLabelEl) {
+      const riskLevel = evalData.riskLevel || (score >= 75 ? 'FAIBLE' : (score >= 60 ? 'MODERE' : 'ELEVE'));
+      scoreLabelEl.className = `badge ${riskLevel === 'FAIBLE' ? 'badge-approved' : (riskLevel === 'MODERE' ? 'badge-warning' : 'badge-rejected')}`;
+      scoreLabelEl.textContent = riskLevel === 'FAIBLE' ? 'Risque Faible' : (riskLevel === 'MODERE' ? 'Risque Modéré' : 'Risque Élevé');
+    }
+    if (scoreBarEl) {
+      scoreBarEl.style.width = `${Math.min(100, Math.max(0, score))}%`;
+      scoreBarEl.style.background = score >= 75 
+        ? 'linear-gradient(90deg, #10b981, #059669)' 
+        : (score >= 60 ? 'linear-gradient(90deg, #f59e0b, #d97706)' : 'linear-gradient(90deg, #ef4444, #dc2626)');
+    }
+
+    // Footer action buttons
+    const footerActions = document.getElementById('agent-drawer-footer-actions');
+    if (footerActions) {
+      footerActions.innerHTML = `
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer(); App.switchView('view-agent-inspections');">
+          <i class="fas fa-motorcycle mr-1"></i> Inspections Terrain
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="App.closeAgentDrawer(); AppInteractions.openDossierModal(${req.id});">
+          <i class="fas fa-magnifying-glass-chart mr-1"></i> Analyser 360°
+        </button>
+      `;
+    }
+
+    // Open Backdrop
+    const backdrop = document.getElementById('agent-drawer-backdrop');
+    if (backdrop) backdrop.classList.add('active');
+  },
+
+  closeAgentDrawer() {
+    const backdrop = document.getElementById('agent-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
   },
 
   // =========================================================================
@@ -710,10 +1101,10 @@ const App = {
     if (this.agentInspSearch) {
       const q = this.agentInspSearch.toLowerCase();
       filtered = filtered.filter(i => 
-        i.clientName.toLowerCase().includes(q) ||
-        i.requestNumber.toLowerCase().includes(q) ||
-        i.description.toLowerCase().includes(q) ||
-        i.city.toLowerCase().includes(q)
+        (i.clientName && i.clientName.toLowerCase().includes(q)) ||
+        (i.requestNumber && i.requestNumber.toLowerCase().includes(q)) ||
+        (i.description && i.description.toLowerCase().includes(q)) ||
+        (i.city && i.city.toLowerCase().includes(q))
       );
     }
 
@@ -941,10 +1332,10 @@ const App = {
     if (this.agentClientSearch) {
       const q = this.agentClientSearch.toLowerCase();
       filtered = filtered.filter(c => 
-        c.fullName.toLowerCase().includes(q) ||
-        c.client_number.toLowerCase().includes(q) ||
-        c.city.toLowerCase().includes(q) ||
-        c.occupation.toLowerCase().includes(q)
+        (c.fullName && c.fullName.toLowerCase().includes(q)) ||
+        (c.client_number && c.client_number.toLowerCase().includes(q)) ||
+        (c.city && c.city.toLowerCase().includes(q)) ||
+        (c.occupation && c.occupation.toLowerCase().includes(q))
       );
     }
 
@@ -1232,13 +1623,16 @@ const App = {
     const enriched = anomalies.map(a => {
       const req = requests.find(r => r.id === a.credit_request_id) || {};
       const client = clients.find(c => c.id === req.client_id) || {};
+      const anomType = String(a.anomaly_type || '');
+      const isOcr = anomType.includes('OCR') || Boolean(a.document_id);
+      const isNetwork = anomType.includes('MULTI') || anomType.includes('CAUTION');
       return {
         ...a,
         request_number: req.request_number || `REQ-2026-000${a.credit_request_id || 1}`,
         client_name: req.client_name || 'Client CIF',
         country: req.country || 'Sénégal',
         city: req.city || 'Dakar',
-        category: a.category || (a.anomaly_type?.includes('OCR') || a.document_id ? 'OCR' : (a.anomaly_type?.includes('MULTI') || a.anomaly_type?.includes('CAUTION') ? 'NETWORK' : 'FINANCIAL')),
+        category: a.category || (isOcr ? 'OCR' : (isNetwork ? 'NETWORK' : 'FINANCIAL')),
         rule_name: a.rule_name || a.anomaly_type || 'Règle de Contrôle Automatisé',
         engine: a.engine || (a.document_id ? 'Moteur OCR Tesseract V2.2' : 'Calculateur Risque & Solvabilité V2')
       };
@@ -1294,12 +1688,12 @@ const App = {
     if (this.analystAnomSearch) {
       const q = this.analystAnomSearch.toLowerCase();
       filtered = filtered.filter(a =>
-        a.request_number.toLowerCase().includes(q) ||
-        a.client_name.toLowerCase().includes(q) ||
-        a.description.toLowerCase().includes(q) ||
-        a.rule_name.toLowerCase().includes(q) ||
-        a.city.toLowerCase().includes(q) ||
-        a.country.toLowerCase().includes(q)
+        (a.request_number && a.request_number.toLowerCase().includes(q)) ||
+        (a.client_name && a.client_name.toLowerCase().includes(q)) ||
+        (a.description && a.description.toLowerCase().includes(q)) ||
+        (a.rule_name && a.rule_name.toLowerCase().includes(q)) ||
+        (a.city && a.city.toLowerCase().includes(q)) ||
+        (a.country && a.country.toLowerCase().includes(q))
       );
     }
 
@@ -2228,41 +2622,132 @@ const App = {
       });
     });
 
-    const updateWizardCalculation = () => {
-      const inc = Number(document.getElementById('wiz-income')?.value || 500000);
-      const exp = Number(document.getElementById('wiz-expenses')?.value || 200000);
-      const debt = Number(document.getElementById('wiz-debt')?.value || 50000);
-      const amount = Number(document.getElementById('wiz-amount')?.value || 1500000);
-      const months = Number(document.getElementById('wiz-duration')?.value || 12);
-
-      const cap = CreditScoringEngine.calculateCapacity(inc, 0, exp, debt, amount, months);
-      
-      const dispEl = document.getElementById('wiz-calc-disposable');
-      const instEl = document.getElementById('wiz-calc-installment');
-      const badgeEl = document.getElementById('wiz-calc-status');
-
-      if (dispEl) dispEl.textContent = CreditScoringEngine.formatFCFA(cap.disposableIncome);
-      if (instEl) instEl.textContent = CreditScoringEngine.formatFCFA(cap.estimatedPayment);
-      if (badgeEl) {
-        badgeEl.className = `badge ${cap.isSufficient ? 'badge-capacity-sufficient' : 'badge-capacity-insufficient'}`;
-        badgeEl.textContent = cap.statusText;
-      }
-    };
-
     ['wiz-income', 'wiz-expenses', 'wiz-debt', 'wiz-amount', 'wiz-duration'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('input', updateWizardCalculation);
+      if (el) el.addEventListener('input', () => this.updateWizardCalculation());
     });
 
-    updateWizardCalculation();
+    // Close on backdrop click for modal-loan-application
+    const loanModal = document.getElementById('modal-loan-application');
+    if (loanModal) {
+      loanModal.addEventListener('click', (e) => {
+        if (e.target === loanModal) {
+          this.closeNewLoanModal();
+        }
+      });
+    }
+
+    this.updateWizardCalculation();
+  },
+
+  updateWizardCalculation() {
+    const inc = Number(document.getElementById('wiz-income')?.value || 850000);
+    const exp = Number(document.getElementById('wiz-expenses')?.value || 320000);
+    const debt = Number(document.getElementById('wiz-debt')?.value || 0);
+    const amount = Number(document.getElementById('wiz-amount')?.value || 2500000);
+    const months = Number(document.getElementById('wiz-duration')?.value || 12);
+
+    const cap = CreditScoringEngine.calculateCapacity(inc, 0, exp, debt, amount, months);
+    
+    const dispEl = document.getElementById('wiz-calc-disposable');
+    const instEl = document.getElementById('wiz-calc-installment');
+    const badgeEl = document.getElementById('wiz-calc-status');
+
+    if (dispEl) dispEl.textContent = CreditScoringEngine.formatFCFA(cap.disposableIncome);
+    if (instEl) instEl.textContent = CreditScoringEngine.formatFCFA(cap.estimatedPayment);
+    if (badgeEl) {
+      badgeEl.className = `badge ${cap.isSufficient ? 'badge-capacity-sufficient' : 'badge-capacity-insufficient'}`;
+      badgeEl.textContent = cap.statusText;
+    }
+  },
+
+  openNewLoanModal(prefillOptions = {}) {
+    const modal = document.getElementById('modal-loan-application');
+    if (!modal) return;
+
+    this.setModalWizardStep(1);
+
+    // Adapt modal branding and texts according to user role
+    const titleEl = document.getElementById('modal-loan-app-title');
+    const badgeEl = document.getElementById('modal-loan-app-badge');
+    const subtitleEl = document.getElementById('modal-loan-app-subtitle');
+    const submitBtnEl = document.getElementById('modal-loan-app-submit-btn');
+    const headerEl = document.getElementById('modal-loan-app-header');
+
+    if (this.currentRole === 'CREDIT_OFFICER') {
+      if (titleEl) titleEl.textContent = 'Enregistrer une Demande de Prêt (Guichet)';
+      if (badgeEl) badgeEl.textContent = 'Agent de Crédit';
+      if (subtitleEl) subtitleEl.textContent = 'Saisie de dossier pour un sociétaire, vérification KYC & transmission au pôle Risque';
+      if (submitBtnEl) submitBtnEl.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Enregistrer & Transmettre au Pôle Risque';
+      if (headerEl) headerEl.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
+    } else {
+      if (titleEl) titleEl.textContent = 'Faire une Demande de Prêt CIF';
+      if (badgeEl) badgeEl.textContent = 'Parcours 6 Étapes';
+      if (subtitleEl) subtitleEl.textContent = 'Instruction rapide, calcul transparent de votre mensualité & transmission sécurisée à votre conseiller';
+      if (submitBtnEl) submitBtnEl.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Confirmer & Soumettre ma Demande';
+      if (headerEl) headerEl.style.background = 'linear-gradient(135deg, #059669, #047857)';
+    }
+
+    if (prefillOptions.amount) {
+      const amountEl = document.getElementById('wiz-amount');
+      if (amountEl) {
+        amountEl.value = prefillOptions.amount;
+        amountEl.dispatchEvent(new Event('input'));
+      }
+    }
+    if (prefillOptions.duration) {
+      const durationEl = document.getElementById('wiz-duration');
+      if (durationEl) {
+        durationEl.value = prefillOptions.duration;
+        durationEl.dispatchEvent(new Event('input'));
+      }
+    }
+    if (prefillOptions.purpose) {
+      const purposeEl = document.getElementById('wiz-purpose');
+      if (purposeEl) purposeEl.value = prefillOptions.purpose;
+    }
+
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+    });
+
+    this.updateWizardCalculation();
+  },
+
+  closeNewLoanModal() {
+    const modal = document.getElementById('modal-loan-application');
+    if (!modal) return;
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 200);
+  },
+
+  setModalWizardStep(step) {
+    const totalSteps = 6;
+    if (step < 1 || step > totalSteps) return;
+
+    document.querySelectorAll('.modal-wizard-step-content').forEach(el => el.style.display = 'none');
+    const activeContent = document.getElementById(`modal-wizard-step-${step}`);
+    if (activeContent) activeContent.style.display = 'block';
+
+    document.querySelectorAll('[id^="modal-wstep-"]').forEach((el, idx) => {
+      const stepNum = idx + 1;
+      el.classList.remove('active', 'completed');
+      if (stepNum === step) el.classList.add('active');
+      else if (stepNum < step) el.classList.add('completed');
+    });
+
+    this.updateWizardCalculation();
   },
 
   handleWizardProfileModeChange(mode) {
     const isCold = mode === 'COLD_START';
-    const labelStd = document.getElementById('label-profile-standard');
-    const labelCold = document.getElementById('label-profile-coldstart');
-    const indicator = document.getElementById('wiz-cold-start-indicator');
-    const info = document.getElementById('wiz-cold-start-info');
+    const labelStd = document.getElementById('label-profile-standard') || document.getElementById('modal-label-profile-standard');
+    const labelCold = document.getElementById('label-profile-coldstart') || document.getElementById('modal-label-profile-coldstart');
+    const indicator = document.getElementById('wiz-cold-start-indicator') || document.getElementById('modal-wiz-cold-start-indicator');
+    const info = document.getElementById('wiz-cold-start-info') || document.getElementById('modal-wiz-cold-start-info');
 
     if (labelStd && labelCold) {
       if (isCold) {
@@ -2289,14 +2774,14 @@ const App = {
   },
 
   submitNewCreditRequest() {
-    const clientName = document.getElementById('wiz-fullname')?.value || 'Nouveau Membre CIF';
-    const city = document.getElementById('wiz-city')?.value || 'Ouagadougou';
-    const country = document.getElementById('wiz-country')?.value || 'Burkina Faso';
-    const amount = Number(document.getElementById('wiz-amount')?.value || 1500000);
+    const clientName = document.getElementById('wiz-fullname')?.value || 'Fatou Ndiaye';
+    const city = document.getElementById('wiz-city')?.value || 'Dakar';
+    const country = document.getElementById('wiz-country')?.value || 'Sénégal';
+    const amount = Number(document.getElementById('wiz-amount')?.value || 2500000);
     const months = Number(document.getElementById('wiz-duration')?.value || 12);
-    const purpose = document.getElementById('wiz-purpose')?.value || 'Financement fond de roulement';
-    const inc = Number(document.getElementById('wiz-income')?.value || 600000);
-    const exp = Number(document.getElementById('wiz-expenses')?.value || 250000);
+    const purpose = document.getElementById('wiz-purpose')?.value || 'Achat de stock conteneur tissus wax et bazin riche';
+    const inc = Number(document.getElementById('wiz-income')?.value || 850000);
+    const exp = Number(document.getElementById('wiz-expenses')?.value || 320000);
 
     const isColdStart = (document.querySelector('input[name="wiz-profile-mode"]:checked')?.value || 'COLD_START') === 'COLD_START';
 
@@ -2308,8 +2793,8 @@ const App = {
       client_number: `${country.substring(0, 2).toUpperCase()}-${city.substring(0, 3).toUpperCase()}-00${Math.floor(1000 + Math.random() * 9000)}`,
       address: city,
       city: city,
-      residential_zone: 'Zone Péri-urbaine Mixte',
-      occupation: document.getElementById('wiz-sector')?.value || 'Commerce de Détail / Gros',
+      residential_zone: 'Zone Urbaine Commerciale',
+      occupation: document.getElementById('wiz-sector')?.value || 'Commerce de Tissus & Habillement (Wax/Bazin)',
       kyc_status: 'VERIFIED',
       institution_verified_at: new Date().toISOString(),
       is_cold_start: isColdStart
@@ -2332,13 +2817,13 @@ const App = {
       country: country,
       city: city,
       is_cold_start: isColdStart,
-      score: isColdStart ? 80 : 75
+      score: isColdStart ? 84 : 78
     });
 
     const newDoc = DB.insert('documents', {
       credit_request_id: newReq.id,
       document_type: 'FACTURE_PROFORMA',
-      original_filename: 'Facture_Devis_Equipement.pdf',
+      original_filename: 'Facture_Proforma_Tissus_Lome.pdf',
       file_path: 'assets/docs/devis.pdf',
       uploaded_at: new Date().toISOString()
     });
@@ -2347,17 +2832,30 @@ const App = {
 
     DB.addAuditLog(4, 'NEW_CREDIT_SUBMISSION', 'credit_requests', newReq.id, `Nouvelle demande de ${CreditScoringEngine.formatFCFA(amount)} déposée par ${clientName}`);
 
+    // Close the application modal
+    this.closeNewLoanModal();
+
+    if (this.currentRole === 'CREDIT_OFFICER') {
+      this.renderAgentPipeline();
+      this.showToast(`Demande #${newReq.request_number} enregistrée au guichet`, 'success');
+    }
+
     this.showSuccessModal({
-      title: 'Demande de Crédit Déposée avec Succès !',
-      subtitle: `Votre dossier #${newReq.request_number} a été scellé par empreinte cryptographique et transmis au service d'analyse CIF.`,
+      title: this.currentRole === 'CREDIT_OFFICER' 
+        ? 'Dossier de Crédit Enregistré au Guichet !' 
+        : 'Demande de Financement Déposée avec Succès !',
+      subtitle: `Le dossier #${newReq.request_number} pour ${clientName} a été scellé et transmis au pôle d'analyse des risques.`,
       reference: newReq.request_number,
       amount: CreditScoringEngine.formatFCFA(amount),
       payment: `${CreditScoringEngine.formatFCFA(cap.estimatedPayment)} / mois (${months} mois)`,
       statusHtml: '<i class="fas fa-circle-check"></i> Enregistré & En Attente d\'Analyse',
       statusClass: 'badge-approved',
-      primaryBtnText: 'Consulter mon Tableau de Bord Emprunteur',
+      primaryBtnText: this.currentRole === 'CREDIT_OFFICER' ? 'Consulter les Dossiers en Cours' : 'Consulter mon Tableau de Bord Emprunteur',
       onPrimaryClick: () => {
-        if (this.currentRole === 'CLIENT') {
+        if (this.currentRole === 'CREDIT_OFFICER') {
+          this.switchView('view-role-agent');
+          this.renderAgentPipeline();
+        } else if (this.currentRole === 'CLIENT') {
           this.switchView('view-role-client');
         } else {
           this.switchView('view-analyst-dossiers');
@@ -2380,10 +2878,10 @@ const App = {
         return;
       }
 
-      const watchlist = DB.get('sanctions_watchlist');
+      const watchlist = DB.get('sanctions_watchlist') || [];
       const match = watchlist.find(item => 
-        item.full_name.toLowerCase().includes(query) || 
-        item.aliases.toLowerCase().includes(query)
+        (item.full_name && item.full_name.toLowerCase().includes(query)) || 
+        (item.aliases && item.aliases.toLowerCase().includes(query))
       );
 
       if (match) {
@@ -2744,24 +3242,269 @@ const App = {
   applyFromSimulation() {
     const amountRange = document.getElementById('sim-amount-range');
     const durationRange = document.getElementById('sim-duration-range');
-    const amount = amountRange ? amountRange.value : 2500000;
-    const duration = durationRange ? durationRange.value : 12;
+    const amount = amountRange ? parseInt(amountRange.value, 10) : 2500000;
+    const duration = durationRange ? parseInt(durationRange.value, 10) : 12;
 
-    this.switchView('view-client-wizard');
+    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CIF' });
+    this.showToast(`Simulation transférée dans votre demande : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
+  },
 
-    // Pre-fill amount and duration in wizard if elements exist
-    const wizAmount = document.getElementById('wiz-loan-amount');
-    const wizDuration = document.getElementById('wiz-loan-duration');
-    if (wizAmount) {
-      wizAmount.value = amount;
-      wizAmount.dispatchEvent(new Event('input'));
+  scheduleInstallments: [
+    { number: 1, dueDate: '05/07/2026', principal: 196250, interest: 25000, insurance: 13750, total: 235000, remaining: 2303750, status: 'PAID', paidDate: '04/07/2026 à 14:22', provider: 'Orange Money (+221 77 540 88 12)', receiptRef: 'REC-2026-0704', txnId: 'OM-SN-8821-0704' },
+    { number: 2, dueDate: '05/08/2026', principal: 198212, interest: 23038, insurance: 13750, total: 235000, remaining: 2105538, status: 'PAID', paidDate: '05/08/2026 à 09:45', provider: 'Wave (+221 77 540 88 12)', receiptRef: 'REC-2026-0805', txnId: 'WV-SN-8821-0805' },
+    { number: 3, dueDate: '05/09/2026', principal: 200195, interest: 21055, insurance: 13750, total: 235000, remaining: 1905343, status: 'DUE', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 4, dueDate: '05/10/2026', principal: 202196, interest: 19054, insurance: 13750, total: 235000, remaining: 1703147, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 5, dueDate: '05/11/2026', principal: 204218, interest: 17032, insurance: 13750, total: 235000, remaining: 1498929, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 6, dueDate: '05/12/2026', principal: 206261, interest: 14989, insurance: 13750, total: 235000, remaining: 1292668, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 7, dueDate: '05/01/2027', principal: 208323, interest: 12927, insurance: 13750, total: 235000, remaining: 1084345, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 8, dueDate: '05/02/2027', principal: 210407, interest: 10843, insurance: 13750, total: 235000, remaining: 873938, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 9, dueDate: '05/03/2027', principal: 212511, interest: 8739, insurance: 13750, total: 235000, remaining: 661427, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 10, dueDate: '05/04/2027', principal: 214636, interest: 6614, insurance: 13750, total: 235000, remaining: 446791, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 11, dueDate: '05/05/2027', principal: 216782, interest: 4468, insurance: 13750, total: 235000, remaining: 230009, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
+    { number: 12, dueDate: '05/06/2027', principal: 230009, interest: 2300, insurance: 13750, total: 246059, remaining: 0, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null }
+  ],
+  currentScheduleFilter: 'ALL',
+
+  renderClientSchedule(filter = null) {
+    if (filter) {
+      this.currentScheduleFilter = filter;
     }
-    if (wizDuration) {
-      wizDuration.value = duration;
-      wizDuration.dispatchEvent(new Event('input'));
+    const currentFilter = this.currentScheduleFilter || 'ALL';
+    const tbody = document.getElementById('client-schedule-table-body');
+    if (!tbody) return;
+
+    // Update Progress Metrics
+    const paidList = this.scheduleInstallments.filter(i => i.status === 'PAID');
+    const dueList = this.scheduleInstallments.filter(i => i.status === 'DUE');
+    const upcomingList = this.scheduleInstallments.filter(i => i.status === 'UPCOMING');
+
+    const totalPaid = paidList.reduce((sum, i) => sum + i.total, 0);
+    const totalRemaining = 2500000 - paidList.reduce((sum, i) => sum + i.principal, 0);
+    const progressPct = ((paidList.length / this.scheduleInstallments.length) * 100).toFixed(1);
+
+    const txtProgress = document.getElementById('schedule-metric-progress-text');
+    const badgeProgress = document.getElementById('schedule-metric-progress-badge');
+    const barProgress = document.getElementById('schedule-metric-progress-bar');
+    const txtPaid = document.getElementById('schedule-metric-paid');
+    const txtRemaining = document.getElementById('schedule-metric-remaining');
+
+    if (txtProgress) txtProgress.textContent = `${paidList.length} / ${this.scheduleInstallments.length} Mensualités`;
+    if (badgeProgress) badgeProgress.innerHTML = `<i class="fas fa-check"></i> ${progressPct}% Payé`;
+    if (barProgress) barProgress.style.width = `${progressPct}%`;
+    if (txtPaid) txtPaid.textContent = CreditScoringEngine.formatFCFA(totalPaid);
+    if (txtRemaining) txtRemaining.textContent = CreditScoringEngine.formatFCFA(totalRemaining > 0 ? totalRemaining : 0);
+
+    // Filter Items
+    let itemsToDisplay = [...this.scheduleInstallments];
+    if (currentFilter === 'PAID') {
+      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'PAID');
+    } else if (currentFilter === 'DUE') {
+      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'DUE');
+    } else if (currentFilter === 'UPCOMING') {
+      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'UPCOMING');
     }
 
-    this.showToast(`Simulation transférée : ${CreditScoringEngine.formatFCFA(parseInt(amount, 10))} sur ${duration} mois`, 'success');
+    if (itemsToDisplay.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+            <i class="fas fa-calendar-xmark text-lg mb-2"></i>
+            <div>Aucune échéance ne correspond à ce filtre.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = itemsToDisplay.map(item => {
+      let statusBadge = '';
+      let actionBtn = '';
+      let rowClass = 'schedule-table-row';
+
+      if (item.status === 'PAID') {
+        const shortDate = item.paidDate ? item.paidDate.split(' à ')[0] : 'Réglé';
+        statusBadge = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé (${shortDate})</span>`;
+        actionBtn = `
+          <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
+              <i class="fas fa-sidebar"></i> <span class="hide-xs">Détails</span>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.showToast('Téléchargement Quittance ${item.receiptRef || 'PDF'}', 'success')" title="Télécharger Reçu">
+              <i class="fas fa-file-invoice text-primary"></i> <span class="hide-xs">Reçu</span>
+            </button>
+          </div>
+        `;
+      } else if (item.status === 'DUE') {
+        rowClass += ' due-active';
+        statusBadge = `<span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler</span>`;
+        actionBtn = `
+          <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
+              <i class="fas fa-sidebar"></i> <span class="hide-xs">Détails</span>
+            </button>
+            <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); App.openClientPaymentModal(${item.number}, ${item.total})" title="Payer maintenant">
+              <i class="fas fa-wallet"></i> <span class="hide-xs">Payer</span>
+            </button>
+          </div>
+        `;
+      } else {
+        statusBadge = `<span class="badge badge-submitted">À venir</span>`;
+        actionBtn = `
+          <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
+              <i class="fas fa-sidebar"></i> Détails
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <tr class="${rowClass}" onclick="App.openScheduleDrawer(${item.number})">
+          <td>
+            <div style="font-weight: 700; color: ${item.status === 'DUE' ? 'var(--cif-gold-700)' : 'var(--text-primary)'};">
+              Échéance N° ${item.number}
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">
+              ${item.number === 12 ? 'Dernière / Clôture' : 'Mensualité standard'}
+            </div>
+          </td>
+          <td>
+            <div style="font-weight: 600; font-size: 0.85rem;">${item.dueDate}</div>
+          </td>
+          <td>
+            <div class="amount-cell" style="font-weight: 800; font-size: 0.95rem; color: ${item.status === 'DUE' ? 'var(--cif-gold-700)' : 'var(--primary-700)'};">
+              ${CreditScoringEngine.formatFCFA(item.total)}
+            </div>
+          </td>
+          <td class="schedule-col-hide-mobile">
+            <span style="font-size: 0.82rem; color: var(--text-muted);">${CreditScoringEngine.formatFCFA(item.principal)}</span>
+          </td>
+          <td class="schedule-col-hide-tablet">
+            <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-subtle);">${CreditScoringEngine.formatFCFA(item.remaining)}</span>
+          </td>
+          <td>
+            ${statusBadge}
+          </td>
+          <td style="text-align: right;">
+            ${actionBtn}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  filterScheduleTable(filter, buttonEl = null) {
+    if (window.AppInteractions && typeof window.AppInteractions.filterScheduleTable === 'function') {
+      window.AppInteractions.filterScheduleTable(filter, buttonEl);
+      return;
+    }
+
+    this.currentScheduleFilter = filter;
+    
+    // Update Tab UI
+    ['all', 'paid', 'due', 'upcoming'].forEach(f => {
+      const btn = document.getElementById(`filter-sched-${f}`);
+      if (btn) {
+        if (f.toUpperCase() === filter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+    });
+
+    this.renderClientSchedule(filter);
+  },
+
+  openScheduleDrawer(installmentNumber) {
+    const item = this.scheduleInstallments.find(i => i.number === installmentNumber) || this.scheduleInstallments[0];
+    if (!item) return;
+
+    // Header Info
+    const titleElem = document.getElementById('drawer-installment-title');
+    const dateElem = document.getElementById('drawer-installment-date');
+    if (titleElem) titleElem.textContent = `Échéance N° ${item.number} sur ${this.scheduleInstallments.length}`;
+    if (dateElem) dateElem.textContent = `Date d'Exigibilité : ${item.dueDate}`;
+
+    // Hero Card
+    const heroAmount = document.getElementById('drawer-hero-amount');
+    const heroStatus = document.getElementById('drawer-hero-status');
+    if (heroAmount) heroAmount.textContent = CreditScoringEngine.formatFCFA(item.total);
+    if (heroStatus) {
+      if (item.status === 'PAID') {
+        heroStatus.innerHTML = `<span class="badge badge-approved"><i class="fas fa-circle-check"></i> Échéance Soldée & Validée</span>`;
+      } else if (item.status === 'DUE') {
+        heroStatus.innerHTML = `<span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>`;
+      } else {
+        heroStatus.innerHTML = `<span class="badge badge-submitted"><i class="fas fa-clock"></i> Échéance Future non échue</span>`;
+      }
+    }
+
+    // Financial Values
+    const valPrincipal = document.getElementById('drawer-val-principal');
+    const valInterest = document.getElementById('drawer-val-interest');
+    const valInsurance = document.getElementById('drawer-val-insurance');
+    const valRemaining = document.getElementById('drawer-val-remaining');
+
+    if (valPrincipal) valPrincipal.textContent = CreditScoringEngine.formatFCFA(item.principal);
+    if (valInterest) valInterest.textContent = CreditScoringEngine.formatFCFA(item.interest);
+    if (valInsurance) valInsurance.textContent = CreditScoringEngine.formatFCFA(item.insurance);
+    if (valRemaining) valRemaining.textContent = CreditScoringEngine.formatFCFA(item.remaining);
+
+    // Segmented Bars
+    const total = item.total || 235000;
+    const pPct = ((item.principal / total) * 100).toFixed(1);
+    const iPct = ((item.interest / total) * 100).toFixed(1);
+    const insPct = (100 - pPct - iPct).toFixed(1);
+
+    const barP = document.getElementById('drawer-bar-principal');
+    const barI = document.getElementById('drawer-bar-interest');
+    const barIns = document.getElementById('drawer-bar-insurance');
+    if (barP) barP.style.width = `${pPct}%`;
+    if (barI) barI.style.width = `${iPct}%`;
+    if (barIns) barIns.style.width = `${insPct}%`;
+
+    // Tracing & Receipt Info
+    const valProvider = document.getElementById('drawer-val-provider');
+    const valPayDate = document.getElementById('drawer-val-paydate');
+    const valReceipt = document.getElementById('drawer-val-receipt');
+
+    if (valProvider) valProvider.textContent = item.provider || 'En attente de paiement Mobile Money';
+    if (valPayDate) valPayDate.textContent = item.paidDate ? `Réglé le ${item.paidDate}` : `Non réglé (Exigible le ${item.dueDate})`;
+    if (valReceipt) valReceipt.textContent = item.receiptRef || 'Générée automatiquement dès validation';
+
+    // Footer Actions
+    const footerActions = document.getElementById('drawer-footer-actions');
+    if (footerActions) {
+      if (item.status === 'DUE') {
+        footerActions.innerHTML = `
+          <button class="btn btn-warning" onclick="App.closeScheduleDrawer(); App.openClientPaymentModal(${item.number}, ${item.total})">
+            <i class="fas fa-wallet mr-1"></i> Payer ${CreditScoringEngine.formatFCFA(item.total)}
+          </button>
+        `;
+      } else if (item.status === 'PAID') {
+        footerActions.innerHTML = `
+          <button class="btn btn-success" onclick="App.showToast('Téléchargement de la Quittance officielle ${item.receiptRef || 'REC'} au format PDF...', 'success')">
+            <i class="fas fa-file-pdf mr-1"></i> Télécharger Quittance PDF
+          </button>
+        `;
+      } else {
+        footerActions.innerHTML = `
+          <button class="btn btn-secondary" onclick="App.showToast('Cette échéance sera ouverte au règlement le ${item.dueDate}.', 'info')">
+            <i class="fas fa-bell mr-1"></i> Rappel SMS Actif
+          </button>
+        `;
+      }
+    }
+
+    // Open Backdrop
+    const backdrop = document.getElementById('schedule-drawer-backdrop');
+    if (backdrop) backdrop.classList.add('active');
+  },
+
+  closeScheduleDrawer() {
+    const backdrop = document.getElementById('schedule-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
   },
 
   openClientPaymentModal(dueIndex = 3, amount = 235000) {
@@ -2786,9 +3529,10 @@ const App = {
 
   triggerMobileMoneyPayment(provider) {
     this.openClientPaymentModal(3, 235000);
+    const providerStr = String(provider || '').toLowerCase().split(' ')[0];
     const radios = document.querySelectorAll('input[name="momo_provider"]');
     radios.forEach(r => {
-      if (r.value.toLowerCase().includes(provider.toLowerCase().split(' ')[0])) {
+      if (r.value && providerStr && String(r.value).toLowerCase().includes(providerStr)) {
         r.checked = true;
       }
     });
@@ -2803,24 +3547,25 @@ const App = {
     this.showToast(`Requête USSD envoyée vers le +221 ${phone} (${selectedProvider})...`, 'info');
 
     setTimeout(() => {
-      // Update the table row in schedule if rendered
-      const due3Row = document.querySelector('#client-schedule-table-body tr:nth-child(3)');
-      if (due3Row) {
-        due3Row.style.background = '';
-        if (due3Row.children[7]) {
-          due3Row.children[7].innerHTML = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 18/08 (${selectedProvider})</span>`;
-        }
-        if (due3Row.children[8]) {
-          due3Row.children[8].innerHTML = `<button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement du reçu REC-2026-0905', 'success')"><i class="fas fa-file-invoice"></i> Reçu #3</button>`;
-        }
+      // Mark installment #3 as paid in schedule state
+      const targetInstallment = this.scheduleInstallments.find(i => i.number === 3);
+      if (targetInstallment) {
+        targetInstallment.status = 'PAID';
+        targetInstallment.paidDate = `20/08/2026 à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+        targetInstallment.provider = `${selectedProvider} (+221 ${phone})`;
+        targetInstallment.receiptRef = 'REC-2026-0905-8821';
+        targetInstallment.txnId = `MOMO-SN-${Date.now().toString().slice(-6)}`;
       }
+
+      // Re-render the schedule table and metrics
+      this.renderClientSchedule();
 
       this.showSuccessModal({
         title: 'Paiement Mobile Money Validé !',
         subtitle: `Le règlement de votre échéance N° 3 a été débité et certifié via ${selectedProvider}.`,
         reference: 'TXN-MOMO-2026-0905-8821',
         amount: '235 000 FCFA',
-        payment: 'Échéance N° 3 Soldée (Principal: 208 333 F + Intérêts: 26 667 F)',
+        payment: 'Échéance N° 3 Soldée (Principal: 200 195 F + Intérêts: 21 055 F + Assurance: 13 750 F)',
         statusHtml: `<i class="fas fa-circle-check"></i> Règlement Confirmé (${selectedProvider})`,
         statusClass: 'badge-approved',
         primaryBtnText: 'Voir mon Échéancier de Remboursement',
@@ -2890,13 +3635,72 @@ const App = {
     }
   },
 
-  handleBookAppointment(event) {
-    event.preventDefault();
-    const date = document.getElementById('appt-date')?.value || '2026-08-21';
-    const time = document.getElementById('appt-time')?.value || '14:00';
-    const reason = document.getElementById('appt-reason')?.selectedOptions[0]?.text || 'Instruction Dossier';
+  openAppointmentModal() {
+    const modal = document.getElementById('client-appointment-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      // Setup channel radio interactions if any
+      const channelRadios = modal.querySelectorAll('input[name="appt_channel"]');
+      channelRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          modal.querySelectorAll('.appt-type-option').forEach(opt => {
+            opt.style.border = '1px solid var(--border-color)';
+            opt.style.background = 'var(--bg-surface)';
+          });
+          const parentLabel = radio.closest('.appt-type-option');
+          if (parentLabel) {
+            parentLabel.style.border = '2px solid var(--primary-600)';
+            parentLabel.style.background = 'var(--primary-50)';
+          }
+        });
+      });
+    }
+  },
 
-    this.showToast(`Rendez-vous confirmé le ${date} à ${time} avec Kofi Mensah (${reason}) ! Un SMS de rappel vous a été envoyé.`, 'success');
+  closeAppointmentModal() {
+    const modal = document.getElementById('client-appointment-modal');
+    if (modal) modal.style.display = 'none';
+  },
+
+  handleBookAppointmentModal(event) {
+    event.preventDefault();
+    const dateInput = document.getElementById('appt-modal-date');
+    const timeSelect = document.getElementById('appt-modal-time');
+    const reasonSelect = document.getElementById('appt-modal-reason');
+    const notesInput = document.getElementById('appt-modal-notes');
+    const channelRadio = document.querySelector('input[name="appt_channel"]:checked');
+
+    const dateVal = dateInput ? dateInput.value : '2026-08-21';
+    const timeVal = timeSelect ? timeSelect.value : '14:00';
+    const reasonText = reasonSelect ? reasonSelect.options[reasonSelect.selectedIndex].text : 'Accompagnement Financement';
+    const channelVal = channelRadio ? channelRadio.value : 'AGENCY';
+    const channelText = channelVal === 'AGENCY' ? 'en agence Médina' : (channelVal === 'PHONE' ? 'par téléphone' : 'en visioconférence');
+
+    this.closeAppointmentModal();
+
+    // Show Confirmation toast
+    this.showToast(`Rendez-vous confirmé le ${dateVal} à ${timeVal} (${channelText}) avec Adama Traore !`, 'success');
+
+    // Add confirmation message to chat thread
+    const chatContainer = document.getElementById('advisor-chat-messages');
+    if (chatContainer) {
+      const confirmationMsg = document.createElement('div');
+      confirmationMsg.style.display = 'flex';
+      confirmationMsg.style.justifyContent = 'center';
+      confirmationMsg.style.margin = '0.5rem 0';
+      confirmationMsg.innerHTML = `
+        <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--cif-emerald-700); padding: 0.6rem 1rem; border-radius: var(--radius-lg); font-size: 0.78rem; text-align: center; max-width: 85%;">
+          <i class="fas fa-calendar-check mr-1"></i> <strong>Rendez-vous programmé :</strong> ${dateVal} à ${timeVal} (${channelText}) - <em>${reasonText}</em>. SMS de rappel envoyé.
+        </div>
+      `;
+      chatContainer.appendChild(confirmationMsg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  },
+
+  handleBookAppointment(event) {
+    if (event) event.preventDefault();
+    this.handleBookAppointmentModal(event);
   },
 
   initNotifications() {
@@ -3455,7 +4259,7 @@ const App = {
       // If invoice amount exists and amount input is on step 4 or guarantee
       if (data.amount) {
         const guaranteeValInput = document.getElementById('wiz-guarantee-val');
-        if (guaranteeValInput && data.amount.includes('1 200 000')) {
+        if (guaranteeValInput && String(data.amount).includes('1 200 000')) {
           guaranteeValInput.value = 1200000;
         }
       }
@@ -3584,21 +4388,8 @@ const App = {
     const amount = amountSlider ? parseInt(amountSlider.value, 10) : 2500000;
     const duration = durationSlider ? parseInt(durationSlider.value, 10) : 12;
 
-    this.switchView('view-client-wizard');
-
-    // Pre-fill amount and duration in wizard
-    const wizAmount = document.getElementById('wiz-amount');
-    const wizDuration = document.getElementById('wiz-duration');
-    if (wizAmount) {
-      wizAmount.value = amount;
-      wizAmount.dispatchEvent(new Event('input'));
-    }
-    if (wizDuration) {
-      wizDuration.value = duration;
-      wizDuration.dispatchEvent(new Event('input'));
-    }
-
-    this.showToast(`Simulation transférée : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
+    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CIF' });
+    this.showToast(`Paramètres appliqués : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
   },
 
   // ==========================================================================

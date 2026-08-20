@@ -145,8 +145,9 @@ const CreditScoringEngine = {
 
     // S9: Zone d'Habitation & Facteur Contextuel (0-100)
     let residentialZoneScore = 75;
-    if (client.residential_zone && client.residential_zone.includes('Commerciale')) residentialZoneScore = 85;
-    else if (client.residential_zone && client.residential_zone.includes('Industrielle')) residentialZoneScore = 80;
+    const resZone = String(client.residential_zone || '');
+    if (resZone.includes('Commerciale')) residentialZoneScore = 85;
+    else if (resZone.includes('Industrielle')) residentialZoneScore = 80;
     else residentialZoneScore = 70;
 
     // 3. Calcul du Score Global Pondéré selon les règles du modèle actif

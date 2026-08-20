@@ -1,0 +1,320 @@
+<!-- ====================================================================
+     [ESPACE 1] TABLEAU DE BORD DU DEMANDEUR (CLIENT EMPRUNTEUR)
+     ==================================================================== -->
+<section id="view-role-client" class="app-view" style="display: none;">
+  <!-- Offline Mode Alert Bar (Visible when browser goes offline) -->
+  <div id="borrower-offline-alert" class="card" style="display: none; background: #fffbeb; border: 1px solid #fde68a; padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+          <i class="fas fa-shield-heart"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #92400e;">Mode Sérénité Hors-Ligne Actif</div>
+          <div style="font-size: 0.72rem; color: #b45309;">Même sans connexion internet, vous consultez vos règlements, vos documents et l'état de votre projet en toute fluidité.</div>
+        </div>
+      </div>
+      <span class="badge badge-approved" style="font-size: 0.68rem;">
+        <i class="fas fa-circle-check mr-1"></i> Informations Toujours Disponibles
+      </span>
+    </div>
+  </div>
+
+  <!-- Borrower Welcome Banner -->
+  <div class="borrower-welcome-banner">
+    <div>
+      <span class="badge badge-client" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); margin-bottom: 0.5rem;">
+        <i class="fas fa-star mr-1"></i> Mon Espace Financement & Projet
+      </span>
+      <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem; color: white;">
+        Bienvenue, <span id="borrower-banner-name">Faratigi Ndiaye</span>
+      </h2>
+      <p style="color: #cbd5e1; font-size: 0.85rem; max-width: 600px;">
+        N° Membre : <strong id="borrower-member-num">SN-DKR-008821</strong> • Agence CIF Médina Dakar (Sénégal) • Activité : Commerce & Textile
+      </p>
+    </div>
+    <div>
+      <button class="btn btn-success btn-lg" onclick="App.openNewLoanModal()">
+        <i class="fas fa-rocket mr-1"></i> Faire une demande de prêt
+      </button>
+    </div>
+  </div>
+
+  <!-- Borrower Financial Metrics (3 Cards) -->
+  <div class="borrower-metrics-grid">
+    <div class="borrower-metric-box">
+      <div class="borrower-metric-icon" style="background: var(--cif-primary-50); color: var(--cif-primary-600);">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </div>
+      <div>
+        <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Financement en Cours</div>
+        <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code);" id="borrower-active-amount">2 500 000 FCFA</div>
+        <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">12 mensualités • Remboursement souple & transparent</div>
+      </div>
+    </div>
+
+    <div class="borrower-metric-box">
+      <div class="borrower-metric-icon" style="background: var(--cif-gold-50); color: var(--cif-gold-600);">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div>
+        <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Prochain Règlement</div>
+        <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-gold-700);">235 000 FCFA</div>
+        <div style="font-size: 0.72rem; color: var(--text-subtle);">À régler le 05/09/2026 • <span style="color: #10b981; font-weight: 600;">0 retard, bravo !</span></div>
+      </div>
+    </div>
+
+    <div class="borrower-metric-box">
+      <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600);">
+        <i class="fas fa-piggy-bank"></i>
+      </div>
+      <div>
+        <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Épargne & Sécurité CIF</div>
+        <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-emerald-700);">1 450 000 FCFA</div>
+        <div style="font-size: 0.72rem; color: var(--cif-emerald-500);"><i class="fas fa-shield-heart mr-1"></i> Votre matelas de sécurité pour vos projets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Credit Request Tracking Card -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-route text-primary"></i> Le Parcours de votre Projet #<span id="borrower-active-ref">REQ-2026-0891</span></h3>
+        <p class="card-subtitle" id="borrower-active-purpose">Achat de stock tissus wax pour la fête de Tabaski</p>
+      </div>
+      <div id="borrower-active-status">
+        <span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Étude Attentive en Cours</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="loan-progress-stepper">
+        <div class="loan-step-node completed">
+          <div class="dot"><i class="fas fa-check"></i></div>
+          <div class="label">1. Projet Déposé</div>
+          <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
+        </div>
+        <div class="loan-step-node completed">
+          <div class="dot"><i class="fas fa-check"></i></div>
+          <div class="label">2. Documents Validés</div>
+          <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
+        </div>
+        <div class="loan-step-node completed">
+          <div class="dot"><i class="fas fa-check"></i></div>
+          <div class="label">3. Confort Financier Vérifié</div>
+          <div style="font-size: 0.65rem; color: var(--text-subtle);">12/08/2026</div>
+        </div>
+        <div class="loan-step-node active">
+          <div class="dot"><i class="fas fa-spinner fa-spin"></i></div>
+          <div class="label">4. Relecture Personnalisée</div>
+          <div style="font-size: 0.65rem; color: var(--cif-primary-600); font-weight: 700;">En Cours</div>
+        </div>
+        <div class="loan-step-node">
+          <div class="dot">5</div>
+          <div class="label">5. Accord du Comité</div>
+          <div style="font-size: 0.65rem; color: var(--text-subtle);">Très prochainement</div>
+        </div>
+        <div class="loan-step-node">
+          <div class="dot">6</div>
+          <div class="label">6. Versement de vos Fonds</div>
+          <div style="font-size: 0.65rem; color: var(--text-subtle);">Directement sur votre compte</div>
+        </div>
+      </div>
+
+      <div class="anomaly-item info" style="margin-top: 1.25rem;">
+        <i class="fas fa-comment-sparkles anomaly-icon" style="color: #0ea5e9;"></i>
+        <div class="anomaly-content">
+          <h5 style="color: #0369a1; font-weight: 700;">Le mot encourageant de votre agence CIF :</h5>
+          <p style="color: #0c4a6e; font-size: 0.84rem; line-height: 1.5;">
+            Excellente nouvelle ! Tous vos justificatifs ont été validés avec succès. Votre projet avance très bien et est programmé pour validation finale afin de déclencher rapidement la mise à disposition de vos fonds.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPACT LOAN ESTIMATION COMPONENT (SIMULATION RAPIDE & ÉCHÉANCE MENSUELLE) -->
+  <div class="compact-estimator-card">
+    <div class="compact-estimator-header">
+      <div class="compact-estimator-title">
+        <div class="compact-estimator-icon">
+          <i class="fas fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--text-primary);">
+            Simulez votre Projet en 1 Clin d'Œil
+          </h3>
+          <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">
+            Ajustez le montant et la durée pour découvrir instantanément vos mensualités claires, transparentes et adaptées à votre activité.
+          </p>
+        </div>
+      </div>
+      <span class="badge badge-approved" style="font-size: 0.72rem;">
+        <i class="fas fa-tag mr-1"></i> Taux Transparent & Sans Frais Cachés
+      </span>
+    </div>
+
+    <div class="compact-estimator-grid">
+      <!-- Sliders Column -->
+      <div>
+        <!-- Amount Slider -->
+        <div class="compact-slider-group">
+          <div class="compact-slider-header">
+            <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant dont vous avez besoin :</span>
+            <span class="compact-slider-val" id="compact-est-amount-val">2 500 000 FCFA</span>
+          </div>
+          <input type="range" id="compact-est-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+          <div class="compact-presets-row">
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500 000 F</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1 000 000 F</button>
+            <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2 500 000 F</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5 000 000 F</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8 000 000 F</button>
+          </div>
+        </div>
+
+        <!-- Duration Slider -->
+        <div class="compact-slider-group">
+          <div class="compact-slider-header">
+            <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée idéale pour rembourser :</span>
+            <span class="compact-slider-val" id="compact-est-duration-val" style="color: var(--primary-700);">12 Mois</span>
+          </div>
+          <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
+          <div class="compact-presets-row">
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(6)">6 mois</button>
+            <button type="button" class="compact-preset-chip active" id="chip-duration-12" onclick="App.setCompactPresetDuration(12)">12 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(18)">18 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(24)">24 mois</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(36)">36 mois</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Calculation Box -->
+      <div class="compact-output-box">
+        <div class="compact-monthly-highlight">
+          <div class="compact-monthly-label">Votre Mensualité Tout Compris</div>
+          <div class="compact-monthly-amount" id="compact-est-monthly-val">235 000 FCFA</div>
+          <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">
+            <i class="fas fa-circle-check mr-1"></i> Zéro surprise : assurance & accompagnement inclus
+          </div>
+        </div>
+
+        <div class="compact-stats-row">
+          <div class="compact-stat-item">
+            <span class="compact-stat-label">Total tout inclus :</span>
+            <span class="compact-stat-val" id="compact-est-total-val">2 820 000 FCFA</span>
+          </div>
+          <div class="compact-stat-item">
+            <span class="compact-stat-label">Coût clair & maîtrisé :</span>
+            <span class="compact-stat-val" id="compact-est-cost-val" style="color: var(--cif-gold-700);">320 000 FCFA</span>
+          </div>
+        </div>
+
+        <div class="compact-actions-row">
+          <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Démarrer votre demande avec ces conditions personnalisées">
+            <i class="fas fa-paper-plane mr-1"></i> Concrétiser ce Prêt
+          </button>
+          <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Affiner votre budget et votre confort financier">
+            <i class="fas fa-sliders mr-1"></i> Personnaliser
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 Columns: Repayment Schedule Summary & Assigned Advisor Summary -->
+  <div class="grid-2">
+    <!-- Repayment Schedule Table Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-calendar-check text-primary"></i> Mon Calendrier de Remboursement</h3>
+          <p class="card-subtitle">Suivez vos versements en toute clarté</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-schedule')">
+          <i class="fas fa-arrow-right"></i> Voir Tout l'Échéancier
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Règlement</th>
+              <th>Date prévue</th>
+              <th>Montant</th>
+              <th>État</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mensualité N° 1</td>
+              <td>05/07/2026</td>
+              <td class="amount-cell">235 000 FCFA</td>
+              <td><span class="badge badge-approved"><i class="fas fa-check"></i> Réglé</span></td>
+            </tr>
+            <tr>
+              <td>Mensualité N° 2</td>
+              <td>05/08/2026</td>
+              <td class="amount-cell">235 000 FCFA</td>
+              <td><span class="badge badge-approved"><i class="fas fa-check"></i> Réglé</span></td>
+            </tr>
+            <tr style="background: var(--cif-gold-50);">
+              <td><strong>Mensualité N° 3</strong></td>
+              <td><strong>05/09/2026</strong></td>
+              <td class="amount-cell" style="color: var(--cif-gold-700);"><strong>235 000 FCFA</strong></td>
+              <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochain versement</span></td>
+            </tr>
+            <tr>
+              <td>Mensualité N° 4</td>
+              <td>05/10/2026</td>
+              <td class="amount-cell">235 000 FCFA</td>
+              <td><span class="badge badge-submitted">Planifié</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Assigned Credit Agent Card Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-user-tie text-emerald"></i> Votre Conseiller Dédié</h3>
+          <p class="card-subtitle">Un accompagnement humain à chaque étape</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-advisor')">
+          <i class="fas fa-comment-dots"></i> Échanger
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="agent-contact-card" style="margin-bottom: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <img src="images/profil/profil01-03.jpg" alt="Agent" class="user-avatar" style="width: 50px; height: 50px;">
+            <div>
+              <h5 style="font-size: 1rem; margin-bottom: 2px;">Adama Traore</h5>
+              <div style="font-size: 0.78rem; color: var(--text-subtle);">Votre Expert Accompagnement Microfinance</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">Agence CIF Médina Dakar</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.82rem; line-height: 1.6; color: var(--text-muted-dark); margin-bottom: 1.25rem;">
+          <div><i class="fas fa-phone mr-1 text-primary"></i> <strong>Ligne directe :</strong> +221 33 821 44 00</div>
+          <div><i class="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> adama.traore@cif-ao.org</div>
+          <div><i class="fas fa-clock mr-1 text-primary"></i> <strong>Horaires d'agence :</strong> Lun - Ven : 08h00 - 17h00</div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="App.switchView('view-client-advisor')">
+            <i class="fas fa-comment-dots"></i> Écrire à mon conseiller
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.openAppointmentModal()">
+            <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

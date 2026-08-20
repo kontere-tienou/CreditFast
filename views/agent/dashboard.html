@@ -1,0 +1,360 @@
+<!-- ====================================================================
+     [ESPACE 2] TABLEAU DE BORD DE L'AGENT DE CRÉDIT (TERRAIN & COLLECTE)
+     ==================================================================== -->
+<section id="view-role-agent" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Espace Agent de Crédit • Portefeuille & Instruction</h1>
+      <div class="page-breadcrumb">
+        <span>Opérations Guichet</span> <i class="fas fa-chevron-right"></i>
+        <span>Agence Assigamé (Lomé, Togo)</span>
+      </div>
+    </div>
+    
+    <!-- Activity Trend Sparkline Widget (7 Days Submissions) -->
+    <div class="header-sparkline-widget" id="agent-activity-widget" title="Rythme de soumission des demandes sur les 7 derniers jours">
+      <div class="sparkline-meta">
+        <div class="sparkline-title">
+          <i class="fas fa-chart-line text-primary"></i>
+          <span>Tendance d'Activité</span>
+        </div>
+        <div class="sparkline-stat">
+          <span class="sparkline-val">23</span>
+          <span class="sparkline-sub">dossiers / 7j</span>
+          <span class="sparkline-trend"><i class="fas fa-arrow-trend-up"></i> +18%</span>
+        </div>
+      </div>
+      <div class="sparkline-canvas-container">
+        <canvas id="agent-activity-sparkline"></canvas>
+      </div>
+    </div>
+
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-primary" onclick="App.openNewLoanModal()" title="Enregistrer une nouvelle demande de crédit pour un emprunteur">
+        <i class="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Agent Cards -->
+  <div class="grid-4">
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-role-agent')" title="Voir tous les dossiers de financement">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">42</div>
+        <div class="stat-label">Dossiers au Guichet</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8 cette semaine</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-inspections')" title="Accéder aux inspections garanties terrain">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-clipboard-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Pré-inspections Garanties</div>
+        <div class="stat-trend down"><i class="fas fa-motorcycle"></i> À visiter sur le terrain</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-complements')" title="Accéder aux pièces manquantes et relances">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Pièces Manquantes</div>
+        <div class="stat-trend down"><i class="fas fa-phone"></i> Relances nécessaires</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-clients')" title="Consulter le portefeuille emprunteurs">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">88%</div>
+        <div class="stat-label">Portefeuille Sociétaires</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> 1 248 membres actifs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agent Loan Requests Table (Essential Columns & Responsive Filter Tabs) -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div>
+        <h3 class="card-title"><i class="fas fa-file-invoice-dollar text-primary mr-1"></i> Registre des Demandes de Financement</h3>
+        <p class="card-subtitle">Instruction Guichet & Terrain • Cliquez sur une ligne pour ouvrir la fiche détaillée du dossier</p>
+      </div>
+      <!-- Filter Tabs -->
+      <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button id="filter-agent-all" class="btn btn-secondary btn-sm active" onclick="App.filterAgentPipeline('ALL', this)">
+          Toutes (<span id="agent-filter-count-all">0</span>)
+        </button>
+        <button id="filter-agent-submitted" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('SUBMITTED', this)">
+          <i class="fas fa-inbox text-primary"></i> Soumises (<span id="agent-filter-count-submitted">0</span>)
+        </button>
+        <button id="filter-agent-review" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('REVIEW', this)">
+          <i class="fas fa-hourglass-half text-warning"></i> En Vérification (<span id="agent-filter-count-review">0</span>)
+        </button>
+        <button id="filter-agent-approved" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('APPROVED', this)">
+          <i class="fas fa-circle-check text-success"></i> Comité / Accordées (<span id="agent-filter-count-approved">0</span>)
+        </button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier" style="min-width: 140px;">
+              <div class="th-content">
+                <span>N° Dossier</span>
+                <i class="fas fa-sort sort-icon" id="sort-icon-request_number"></i>
+              </div>
+            </th>
+            <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur" style="min-width: 170px;">
+              <div class="th-content">
+                <span>Client Emprunteur</span>
+                <i class="fas fa-sort sort-icon" id="sort-icon-client_name"></i>
+              </div>
+            </th>
+            <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant" style="min-width: 140px;">
+              <div class="th-content">
+                <span>Montant Demandé</span>
+                <i class="fas fa-sort sort-icon" id="sort-icon-requested_amount"></i>
+              </div>
+            </th>
+            <th class="sortable-th schedule-col-hide-mobile" onclick="App.sortAgentTable('purpose')" title="Cliquer pour trier par Objet du prêt" style="min-width: 180px;">
+              <div class="th-content">
+                <span>Objet du Prêt</span>
+                <i class="fas fa-sort sort-icon" id="sort-icon-purpose"></i>
+              </div>
+            </th>
+            <th class="schedule-col-hide-tablet" style="min-width: 120px;">
+              <span>Capacité</span>
+            </th>
+            <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut" style="min-width: 130px;">
+              <div class="th-content">
+                <span>Statut</span>
+                <i class="fas fa-sort sort-icon" id="sort-icon-status"></i>
+              </div>
+            </th>
+            <th style="min-width: 140px; text-align: right;">Action / Volet</th>
+          </tr>
+        </thead>
+        <tbody id="agent-pipeline-table-body">
+          <!-- Injected Dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SIDE DRAWER: DÉTAIL COMPLET DU DOSSIER AGENT
+     ==================================================================== -->
+<div id="agent-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAgentDrawer()">
+  <div class="schedule-drawer" onclick="event.stopPropagation()">
+    <!-- Drawer Header -->
+    <div class="schedule-drawer-header">
+      <div class="schedule-drawer-title-box">
+        <div class="schedule-drawer-icon">
+          <i class="fas fa-folder-open"></i>
+        </div>
+        <div>
+          <h3 id="agent-drawer-title" style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Dossier N° REQ-2026-0891</h3>
+          <p id="agent-drawer-date" style="font-size: 0.74rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Déposé le 11/08/2026 • Agence Assigamé</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeAgentDrawer()" title="Fermer le volet">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="schedule-drawer-body">
+      <!-- 1. Hero Amount & Status Summary Banner -->
+      <div class="drawer-hero-banner">
+        <div class="drawer-hero-label">Montant Net Demandé</div>
+        <div id="agent-drawer-hero-amount" class="drawer-hero-val">2 500 000 FCFA</div>
+        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <span id="agent-drawer-hero-status-container">
+            <span id="agent-drawer-hero-status" class="badge badge-submitted">En Traitement</span>
+          </span>
+          <span id="agent-drawer-hero-mode" class="badge badge-submitted" style="font-size: 0.7rem;"><i class="fas fa-history"></i> Standard</span>
+          <span id="agent-drawer-hero-score-badge" class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-microchip"></i> Score IA : 84/100</span>
+        </div>
+      </div>
+
+      <!-- 2. Borrower & Contact Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-user-circle text-primary"></i> Profil Emprunteur & Contact
+          </h4>
+          <span id="agent-drawer-client-number" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.68rem;">SN-DKR-008821</span>
+        </div>
+
+        <div style="display: flex; gap: 0.85rem; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border-color);">
+          <img id="agent-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
+          <div style="flex: 1; min-width: 0;">
+            <div id="agent-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Fatou Ndiaye</div>
+            <div id="agent-drawer-client-occupation" style="font-size: 0.76rem; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Commerçante / Grossiste Textiles</div>
+          </div>
+        </div>
+
+        <div class="drawer-grid-2">
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-location-dot text-primary mr-1"></i> Localisation</span>
+            <span id="agent-drawer-client-location" class="drawer-kv-value">Dakar, Sénégal</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-phone text-emerald mr-1"></i> Téléphone</span>
+            <span id="agent-drawer-client-phone" class="drawer-kv-value" style="font-family: var(--font-family-code);">+221 77 450 88 21</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-envelope text-info mr-1"></i> Email</span>
+            <span id="agent-drawer-client-email" class="drawer-kv-value" style="font-size: 0.76rem;">fatou.ndiaye@gmail.com</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-id-card text-gold mr-1"></i> Conformité KYC</span>
+            <span id="agent-drawer-client-kyc" class="badge badge-approved" style="font-size: 0.68rem; align-self: flex-start;"><i class="fas fa-check-circle"></i> Conforme</span>
+          </div>
+        </div>
+
+        <!-- Quick Contact Action Buttons -->
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color-light, #f1f5f9);">
+          <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-sms" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+            <i class="fas fa-comment-sms text-primary"></i> Relance SMS
+          </button>
+          <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-call" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+            <i class="fas fa-phone text-emerald"></i> Appeler
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Financial Capacity & Repayment Schedule Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-coins text-gold"></i> Paramètres Prêt & Capacité
+          </h4>
+          <span id="agent-drawer-capacity-badge">
+            <span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>
+          </span>
+        </div>
+
+        <div class="drawer-grid-2" style="margin-bottom: 0.75rem;">
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Durée Accordée</div>
+            <div id="agent-drawer-duration" style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">18 Mois</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Mensualité Estimée</div>
+            <div id="agent-drawer-monthly-payment" style="font-size: 0.95rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Revenus Mensuels</div>
+            <div id="agent-drawer-income" style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-family-code);">1 450 000 FCFA</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Reste à Vivre Net</div>
+            <div id="agent-drawer-disposable" style="font-size: 0.9rem; font-weight: 700; color: var(--cif-emerald-700); font-family: var(--font-family-code);">780 000 FCFA</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+          <span>Charges mensuelles déclarées :</span>
+          <strong id="agent-drawer-expenses" style="color: var(--text-primary); font-family: var(--font-family-code);">670 000 FCFA</strong>
+        </div>
+      </div>
+
+      <!-- 4. Financing Purpose & Collaterals Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-shield-halved text-emerald"></i> Objet du Prêt & Garanties
+          </h4>
+          <span id="agent-drawer-guarantee-status" class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-check"></i> Inspecté sur terrain</span>
+        </div>
+
+        <div style="background: var(--bg-surface-secondary); padding: 0.75rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+          <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;">Objet déclaré</div>
+          <p id="agent-drawer-purpose" style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin: 0; line-height: 1.45;">
+            Acquisition broyeur industriel et ensacheuse moderne
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.78rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Type de garantie :</span>
+            <strong id="agent-drawer-guarantee-type" style="color: var(--text-primary);">Stock Marchandises & Matériel</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Description :</span>
+            <span id="agent-drawer-guarantee-desc" style="font-weight: 500; text-align: right; max-width: 60%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Broyeur 15kW et ensacheuse</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+            <span>Valeur déclarée : <strong id="agent-drawer-guarantee-declared" style="color: var(--text-primary); font-family: var(--font-family-code);">6 500 000 FCFA</strong></span>
+            <span>Expertise terrain : <strong id="agent-drawer-guarantee-verified" style="color: var(--cif-emerald-700); font-family: var(--font-family-code);">5 800 000 FCFA</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Attached Documents (GED) & OCR Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-file-contract text-primary"></i> Pièces Justificatives (GED)
+          </h4>
+          <span id="agent-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">3 documents</span>
+        </div>
+
+        <div id="agent-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 6. Scoring V2 & Recommendation Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-chart-line text-purple"></i> Scoring V2 & Décision IA
+          </h4>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span id="agent-drawer-score-val" style="font-size: 1.25rem; font-weight: 800; color: #059669; font-family: var(--font-family-code);">84</span>
+            <span style="font-size: 0.75rem; color: var(--text-subtle);">/100</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; margin-bottom: 0.65rem;">
+          <span id="agent-drawer-score-label" class="badge badge-approved" style="font-size: 0.7rem;">Risque Faible</span>
+          <span style="color: var(--text-muted);">Indice de confiance : <strong id="agent-drawer-confidence-val" style="color: var(--cif-emerald-600);">94%</strong></span>
+        </div>
+
+        <div style="height: 6px; background: var(--bg-surface-secondary); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color);">
+          <div id="agent-drawer-score-progress" style="width: 84%; height: 100%; background: linear-gradient(90deg, #10b981, #059669); border-radius: var(--radius-full);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="schedule-drawer-footer">
+      <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer()">
+        Fermer
+      </button>
+      <div id="agent-drawer-footer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer(); App.switchView('view-agent-inspections');">
+          <i class="fas fa-motorcycle mr-1"></i> Inspections Terrain
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="App.closeAgentDrawer(); AppInteractions.openDossierModal(1);">
+          <i class="fas fa-magnifying-glass-chart mr-1"></i> Analyser 360°
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

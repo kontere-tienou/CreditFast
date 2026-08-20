@@ -1,0 +1,262 @@
+<!-- ====================================================================
+     [DEMANDEUR] MON ÉCHÉANCIER RÉEL & PAIEMENT MOBILE MONEY
+     ==================================================================== -->
+<section id="view-client-schedule" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+    <div>
+      <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
+      <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CIF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
+    </div>
+    <div class="page-actions" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+      <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
+        <i class="fas fa-file-pdf text-danger"></i> <span class="hide-xs">Télécharger le</span> Relevé PDF
+      </button>
+      <button class="btn btn-success" onclick="App.openClientPaymentModal()">
+        <i class="fas fa-wallet"></i> Payer une Échéance
+      </button>
+    </div>
+  </div>
+
+  <!-- Loan Progress & Summary Metrics -->
+  <div class="schedule-grid-responsive">
+    <!-- Metric 1: Capital Amorti vs Restant -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Progression du Prêt</div>
+          <div id="schedule-metric-progress-text" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
+        </div>
+        <span id="schedule-metric-progress-badge" class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
+      </div>
+      <!-- Progress Bar -->
+      <div style="width: 100%; height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0.5rem;">
+        <div id="schedule-metric-progress-bar" style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-subtle);">
+        <span>Remboursé : <strong id="schedule-metric-paid">470 000 FCFA</strong></span>
+        <span>Restant : <strong id="schedule-metric-remaining">2 030 000 FCFA</strong></span>
+      </div>
+    </div>
+
+    <!-- Metric 2: Prochaine Échéance -->
+    <div class="card" style="padding: 1.25rem; border-left: 4px solid var(--cif-gold-500);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance N° 3</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700); font-family: var(--font-family-code);">235 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="far fa-calendar text-gold mr-1"></i> Date limite : <strong>05 Septembre 2026</strong>
+          </div>
+        </div>
+        <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+          <i class="fas fa-credit-card"></i> Régler
+        </button>
+      </div>
+    </div>
+
+    <!-- Metric 3: Épargne Nantie / Caution Solidaire -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Épargne Nantie Sécurisée</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="fas fa-lock text-emerald mr-1"></i> Garantie bloquée à 20% du prêt
+          </div>
+        </div>
+        <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md);">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Money Quick Pay Strip -->
+  <div class="card schedule-quickpay-card">
+    <div class="card-body schedule-quickpay-body">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 44px; height: 44px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">
+          <i class="fas fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Paiement instantané sans déplacement • Quittance numérique et SMS immédiat</p>
+        </div>
+      </div>
+      <div class="schedule-momo-buttons">
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: var(--bg-surface); border-color: #ff7900;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: var(--bg-surface); border-color: #1dc5d8;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: var(--bg-surface); border-color: #005ba4;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: var(--bg-surface); border-color: #ffcc00;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed 12-Month Schedule Table (Essential Columns Focus) -->
+  <div class="card">
+    <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div>
+        <h3 class="card-title"><i class="fas fa-list-ol text-primary mr-1"></i> Échéancier de Remboursement (12 Mois)</h3>
+        <p class="card-subtitle">Montant : 2 500 000 FCFA • Taux effectif : 12.0% annuel dégressif • Cliquez sur une ligne pour voir le détail complet</p>
+      </div>
+      <!-- Filter Tabs -->
+      <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button id="filter-sched-all" class="btn btn-secondary btn-sm active" onclick="AppInteractions.filterScheduleTable('ALL', this)">Toutes (12)</button>
+        <button id="filter-sched-paid" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('PAID', this)"><i class="fas fa-circle-check text-success"></i> Payées (2)</button>
+        <button id="filter-sched-due" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('DUE', this)"><i class="fas fa-clock text-warning"></i> Exigibles (1)</button>
+        <button id="filter-sched-upcoming" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('UPCOMING', this)">À venir (9)</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th style="min-width: 130px;">Échéance</th>
+            <th style="min-width: 110px;">Date Limite</th>
+            <th style="min-width: 120px;">Mensualité</th>
+            <th class="schedule-col-hide-mobile" style="min-width: 110px;">Amortissement</th>
+            <th class="schedule-col-hide-tablet" style="min-width: 120px;">Capital Restant</th>
+            <th style="min-width: 130px;">Statut</th>
+            <th style="min-width: 130px; text-align: right;">Action / Volet</th>
+          </tr>
+        </thead>
+        <tbody id="client-schedule-table-body">
+          <!-- Dynamically populated via App.renderClientSchedule() -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SIDE DRAWER: DÉTAIL COMPLET DE L'ÉCHÉANCE
+     ==================================================================== -->
+<div id="schedule-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeScheduleDrawer()">
+  <div class="schedule-drawer" onclick="event.stopPropagation()">
+    <!-- Drawer Header -->
+    <div class="schedule-drawer-header">
+      <div class="schedule-drawer-title-box">
+        <div class="schedule-drawer-icon">
+          <i class="fas fa-receipt"></i>
+        </div>
+        <div>
+          <h3 id="drawer-installment-title" style="font-size: 1.05rem; font-weight: 700; margin: 0;">Échéance N° 3 sur 12</h3>
+          <p id="drawer-installment-date" style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Exigibilité : 05 Septembre 2026</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeScheduleDrawer()" title="Fermer le volet">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="schedule-drawer-body">
+      <!-- Hero Amount & Status Card -->
+      <div class="schedule-drawer-hero">
+        <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">
+          Montant Net de la Mensualité
+        </div>
+        <div id="drawer-hero-amount" style="font-size: 1.75rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">
+          235 000 FCFA
+        </div>
+        <div id="drawer-hero-status" style="margin-top: 8px;">
+          <span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>
+        </div>
+      </div>
+
+      <!-- Financial Breakdown Card -->
+      <div class="card" style="padding: 1.25rem;">
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 1rem;">
+          <i class="fas fa-chart-pie text-primary mr-1"></i> Décomposition Financière
+        </h4>
+        
+        <!-- Segmented Visual Bar -->
+        <div style="height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; display: flex; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+          <div id="drawer-bar-principal" style="width: 85%; background: var(--cif-primary-600);" title="Capital principal"></div>
+          <div id="drawer-bar-interest" style="width: 9%; background: var(--cif-gold-500);" title="Intérêts CIF"></div>
+          <div id="drawer-bar-insurance" style="width: 6%; background: var(--cif-emerald-500);" title="Assurance prêt"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.82rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-primary-600);"></span>
+              <span>Capital Principal Amorti</span>
+            </span>
+            <strong id="drawer-val-principal" style="font-family: var(--font-family-code);">200 195 FCFA</strong>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-gold-500);"></span>
+              <span>Intérêts Dégressifs (12% l'an)</span>
+            </span>
+            <strong id="drawer-val-interest" style="font-family: var(--font-family-code);">21 055 FCFA</strong>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-emerald-500);"></span>
+              <span>Prime d'Assurance Emprunteur</span>
+            </span>
+            <strong id="drawer-val-insurance" style="font-family: var(--font-family-code);">13 750 FCFA</strong>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
+            <span style="color: var(--text-muted); font-weight: 600;">Capital Restant Dû après échéance :</span>
+            <strong id="drawer-val-remaining" style="color: var(--primary-800); font-family: var(--font-family-code);">1 905 343 FCFA</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settlement Tracing / Receipt Info -->
+      <div class="card" style="padding: 1.25rem;">
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.85rem;">
+          <i class="fas fa-shield-check text-emerald mr-1"></i> Traçabilité & Quittance
+        </h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Contrat de Prêt :</span>
+            <span style="font-weight: 600;">CIF-DKR-8821 (REQ-2025-0412)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Mode de règlement :</span>
+            <span id="drawer-val-provider" style="font-weight: 600;">Mobile Money / Agence CIF</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Règlement effectif :</span>
+            <span id="drawer-val-paydate" style="font-weight: 600;">Non réglé (Échéance ouverte)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Référence Quittance :</span>
+            <span id="drawer-val-receipt" style="font-weight: 600; font-family: var(--font-family-code);">Générée après paiement</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Certification UEMOA :</span>
+            <span style="color: var(--cif-emerald-600); font-weight: 600;"><i class="fas fa-check-circle"></i> Sceau Digital DigiCoop</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="schedule-drawer-footer">
+      <button class="btn btn-secondary" onclick="App.closeScheduleDrawer()">
+        Fermer
+      </button>
+      <div id="drawer-footer-actions" style="display: flex; gap: 0.5rem;">
+        <!-- Dynamic based on payment status -->
+      </div>
+    </div>
+  </div>
+</div>

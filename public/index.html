@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crédit Fast - Espaces Métiers Dédiés & Scoring V2 | CIF DigiCoop-WA+</title>
+  <title>CreditFast - Espaces Métiers Dédiés & Scoring | CIF DigiCoop-WA+</title>
   <meta name="description" content="Plateforme bancaire multi-rôles : Espaces dédiés Demandeur, Agent de Crédit, Analyste Risque V2, Comité de Crédit et Conformité LBC/FT/FP pour la CIF UEMOA.">
   
   <!-- FontAwesome 6 Icons CDN -->
@@ -24,79 +24,197 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dark.css">
   
+  <!-- Tailwind CSS CDN & Extended Theme Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              DEFAULT: '#4f46e5'
+            },
+            cif: {
+              gold: '#f59e0b',
+              emerald: '#10b981',
+              navy: '#1e293b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  
 </head>
 <body>
 
 <!-- ==========================================================================
-     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVANCÉE V2)
+     0. AUTHENTICATION / LOGIN VIEW (PAGE DE CONNEXION AVANCÉE V2 - FULL HERO IMAGE)
      ========================================================================== -->
 <div id="auth-view">
   <div class="auth-container">
-    <!-- Left Hero Showcase Pane -->
-    <div class="auth-hero-pane">
-      <div class="auth-brand">
-        <div class="auth-brand-logo">
-          <i class="fas fa-hand-holding-dollar"></i>
-        </div>
-        <div>
-          <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0; color: white;">CRÉDIT FAST <span style="font-size: 0.75rem; background: var(--cif-gold-500, #f59e0b); color: #78350f; padding: 2px 6px; border-radius: 4px; vertical-align: middle; font-weight: 800;">V2</span></h3>
-          <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">PROJET DIGICOOP-WA+ • CIF</span>
+    <!-- Left Hero Showcase Pane (Full-Bleed Cover Image, No Enclosed Box) -->
+    <div class="auth-hero-pane" id="auth-hero-pane" onmouseenter="App.pauseAuthSlider()" onmouseleave="App.resumeAuthSlider()">
+      
+      <!-- 100% Full-Bleed Background Slider Track -->
+      <div class="auth-hero-slider full-bleed" id="auth-hero-slider">
+        <div class="auth-slider-track">
+          <!-- SLIDE 1 : Financement d'Activité -->
+          <div class="auth-slide active" data-slide="0">
+            <img src="images/slide4.png" alt="Financement TPE & Particuliers" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide4.png');"></div>
+            <div class="auth-slide-overlay"></div>
+            
+            <!-- Floating Highlights on Slide 1 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-circle-check text-success"></i>
+              <span>Accord de principe <strong>immédiat</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-coins" style="color: #fbbf24;"></i>
+              <span>De <strong>100 000</strong> à <strong>5 000 000 FCFA</strong></span>
+            </div>
+          </div>
+
+          <!-- SLIDE 2 : Rapidité & Déblocage < 48h -->
+          <div class="auth-slide" data-slide="1">
+            <img src="images/slide5.png" alt="Déblocage rapide < 48h" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide5.png');"></div>
+            <div class="auth-slide-overlay"></div>
+
+            <!-- Floating Highlights on Slide 2 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-bolt" style="color: #fbbf24;"></i>
+              <span>Fonds disponibles en <strong>&lt; 48 heures</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-bell text-info"></i>
+              <span>Notifications <strong>SMS & WhatsApp</strong></span>
+            </div>
+          </div>
+
+          <!-- SLIDE 3 : Paiement Mobile Money & Quittances -->
+          <div class="auth-slide" data-slide="2">
+            <img src="images/slide3.jpg" alt="Paiement Mobile Money flexible" class="auth-slide-img" />
+            <div class="auth-slide-bg" style="background-image: url('images/slide3.jpg');"></div>
+            <div class="auth-slide-overlay"></div>
+
+            <!-- Floating Highlights on Slide 3 -->
+            <div class="auth-floating-badge float-top-right">
+              <i class="fas fa-mobile-screen-button text-success"></i>
+              <span><strong>Wave • Orange • Moov • Free</strong></span>
+            </div>
+            <div class="auth-floating-badge float-mid-left">
+              <i class="fas fa-calendar-check" style="color: #c084fc;"></i>
+              <span><strong>0 déplacement</strong> en agence</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="auth-hero-content">
-        <div class="auth-hero-badge">
-          <i class="fas fa-shield-halved"></i> Système Prudentiel Bancaire UEMOA / BCEAO
-        </div>
-        <h1 class="auth-hero-title">Plateforme d'Octroi, Scoring & Conformité</h1>
-        <p class="auth-hero-desc">
-          Une infrastructure unifiée pour les 4 acteurs clés : <strong>Demandeur</strong> (suivi & échéancier), <strong>Agent de Crédit</strong> (collecte & terrain), <strong>Analyste Risque</strong> (dossier 360° & Cold Start) et <strong>Comité & Conformité</strong> (décision collégiale & filtrage PPE).
-        </p>
+      <!-- Overlaid Foreground Content (Spans Entire Full-Image Left Panel) -->
+      <div class="auth-hero-foreground">
+        
+        <!-- Top: Logo & Platform Identity -->
+        <div class="auth-hero-top">
+          <div class="auth-brand">
+            <div class="auth-brand-logo">
+              <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 1.4rem; font-weight: 800; margin: 0; color: white; letter-spacing: -0.02em;">CreditFast</h3>
+              <span style="font-size: 0.74rem; color: #fbbf24; font-weight: 700; letter-spacing: 0.5px;">Scoring & octroi de microcrédit</span>
+            </div>
+          </div>
 
-        <div class="auth-pillars-grid">
-          <div class="auth-pillar-card">
-            <i class="fas fa-user-tag" style="color: #34d399;"></i>
-            <h5>Espace Demandeur</h5>
-            <p>Suivi de crédit, échéancier réel, demande en 6 étapes & contact conseiller.</p>
-          </div>
-          <div class="auth-pillar-card">
-            <i class="fas fa-user-tie" style="color: #38bdf8;"></i>
-            <h5>Agent de Crédit</h5>
-            <p>Guichet d'enregistrement, relances de pièces et inspections terrain.</p>
-          </div>
-          <div class="auth-pillar-card">
-            <i class="fas fa-chart-pie" style="color: #a5b4fc;"></i>
-            <h5>Analyste Risque V2</h5>
-            <p>Rapprochement OCR, scoring explicable et simulateur Cold Start.</p>
-          </div>
-          <div class="auth-pillar-card">
-            <i class="fas fa-scale-balanced" style="color: #f0abfc;"></i>
-            <h5>Comité & Conformité</h5>
-            <p>Délibérations, signatures de PV et filtrage des sanctions UEMOA.</p>
+          <div class="auth-hero-badge">
+            <i class="fas fa-shield-halved"></i> Plateforme Agréée • Zone UEMOA
           </div>
         </div>
-      </div>
 
-      <div class="auth-countries-strip">
-        <i class="fas fa-earth-africa"></i>
-        <span>Réseau CIF Régional : <span class="fi fi-bf"></span> Burkina Faso • <span class="fi fi-tg"></span> Togo • <span class="fi fi-bj"></span> Bénin • <span class="fi fi-sn"></span> Sénégal • <span class="fi fi-ml"></span> Mali</span>
+        <!-- Center: Dynamic Slider Text & Messages per Slide -->
+        <div class="auth-hero-center">
+          <!-- Slide 1 Text Content -->
+          <div class="auth-slide-text-block active" data-slide-text="0">
+            <span class="auth-slide-tag-pill tag-emerald">
+              <i class="fas fa-shop"></i> 1. Financement sur-mesure
+            </span>
+            <h1 class="auth-hero-title">Financez vos projets et développez votre activité</h1>
+            <p class="auth-hero-desc">
+              Une solution 100% digitale pour concrétiser vos ambitions : simulation de crédit en direct, constitution de dossier simplifiée et obtention d'une offre claire adaptée à votre trésorerie.
+            </p>
+          </div>
+
+          <!-- Slide 2 Text Content -->
+          <div class="auth-slide-text-block" data-slide-text="1">
+            <span class="auth-slide-tag-pill tag-sky">
+              <i class="fas fa-bolt"></i> 2. Décision & Déblocage Rapide
+            </span>
+            <h1 class="auth-hero-title">Votre argent disponible sans attente inutile</h1>
+            <p class="auth-hero-desc">
+              Suivez l'avancement de votre dossier 24h/24 depuis votre téléphone. Après validation par nos analystes et le comité, vos fonds sont mis à votre disposition en moins de 48 heures.
+            </p>
+          </div>
+
+          <!-- Slide 3 Text Content -->
+          <div class="auth-slide-text-block" data-slide-text="2">
+            <span class="auth-slide-tag-pill tag-purple">
+              <i class="fas fa-wallet"></i> 3. Paiement Mobile Flexible
+            </span>
+            <h1 class="auth-hero-title">Remboursez vos mensualités en toute tranquillité</h1>
+            <p class="auth-hero-desc">
+              Payez vos échéances directement par Mobile Money (Wave, Orange Money, Moov Money, Free Money), consultez votre solde en temps réel et téléchargez vos quittances officielles.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bottom: Interactive Slider Controls & Regional Network Strip -->
+        <div class="auth-hero-bottom">
+          <!-- Slider Navigation Bar -->
+          <div class="auth-hero-nav-bar">
+            <!-- Dots Indicators -->
+            <div class="auth-slider-dots-bar" id="auth-slider-dots">
+              <button type="button" class="auth-slider-dot active" onclick="App.setAuthSlide(0)" aria-label="Slide 1 : Financement d'activité" title="Financement d'activité"></button>
+              <button type="button" class="auth-slider-dot" onclick="App.setAuthSlide(1)" aria-label="Slide 2 : Déblocage rapide" title="Déblocage en < 48h"></button>
+              <button type="button" class="auth-slider-dot" onclick="App.setAuthSlide(2)" aria-label="Slide 3 : Remboursement Mobile Money" title="Remboursement Mobile Money"></button>
+            </div>
+
+            <!-- Prev / Next Controls -->
+            <div class="auth-slider-controls">
+              <button type="button" class="auth-slider-btn" onclick="App.prevAuthSlide()" aria-label="Photo précédente" title="Précédent">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button type="button" class="auth-slider-btn" onclick="App.nextAuthSlide()" aria-label="Photo suivante" title="Suivant">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Countries Footnote -->
+          <div class="auth-countries-strip">
+            <i class="fas fa-earth-africa"></i>
+            <span>Réseau CIF Régional : <span class="fi fi-bf"></span> Burkina Faso • <span class="fi fi-tg"></span> Togo • <span class="fi fi-bj"></span> Bénin • <span class="fi fi-sn"></span> Sénégal • <span class="fi fi-ml"></span> Mali</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <!-- Right Login Form Pane -->
     <div class="auth-form-pane">
       <div class="auth-form-box">
-        <!-- Top Utilities Bar: Security & Compliance Badge -->
-        <div class="auth-top-controls">
-          <div class="auth-security-pill" title="Connexion chiffrée SSL/TLS 256 bits conforme BCEAO">
-            <i class="fas fa-lock text-success"></i>
-            <span>Protocole Sécurisé TLS 1.3 • Chiffrement SHA-256</span>
-          </div>
-          <div class="auth-security-pill" title="Espace bancaire réglementé UEMOA">
-            <i class="fas fa-building-columns text-primary"></i>
-            <span>Zone UEMOA / BCEAO</span>
-          </div>
-        </div>
 
         <!-- Mobile/Tablet Brand Header (visible when hero pane is hidden) -->
         <div class="auth-mobile-brand">
@@ -111,168 +229,144 @@
 
         <div class="auth-header">
           <h2>Portail d'Accès Sécurisé</h2>
-          <p>Identifiez-vous pour ouvrir votre espace de travail ou sélectionnez un profil démo.</p>
+          <p>Saisissez vos identifiants ou cliquez sur un profil démo ci-dessous pour remplir automatiquement le formulaire.</p>
         </div>
 
-        <!-- Auth Tabs Navigation: 1-Clic Personas vs Saisie Manuelle -->
-        <div class="auth-nav-tabs" role="tablist">
-          <button type="button" class="auth-tab-btn active" id="auth-tab-express" onclick="App.switchAuthTab('express')">
-            <i class="fas fa-wand-magic-sparkles"></i>
-            <span>Accès Express (4 Rôles)</span>
-          </button>
-          <button type="button" class="auth-tab-btn" id="auth-tab-manual" onclick="App.switchAuthTab('manual')">
-            <i class="fas fa-id-card-clip"></i>
-            <span>Identifiants & N° Client</span>
-          </button>
-        </div>
+        <!-- Standard Login Form -->
+        <form id="login-form" novalidate>
+          <!-- Identifier Field (Email, Phone or Client Number) -->
+          <div class="form-group">
+            <label class="form-label" for="login-email">
+              Identifiant, ou Numéro de Téléphone
+            </label>
+            <div class="input-with-icon">
+              <i class="fas fa-user-check input-prefix-icon"></i>
+              <input 
+                type="text" 
+                id="login-email" 
+                class="form-control" 
+                placeholder="ex: ali.diallo@cif-ao.org ou +223 70 12 34 56" 
+                value="ali.diallo@cif-ao.org" 
+                autocomplete="username"
+                required
+              >
+            </div>
+          </div>
 
-        <!-- Tab Content 1: Express 1-Click Persona Cards -->
-        <div id="auth-tab-content-express" class="auth-tab-content active">
+          <!-- Password Field with Visibility Toggle -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
+              <button type="button" class="auth-link-btn" onclick="App.showDemoCredentialsHelp()">
+                <i class="fas fa-key mr-1"></i> Aide identifiants
+              </button>
+            </div>
+            <div class="input-with-icon input-with-suffix">
+              <i class="fas fa-lock input-prefix-icon"></i>
+              <input 
+                type="password" 
+                id="login-password" 
+                class="form-control" 
+                value="demo" 
+                placeholder="Saisissez votre mot de passe"
+                autocomplete="current-password"
+                required
+              >
+              <button 
+                type="button" 
+                class="password-toggle-btn" 
+                id="btn-toggle-password" 
+                onclick="App.togglePasswordVisibility('login-password', 'icon-toggle-password')"
+                title="Afficher ou masquer le mot de passe"
+                aria-label="Afficher ou masquer le mot de passe"
+              >
+                <i class="fas fa-eye" id="icon-toggle-password"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Security Options -->
+          <div class="auth-options-row">
+            <label class="auth-checkbox-label" for="remember-me-checkbox">
+              <input type="checkbox" id="remember-me-checkbox" checked>
+              <span>Mémoriser ma session</span>
+            </label>
+            <a href="javascript:void(0)" class="auth-link-subtle" onclick="App.showToast('En environnement démo, tout mot de passe est accepté.', 'info')">
+              Mot de passe oublié ?
+            </a>
+          </div>
+
+          <!-- Submit Button with Loading State -->
+          <button type="submit" id="btn-submit-login" class="btn btn-primary btn-lg auth-submit-btn">
+            <span id="login-btn-content">
+              <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
+            </span>
+          </button>
+        </form>
+
+        <!-- Demo Accounts Quick Fill Buttons Section -->
+        <div class="auth-demo-section">
+          <div class="auth-demo-divider">
+            <span>Ou pré-remplir avec un profil démo (1 clic)</span>
+          </div>
+
           <div class="demo-personas-grid">
             <!-- Persona 1: Demandeur (Client - Sénégal) -->
-            <button type="button" class="demo-persona-btn" data-demo-id="demo-client" title="Ouvrir l'espace Demandeur Emprunteur (Sénégal)">
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-client" onclick="App.fillDemoCredentials('demo-client')" title="Pré-remplir avec Fatou Ndiaye (Demandeur - Sénégal)">
               <div class="demo-persona-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Client">
-                <span class="avatar-flag-badge demo-flag" title="Sénégal"><span class="fi fi-sn fis"></span></span>
+                <img src="images/profil/profil01-02.jpg" class="demo-persona-avatar" alt="Client">
               </div>
               <div class="demo-persona-info">
-                <h6>Fatou Ndiaye</h6>
+                <h6>Faratigi Ndiaye</h6>
                 <span style="color: #10b981;"><i class="fas fa-user-tag"></i> Demandeur (Sénégal)</span>
-                <small class="persona-sub">Caisse Médina Dakar • N° SN-008821</small>
               </div>
               <div class="persona-action-arrow">
-                <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-turn-up"></i>
               </div>
             </button>
 
             <!-- Persona 2: Agent de Crédit (Togo) -->
-            <button type="button" class="demo-persona-btn" data-demo-id="demo-agent" title="Ouvrir l'espace Agent de Crédit (Togo)">
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-agent" onclick="App.fillDemoCredentials('demo-agent')" title="Pré-remplir avec Adama Traore (Agent de Crédit - Togo)">
               <div class="demo-persona-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Agent">
-                <span class="avatar-flag-badge demo-flag" title="Togo"><span class="fi fi-tg fis"></span></span>
+                <img src="images/profil/profil01-03.jpg" class="demo-persona-avatar" alt="Agent">
               </div>
               <div class="demo-persona-info">
-                <h6>Kofi Mensah</h6>
+                <h6>Adama Traore</h6>
                 <span style="color: #0ea5e9;"><i class="fas fa-user-tie"></i> Agent de Crédit (Togo)</span>
-                <small class="persona-sub">Agence Assigamé Lomé</small>
               </div>
               <div class="persona-action-arrow">
-                <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-turn-up"></i>
               </div>
             </button>
 
             <!-- Persona 3: Analyste Risque (Burkina Faso) -->
-            <button type="button" class="demo-persona-btn active" data-demo-id="demo-analyst" title="Ouvrir l'espace Analyste Risque (Burkina Faso)">
+            <button type="button" class="demo-persona-btn active" data-demo-id="demo-analyst" onclick="App.fillDemoCredentials('demo-analyst')" title="Pré-remplir avec Ali Diallo (Analyste Risque - Burkina Faso)">
               <div class="demo-persona-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Analyste">
-                <span class="avatar-flag-badge demo-flag" title="Burkina Faso"><span class="fi fi-bf fis"></span></span>
+                <img src="images/profil/profil01-04.jpg" class="demo-persona-avatar" alt="Analyste">
               </div>
               <div class="demo-persona-info">
-                <h6>Aminata Diallo</h6>
-                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina Faso)</span>
-                <small class="persona-sub">Siège Régional CIF Ouaga</small>
+                <h6>Ali Diallo</h6>
+                <span style="color: #4f46e5;"><i class="fas fa-chart-pie"></i> Analyste (Burkina)</span>
               </div>
               <div class="persona-action-arrow">
-                <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-turn-up"></i>
               </div>
             </button>
 
             <!-- Persona 4: Comité de Crédit & Conformité (Mali) -->
-            <button type="button" class="demo-persona-btn" data-demo-id="demo-committee" title="Ouvrir l'espace Comité de Décision & Conformité LBC/FT (Mali)">
+            <button type="button" class="demo-persona-btn" data-demo-id="demo-committee" onclick="App.fillDemoCredentials('demo-committee')" title="Pré-remplir avec Moussa Keita (Comité & Conformité - Mali)">
               <div class="demo-persona-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" class="demo-persona-avatar" alt="Comité">
-                <span class="avatar-flag-badge demo-flag" title="Mali"><span class="fi fi-ml fis"></span></span>
+                <img src="images/profil/profil01-01.jpg" class="demo-persona-avatar" alt="Comité">
               </div>
               <div class="demo-persona-info">
-                <h6>Moussa Traoré</h6>
-                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité & Conformité</span>
-                <small class="persona-sub">Caisse Bamako • Sanctions UEMOA</small>
+                <h6>Mariam Keita</h6>
+                <span style="color: #8b5cf6;"><i class="fas fa-scale-balanced"></i> Comité (Mali)</span>
               </div>
               <div class="persona-action-arrow">
-                <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-turn-up"></i>
               </div>
             </button>
           </div>
-
-          <div class="auth-express-tip">
-            <i class="fas fa-circle-info text-primary"></i>
-            <span>Cliquez sur l'un des 4 profils pour vous connecter instantanément dans son espace de travail.</span>
-          </div>
-        </div>
-
-        <!-- Tab Content 2: Standard Login Form -->
-        <div id="auth-tab-content-manual" class="auth-tab-content">
-          <form id="login-form" novalidate>
-            <!-- Identifier Field (Email, Phone or Client Number) -->
-            <div class="form-group">
-              <label class="form-label" for="login-email">
-                Identifiant, Email ou N° Client UEMOA
-              </label>
-              <div class="input-with-icon">
-                <i class="fas fa-user-check input-prefix-icon"></i>
-                <input 
-                  type="text" 
-                  id="login-email" 
-                  class="form-control" 
-                  placeholder="ex: aminata.diallo@cif-ao.org ou SN-DKR-008821" 
-                  value="aminata.diallo@cif-ao.org" 
-                  autocomplete="username"
-                  required
-                >
-              </div>
-              <small class="form-hint">Supporte les adresses email, N° de téléphone (+221...) et codes membres.</small>
-            </div>
-
-            <!-- Password Field with Visibility Toggle -->
-            <div class="form-group">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <label class="form-label" for="login-password" style="margin-bottom: 0;">Mot de Passe</label>
-                <button type="button" class="auth-link-btn" onclick="App.showDemoCredentialsHelp()">
-                  <i class="fas fa-key mr-1"></i> Aide identifiants
-                </button>
-              </div>
-              <div class="input-with-icon input-with-suffix">
-                <i class="fas fa-lock input-prefix-icon"></i>
-                <input 
-                  type="password" 
-                  id="login-password" 
-                  class="form-control" 
-                  value="demo" 
-                  placeholder="Saisissez votre mot de passe"
-                  autocomplete="current-password"
-                  required
-                >
-                <button 
-                  type="button" 
-                  class="password-toggle-btn" 
-                  id="btn-toggle-password" 
-                  onclick="App.togglePasswordVisibility('login-password', 'icon-toggle-password')"
-                  title="Afficher ou masquer le mot de passe"
-                  aria-label="Afficher ou masquer le mot de passe"
-                >
-                  <i class="fas fa-eye" id="icon-toggle-password"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Remember Me & Security Options -->
-            <div class="auth-options-row">
-              <label class="auth-checkbox-label" for="remember-me-checkbox">
-                <input type="checkbox" id="remember-me-checkbox" checked>
-                <span>Mémoriser ma session sur ce terminal</span>
-              </label>
-              <a href="javascript:void(0)" class="auth-link-subtle" onclick="App.showToast('En environnement démo, tout mot de passe est accepté.', 'info')">
-                Mot de passe oublié ?
-              </a>
-            </div>
-
-            <!-- Submit Button with Loading State -->
-            <button type="submit" id="btn-submit-login" class="btn btn-primary btn-lg auth-submit-btn">
-              <span id="login-btn-content">
-                <i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace
-              </span>
-            </button>
-          </form>
         </div>
 
         <!-- Security and Regulatory Footer Strip -->
@@ -311,7 +405,7 @@
         </div>
         <div class="brand-title-group">
           <span class="brand-name">CRÉDIT FAST</span>
-          <span class="brand-tag">CIF-WA+</span>
+          <!-- <span class="brand-tag">CIF-WA+</span> -->
         </div>
       </a>
       <!-- Close Drawer Button for Mobile / Tablet -->
@@ -323,14 +417,14 @@
     <!-- User Mini Profile -->
     <div class="sidebar-user-card">
       <div class="user-avatar-wrap">
-        <img id="user-avatar-display" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
+        <img id="user-avatar-display" src="images/profil/profil01-04.jpg" alt="Avatar" class="user-avatar">
         <span class="avatar-flag-badge sidebar-flag" id="sidebar-avatar-flag" title="Pays de l'utilisateur"></span>
       </div>
       <div class="user-info">
         <div id="user-name-display" class="user-name">Aminata Diallo</div>
         <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
         <div class="user-region-badge" id="sidebar-region-badge">
-          <i class="fas fa-location-dot"></i> <span id="sidebar-country-text">Burkina Faso (UEMOA)</span>
+          <!-- <i class="fas fa-location-dot"></i> <span id="sidebar-country-text">Burkina Faso (UEMOA)</span> -->
         </div>
       </div>
     </div>
@@ -405,14 +499,6 @@
           <i class="fas fa-wifi"></i> <span>Hors-Ligne (Cache Actif)</span>
         </div>
     
-        <!-- Active Role Badge Pill (Populated dynamically by active user) -->
-        <span id="user-role-pill-badge" class="badge user-role-pill"></span>
-    
-        <!-- Dark / Light Mode Toggle -->
-        <button id="theme-toggle-btn" class="topbar-action-btn" title="Changer de thème (Mode Sombre / Clair)">
-          <i class="fas fa-moon"></i>
-        </button>
-    
         <!-- Notifications Bell -->
         <div class="notif-dropdown-container" style="position: relative;">
           <button id="notif-bell-btn" class="topbar-action-btn" title="Centre de Notifications" aria-label="Notifications">
@@ -462,8 +548,8 @@
         <div class="profile-dropdown-container" id="profile-dropdown-container">
           <button class="topbar-profile-btn" id="topbar-profile-btn" aria-haspopup="true" aria-expanded="false" title="Mon Profil & Paramètres">
             <div class="topbar-avatar-wrap">
-              <img id="topbar-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="topbar-avatar">
-              <span class="avatar-flag-badge" id="topbar-avatar-flag" title="Pays de l'utilisateur"></span>
+              <img id="topbar-avatar-img" src="images/profil/profil01-04.jpg" alt="Avatar" class="topbar-avatar">
+              <!-- <span class="avatar-flag-badge" id="topbar-avatar-flag" title="Pays de l'utilisateur"></span> -->
             </div>
             <div class="topbar-user-meta">
               <span id="topbar-user-name" class="topbar-user-name">Aminata Diallo</span>
@@ -473,56 +559,116 @@
           </button>
     
           <!-- Dropdown Menu Box -->
-          <div id="profile-dropdown-menu" class="profile-dropdown-menu">
-            <div class="profile-dropdown-header">
-              <div class="topbar-avatar-wrap">
-                <img id="menu-avatar-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="menu-avatar">
-                <span class="avatar-flag-badge lg" id="menu-avatar-flag" title="Pays de l'utilisateur"></span>
-              </div>
-              <div class="menu-user-details">
-                <h6 id="menu-user-name">Aminata Diallo</h6>
-                <span id="menu-user-email" class="menu-user-email">aminata.diallo@cif-ao.org</span>
-                <span id="menu-user-role-badge" class="badge badge-submitted" style="font-size: 0.68rem; margin-top: 4px;">Analyste Risque V2</span>
-              </div>
-            </div>
+          <div
+      id="profile-dropdown-menu"
+      class="profile-dropdown-menu absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white py-2 shadow-xl"
+    >
+      
+      <!-- <div class="profile-dropdown-header">
+        <div class="topbar-avatar-wrap">
+          <img
+            id="menu-avatar-img"
+            src="images/profil/profil01-04.jpg"
+            alt="Avatar"
+            class="menu-avatar"
+          >
+          <span
+            class="avatar-flag-badge lg"
+            id="menu-avatar-flag"
+            title="Pays de l'utilisateur"
+          ></span>
+        </div>
     
-            <div class="profile-dropdown-divider"></div>
+        <div class="menu-user-details">
+          <h6 id="menu-user-name">Aminata Diallo</h6>
     
-            <ul class="profile-menu-list">
-              <li>
-                <a href="#" class="profile-menu-item" id="btn-edit-profile" onclick="App.openEditProfileModal(); return false;">
-                  <i class="fas fa-user-pen text-primary"></i>
-                  <span>Modifier mon Profil</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="profile-menu-item" id="btn-open-settings" onclick="App.openSettingsModal(); return false;">
-                  <i class="fas fa-sliders-h text-secondary"></i>
-                  <span>Paramètres & Préférences</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="profile-menu-item" onclick="App.showToast('Sécurité du compte : Authentification 2FA active', 'info'); return false;">
-                  <i class="fas fa-shield-halved text-emerald"></i>
-                  <span>Sécurité & Clés d'Accès</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="profile-menu-item" onclick="App.showToast('Support CIF DigiCoop-WA+ disponible 24/7', 'info'); return false;">
-                  <i class="fas fa-circle-question text-info"></i>
-                  <span>Centre d'Aide CIF</span>
-                </a>
-              </li>
-            </ul>
+          <span
+            id="menu-user-email"
+            class="menu-user-email"
+          >
+            aminata.diallo@cif-ao.org
+          </span>
     
-            <div class="profile-dropdown-divider"></div>
+          <span
+            id="menu-user-role-badge"
+            class="badge badge-submitted mt-1 text-[0.68rem]"
+          >
+            Analyste Risque V2
+          </span>
+        </div>
+      </div> -->
     
-            <div class="profile-dropdown-footer">
-              <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout" id="btn-topbar-logout" onclick="App.openLogoutConfirmModal(); return false;" style="width: 100%; justify-content: center;">
-                <i class="fas fa-right-from-bracket mr-2"></i> Se Déconnecter
-              </button>
-            </div>
-          </div>
+      <!-- Divider -->
+      <div class="profile-dropdown-divider my-2 h-px bg-slate-200"></div>
+    
+      <!-- Menu -->
+      <ul class="profile-menu-list space-y-1 px-2">
+    
+        <li>
+          <a
+            href="#"
+            class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            id="btn-edit-profile"
+            onclick="App.openEditProfileModal(); return false;"
+          >
+            <i class="fas fa-user-pen w-4 text-center text-primary"></i>
+            <span>Modifier mon Profil</span>
+          </a>
+        </li>
+    
+        <li>
+          <a
+            href="#"
+            class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            id="btn-open-settings"
+            onclick="App.openSettingsModal(); return false;"
+          >
+            <i class="fas fa-sliders-h w-4 text-center text-secondary"></i>
+            <span>Paramètres &amp; Préférences</span>
+          </a>
+        </li>
+    
+        <li>
+          <a
+            href="#"
+            class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            onclick="App.showToast('Sécurité du compte : Authentification 2FA active', 'info'); return false;"
+          >
+            <i class="fas fa-shield-halved w-4 text-center text-emerald"></i>
+            <span>Sécurité &amp; Clés d'Accès</span>
+          </a>
+        </li>
+    
+        <li>
+          <a
+            href="#"
+            class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            onclick="App.showToast('Support CIF DigiCoop-WA+ disponible 24/7', 'info'); return false;"
+          >
+            <i class="fas fa-circle-question w-4 text-center text-info"></i>
+            <span>Centre d'Aide CreditFast</span>
+          </a>
+        </li>
+    
+      </ul>
+    
+      <!-- Divider -->
+      <div class="profile-dropdown-divider my-2 h-px bg-slate-200"></div>
+    
+      <!-- Footer -->
+      <div class="profile-dropdown-footer px-3 pb-2 pt-1">
+        <button
+          type="button"
+          class="btn btn-danger-subtle btn-sm btn-action-logout flex w-full justify-center gap-2 rounded-lg px-4 py-2.5 transition hover:bg-red-100"
+          id="btn-topbar-logout"
+          onclick="App.openLogoutConfirmModal(); return false;"
+        >
+          <i class="fas fa-right-from-bracket"></i>
+          Se Déconnecter
+        </button>
+      </div>
+    
+    </div>
         </div>
       </div>
     </header>
@@ -541,15 +687,15 @@
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
             <div style="display: flex; align-items: center; gap: 0.65rem;">
               <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
-                <i class="fas fa-wifi"></i>
+                <i class="fas fa-shield-heart"></i>
               </div>
               <div>
-                <div style="font-size: 0.82rem; font-weight: 700; color: #92400e;">Mode Hors-Ligne Actif • Service Worker & Cache Opérationnels</div>
-                <div style="font-size: 0.72rem; color: #b45309;">Vous consultez l'état de votre dossier et vos échéances en cache local sans interruption.</div>
+                <div style="font-size: 0.82rem; font-weight: 700; color: #92400e;">Mode Sérénité Hors-Ligne Actif</div>
+                <div style="font-size: 0.72rem; color: #b45309;">Même sans connexion internet, vous consultez vos règlements, vos documents et l'état de votre projet en toute fluidité.</div>
               </div>
             </div>
             <span class="badge badge-approved" style="font-size: 0.68rem;">
-              <i class="fas fa-database mr-1"></i> Données Locales Synchronisées
+              <i class="fas fa-circle-check mr-1"></i> Informations Toujours Disponibles
             </span>
           </div>
         </div>
@@ -558,18 +704,18 @@
         <div class="borrower-welcome-banner">
           <div>
             <span class="badge badge-client" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); margin-bottom: 0.5rem;">
-              <i class="fas fa-id-badge"></i> Espace Demandeur & Emprunteur
+              <i class="fas fa-star mr-1"></i> Mon Espace Financement & Projet
             </span>
             <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem; color: white;">
-              Bienvenue, <span id="borrower-banner-name">Fatou Ndiaye</span>
+              Bienvenue, <span id="borrower-banner-name">Faratigi Ndiaye</span>
             </h2>
             <p style="color: #cbd5e1; font-size: 0.85rem; max-width: 600px;">
-              N° Membre : <strong id="borrower-member-num">SN-DKR-008821</strong> • Caisse CIF Médina Dakar (Sénégal) • Activité : Commerce & Textile
+              N° Membre : <strong id="borrower-member-num">SN-DKR-008821</strong> • Agence CIF Médina Dakar (Sénégal) • Activité : Commerce & Textile
             </p>
           </div>
           <div>
-            <button class="btn btn-success btn-lg" onclick="App.switchView('view-client-wizard')">
-              <i class="fas fa-plus-circle"></i> Déposer une Nouvelle Demande
+            <button class="btn btn-success btn-lg" onclick="App.openNewLoanModal()">
+              <i class="fas fa-rocket mr-1"></i> Faire une demande de prêt
             </button>
           </div>
         </div>
@@ -581,9 +727,9 @@
               <i class="fas fa-hand-holding-dollar"></i>
             </div>
             <div>
-              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Crédit Actif en Cours</div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Financement en Cours</div>
               <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code);" id="borrower-active-amount">2 500 000 FCFA</div>
-              <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">12 mensualités • Taux dégressif</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">12 mensualités • Remboursement souple & transparent</div>
             </div>
           </div>
       
@@ -592,9 +738,9 @@
               <i class="fas fa-calendar-check"></i>
             </div>
             <div>
-              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance à Régler</div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Prochain Règlement</div>
               <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-gold-700);">235 000 FCFA</div>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">Échéance au 05/09/2026 (0 retard)</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">À régler le 05/09/2026 • <span style="color: #10b981; font-weight: 600;">0 retard, bravo !</span></div>
             </div>
           </div>
       
@@ -603,9 +749,9 @@
               <i class="fas fa-piggy-bank"></i>
             </div>
             <div>
-              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Épargne Disponible CIF</div>
+              <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Épargne & Sécurité CIF</div>
               <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-emerald-700);">1 450 000 FCFA</div>
-              <div style="font-size: 0.72rem; color: var(--cif-emerald-500);"><i class="fas fa-shield"></i> Garantie mobilisable</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-500);"><i class="fas fa-shield-heart mr-1"></i> Votre matelas de sécurité pour vos projets</div>
             </div>
           </div>
         </div>
@@ -614,103 +760,54 @@
         <div class="card" style="margin-bottom: 1.5rem;">
           <div class="card-header">
             <div>
-              <h3 class="card-title"><i class="fas fa-route text-primary"></i> Suivi en Direct de votre Demande #<span id="borrower-active-ref">REQ-2026-0891</span></h3>
+              <h3 class="card-title"><i class="fas fa-route text-primary"></i> Le Parcours de votre Projet #<span id="borrower-active-ref">REQ-2026-0891</span></h3>
               <p class="card-subtitle" id="borrower-active-purpose">Achat de stock tissus wax pour la fête de Tabaski</p>
             </div>
             <div id="borrower-active-status">
-              <span class="badge badge-analysis">Revue Analyste</span>
+              <span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Étude Attentive en Cours</span>
             </div>
           </div>
           <div class="card-body">
             <div class="loan-progress-stepper">
               <div class="loan-step-node completed">
                 <div class="dot"><i class="fas fa-check"></i></div>
-                <div class="label">1. Demande Déposée</div>
+                <div class="label">1. Projet Déposé</div>
                 <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
               </div>
               <div class="loan-step-node completed">
                 <div class="dot"><i class="fas fa-check"></i></div>
-                <div class="label">2. Extraction OCR Pièces</div>
+                <div class="label">2. Documents Validés</div>
                 <div style="font-size: 0.65rem; color: var(--text-subtle);">11/08/2026</div>
               </div>
               <div class="loan-step-node completed">
                 <div class="dot"><i class="fas fa-check"></i></div>
-                <div class="label">3. Reste à Vivre Calculé</div>
+                <div class="label">3. Confort Financier Vérifié</div>
                 <div style="font-size: 0.65rem; color: var(--text-subtle);">12/08/2026</div>
               </div>
               <div class="loan-step-node active">
                 <div class="dot"><i class="fas fa-spinner fa-spin"></i></div>
-                <div class="label">4. Revue Finale Analyste</div>
+                <div class="label">4. Relecture Personnalisée</div>
                 <div style="font-size: 0.65rem; color: var(--cif-primary-600); font-weight: 700;">En Cours</div>
               </div>
               <div class="loan-step-node">
                 <div class="dot">5</div>
-                <div class="label">5. Décision Comité</div>
-                <div style="font-size: 0.65rem; color: var(--text-subtle);">À venir</div>
+                <div class="label">5. Accord du Comité</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">Très prochainement</div>
               </div>
               <div class="loan-step-node">
                 <div class="dot">6</div>
-                <div class="label">6. Déblocage Fonds</div>
-                <div style="font-size: 0.65rem; color: var(--text-subtle);">Final</div>
+                <div class="label">6. Versement de vos Fonds</div>
+                <div style="font-size: 0.65rem; color: var(--text-subtle);">Directement sur votre compte</div>
               </div>
             </div>
       
-            <div class="anomaly-item info" style="margin-top: 1rem;">
-              <i class="fas fa-circle-info anomaly-icon"></i>
+            <div class="anomaly-item info" style="margin-top: 1.25rem;">
+              <i class="fas fa-comment-sparkles anomaly-icon" style="color: #0ea5e9;"></i>
               <div class="anomaly-content">
-                <h5>Message de votre agence CIF :</h5>
-                <p>Votre analyste (Aminata Diallo) a certifié conforme vos factures proforma. Votre dossier est programmé pour passage en délibération au prochain comité.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Quick Services Access Grid (4 modules) -->
-        <div class="grid-4" style="margin-bottom: 1.5rem;">
-          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-requests')" onmouseover="this.style.borderColor='var(--primary-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
-                <i class="fas fa-folder-tree"></i>
-              </div>
-              <div>
-                <div style="font-size: 0.82rem; font-weight: 700;">Mes Demandes</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">1 En attente • 2 Clôturées</div>
-              </div>
-            </div>
-          </div>
-      
-          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-schedule')" onmouseover="this.style.borderColor='var(--cif-gold-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--cif-gold-50); color: var(--cif-gold-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
-                <i class="fas fa-calendar-days"></i>
-              </div>
-              <div>
-                <div style="font-size: 0.82rem; font-weight: 700;">Mon Échéancier</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">Paiement Mobile Money</div>
-              </div>
-            </div>
-          </div>
-      
-          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-documents')" onmouseover="this.style.borderColor='var(--cif-emerald-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--cif-emerald-50); color: var(--cif-emerald-600); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
-                <i class="fas fa-folder-closed"></i>
-              </div>
-              <div>
-                <div style="font-size: 0.82rem; font-weight: 700;">Mes Pièces & Devis</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">6 Justificatifs & Contrats</div>
-              </div>
-            </div>
-          </div>
-      
-          <div class="card" style="padding: 1rem; cursor: pointer; transition: all 0.2s ease;" onclick="App.switchView('view-client-simulator')" onmouseover="this.style.borderColor='var(--primary-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
-                <i class="fas fa-calculator"></i>
-              </div>
-              <div>
-                <div style="font-size: 0.82rem; font-weight: 700;">Simulateur de Prêt</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted);">Calcul Reste à Vivre</div>
+                <h5 style="color: #0369a1; font-weight: 700;">Le mot encourageant de votre agence CIF :</h5>
+                <p style="color: #0c4a6e; font-size: 0.84rem; line-height: 1.5;">
+                  Excellente nouvelle ! Tous vos justificatifs ont été validés avec succès. Votre projet avance très bien et est programmé pour validation finale afin de déclencher rapidement la mise à disposition de vos fonds.
+                </p>
               </div>
             </div>
           </div>
@@ -721,19 +818,19 @@
           <div class="compact-estimator-header">
             <div class="compact-estimator-title">
               <div class="compact-estimator-icon">
-                <i class="fas fa-calculator"></i>
+                <i class="fas fa-wand-magic-sparkles"></i>
               </div>
               <div>
                 <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--text-primary);">
-                  Estimation Express de Mensualité de Prêt
+                  Simulez votre Projet en 1 Clin d'Œil
                 </h3>
                 <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">
-                  Ajustez le montant et la durée pour calculer instantanément votre mensualité estimée (Barème UEMOA CIF)
+                  Ajustez le montant et la durée pour découvrir instantanément vos mensualités claires, transparentes et adaptées à votre activité.
                 </p>
               </div>
             </div>
             <span class="badge badge-approved" style="font-size: 0.72rem;">
-              <i class="fas fa-bolt mr-1"></i> Taux Dégressif 1.2% / mois
+              <i class="fas fa-tag mr-1"></i> Taux Transparent & Sans Frais Cachés
             </span>
           </div>
       
@@ -743,23 +840,23 @@
               <!-- Amount Slider -->
               <div class="compact-slider-group">
                 <div class="compact-slider-header">
-                  <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant Souhaité :</span>
+                  <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant dont vous avez besoin :</span>
                   <span class="compact-slider-val" id="compact-est-amount-val">2 500 000 FCFA</span>
                 </div>
                 <input type="range" id="compact-est-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
                 <div class="compact-presets-row">
-                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500k</button>
-                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1M</button>
-                  <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2.5M</button>
-                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5M</button>
-                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8M</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500 000 F</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1 000 000 F</button>
+                  <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2 500 000 F</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5 000 000 F</button>
+                  <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8 000 000 F</button>
                 </div>
               </div>
       
               <!-- Duration Slider -->
               <div class="compact-slider-group">
                 <div class="compact-slider-header">
-                  <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée de Remboursement :</span>
+                  <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée idéale pour rembourser :</span>
                   <span class="compact-slider-val" id="compact-est-duration-val" style="color: var(--primary-700);">12 Mois</span>
                 </div>
                 <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
@@ -776,30 +873,30 @@
             <!-- Output Calculation Box -->
             <div class="compact-output-box">
               <div class="compact-monthly-highlight">
-                <div class="compact-monthly-label">Votre Mensualité Estimée</div>
+                <div class="compact-monthly-label">Votre Mensualité Tout Compris</div>
                 <div class="compact-monthly-amount" id="compact-est-monthly-val">235 000 FCFA</div>
-                <div style="font-size: 0.7rem; color: var(--cif-emerald-500); font-weight: 600;">
-                  <i class="fas fa-check-circle mr-1"></i> Assurance & frais de dossier inclus
+                <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">
+                  <i class="fas fa-circle-check mr-1"></i> Zéro surprise : assurance & accompagnement inclus
                 </div>
               </div>
       
               <div class="compact-stats-row">
                 <div class="compact-stat-item">
-                  <span class="compact-stat-label">Total Remboursé :</span>
+                  <span class="compact-stat-label">Total tout inclus :</span>
                   <span class="compact-stat-val" id="compact-est-total-val">2 820 000 FCFA</span>
                 </div>
                 <div class="compact-stat-item">
-                  <span class="compact-stat-label">Coût du Crédit :</span>
+                  <span class="compact-stat-label">Coût clair & maîtrisé :</span>
                   <span class="compact-stat-val" id="compact-est-cost-val" style="color: var(--cif-gold-700);">320 000 FCFA</span>
                 </div>
               </div>
       
               <div class="compact-actions-row">
-                <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Transférer cette simulation vers le formulaire de demande de prêt">
-                  <i class="fas fa-paper-plane mr-1"></i> Demander ce Prêt
+                <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Démarrer votre demande avec ces conditions personnalisées">
+                  <i class="fas fa-paper-plane mr-1"></i> Concrétiser ce Prêt
                 </button>
-                <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Accéder au simulateur complet avec calcul du Reste à Vivre">
-                  <i class="fas fa-sliders mr-1"></i> Détails
+                <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Affiner votre budget et votre confort financier">
+                  <i class="fas fa-sliders mr-1"></i> Personnaliser
                 </button>
               </div>
             </div>
@@ -811,7 +908,10 @@
           <!-- Repayment Schedule Table Summary -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><i class="fas fa-table-list text-primary"></i> Échéancier de Remboursement Réel</h3>
+              <div>
+                <h3 class="card-title"><i class="fas fa-calendar-check text-primary"></i> Mon Calendrier de Remboursement</h3>
+                <p class="card-subtitle">Suivez vos versements en toute clarté</p>
+              </div>
               <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-schedule')">
                 <i class="fas fa-arrow-right"></i> Voir Tout l'Échéancier
               </button>
@@ -820,36 +920,36 @@
               <table class="table-custom">
                 <thead>
                   <tr>
-                    <th>Échéance</th>
-                    <th>Date</th>
+                    <th>Règlement</th>
+                    <th>Date prévue</th>
                     <th>Montant</th>
-                    <th>Statut</th>
+                    <th>État</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Échéance N° 1</td>
+                    <td>Mensualité N° 1</td>
                     <td>05/07/2026</td>
                     <td class="amount-cell">235 000 FCFA</td>
-                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé</span></td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Réglé</span></td>
                   </tr>
                   <tr>
-                    <td>Échéance N° 2</td>
+                    <td>Mensualité N° 2</td>
                     <td>05/08/2026</td>
                     <td class="amount-cell">235 000 FCFA</td>
-                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé</span></td>
+                    <td><span class="badge badge-approved"><i class="fas fa-check"></i> Réglé</span></td>
                   </tr>
                   <tr style="background: var(--cif-gold-50);">
-                    <td><strong>Échéance N° 3</strong></td>
+                    <td><strong>Mensualité N° 3</strong></td>
                     <td><strong>05/09/2026</strong></td>
                     <td class="amount-cell" style="color: var(--cif-gold-700);"><strong>235 000 FCFA</strong></td>
-                    <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochaine</span></td>
+                    <td><span class="badge badge-verification"><i class="fas fa-clock"></i> Prochain versement</span></td>
                   </tr>
                   <tr>
-                    <td>Échéance N° 4</td>
+                    <td>Mensualité N° 4</td>
                     <td>05/10/2026</td>
                     <td class="amount-cell">235 000 FCFA</td>
-                    <td><span class="badge badge-submitted">À venir</span></td>
+                    <td><span class="badge badge-submitted">Planifié</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -859,18 +959,21 @@
           <!-- Assigned Credit Agent Card Summary -->
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><i class="fas fa-user-tie text-emerald"></i> Votre Conseiller Attitré</h3>
+              <div>
+                <h3 class="card-title"><i class="fas fa-user-tie text-emerald"></i> Votre Conseiller Dédié</h3>
+                <p class="card-subtitle">Un accompagnement humain à chaque étape</p>
+              </div>
               <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-advisor')">
-                <i class="fas fa-comment-dots"></i> Ouvrir Messagerie
+                <i class="fas fa-comment-dots"></i> Échanger
               </button>
             </div>
             <div class="card-body">
               <div class="agent-contact-card" style="margin-bottom: 1.25rem;">
                 <div style="display: flex; align-items: center; gap: 0.85rem;">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Agent" class="user-avatar" style="width: 50px; height: 50px;">
+                  <img src="images/profil/profil01-03.jpg" alt="Agent" class="user-avatar" style="width: 50px; height: 50px;">
                   <div>
-                    <h5 style="font-size: 1rem; margin-bottom: 2px;">Kofi Mensah</h5>
-                    <div style="font-size: 0.78rem; color: var(--text-subtle);">Conseiller Microfinance Senior</div>
+                    <h5 style="font-size: 1rem; margin-bottom: 2px;">Adama Traore</h5>
+                    <div style="font-size: 0.78rem; color: var(--text-subtle);">Votre Expert Accompagnement Microfinance</div>
                     <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">Agence CIF Médina Dakar</div>
                   </div>
                 </div>
@@ -878,22 +981,23 @@
       
               <div style="font-size: 0.82rem; line-height: 1.6; color: var(--text-muted-dark); margin-bottom: 1.25rem;">
                 <div><i class="fas fa-phone mr-1 text-primary"></i> <strong>Ligne directe :</strong> +221 33 821 44 00</div>
-                <div><i class="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
+                <div><i class="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> adama.traore@cif-ao.org</div>
                 <div><i class="fas fa-clock mr-1 text-primary"></i> <strong>Horaires d'agence :</strong> Lun - Ven : 08h00 - 17h00</div>
               </div>
       
               <div style="display: flex; gap: 0.75rem;">
                 <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="App.switchView('view-client-advisor')">
-                  <i class="fas fa-comment-dots"></i> Écrire un Message
+                  <i class="fas fa-comment-dots"></i> Écrire à mon conseiller
                 </button>
-                <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-client-advisor')">
-                  <i class="fas fa-calendar-plus"></i> Prendre RDV
+                <button class="btn btn-secondary btn-sm" onclick="App.openAppointmentModal()">
+                  <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
                 </button>
               </div>
             </div>
           </div>
         </div>
       </section>
+      
       
 
       <!-- ====================================================================
@@ -907,7 +1011,7 @@
             <p class="page-subtitle">Suivi en temps réel de l'état d'instruction de vos dossiers de microcrédit CIF</p>
           </div>
           <div class="page-actions">
-            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+            <button class="btn btn-primary" onclick="App.openNewLoanModal()">
               <i class="fas fa-plus-circle"></i> Déposer une Nouvelle Demande
             </button>
           </div>
@@ -1005,7 +1109,7 @@
           <div class="card-header">
             <div>
               <h3 class="card-title"><i class="fas fa-clock-rotate-left text-primary"></i> Historique de mes Demandes de Crédit</h3>
-              <p class="card-subtitle">Retrouvez l'ensemble de vos prêts antérieurs remboursés et clôturés auprès de la CIF</p>
+              <!-- <p class="card-subtitle">Retrouvez l'ensemble de vos prêts antérieurs remboursés et clôturés auprès de la CIF</p> -->
             </div>
             <div>
               <span class="badge badge-submitted">3 Dossiers enregistrés</span>
@@ -1080,14 +1184,14 @@
            ==================================================================== -->
       <section id="view-client-schedule" class="app-view" style="display: none;">
         <!-- Page Header -->
-        <div class="page-header">
+        <div class="page-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
           <div>
             <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
             <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CIF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
           </div>
-          <div class="page-actions">
+          <div class="page-actions" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
             <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
-              <i class="fas fa-file-pdf text-danger"></i> Télécharger le Relevé PDF
+              <i class="fas fa-file-pdf text-danger"></i> <span class="hide-xs">Télécharger le</span> Relevé PDF
             </button>
             <button class="btn btn-success" onclick="App.openClientPaymentModal()">
               <i class="fas fa-wallet"></i> Payer une Échéance
@@ -1096,23 +1200,23 @@
         </div>
       
         <!-- Loan Progress & Summary Metrics -->
-        <div class="grid-3" style="margin-bottom: 1.5rem;">
+        <div class="schedule-grid-responsive">
           <!-- Metric 1: Capital Amorti vs Restant -->
           <div class="card" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
               <div>
                 <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Progression du Prêt</div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
+                <div id="schedule-metric-progress-text" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
               </div>
-              <span class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
+              <span id="schedule-metric-progress-badge" class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
             </div>
             <!-- Progress Bar -->
             <div style="width: 100%; height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0.5rem;">
-              <div style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
+              <div id="schedule-metric-progress-bar" style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-subtle);">
-              <span>Remboursé : <strong>470 000 FCFA</strong></span>
-              <span>Restant : <strong>2 030 000 FCFA</strong></span>
+              <span>Remboursé : <strong id="schedule-metric-paid">470 000 FCFA</strong></span>
+              <span>Restant : <strong id="schedule-metric-remaining">2 030 000 FCFA</strong></span>
             </div>
           </div>
       
@@ -1142,7 +1246,7 @@
                   <i class="fas fa-lock text-emerald mr-1"></i> Garantie bloquée à 20% du prêt
                 </div>
               </div>
-              <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem;">
+              <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md);">
                 <i class="fas fa-shield-halved"></i>
               </div>
             </div>
@@ -1150,213 +1254,193 @@
         </div>
       
         <!-- Mobile Money Quick Pay Strip -->
-        <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(16, 185, 129, 0.04)); border: 1px solid rgba(79, 70, 229, 0.15);">
-          <div class="card-body" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+        <div class="card schedule-quickpay-card">
+          <div class="card-body schedule-quickpay-body">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+              <div style="width: 44px; height: 44px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">
                 <i class="fas fa-mobile-screen-button"></i>
               </div>
               <div>
-                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Paiement instantané sans vous déplacer en agence • Quittance SMS immédiate</p>
+                <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Paiement instantané sans déplacement • Quittance numérique et SMS immédiat</p>
               </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: white; border-color: #ff7900;">
-                <span style="display: inline-block; width: 10px; height: 10px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
+            <div class="schedule-momo-buttons">
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: var(--bg-surface); border-color: #ff7900;">
+                <span style="display: inline-block; width: 8px; height: 8px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: white; border-color: #1dc5d8;">
-                <span style="display: inline-block; width: 10px; height: 10px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: var(--bg-surface); border-color: #1dc5d8;">
+                <span style="display: inline-block; width: 8px; height: 8px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: white; border-color: #005ba4;">
-                <span style="display: inline-block; width: 10px; height: 10px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: var(--bg-surface); border-color: #005ba4;">
+                <span style="display: inline-block; width: 8px; height: 8px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: white; border-color: #ffcc00;">
-                <span style="display: inline-block; width: 10px; height: 10px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
+              <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: var(--bg-surface); border-color: #ffcc00;">
+                <span style="display: inline-block; width: 8px; height: 8px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
               </button>
             </div>
           </div>
         </div>
       
-        <!-- Detailed 12-Month Schedule Table -->
+        <!-- Detailed 12-Month Schedule Table (Essential Columns Focus) -->
         <div class="card">
-          <div class="card-header">
+          <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
             <div>
-              <h3 class="card-title"><i class="fas fa-list-ol text-primary"></i> Tableau d'Amortissement Détaillé (12 Mois)</h3>
-              <p class="card-subtitle">Montant emprunté : 2 500 000 FCFA • Taux effectif global : 12.0% annuel dégressif</p>
+              <h3 class="card-title"><i class="fas fa-list-ol text-primary mr-1"></i> Échéancier de Remboursement (12 Mois)</h3>
+              <p class="card-subtitle">Montant : 2 500 000 FCFA • Taux effectif : 12.0% annuel dégressif • Cliquez sur une ligne pour voir le détail complet</p>
             </div>
-            <div style="display: flex; gap: 0.5rem;">
-              <span class="badge badge-approved"><i class="fas fa-circle-check"></i> 2 Réglées</span>
-              <span class="badge badge-verification"><i class="fas fa-clock"></i> 1 Exigible</span>
-              <span class="badge badge-submitted">9 À venir</span>
+            <!-- Filter Tabs -->
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <button id="filter-sched-all" class="btn btn-secondary btn-sm active" onclick="AppInteractions.filterScheduleTable('ALL', this)">Toutes (12)</button>
+              <button id="filter-sched-paid" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('PAID', this)"><i class="fas fa-circle-check text-success"></i> Payées (2)</button>
+              <button id="filter-sched-due" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('DUE', this)"><i class="fas fa-clock text-warning"></i> Exigibles (1)</button>
+              <button id="filter-sched-upcoming" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('UPCOMING', this)">À venir (9)</button>
             </div>
           </div>
+      
           <div class="table-responsive">
             <table class="table-custom">
               <thead>
                 <tr>
-                  <th>N° Échéance</th>
-                  <th>Date d'Exigibilité</th>
-                  <th>Capital Amorti</th>
-                  <th>Intérêts CIF</th>
-                  <th>Assurance Prêt</th>
-                  <th>Total Mensualité</th>
-                  <th>Capital Restant Dû</th>
-                  <th>Statut</th>
-                  <th>Quittance / Reçu</th>
+                  <th style="min-width: 130px;">Échéance</th>
+                  <th style="min-width: 110px;">Date Limite</th>
+                  <th style="min-width: 120px;">Mensualité</th>
+                  <th class="schedule-col-hide-mobile" style="min-width: 110px;">Amortissement</th>
+                  <th class="schedule-col-hide-tablet" style="min-width: 120px;">Capital Restant</th>
+                  <th style="min-width: 130px;">Statut</th>
+                  <th style="min-width: 130px; text-align: right;">Action / Volet</th>
                 </tr>
               </thead>
               <tbody id="client-schedule-table-body">
-                <!-- Dynamically populated or rendered -->
-                <tr>
-                  <td><strong>Échéance N° 1</strong></td>
-                  <td>05/07/2026</td>
-                  <td>196 250 FCFA</td>
-                  <td>25 000 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
-                  <td>2 303 750 FCFA</td>
-                  <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 04/07 (Orange Money)</span></td>
-                  <td>
-                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0704', 'success')">
-                      <i class="fas fa-file-invoice"></i> Reçu #1
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Échéance N° 2</strong></td>
-                  <td>05/08/2026</td>
-                  <td>198 212 FCFA</td>
-                  <td>23 038 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell" style="font-weight: 800;">235 000 FCFA</td>
-                  <td>2 105 538 FCFA</td>
-                  <td><span class="badge badge-approved"><i class="fas fa-check"></i> Payé le 05/08 (Wave)</span></td>
-                  <td>
-                    <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement Quittance N° REC-2026-0805', 'success')">
-                      <i class="fas fa-file-invoice"></i> Reçu #2
-                    </button>
-                  </td>
-                </tr>
-                <tr style="background: rgba(245, 158, 11, 0.08); font-weight: 600;">
-                  <td><strong style="color: var(--cif-gold-700);">Échéance N° 3</strong></td>
-                  <td><strong style="color: var(--cif-gold-700);">05/09/2026</strong></td>
-                  <td>200 195 FCFA</td>
-                  <td>21 055 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell" style="color: var(--cif-gold-700); font-weight: 800;">235 000 FCFA</td>
-                  <td>1 905 343 FCFA</td>
-                  <td><span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Prochaine)</span></td>
-                  <td>
-                    <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
-                      <i class="fas fa-wallet"></i> Payer 235 000 F
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 4</td>
-                  <td>05/10/2026</td>
-                  <td>202 196 FCFA</td>
-                  <td>19 054 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>1 703 147 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 5</td>
-                  <td>05/11/2026</td>
-                  <td>204 218 FCFA</td>
-                  <td>17 032 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>1 498 929 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 6</td>
-                  <td>05/12/2026</td>
-                  <td>206 261 FCFA</td>
-                  <td>14 989 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>1 292 668 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 7</td>
-                  <td>05/01/2027</td>
-                  <td>208 323 FCFA</td>
-                  <td>12 927 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>1 084 345 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 8</td>
-                  <td>05/02/2027</td>
-                  <td>210 407 FCFA</td>
-                  <td>10 843 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>873 938 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 9</td>
-                  <td>05/03/2027</td>
-                  <td>212 511 FCFA</td>
-                  <td>8 739 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>661 427 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 10</td>
-                  <td>05/04/2027</td>
-                  <td>214 636 FCFA</td>
-                  <td>6 614 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>446 791 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 11</td>
-                  <td>05/05/2027</td>
-                  <td>216 782 FCFA</td>
-                  <td>4 468 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">235 000 FCFA</td>
-                  <td>230 009 FCFA</td>
-                  <td><span class="badge badge-submitted">À venir</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Non exigible</span></td>
-                </tr>
-                <tr>
-                  <td>Échéance N° 12</td>
-                  <td>05/06/2027</td>
-                  <td>230 009 FCFA</td>
-                  <td>2 300 FCFA</td>
-                  <td>13 750 FCFA</td>
-                  <td class="amount-cell">246 059 FCFA</td>
-                  <td>0 FCFA</td>
-                  <td><span class="badge badge-submitted">Dernière échéance</span></td>
-                  <td><span style="color: var(--text-subtle); font-size: 0.75rem;">Clôture prêt</span></td>
-                </tr>
+                <!-- Dynamically populated via App.renderClientSchedule() -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
+      
+      <!-- ====================================================================
+           SIDE DRAWER: DÉTAIL COMPLET DE L'ÉCHÉANCE
+           ==================================================================== -->
+      <div id="schedule-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeScheduleDrawer()">
+        <div class="schedule-drawer" onclick="event.stopPropagation()">
+          <!-- Drawer Header -->
+          <div class="schedule-drawer-header">
+            <div class="schedule-drawer-title-box">
+              <div class="schedule-drawer-icon">
+                <i class="fas fa-receipt"></i>
+              </div>
+              <div>
+                <h3 id="drawer-installment-title" style="font-size: 1.05rem; font-weight: 700; margin: 0;">Échéance N° 3 sur 12</h3>
+                <p id="drawer-installment-date" style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Exigibilité : 05 Septembre 2026</p>
+              </div>
+            </div>
+            <button class="modal-close-btn" onclick="App.closeScheduleDrawer()" title="Fermer le volet">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+      
+          <!-- Drawer Body -->
+          <div class="schedule-drawer-body">
+            <!-- Hero Amount & Status Card -->
+            <div class="schedule-drawer-hero">
+              <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">
+                Montant Net de la Mensualité
+              </div>
+              <div id="drawer-hero-amount" style="font-size: 1.75rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">
+                235 000 FCFA
+              </div>
+              <div id="drawer-hero-status" style="margin-top: 8px;">
+                <span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>
+              </div>
+            </div>
+      
+            <!-- Financial Breakdown Card -->
+            <div class="card" style="padding: 1.25rem;">
+              <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 1rem;">
+                <i class="fas fa-chart-pie text-primary mr-1"></i> Décomposition Financière
+              </h4>
+              
+              <!-- Segmented Visual Bar -->
+              <div style="height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; display: flex; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+                <div id="drawer-bar-principal" style="width: 85%; background: var(--cif-primary-600);" title="Capital principal"></div>
+                <div id="drawer-bar-interest" style="width: 9%; background: var(--cif-gold-500);" title="Intérêts CIF"></div>
+                <div id="drawer-bar-insurance" style="width: 6%; background: var(--cif-emerald-500);" title="Assurance prêt"></div>
+              </div>
+      
+              <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.82rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+                  <span style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-primary-600);"></span>
+                    <span>Capital Principal Amorti</span>
+                  </span>
+                  <strong id="drawer-val-principal" style="font-family: var(--font-family-code);">200 195 FCFA</strong>
+                </div>
+      
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+                  <span style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-gold-500);"></span>
+                    <span>Intérêts Dégressifs (12% l'an)</span>
+                  </span>
+                  <strong id="drawer-val-interest" style="font-family: var(--font-family-code);">21 055 FCFA</strong>
+                </div>
+      
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+                  <span style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-emerald-500);"></span>
+                    <span>Prime d'Assurance Emprunteur</span>
+                  </span>
+                  <strong id="drawer-val-insurance" style="font-family: var(--font-family-code);">13 750 FCFA</strong>
+                </div>
+      
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
+                  <span style="color: var(--text-muted); font-weight: 600;">Capital Restant Dû après échéance :</span>
+                  <strong id="drawer-val-remaining" style="color: var(--primary-800); font-family: var(--font-family-code);">1 905 343 FCFA</strong>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Settlement Tracing / Receipt Info -->
+            <div class="card" style="padding: 1.25rem;">
+              <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.85rem;">
+                <i class="fas fa-shield-check text-emerald mr-1"></i> Traçabilité & Quittance
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Contrat de Prêt :</span>
+                  <span style="font-weight: 600;">CIF-DKR-8821 (REQ-2025-0412)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Mode de règlement :</span>
+                  <span id="drawer-val-provider" style="font-weight: 600;">Mobile Money / Agence CIF</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Règlement effectif :</span>
+                  <span id="drawer-val-paydate" style="font-weight: 600;">Non réglé (Échéance ouverte)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Référence Quittance :</span>
+                  <span id="drawer-val-receipt" style="font-weight: 600; font-family: var(--font-family-code);">Générée après paiement</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Certification UEMOA :</span>
+                  <span style="color: var(--cif-emerald-600); font-weight: 600;"><i class="fas fa-check-circle"></i> Sceau Digital DigiCoop</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Drawer Footer Actions -->
+          <div class="schedule-drawer-footer">
+            <button class="btn btn-secondary" onclick="App.closeScheduleDrawer()">
+              Fermer
+            </button>
+            <div id="drawer-footer-actions" style="display: flex; gap: 0.5rem;">
+              <!-- Dynamic based on payment status -->
+            </div>
+          </div>
+        </div>
+      </div>
       
 
       <!-- ====================================================================
@@ -1587,11 +1671,11 @@
         <!-- Page Header -->
         <div class="page-header">
           <div>
-            <h2 class="page-title"><i class="fas fa-headset text-primary mr-2"></i> Mon Conseiller Attitré & Agence CIF</h2>
-            <p class="page-subtitle">Échangez en direct avec votre chargé de clientèle et planifiez vos rendez-vous d'instruction</p>
+            <h2 class="page-title"><i class="fas fa-headset text-primary mr-2"></i> Mon Conseiller Dédié & Agence CreditFast</h2>
+            <p class="page-subtitle">Échangez directement avec votre conseiller personnel et planifiez vos rendez-vous d'accompagnement</p>
           </div>
           <div class="page-actions">
-            <button class="btn btn-primary" onclick="document.getElementById('appointment-section').scrollIntoView({behavior: 'smooth'})">
+            <button class="btn btn-primary" onclick="App.openAppointmentModal()">
               <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
             </button>
           </div>
@@ -1601,52 +1685,63 @@
           <!-- Column 1: Advisor Profile Card -->
           <div class="card" style="padding: 1.5rem; text-align: center;">
             <div style="position: relative; width: 84px; height: 84px; margin: 0 auto 1rem auto;">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi Mensah" class="user-avatar" style="width: 84px; height: 84px; border: 3px solid var(--primary-200); box-shadow: var(--shadow-md);">
+              <img src="images/profil/profil01-03.jpg" alt="Adama Traore" class="user-avatar" style="width: 84px; height: 84px; border: 3px solid var(--primary-200); box-shadow: var(--shadow-md);">
               <span style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: #10b981; border: 2px solid white; border-radius: 50%;" title="En ligne actuellement"></span>
             </div>
       
-            <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Kofi Mensah</h3>
-            <div style="font-size: 0.8rem; color: var(--primary-600); font-weight: 700; margin-bottom: 4px;">Conseiller Microfinance Senior</div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Adama Traore</h3>
+            <div style="font-size: 0.8rem; color: var(--primary-600); font-weight: 700; margin-bottom: 4px;">Votre Expert Accompagnement Microfinance</div>
             <span class="badge badge-approved" style="font-size: 0.7rem; margin-bottom: 1.25rem;">
               <i class="fas fa-circle-check"></i> Conseiller Attitré Actif
             </span>
       
             <div style="text-align: left; font-size: 0.8rem; line-height: 1.8; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; margin-bottom: 1.25rem;">
-              <div><i class="fas fa-phone text-primary mr-2"></i> <strong>Direct :</strong> +221 33 821 44 00</div>
+              <div><i class="fas fa-building-columns text-primary mr-2"></i> <strong>Agence :</strong> Caisse CreditFast Médina Bamako</div>
+              <div><i class="fas fa-phone text-primary mr-2"></i> <strong>Direct :</strong> +223 33 82 44 00</div>
               <div><i class="fas fa-mobile-screen text-primary mr-2"></i> <strong>Mobile :</strong> +221 77 540 12 88</div>
-              <div><i class="fas fa-envelope text-primary mr-2"></i> <strong>Email :</strong> kofi.mensah@cif-ao.org</div>
+              <div><i class="fas fa-envelope text-primary mr-2"></i> <strong>Email :</strong> adama.traore@cif-ao.org</div>
               <div><i class="fas fa-language text-primary mr-2"></i> <strong>Langues :</strong> Français, Wolof, Bambara</div>
             </div>
       
-            <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="App.showToast('Appel direct initié vers le poste de Kofi Mensah...', 'info')">
-              <i class="fas fa-phone-volume"></i> Appeler le Conseiller
-            </button>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <!-- <button class="btn btn-primary btn-sm" style="width: 100%;" onclick="App.openAppointmentModal()">
+                <i class="fas fa-calendar-plus mr-1"></i> Prendre Rendez-vous
+              </button> -->
+              <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="App.showToast('Appel direct initié vers le poste de Adama Traore (+221 33 821 44 00)...', 'info')">
+                <i class="fas fa-phone-volume mr-1"></i> Appeler le Conseiller
+              </button>
+            </div>
           </div>
       
           <!-- Column 2 & 3: Live Messaging Thread -->
-          <div class="card" style="grid-column: span 2; display: flex; flex-direction: column; min-height: 480px;">
-            <div class="card-header" style="padding: 0.85rem 1.25rem;">
+          <div class="card" style="grid-column: span 2; display: flex; flex-direction: column; min-height: 520px;">
+            <div class="card-header" style="padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
               <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <div style="width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></div>
                 <div>
-                  <h4 style="font-size: 0.92rem; font-weight: 700; margin: 0;">Discussion Sécurisée Agence CIF</h4>
-                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Dossier REQ-2026-0891 (Tabaski Tissus Wax)</span>
+                  <h4 style="font-size: 0.92rem; font-weight: 700; margin: 0;">Discussion Sécurisée avec Adama Traore</h4>
+                  <span style="font-size: 0.72rem; color: var(--text-subtle);">Projet REQ-2026-0891 (Stock Tissus Wax) • Réponse moyenne sous 15 min</span>
                 </div>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Historique des échanges archivé au format PDF', 'info')">
-                <i class="fas fa-download"></i> Exporter
-              </button>
+              <div style="display: flex; gap: 0.4rem;">
+                <!-- <button class="btn btn-primary btn-sm" onclick="App.openAppointmentModal()">
+                  <i class="fas fa-calendar-plus"></i> <span class="hide-xs">Prendre</span> Rendez-vous
+                </button> -->
+                <button class="btn btn-secondary btn-sm" onclick="App.showToast('Historique des échanges archivé au format PDF', 'info')">
+                  <i class="fas fa-download"></i> <span class="hide-xs">Exporter</span>
+                </button>
+              </div>
             </div>
       
             <!-- Messages Body -->
             <div id="advisor-chat-messages" style="flex: 1; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: var(--bg-body);">
               <!-- Advisor Message -->
               <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+                <img src="images/profil/profil01-03.jpg" alt="Adama" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
                 <div>
-                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 11/08/2026 à 11:30</div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Adama Traore • 11/08/2026 à 11:30</div>
                   <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
-                    Bonjour Madame Ndiaye, j'ai bien reçu votre demande de prêt de 2 500 000 FCFA pour le stock de tissus. Vos factures proforma sont bien lisibles et l'OCR a extrait les montants. Le dossier est en cours de validation scoring.
+                    Bonjour Madame Ndiaye, j'ai bien reçu votre demande de financement de 2 500 000 FCFA pour le stock de tissus. Vos devis et pièces sont très clairs et nos équipes ont validé la conformité de vos documents. Votre projet avance parfaitement.
                   </div>
                 </div>
               </div>
@@ -1659,18 +1754,18 @@
                 <div>
                   <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px; text-align: right;">Vous • 11/08/2026 à 14:12</div>
                   <div style="background: var(--primary-600); color: white; padding: 0.75rem 1rem; border-radius: var(--radius-lg); font-size: 0.82rem; line-height: 1.5;">
-                    Merci Monsieur Mensah. Mon fournisseur à Lomé m'a confirmé la réservation du conteneur jusqu'au 22 août. Est-ce que le déblocage pourra se faire avant cette date si le comité valide ?
+                    Merci Monsieur Traore. Mon fournisseur à Lomé m'a confirmé la réservation du conteneur jusqu'au 22 août. Est-ce que le versement des fonds pourra se faire avant cette date dès l'accord ?
                   </div>
                 </div>
               </div>
       
               <!-- Advisor Message -->
               <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
+                <img src="images/profil/profil01-03.jpg" alt="Adama" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
                 <div>
-                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Kofi Mensah • 12/08/2026 à 09:20</div>
+                  <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Adama Traore • 12/08/2026 à 09:20</div>
                   <div style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
-                    Absolument ! Le comité se réunit le 20 août. Si la délibération est favorable, les fonds seront mis à disposition sur votre compte CIF ou virement Wave dès le 21 août au matin.
+                    Absolument ! La commission se réunit le 20 août. Dès la décision favorable, vos fonds seront immédiatement mis à votre disposition sur votre compte CIF ou par transfert Mobile Money selon votre préférence dès le 21 août au matin.
                   </div>
                 </div>
               </div>
@@ -1681,83 +1776,15 @@
               <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()" title="Joindre un document ou une photo">
                 <i class="fas fa-paperclip"></i>
               </button>
-              <input type="text" id="advisor-msg-input" class="form-control" placeholder="Écrivez votre message à Kofi Mensah..." style="flex: 1; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') App.sendAdvisorMessage()">
+              <input type="text" id="advisor-msg-input" class="form-control" placeholder="Écrivez votre message à Adama Traore..." style="flex: 1; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') App.sendAdvisorMessage()">
               <button class="btn btn-primary btn-sm" onclick="App.sendAdvisorMessage()">
                 <i class="fas fa-paper-plane"></i> Envoyer
               </button>
             </div>
           </div>
         </div>
-      
-        <!-- Agency Details & Appointment Booking Section -->
-        <div class="grid-2" id="appointment-section">
-          <!-- Agency Location & Hours Card -->
-          <div class="card" style="padding: 1.25rem;">
-            <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
-              <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Mon Agence CIF de Rattachement</h3>
-            </div>
-            <div style="font-size: 0.84rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.25rem;">
-              <div><strong>Caisse :</strong> Caisse CIF Médina - Réseau DigiCoop-WA+</div>
-              <div><strong>Adresse :</strong> Boulevard du Général de Gaulle x Rue 22, Dakar (Sénégal)</div>
-              <div><strong>Guichet Caisse :</strong> Lun - Ven : 08h00 - 16h30 • Samedi : 08h30 - 12h30</div>
-              <div><strong>Téléphone Agence :</strong> +221 33 821 44 00 / +221 33 821 44 01</div>
-              <div><strong>GAB / Distributeur :</strong> Disponible 24h/24 (Carte GIM-UEMOA)</div>
-            </div>
-            <div style="background: var(--bg-body); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-              <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-map-location-dot text-emerald" style="font-size: 1.2rem;"></i>
-                <span style="font-size: 0.78rem; font-weight: 600;">Itinéraire & Localisation GPS</span>
-              </div>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Coordonnées GPS transmises à votre application cartographique', 'info')">
-                <i class="fas fa-location-arrow"></i> Ouvrir Carte
-              </button>
-            </div>
-          </div>
-      
-          <!-- Booking Form Card -->
-          <div class="card" style="padding: 1.25rem;">
-            <div class="card-header" style="padding: 0 0 0.75rem 0; margin-bottom: 1rem;">
-              <h3 class="card-title"><i class="fas fa-calendar-check text-emerald"></i> Prendre Rendez-vous en Agence</h3>
-            </div>
-            <form onsubmit="App.handleBookAppointment(event)">
-              <div class="form-group" style="margin-bottom: 0.75rem;">
-                <label class="form-label" style="font-size: 0.78rem;">Motif du Rendez-vous *</label>
-                <select id="appt-reason" class="form-control" required style="font-size: 0.82rem;">
-                  <option value="EXAM_DOSSIER">Instruction & Signature Dossier Crédit</option>
-                  <option value="GUARANTEE_DROP">Dépôt physique de titres ou garanties</option>
-                  <option value="SAVINGS_ADVICE">Conseil en Épargne & Gestion de Trésorerie</option>
-                  <option value="OTHER">Autre question ou renseignement</option>
-                </select>
-              </div>
-      
-              <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
-                <div class="form-group" style="margin: 0;">
-                  <label class="form-label" style="font-size: 0.78rem;">Date souhaitée *</label>
-                  <input type="date" id="appt-date" class="form-control" value="2026-08-21" required style="font-size: 0.82rem;">
-                </div>
-                <div class="form-group" style="margin: 0;">
-                  <label class="form-label" style="font-size: 0.78rem;">Créneau horaire *</label>
-                  <select id="appt-time" class="form-control" required style="font-size: 0.82rem;">
-                    <option value="09:00">09h00 - 09h45</option>
-                    <option value="10:30">10h30 - 11h15</option>
-                    <option value="14:00" selected>14h00 - 14h45</option>
-                    <option value="15:30">15h30 - 16h15</option>
-                  </select>
-                </div>
-              </div>
-      
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label class="form-label" style="font-size: 0.78rem;">Note complémentaire (facultatif)</label>
-                <input type="text" id="appt-notes" class="form-control" placeholder="Ex: Je viendrai accompagnée de ma caution solidaire" style="font-size: 0.82rem;">
-              </div>
-      
-              <button type="submit" class="btn btn-success" style="width: 100%;">
-                <i class="fas fa-check-circle mr-1"></i> Confirmer le Rendez-vous avec Kofi Mensah
-              </button>
-            </form>
-          </div>
-        </div>
       </section>
+      
       
 
       <!-- ====================================================================
@@ -1940,7 +1967,7 @@
       <section id="view-role-agent" class="app-view" style="display: none;">
         <div class="page-header">
           <div class="page-title-group">
-            <h1>Espace Agent de Crédit • Pipeline de Collecte</h1>
+            <h1>Espace Agent de Crédit • Portefeuille & Instruction</h1>
             <div class="page-breadcrumb">
               <span>Opérations Guichet</span> <i class="fas fa-chevron-right"></i>
               <span>Agence Assigamé (Lomé, Togo)</span>
@@ -1966,18 +1993,15 @@
           </div>
       
           <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button class="btn btn-secondary" onclick="App.openQrScannerModal('general')" title="Scanner le QR Code d'un document ou d'une pièce d'identité">
-              <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Document QR
-            </button>
-            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
-              <i class="fas fa-user-plus"></i> Enregistrer Nouvelle Demande
+            <button class="btn btn-primary" onclick="App.openNewLoanModal()" title="Enregistrer une nouvelle demande de crédit pour un emprunteur">
+              <i class="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
             </button>
           </div>
         </div>
       
         <!-- 4 KPI Agent Cards -->
         <div class="grid-4">
-          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-role-agent')" title="Voir le pipeline complet">
+          <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-role-agent')" title="Voir tous les dossiers de financement">
             <div class="stat-icon-wrap primary">
               <i class="fas fa-inbox"></i>
             </div>
@@ -2022,47 +2046,67 @@
           </div>
         </div>
       
-        <!-- Agent Pipeline Table -->
+        <!-- Agent Loan Requests Table (Essential Columns & Responsive Filter Tabs) -->
         <div class="card" style="margin-top: 1.25rem;">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-list-check text-primary"></i> Pipeline des Demandes à Traiter par l'Agent</h3>
-            <span class="badge badge-submitted">Guichet & Terrain</span>
+          <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+            <div>
+              <h3 class="card-title"><i class="fas fa-file-invoice-dollar text-primary mr-1"></i> Registre des Demandes de Financement</h3>
+              <p class="card-subtitle">Instruction Guichet & Terrain • Cliquez sur une ligne pour ouvrir la fiche détaillée du dossier</p>
+            </div>
+            <!-- Filter Tabs -->
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <button id="filter-agent-all" class="btn btn-secondary btn-sm active" onclick="App.filterAgentPipeline('ALL', this)">
+                Toutes (<span id="agent-filter-count-all">0</span>)
+              </button>
+              <button id="filter-agent-submitted" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('SUBMITTED', this)">
+                <i class="fas fa-inbox text-primary"></i> Soumises (<span id="agent-filter-count-submitted">0</span>)
+              </button>
+              <button id="filter-agent-review" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('REVIEW', this)">
+                <i class="fas fa-hourglass-half text-warning"></i> En Vérification (<span id="agent-filter-count-review">0</span>)
+              </button>
+              <button id="filter-agent-approved" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('APPROVED', this)">
+                <i class="fas fa-circle-check text-success"></i> Comité / Accordées (<span id="agent-filter-count-approved">0</span>)
+              </button>
+            </div>
           </div>
           <div class="table-responsive">
             <table class="table-custom">
               <thead>
                 <tr>
-                  <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier">
+                  <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier" style="min-width: 140px;">
                     <div class="th-content">
                       <span>N° Dossier</span>
                       <i class="fas fa-sort sort-icon" id="sort-icon-request_number"></i>
                     </div>
                   </th>
-                  <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur">
+                  <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur" style="min-width: 170px;">
                     <div class="th-content">
                       <span>Client Emprunteur</span>
                       <i class="fas fa-sort sort-icon" id="sort-icon-client_name"></i>
                     </div>
                   </th>
-                  <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant">
+                  <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant" style="min-width: 140px;">
                     <div class="th-content">
                       <span>Montant Demandé</span>
                       <i class="fas fa-sort sort-icon" id="sort-icon-requested_amount"></i>
                     </div>
                   </th>
-                  <th class="sortable-th" onclick="App.sortAgentTable('purpose')" title="Cliquer pour trier par Objet du prêt">
+                  <th class="sortable-th schedule-col-hide-mobile" onclick="App.sortAgentTable('purpose')" title="Cliquer pour trier par Objet du prêt" style="min-width: 180px;">
                     <div class="th-content">
                       <span>Objet du Prêt</span>
                       <i class="fas fa-sort sort-icon" id="sort-icon-purpose"></i>
                     </div>
                   </th>
-                  <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut">
+                  <th class="schedule-col-hide-tablet" style="min-width: 120px;">
+                    <span>Capacité</span>
+                  </th>
+                  <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut" style="min-width: 130px;">
                     <div class="th-content">
                       <span>Statut</span>
                       <i class="fas fa-sort sort-icon" id="sort-icon-status"></i>
                     </div>
                   </th>
-                  <th style="text-align: right;">Action Rapide</th>
+                  <th style="min-width: 140px; text-align: right;">Action / Volet</th>
                 </tr>
               </thead>
               <tbody id="agent-pipeline-table-body">
@@ -2072,6 +2116,211 @@
           </div>
         </div>
       </section>
+      
+      <!-- ====================================================================
+           SIDE DRAWER: DÉTAIL COMPLET DU DOSSIER AGENT
+           ==================================================================== -->
+      <div id="agent-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAgentDrawer()">
+        <div class="schedule-drawer" onclick="event.stopPropagation()">
+          <!-- Drawer Header -->
+          <div class="schedule-drawer-header">
+            <div class="schedule-drawer-title-box">
+              <div class="schedule-drawer-icon">
+                <i class="fas fa-folder-open"></i>
+              </div>
+              <div>
+                <h3 id="agent-drawer-title" style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Dossier N° REQ-2026-0891</h3>
+                <p id="agent-drawer-date" style="font-size: 0.74rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Déposé le 11/08/2026 • Agence Assigamé</p>
+              </div>
+            </div>
+            <button class="modal-close-btn" onclick="App.closeAgentDrawer()" title="Fermer le volet">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+      
+          <!-- Drawer Body -->
+          <div class="schedule-drawer-body">
+            <!-- 1. Hero Amount & Status Summary Banner -->
+            <div class="drawer-hero-banner">
+              <div class="drawer-hero-label">Montant Net Demandé</div>
+              <div id="agent-drawer-hero-amount" class="drawer-hero-val">2 500 000 FCFA</div>
+              <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <span id="agent-drawer-hero-status-container">
+                  <span id="agent-drawer-hero-status" class="badge badge-submitted">En Traitement</span>
+                </span>
+                <span id="agent-drawer-hero-mode" class="badge badge-submitted" style="font-size: 0.7rem;"><i class="fas fa-history"></i> Standard</span>
+                <span id="agent-drawer-hero-score-badge" class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-microchip"></i> Score IA : 84/100</span>
+              </div>
+            </div>
+      
+            <!-- 2. Borrower & Contact Panel -->
+            <div class="drawer-panel">
+              <div class="drawer-panel-header">
+                <h4 class="drawer-panel-title">
+                  <i class="fas fa-user-circle text-primary"></i> Profil Emprunteur & Contact
+                </h4>
+                <span id="agent-drawer-client-number" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.68rem;">SN-DKR-008821</span>
+              </div>
+      
+              <div style="display: flex; gap: 0.85rem; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border-color);">
+                <img id="agent-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
+                <div style="flex: 1; min-width: 0;">
+                  <div id="agent-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Fatou Ndiaye</div>
+                  <div id="agent-drawer-client-occupation" style="font-size: 0.76rem; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Commerçante / Grossiste Textiles</div>
+                </div>
+              </div>
+      
+              <div class="drawer-grid-2">
+                <div class="drawer-kv">
+                  <span class="drawer-kv-label"><i class="fas fa-location-dot text-primary mr-1"></i> Localisation</span>
+                  <span id="agent-drawer-client-location" class="drawer-kv-value">Dakar, Sénégal</span>
+                </div>
+                <div class="drawer-kv">
+                  <span class="drawer-kv-label"><i class="fas fa-phone text-emerald mr-1"></i> Téléphone</span>
+                  <span id="agent-drawer-client-phone" class="drawer-kv-value" style="font-family: var(--font-family-code);">+221 77 450 88 21</span>
+                </div>
+                <div class="drawer-kv">
+                  <span class="drawer-kv-label"><i class="fas fa-envelope text-info mr-1"></i> Email</span>
+                  <span id="agent-drawer-client-email" class="drawer-kv-value" style="font-size: 0.76rem;">fatou.ndiaye@gmail.com</span>
+                </div>
+                <div class="drawer-kv">
+                  <span class="drawer-kv-label"><i class="fas fa-id-card text-gold mr-1"></i> Conformité KYC</span>
+                  <span id="agent-drawer-client-kyc" class="badge badge-approved" style="font-size: 0.68rem; align-self: flex-start;"><i class="fas fa-check-circle"></i> Conforme</span>
+                </div>
+              </div>
+      
+              <!-- Quick Contact Action Buttons -->
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color-light, #f1f5f9);">
+                <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-sms" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+                  <i class="fas fa-comment-sms text-primary"></i> Relance SMS
+                </button>
+                <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-call" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+                  <i class="fas fa-phone text-emerald"></i> Appeler
+                </button>
+              </div>
+            </div>
+      
+            <!-- 3. Financial Capacity & Repayment Schedule Panel -->
+            <div class="drawer-panel">
+              <div class="drawer-panel-header">
+                <h4 class="drawer-panel-title">
+                  <i class="fas fa-coins text-gold"></i> Paramètres Prêt & Capacité
+                </h4>
+                <span id="agent-drawer-capacity-badge">
+                  <span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>
+                </span>
+              </div>
+      
+              <div class="drawer-grid-2" style="margin-bottom: 0.75rem;">
+                <div class="drawer-metric-box">
+                  <div class="drawer-kv-label">Durée Accordée</div>
+                  <div id="agent-drawer-duration" style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">18 Mois</div>
+                </div>
+                <div class="drawer-metric-box">
+                  <div class="drawer-kv-label">Mensualité Estimée</div>
+                  <div id="agent-drawer-monthly-payment" style="font-size: 0.95rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+                </div>
+                <div class="drawer-metric-box">
+                  <div class="drawer-kv-label">Revenus Mensuels</div>
+                  <div id="agent-drawer-income" style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-family-code);">1 450 000 FCFA</div>
+                </div>
+                <div class="drawer-metric-box">
+                  <div class="drawer-kv-label">Reste à Vivre Net</div>
+                  <div id="agent-drawer-disposable" style="font-size: 0.9rem; font-weight: 700; color: var(--cif-emerald-700); font-family: var(--font-family-code);">780 000 FCFA</div>
+                </div>
+              </div>
+      
+              <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+                <span>Charges mensuelles déclarées :</span>
+                <strong id="agent-drawer-expenses" style="color: var(--text-primary); font-family: var(--font-family-code);">670 000 FCFA</strong>
+              </div>
+            </div>
+      
+            <!-- 4. Financing Purpose & Collaterals Panel -->
+            <div class="drawer-panel">
+              <div class="drawer-panel-header">
+                <h4 class="drawer-panel-title">
+                  <i class="fas fa-shield-halved text-emerald"></i> Objet du Prêt & Garanties
+                </h4>
+                <span id="agent-drawer-guarantee-status" class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-check"></i> Inspecté sur terrain</span>
+              </div>
+      
+              <div style="background: var(--bg-surface-secondary); padding: 0.75rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+                <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;">Objet déclaré</div>
+                <p id="agent-drawer-purpose" style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                  Acquisition broyeur industriel et ensacheuse moderne
+                </p>
+              </div>
+      
+              <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.78rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Type de garantie :</span>
+                  <strong id="agent-drawer-guarantee-type" style="color: var(--text-primary);">Stock Marchandises & Matériel</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Description :</span>
+                  <span id="agent-drawer-guarantee-desc" style="font-weight: 500; text-align: right; max-width: 60%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Broyeur 15kW et ensacheuse</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+                  <span>Valeur déclarée : <strong id="agent-drawer-guarantee-declared" style="color: var(--text-primary); font-family: var(--font-family-code);">6 500 000 FCFA</strong></span>
+                  <span>Expertise terrain : <strong id="agent-drawer-guarantee-verified" style="color: var(--cif-emerald-700); font-family: var(--font-family-code);">5 800 000 FCFA</strong></span>
+                </div>
+              </div>
+            </div>
+      
+            <!-- 5. Attached Documents (GED) & OCR Panel -->
+            <div class="drawer-panel">
+              <div class="drawer-panel-header">
+                <h4 class="drawer-panel-title">
+                  <i class="fas fa-file-contract text-primary"></i> Pièces Justificatives (GED)
+                </h4>
+                <span id="agent-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">3 documents</span>
+              </div>
+      
+              <div id="agent-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+      
+            <!-- 6. Scoring V2 & Recommendation Panel -->
+            <div class="drawer-panel">
+              <div class="drawer-panel-header">
+                <h4 class="drawer-panel-title">
+                  <i class="fas fa-chart-line text-purple"></i> Scoring V2 & Décision IA
+                </h4>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <span id="agent-drawer-score-val" style="font-size: 1.25rem; font-weight: 800; color: #059669; font-family: var(--font-family-code);">84</span>
+                  <span style="font-size: 0.75rem; color: var(--text-subtle);">/100</span>
+                </div>
+              </div>
+      
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; margin-bottom: 0.65rem;">
+                <span id="agent-drawer-score-label" class="badge badge-approved" style="font-size: 0.7rem;">Risque Faible</span>
+                <span style="color: var(--text-muted);">Indice de confiance : <strong id="agent-drawer-confidence-val" style="color: var(--cif-emerald-600);">94%</strong></span>
+              </div>
+      
+              <div style="height: 6px; background: var(--bg-surface-secondary); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color);">
+                <div id="agent-drawer-score-progress" style="width: 84%; height: 100%; background: linear-gradient(90deg, #10b981, #059669); border-radius: var(--radius-full);"></div>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Drawer Footer Actions -->
+          <div class="schedule-drawer-footer">
+            <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer()">
+              Fermer
+            </button>
+            <div id="agent-drawer-footer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer(); App.switchView('view-agent-inspections');">
+                <i class="fas fa-motorcycle mr-1"></i> Inspections Terrain
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="App.closeAgentDrawer(); AppInteractions.openDossierModal(1);">
+                <i class="fas fa-magnifying-glass-chart mr-1"></i> Analyser 360°
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       
 
       <!-- ====================================================================
@@ -2219,8 +2468,8 @@
             <button class="btn btn-secondary" onclick="App.exportClientsCsv()">
               <i class="fas fa-file-excel text-emerald mr-1"></i> Exporter Portefeuille (CSV)
             </button>
-            <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
-              <i class="fas fa-user-plus mr-1"></i> Enrôler un Nouveau Membre
+            <button class="btn btn-primary" onclick="App.openNewLoanModal()" title="Enregistrer une nouvelle demande de crédit au guichet">
+              <i class="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
             </button>
           </div>
         </div>
@@ -2568,7 +2817,7 @@
             <h1>Dossiers à Instruire • Espace Analyste</h1>
             <div class="page-breadcrumb">
               <span>Analyse Risque</span> <i class="fas fa-chevron-right"></i>
-              <span>Pipeline & Cold Start</span>
+              <span>Instruction & Risque</span>
             </div>
           </div>
         </div>
@@ -4585,91 +4834,189 @@
      MODAL: MODIFIER LE PROFIL UTILISATEUR (Email & Téléphone / Mobile Money)
      Confédération des Institutions Financières d'Afrique de l'Ouest (CIF)
      ========================================================================== -->
-<div id="modal-edit-profile" class="modal-backdrop" style="display: none;">
-  <div class="modal-dialog" style="max-width: 520px;">
-    <div class="modal-header">
+<div
+  id="modal-edit-profile"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+>
+  <div
+    class="max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-2xl bg-white shadow-2xl"
+  >
+
+    <!-- HEADER -->
+    <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4">
       <div>
-        <h3 style="font-size: 1.15rem; margin-bottom: 2px; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-user-pen text-primary"></i> Modifier mon Profil
+        <h3 class="mb-0.5 flex items-center gap-2 text-[1.15rem] font-bold text-slate-900">
+          <i class="fas fa-user-pen text-primary"></i>
+          Modifier mon Profil
         </h3>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Mettez à jour votre adresse e-mail professionnelle et votre numéro de contact</p>
+
+        <p class="text-[0.78rem] text-slate-500">
+          Mettez à jour votre adresse e-mail professionnelle et votre numéro de contact
+        </p>
       </div>
-      <button class="modal-close-btn" onclick="App.closeEditProfileModal()" title="Fermer la fenêtre">&times;</button>
+
+      <button
+        type="button"
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+        onclick="App.closeEditProfileModal()"
+        title="Fermer la fenêtre"
+      >
+        &times;
+      </button>
     </div>
 
-    <form id="edit-profile-form" onsubmit="event.preventDefault(); App.saveUserProfile();">
-      <div class="modal-body">
-        <!-- User Summary Card with Avatar & Superimposed Flag -->
-        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-surface-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); margin-bottom: 1.25rem;">
+    <form
+      id="edit-profile-form"
+      onsubmit="event.preventDefault(); App.saveUserProfile();"
+    >
+      <div class="px-5 py-5">
+
+        <!-- User Summary Card -->
+        <div class="mb-5 flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div class="topbar-avatar-wrap">
-            <img id="edit-profile-avatar-img" src="" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-500);">
-            <span class="avatar-flag-badge lg" id="edit-profile-avatar-flag"></span>
+            <img
+              id="edit-profile-avatar-img"
+              src=""
+              alt="Avatar"
+              class="h-12 w-12 rounded-full border-2 border-indigo-500 object-cover"
+            >
+
+            <!-- <span class="avatar-flag-badge lg" id="edit-profile-avatar-flag"></span> -->
           </div>
-          <div style="flex: 1; min-width: 0;">
-            <h5 id="edit-profile-card-name" style="font-size: 0.95rem; font-weight: 700; margin: 0 0 2px 0; color: var(--text-primary);"></h5>
-            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-              <span id="edit-profile-card-role" class="badge user-role-pill" style="font-size: 0.7rem; padding: 2px 8px;"></span>
-              <span id="edit-profile-card-location" style="font-size: 0.72rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: 3px;">
-                <i class="fas fa-location-dot"></i> <span></span>
+
+          <div class="min-w-0 flex-1">
+            <h5
+              id="edit-profile-card-name"
+              class="mb-0.5 text-[0.95rem] font-bold text-slate-900"
+            ></h5>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                id="edit-profile-card-role"
+                class="rounded-full bg-indigo-50 px-2 py-0.5 text-[0.7rem] font-medium text-indigo-700"
+              ></span>
+
+              <span
+                id="edit-profile-card-location"
+                class="inline-flex items-center gap-1 text-[0.72rem] text-slate-500"
+              >
+                <i class="fas fa-location-dot"></i>
+                <span></span>
               </span>
             </div>
           </div>
         </div>
 
-        <!-- Section: Coordonnées Actives -->
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="edit-profile-email" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-            <i class="fas fa-envelope text-primary"></i> Adresse E-mail Professionnelle <span class="text-danger">*</span>
+        <!-- EMAIL -->
+        <div class="mb-4">
+          <label
+            for="edit-profile-email"
+            class="mb-1.5 flex items-center gap-2 text-[0.82rem] font-semibold text-slate-700"
+          >
+            <i class="fas fa-envelope text-primary"></i>
+            Adresse E-mail Professionnelle
+            <span class="text-red-500">*</span>
           </label>
-          <div style="position: relative;">
-            <input type="email" id="edit-profile-email" class="form-control" placeholder="nom.prenom@cif-ao.org" required style="padding-left: 2.25rem;">
-            <i class="fas fa-at" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+
+          <div class="relative">
+            <input
+              type="email"
+              id="edit-profile-email"
+              class="w-full rounded-xl border border-slate-300 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+              placeholder="nom.prenom@cif-ao.org"
+              required
+            >
+
+            <i class="fas fa-at absolute left-3 top-1/2 -translate-y-1/2 text-[0.85rem] text-slate-400"></i>
           </div>
-          <small style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
+
+          <small class="mt-1 block text-[0.7rem] text-slate-500">
             Utilisée pour les alertes de sécurité, rapports de crédit et convocations.
           </small>
         </div>
 
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label class="form-label" for="edit-profile-phone" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-            <i class="fas fa-phone text-emerald"></i> Numéro de Téléphone / Mobile Money <span class="text-danger">*</span>
+        <!-- TELEPHONE -->
+        <div class="mb-4">
+          <label
+            for="edit-profile-phone"
+            class="mb-1.5 flex items-center gap-2 text-[0.82rem] font-semibold text-slate-700"
+          >
+            <i class="fas fa-phone text-emerald-600"></i>
+            Numéro de Téléphone / Mobile Money
+            <span class="text-red-500">*</span>
           </label>
-          <div style="position: relative;">
-            <input type="tel" id="edit-profile-phone" class="form-control" placeholder="+226 70 12 34 56" required style="padding-left: 2.25rem;">
-            <i class="fas fa-mobile-screen" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+
+          <div class="relative">
+            <input
+              type="tel"
+              id="edit-profile-phone"
+              class="w-full rounded-xl border border-slate-300 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+              placeholder="+226 70 12 34 56"
+              required
+            >
+
+            <i class="fas fa-mobile-screen absolute left-3 top-1/2 -translate-y-1/2 text-[0.85rem] text-slate-400"></i>
           </div>
-          <small style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
-            Format international (ex: +221 77..., +228 90..., +226 70...). Alertes instantanées SMS & WhatsApp.
+
+          <small class="mt-1 block text-[0.7rem] text-slate-500">
+            Format international (ex: +223 77..., +228 90..., +226 70...).
+            Alertes instantanées SMS &amp; WhatsApp.
           </small>
         </div>
 
-        <div class="form-group" style="margin-bottom: 0.5rem;">
-          <label class="form-label" for="edit-profile-title" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-            <i class="fas fa-id-badge text-info"></i> Titre & Fonction CIF
+        <!-- TITRE -->
+        <div class="mb-2">
+          <label
+            for="edit-profile-title"
+            class="mb-1.5 flex items-center gap-2 text-[0.82rem] font-semibold text-slate-700"
+          >
+            <i class="fas fa-id-badge text-sky-600"></i>
+            Titre &amp; Fonction CreditFast
           </label>
-          <input type="text" id="edit-profile-title" class="form-control" readonly style="background: var(--bg-surface-secondary); cursor: not-allowed; font-size: 0.82rem;">
+
+          <input
+            type="text"
+            id="edit-profile-title"
+            class="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-[0.82rem] text-slate-500 outline-none"
+            readonly
+          >
         </div>
 
-        <div style="margin-top: 1rem; padding: 0.65rem 0.85rem; background: rgba(79, 70, 229, 0.06); border: 1px dashed rgba(79, 70, 229, 0.25); border-radius: var(--radius-md); display: flex; align-items: flex-start; gap: 0.6rem;">
-          <i class="fas fa-shield-check text-primary" style="font-size: 1rem; margin-top: 2px;"></i>
-          <span style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.4;">
-            Vos coordonnées sont chiffrées selon les standards de sécurité UEMOA. Toute modification prend effet immédiatement sur vos alertes en temps réel.
+        <!-- SECURITY INFO -->
+        <div class="mt-4 flex items-start gap-2.5 rounded-lg border border-dashed border-indigo-500/25 bg-indigo-500/[0.06] px-3.5 py-2.5">
+          <i class="fas fa-shield-check mt-0.5 text-base text-primary"></i>
+
+          <span class="text-[0.72rem] leading-[1.4] text-slate-600">
+            Vos coordonnées sont chiffrées selon les standards de sécurité UEMOA.
+            Toute modification prend effet immédiatement sur vos alertes en temps réel.
           </span>
         </div>
+
       </div>
 
-      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border-color);">
-        <button type="button" class="btn btn-secondary btn-sm" onclick="App.closeEditProfileModal()">
+      <!-- FOOTER -->
+      <div class="flex justify-end gap-3 border-t border-slate-200 px-5 py-4">
+        <button
+          type="button"
+          class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+          onclick="App.closeEditProfileModal()"
+        >
           Annuler
         </button>
-        <button type="submit" class="btn btn-primary btn-sm" id="btn-save-user-profile">
-          <i class="fas fa-floppy-disk mr-1"></i> Enregistrer les Modifications
+
+        <button
+          type="submit"
+          id="btn-save-user-profile"
+          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20"
+        >
+          <i class="fas fa-floppy-disk"></i>
+          Enregistrer les Modifications
         </button>
       </div>
     </form>
+
   </div>
 </div>
-
 
 <!-- ====================================================================
      [MODAL] PAIEMENT D'ÉCHÉANCE MOBILE MONEY (DEMANDEUR CIF)
@@ -5038,6 +5385,491 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====================================================================
+     [MODAL] DEMANDE DE FINANCEMENT & CRÉDIT CIF (PARCOURS EN 6 ÉTAPES)
+     Confédération des Institutions Financières d'Afrique de l'Ouest
+     ==================================================================== -->
+<div id="modal-loan-application" class="modal-backdrop" style="display: none; position: fixed; inset: 0; z-index: 2100; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);">
+  <div class="modal-dialog modal-xl" style="max-width: 900px; width: 95%; max-height: 90vh; background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl); border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; animation: modalFadeIn 0.25s ease-out;">
+    
+    <!-- Modal Header -->
+    <div class="modal-header" id="modal-loan-app-header" style="padding: 1.25rem 1.75rem; background: linear-gradient(135deg, var(--cif-emerald-600, #059669), var(--cif-emerald-700, #047857)); color: white; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <i class="fas fa-file-circle-plus"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: white; display: flex; align-items: center; gap: 0.5rem;">
+            <span id="modal-loan-app-title">Faire une Demande de Prêt CIF</span>
+            <span class="badge" id="modal-loan-app-badge" style="background: rgba(255, 255, 255, 0.25); color: white; font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 12px;">Parcours 6 Étapes</span>
+          </h3>
+          <p id="modal-loan-app-subtitle" style="font-size: 0.76rem; color: #d1fae5; margin: 2px 0 0 0;">
+            Instruction rapide, calcul transparent de votre mensualité & transmission sécurisée à votre conseiller
+          </p>
+        </div>
+      </div>
+      <button type="button" class="modal-close-btn" style="color: white; background: rgba(255,255,255,0.18); border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onclick="App.closeNewLoanModal()" title="Fermer la fenêtre">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body (Scrollable Wizard) -->
+    <div class="modal-body" style="padding: 1.5rem 1.75rem; overflow-y: auto; flex: 1;">
+      
+      <!-- 6-Step Indicator -->
+      <div class="wizard-nav" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+        <div class="wizard-step active" id="modal-wstep-1" onclick="App.setModalWizardStep(1)" style="cursor: pointer;">
+          <div class="wizard-step-circle">1</div>
+          <div class="wizard-step-label">Identité</div>
+        </div>
+        <div class="wizard-step" id="modal-wstep-2" onclick="App.setModalWizardStep(2)" style="cursor: pointer;">
+          <div class="wizard-step-circle">2</div>
+          <div class="wizard-step-label">Activité</div>
+        </div>
+        <div class="wizard-step" id="modal-wstep-3" onclick="App.setModalWizardStep(3)" style="cursor: pointer;">
+          <div class="wizard-step-circle">3</div>
+          <div class="wizard-step-label">Finances</div>
+        </div>
+        <div class="wizard-step" id="modal-wstep-4" onclick="App.setModalWizardStep(4)" style="cursor: pointer;">
+          <div class="wizard-step-circle">4</div>
+          <div class="wizard-step-label">Demande</div>
+        </div>
+        <div class="wizard-step" id="modal-wstep-5" onclick="App.setModalWizardStep(5)" style="cursor: pointer;">
+          <div class="wizard-step-circle">5</div>
+          <div class="wizard-step-label">Garantie</div>
+        </div>
+        <div class="wizard-step" id="modal-wstep-6" onclick="App.setModalWizardStep(6)" style="cursor: pointer;">
+          <div class="wizard-step-circle">6</div>
+          <div class="wizard-step-label">Justificatifs</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Identité -->
+      <div id="modal-wizard-step-1" class="modal-wizard-step-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+            <i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC
+          </h4>
+          <button type="button" class="btn btn-primary-subtle btn-sm" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
+            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+          </button>
+        </div>
+
+        <!-- Verified QR Document Banner -->
+        <div id="modal-wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
+          <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
+          <div class="anomaly-content">
+            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
+            <p id="modal-wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+          </div>
+          <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
+            <i class="fas fa-rotate"></i> Re-scanner
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Nom et Prénom *</label>
+            <input type="text" id="wiz-fullname" class="form-control" value="Fatou Ndiaye" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Numéro de Téléphone *</label>
+            <input type="tel" id="wiz-phone" class="form-control" value="+221 77 540 12 88" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pays de Résidence (UEMOA)</label>
+            <select id="wiz-country" class="form-control">
+              <option value="Sénégal" selected>Sénégal (Dakar)</option>
+              <option value="Mali">Mali (Bamako)</option>
+              <option value="Burkina Faso">Burkina Faso (Ouagadougou)</option>
+              <option value="Togo">Togo (Lomé)</option>
+              <option value="Bénin">Bénin (Cotonou)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Ville & Quartier / Zone</label>
+            <input type="text" id="wiz-city" class="form-control" value="Dakar - Médina">
+          </div>
+        </div>
+
+        <!-- Profil d'Éligibilité & Cold Start (Inclusion Financière) -->
+        <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.15rem; margin-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <label class="form-label" style="margin: 0; font-size: 0.84rem; font-weight: 700; color: var(--text-primary);">
+              <i class="fas fa-seedling text-emerald mr-1"></i> Profil d'Inclusion & Antécédents Financiers
+            </label>
+            <span class="badge badge-warning" id="modal-wiz-cold-start-indicator" style="font-size: 0.7rem;">
+              <i class="fas fa-check"></i> Mode Cold Start Activé
+            </span>
+          </div>
+
+          <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+            <label style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--bg-surface); transition: all 0.2s;" id="modal-label-profile-standard">
+              <input type="radio" name="wiz-profile-mode" id="modal-wiz-profile-standard" value="STANDARD" onchange="App.handleWizardProfileModeChange('STANDARD')" style="margin-top: 3px;">
+              <div>
+                <strong style="font-size: 0.82rem; color: var(--text-primary); display: block;">Membre Existant CIF</strong>
+                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Déjà client avec compte d'épargne ou historique régulier.</span>
+              </div>
+            </label>
+
+            <label style="border: 2px solid var(--primary-600); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--cif-emerald-50, #f0fdf4); transition: all 0.2s;" id="modal-label-profile-coldstart">
+              <input type="radio" name="wiz-profile-mode" id="modal-wiz-profile-coldstart" value="COLD_START" checked onchange="App.handleWizardProfileModeChange('COLD_START')" style="margin-top: 3px;">
+              <div>
+                <strong style="font-size: 0.82rem; color: var(--emerald, #047857); display: block;">
+                  <i class="fas fa-seedling"></i> Primo-Demandeur (Cold Start)
+                </strong>
+                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Nouveau bénéficiaire : évaluation inclusive par solvabilité réelle.</span>
+              </div>
+            </label>
+          </div>
+
+          <div id="modal-wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
+            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CIF UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations s'adaptent à votre capacité réelle de remboursement et à vos garanties de proximité.
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-primary" onclick="App.setModalWizardStep(2)">
+            Suivant : Activité <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Activité -->
+      <div id="modal-wizard-step-2" class="modal-wizard-step-content" style="display: none;">
+        <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+          <i class="fas fa-store text-primary mr-2"></i> Étape 2 : Votre Activité Économique
+        </h4>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Secteur d'Activité *</label>
+          <select id="wiz-sector" class="form-control">
+            <option value="Commerce de Tissus & Habillement (Wax/Bazin)" selected>Commerce de Tissus & Habillement (Wax/Bazin)</option>
+            <option value="Artisanat & Menuiserie Bois">Artisanat & Menuiserie Bois</option>
+            <option value="Transformation Agroalimentaire">Transformation Agroalimentaire</option>
+            <option value="Commerce Général & Demi-Gros">Commerce Général & Demi-Gros</option>
+            <option value="Aviculture & Élevage">Aviculture & Élevage</option>
+            <option value="BTP & Quincaillerie">BTP & Quincaillerie</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Ancienneté de votre activité (Années)</label>
+            <input type="number" id="wiz-seniority" class="form-control" value="4">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Emplacement Commercial / Boutique</label>
+            <input type="text" id="wiz-location" class="form-control" value="Marché Sandaga / Médina, Dakar">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.setModalWizardStep(1)"><i class="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" class="btn btn-primary" onclick="App.setModalWizardStep(3)">Suivant : Finances <i class="fas fa-arrow-right ml-1"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 3: Finances -->
+      <div id="modal-wizard-step-3" class="modal-wizard-step-content" style="display: none;">
+        <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+          <i class="fas fa-calculator text-primary mr-2"></i> Étape 3 : Revenus, Charges & Capacité
+        </h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Revenu Mensuel Moyen de l'Activité (FCFA) *</label>
+            <input type="number" id="wiz-income" class="form-control" value="850000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Dépenses Mensuelles & Ménage (FCFA) *</label>
+            <input type="number" id="wiz-expenses" class="form-control" value="320000">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Mensualités d'autres crédits en cours (FCFA)</label>
+            <input type="number" id="wiz-debt" class="form-control" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Nombre de personnes à charge</label>
+            <input type="number" id="wiz-dependents" class="form-control" value="3">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.setModalWizardStep(2)"><i class="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" class="btn btn-primary" onclick="App.setModalWizardStep(4)">Suivant : Demande <i class="fas fa-arrow-right ml-1"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 4: Demande -->
+      <div id="modal-wizard-step-4" class="modal-wizard-step-content" style="display: none;">
+        <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+          <i class="fas fa-money-bill-wave text-primary mr-2"></i> Étape 4 : Détails du Financement Souhaité
+        </h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Montant Demandé (FCFA) *</label>
+            <input type="number" id="wiz-amount" class="form-control" value="2500000" min="100000" step="50000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Durée Souhaitée (Mois) *</label>
+            <input type="number" id="wiz-duration" class="form-control" value="12" min="3" max="36">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Objet précis de votre financement *</label>
+          <textarea id="wiz-purpose" class="form-control" rows="2">Achat de stock conteneur tissus wax et bazin riche pour les commandes de Tabaski</textarea>
+        </div>
+
+        <!-- Live Capacity Simulator Card -->
+        <div class="capacity-card" style="margin-top: 1rem; background: var(--bg-body); padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+          <h5 style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 0.5rem; font-weight: 700;">
+            <i class="fas fa-calculator text-primary mr-1"></i> Estimation Instantanée de votre Confort Financier
+          </h5>
+          <div class="capacity-equation" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div class="capacity-item">
+              <div class="val" id="wiz-calc-disposable" style="font-size: 1.1rem; font-weight: 800; color: #047857;">530 000 FCFA</div>
+              <div class="lbl" style="font-size: 0.72rem; color: var(--text-subtle);">Reste à Vivre Disponible</div>
+            </div>
+            <div class="capacity-op" style="font-weight: 700; color: var(--text-subtle);">vs</div>
+            <div class="capacity-item">
+              <div class="val" id="wiz-calc-installment" style="font-size: 1.1rem; font-weight: 800; color: var(--primary-700);">235 000 FCFA</div>
+              <div class="lbl" style="font-size: 0.72rem; color: var(--text-subtle);">Mensualité Estimée</div>
+            </div>
+            <div class="capacity-item">
+              <span id="wiz-calc-status" class="badge badge-capacity-sufficient" style="font-size: 0.76rem; padding: 6px 12px;">Capacité Suffisante</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.setModalWizardStep(3)"><i class="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" class="btn btn-primary" onclick="App.setModalWizardStep(5)">Suivant : Garanties <i class="fas fa-arrow-right ml-1"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 5: Garanties -->
+      <div id="modal-wizard-step-5" class="modal-wizard-step-content" style="display: none;">
+        <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+          <i class="fas fa-shield-alt text-primary mr-2"></i> Étape 5 : Déclaration de Garantie
+        </h4>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Type de Garantie Proposée</label>
+          <select id="wiz-guarantee-type" class="form-control">
+            <option value="STOCK_MARCHANDISE" selected>Stock de marchandise / Tissus & Devis</option>
+            <option value="CAUTION_SOLIDAIRE">Caution solidaire d'un commerçant / artisan</option>
+            <option value="EQUIPEMENT_MATERIEL">Équipement professionnel / Matériel</option>
+            <option value="PARCELLE_TERRAIN">Titre foncier / Attestation d'attribution</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Valeur Estimée de la Garantie (FCFA)</label>
+            <input type="number" id="wiz-guarantee-val" class="form-control" value="3200000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Description de la garantie</label>
+            <input type="text" id="wiz-guarantee-desc" class="form-control" value="Stock tissus wax et factures proforma certifiées Lomé">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.setModalWizardStep(4)"><i class="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" class="btn btn-primary" onclick="App.setModalWizardStep(6)">Suivant : Justificatifs & Signature <i class="fas fa-arrow-right ml-1"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 6: Justificatifs & OCR -->
+      <div id="modal-wizard-step-6" class="modal-wizard-step-content" style="display: none;">
+        <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
+          <i class="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des Justificatifs & Signature
+        </h4>
+        
+        <div class="grid-2" style="gap: 1rem; margin-bottom: 1.25rem;">
+          <!-- Option A: Scanner via Caméra QR Code -->
+          <div style="border: 2px dashed var(--primary-300); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.5rem;">
+                <i class="fas fa-camera"></i>
+              </div>
+              <h5 style="margin-bottom: 0.25rem; font-size: 0.9rem; font-weight: 700;">Scanner en Direct (Caméra)</h5>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Scannez le QR Code officiel de votre devis normalisé, facture DGI ou reçu.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="App.openQrScannerModal('document')" style="width: 100%; justify-content: center;">
+              <i class="fas fa-qrcode mr-2"></i> Lancer la Caméra & Scanner QR
+            </button>
+          </div>
+
+          <!-- Option B: Téléverser un Fichier -->
+          <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-surface); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.5rem; border: 1px solid var(--border-color);">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+              <h5 style="margin-bottom: 0.25rem; font-size: 0.9rem; font-weight: 700;">Joindre un Fichier (PDF / Photo)</h5>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Format PDF, JPEG ou PNG avec extraction OCR automatique des montants.
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document joint avec succès (Devis_Fournisseur_Lome.pdf)', 'success')" style="width: 100%; justify-content: center;">
+              <i class="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
+            </button>
+          </div>
+        </div>
+
+        <!-- Scanned Document Banner if available -->
+        <div id="modal-wizard-doc-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
+          <i class="fas fa-file-circle-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
+          <div class="anomaly-content">
+            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Document Officiel Vérifié par QR Code</h5>
+            <p id="modal-wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée attachée avec succès au dossier.</p>
+          </div>
+        </div>
+
+        <!-- Consent Checkbox -->
+        <div style="background: rgba(16, 185, 129, 0.08); border-radius: var(--radius-md); padding: 0.85rem 1rem; border: 1px solid rgba(16, 185, 129, 0.25); margin-bottom: 1.25rem;">
+          <label style="display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; margin: 0; font-size: 0.78rem; color: var(--text-primary);">
+            <input type="checkbox" id="modal-wiz-consent" checked style="margin-top: 2px; accent-color: var(--cif-emerald-500);">
+            <span>
+              Je certifie l'exactitude des informations fournies et j'autorise la Caisse CIF à instruire ma demande de financement selon les normes de l'UEMOA.
+            </span>
+          </label>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.setModalWizardStep(5)"><i class="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" id="modal-loan-app-submit-btn" class="btn btn-success btn-lg" onclick="App.submitNewCreditRequest()">
+            <i class="fas fa-paper-plane mr-2"></i> Confirmer & Soumettre ma Demande
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ====================================================================
+     [MODAL] PRISE DE RENDEZ-VOUS AVEC LE CONSEILLER (DEMANDEUR CIF)
+     ==================================================================== -->
+<div id="client-appointment-modal" class="modal" style="display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
+  <div class="modal-dialog" style="max-width: 540px; width: 92%; background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl); border: 1px solid var(--border-color); overflow: hidden; animation: modalFadeIn 0.25s ease-out;">
+    
+    <!-- Modal Header -->
+    <div class="modal-header" style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, var(--cif-primary-600), var(--cif-primary-800)); color: white; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+          <i class="fas fa-calendar-check text-white"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: white;">
+            Prendre Rendez-vous
+          </h4>
+          <span style="font-size: 0.76rem; color: #cbd5e1;">Avec votre conseiller attitré Adama Traore</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" style="color: white; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="App.closeAppointmentModal()" title="Fermer">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body" style="padding: 1.5rem; max-height: calc(90vh - 120px); overflow-y: auto;">
+      
+      <!-- Advisor Quick Info Strip -->
+      <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 0.85rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <img src="images/profil/profil01-03.jpg" alt="Adama Traore" class="user-avatar" style="width: 42px; height: 42px; border: 2px solid var(--primary-300);">
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">Adama Traore</div>
+            <div style="font-size: 0.74rem; color: var(--primary-600); font-weight: 600;">Expert Microfinance • Agence Médina Dakar</div>
+          </div>
+        </div>
+        <span class="badge badge-approved" style="font-size: 0.68rem;">
+          <i class="fas fa-circle-check"></i> Disponible
+        </span>
+      </div>
+
+      <form id="client-appointment-modal-form" onsubmit="App.handleBookAppointmentModal(event)">
+        <!-- Meeting Format Selection (Agency / Phone / Video) -->
+        <div class="form-group" style="margin-bottom: 1.1rem;">
+          <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Format du Rendez-vous *</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;" id="appt-modal-type-selection">
+            <label class="appt-type-option" style="border: 2px solid var(--primary-600); background: var(--primary-50); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="AGENCY" checked style="accent-color: var(--primary-600);">
+              <i class="fas fa-building-columns text-primary" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">En Agence</span>
+            </label>
+            <label class="appt-type-option" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="PHONE" style="accent-color: var(--primary-600);">
+              <i class="fas fa-phone-volume text-emerald" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">Par Téléphone</span>
+            </label>
+            <label class="appt-type-option" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="VIDEO" style="accent-color: var(--primary-600);">
+              <i class="fas fa-video text-primary" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">Visioconférence</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Motif du Rendez-vous *</label>
+          <select id="appt-modal-reason" class="form-control" required style="font-size: 0.82rem;">
+            <option value="EXAM_DOSSIER" selected>Finalisation & Signature de mon Financement</option>
+            <option value="GUARANTEE_DROP">Dépôt de justificatifs complémentaires</option>
+            <option value="SAVINGS_ADVICE">Conseils personnalisés en épargne & développement</option>
+            <option value="SCHEDULE_REVIEW">Échéancier de remboursement & questions</option>
+            <option value="OTHER">Autre question ou accompagnement</option>
+          </select>
+        </div>
+
+        <!-- Date & Time Row -->
+        <div class="grid-2" style="gap: 0.75rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Date souhaitée *</label>
+            <input type="date" id="appt-modal-date" class="form-control" value="2026-08-21" required style="font-size: 0.82rem;">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Créneau horaire *</label>
+            <select id="appt-modal-time" class="form-control" required style="font-size: 0.82rem;">
+              <option value="09:00">09h00 - 09h45</option>
+              <option value="10:30">10h30 - 11h15</option>
+              <option value="14:00" selected>14h00 - 14h45</option>
+              <option value="15:30">15h30 - 16h15</option>
+              <option value="16:30">16h30 - 17h15</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" style="font-size: 0.78rem;">Précisions pour votre conseiller (facultatif)</label>
+          <textarea id="appt-modal-notes" class="form-control" rows="2" placeholder="Ex: Je souhaite faire le point sur la libération des fonds pour mon stock..." style="font-size: 0.82rem; resize: none;"></textarea>
+        </div>
+
+        <!-- Security / Confirmation Notice -->
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.75rem; color: var(--cif-emerald-700); display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-bell text-emerald" style="font-size: 1rem;"></i>
+          <span>Un SMS de confirmation et de rappel 24h avant vous sera automatiquement envoyé au <strong>+221 77 540 88 12</strong>.</span>
+        </div>
+
+        <!-- Modal Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.closeAppointmentModal()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle mr-1"></i> Confirmer le Rendez-vous
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

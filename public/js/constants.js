@@ -47,7 +47,6 @@ const APP_CONSTANTS = {
           items: [
             { id: 'nav-client-dash', target: 'view-role-client', icon: 'fa-house-user', label: 'Mon Tableau de Bord', badge: 'Actif', badgeClass: 'success' },
             { id: 'nav-client-requests', target: 'view-client-requests', icon: 'fa-folder-tree', label: 'Mes Demandes en Cours', badge: '1 En attente', badgeClass: 'primary' },
-            { id: 'nav-client-apply', target: 'view-client-wizard', icon: 'fa-file-circle-plus', label: 'Nouvelle Demande', badge: '6 Étapes', badgeClass: 'warning' },
             { id: 'nav-client-simulator', target: 'view-client-simulator', icon: 'fa-calculator', label: 'Simulateur de Prêt' }
           ]
         },
@@ -78,8 +77,7 @@ const APP_CONSTANTS = {
         {
           title: 'Guichet & Collecte',
           items: [
-            { id: 'nav-agent-dash', target: 'view-role-agent', icon: 'fa-inbox', label: 'Tableau de Bord Agent', badge: 'Pipeline', badgeClass: 'primary' },
-            { id: 'nav-agent-intake', target: 'view-client-wizard', icon: 'fa-user-plus', label: 'Enregistrer une Demande' },
+            { id: 'nav-agent-dash', target: 'view-role-agent', icon: 'fa-inbox', label: 'Tableau de Bord Agent', badge: 'Dossiers', badgeClass: 'primary' },
             { id: 'nav-agent-inspections', target: 'view-agent-inspections', icon: 'fa-clipboard-check', label: 'Inspections Garanties', badge: '3', badgeClass: 'warning' }
           ]
         },
@@ -159,7 +157,7 @@ const APP_CONSTANTS = {
       id: 'demo-client',
       role: 'CLIENT',
       email: 'fatou.ndiaye@gmail.com',
-      phone: '+221 77 654 32 10',
+      phone: '+223 77 45 67 89',
       password: 'demo',
       name: 'Fatou Ndiaye',
       title: 'Emprunteuse • Commerçante Grossiste',
@@ -168,7 +166,7 @@ const APP_CONSTANTS = {
       countryName: 'Sénégal (Dakar)',
       countryFlag: 'sn',
       clientNumber: 'SN-DKR-008821',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      avatar: 'images/profil/profil01-02.jpg',
       badge: 'Demandeur',
       badgeColor: '#10b981',
       description: 'Accédez à votre tableau de bord emprunteur, suivez votre prêt, payez vos échéances et déposez une nouvelle demande.'
@@ -176,33 +174,33 @@ const APP_CONSTANTS = {
     {
       id: 'demo-agent',
       role: 'CREDIT_OFFICER',
-      email: 'kofi.mensah@cif-ao.org',
-      phone: '+228 90 12 34 56',
+      email: 'adama.traore@cif-ao.org',
+      phone: '+223 90 23 45 67',
       password: 'demo',
-      name: 'Kofi Mensah',
+      name: 'Adama Traore',
       title: 'Chargé de Crédit & Clientèle',
       location: 'Lomé, Togo (Agence Assigamé)',
       countryCode: 'TG',
       countryName: 'Togo (Lomé)',
       countryFlag: 'tg',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      avatar: 'images/profil/profil01-03.jpg',
       badge: 'Agent de Crédit',
       badgeColor: '#0ea5e9',
-      description: 'Gérez le pipeline de collecte au guichet, les pièces manquantes et la vérification terrain des garanties.'
+      description: 'Gérez l\'instruction des demandes de prêt au guichet, les pièces justificatives et la vérification terrain des garanties.'
     },
     {
       id: 'demo-analyst',
       role: 'ANALYST',
-      email: 'aminata.diallo@cif-ao.org',
-      phone: '+226 70 88 99 00',
+      email: 'ali.diallo@cif-ao.org',
+      phone: '+223 70 12 34 56',
       password: 'demo',
-      name: 'Aminata Diallo',
+      name: 'Ali Diallo',
       title: 'Analyste Risque Senior',
       location: 'Ouagadougou, Burkina Faso (Siège CIF)',
       countryCode: 'BF',
       countryName: 'Burkina Faso (UEMOA)',
       countryFlag: 'bf',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      avatar: 'images/profil/profil01-04.jpg',
       badge: 'Analyste Risque',
       badgeColor: '#4f46e5',
       description: 'Exécutez le rapprochement OCR, le calcul du Reste à Vivre, la simulation Cold Start et le scoring explicable V2.'
@@ -210,16 +208,16 @@ const APP_CONSTANTS = {
     {
       id: 'demo-committee',
       role: 'COMMITTEE',
-      email: 'moussa.traore@cif-ao.org',
-      phone: '+223 76 54 32 10',
+      email: 'moussa.keita@cif-ao.org',
+      phone: '+223 66 34 56 78',
       password: 'demo',
-      name: 'Moussa Traoré',
+      name: 'Moussa Keita',
       title: 'Président Comité & Conformité LBC/FT',
       location: 'Bamako, Mali (Caisse Régionale)',
       countryCode: 'ML',
       countryName: 'Mali (Bamako)',
       countryFlag: 'ml',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      avatar: 'images/profil/profil01-01.jpg',
       badge: 'Comité & Conformité',
       badgeColor: '#8b5cf6',
       description: 'Délibérez en séance collégiale, signez les décisions et pilotez la conformité LBC/FT (filtrage PPE/ONU, multi-comptes).'

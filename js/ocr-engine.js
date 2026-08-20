@@ -14,15 +14,16 @@ const OCREngine = {
     
     // If not extracted yet, generate extraction based on document type
     if (!extraction) {
-      const isInvoice = doc.type.includes('FACTURE');
-      const isStatement = doc.type.includes('RELEVE');
+      const docType = String(doc.document_type || doc.type || '').toUpperCase();
+      const isInvoice = docType.includes('FACTURE');
+      const isStatement = docType.includes('RELEVE');
       
       let sampleText = '';
       let structured = {};
       let confidence = 0.93;
 
       if (isInvoice) {
-        sampleText = `FACTURE PROFORMA / COMMERCIALE\nFournisseur: COMPTOIR GENERAL D'AFRIQUE DE L'OUEST\nClient: ${doc.name}\nMontant Net à Payer: 2 150 000 FCFA\nDate d'émission: 10/08/2026\nMentions: Payé / Valide 30 jours`;
+        sampleText = `FACTURE PROFORMA / COMMERCIALE\nFournisseur: COMPTOIR GENERAL D'AFRIQUE DE L'OUEST\nClient: ${doc.name || doc.original_filename || 'Client Membre'}\nMontant Net à Payer: 2 150 000 FCFA\nDate d'émission: 10/08/2026\nMentions: Payé / Valide 30 jours`;
         structured = {
           fournisseur: "COMPTOIR GENERAL D'AFRIQUE",
           montant_ttc: 2150000,

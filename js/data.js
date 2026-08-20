@@ -11,18 +11,18 @@ const DEFAULT_DATABASE = {
   // 1. Roles (4 Profils Métiers)
   roles: [
     { id: 1, name: 'Analyste Risque', description: 'Analyse détaillée, OCR, anomalies et scoring explicable V2' },
-    { id: 2, name: 'Chargé de Crédit', description: 'Gestion du pipeline, premières vérifications, compléments terrain' },
+    { id: 2, name: 'Chargé de Crédit', description: 'Instruction des demandes de prêt, premières vérifications, compléments terrain' },
     { id: 3, name: 'Comité de Crédit & Conformité', description: 'Décision collégiale, ajustement montants/durées, signature et conformité LBC/FT' },
     { id: 4, name: 'Client Emprunteur', description: 'Parcours d’octroi, pièces, suivi en direct et échéancier' }
   ],
 
   // 2. Users
   users: [
-    { id: 1, role_id: 1, first_name: 'Aminata', last_name: 'Diallo', phone: '+226 70 12 34 56', email: 'aminata.diallo@cif-ao.org', status: 'ACTIVE', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80', country: 'Burkina Faso' },
-    { id: 2, role_id: 2, first_name: 'Kofi', last_name: 'Mensah', phone: '+228 90 23 45 67', email: 'kofi.mensah@cif-ao.org', status: 'ACTIVE', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', country: 'Togo' },
-    { id: 3, role_id: 3, first_name: 'Moussa', last_name: 'Traoré', phone: '+223 66 34 56 78', email: 'moussa.traore@cif-ao.org', status: 'ACTIVE', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', country: 'Mali' },
-    { id: 4, role_id: 4, first_name: 'Fatou', last_name: 'Ndiaye', phone: '+221 77 45 67 89', email: 'fatou.ndiaye@gmail.com', status: 'ACTIVE', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', country: 'Sénégal' },
-    { id: 5, role_id: 5, first_name: 'Bakary', last_name: 'Sanou', phone: '+226 76 56 78 90', email: 'bakary.sanou@cif-ao.org', status: 'ACTIVE', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80', country: 'Burkina Faso' }
+    { id: 1, role_id: 1, first_name: 'Ali', last_name: 'Diallo', phone: '+223 70 12 34 56', email: 'ali.diallo@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' },
+    { id: 2, role_id: 2, first_name: 'Adama', last_name: 'Traore', phone: '+223 90 23 45 67', email: 'adama.traore@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-03.jpg', country: 'Togo' },
+    { id: 3, role_id: 3, first_name: 'Mariam', last_name: 'Keita', phone: '+223 66 34 56 78', email: 'mariam.keita@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-01.jpg', country: 'Mali' },
+    { id: 4, role_id: 4, first_name: 'Faratigi', last_name: 'Ndiaye', phone: '+223 77 45 67 89', email: 'fatou.ndiaye@gmail.com', status: 'ACTIVE', avatar: 'images/profil/profil01-02.jpg', country: 'Sénégal' },
+    { id: 5, role_id: 5, first_name: 'Bakary', last_name: 'Sanou', phone: '+223 76 56 78 90', email: 'bakary.sanou@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' }
   ],
 
   // 3. Clients (avec format ID CIF : Code Caisse + Code Agence + N° Incrémentiel, residential_zone)
