@@ -357,6 +357,118 @@ const AppCharts = {
         }
       }
     });
+  },
+
+  // 6. Compact Estimator Financial Breakdown Donut/Pie Chart
+  renderLoanBreakdownPie(canvasId, capital, interest, fees) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    if (this.instances[canvasId]) {
+      this.instances[canvasId].destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const total = (capital || 0) + (interest || 0) + (fees || 0) || 1;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    this.instances[canvasId] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Capital Principal', 'Intérêts Dégressifs', 'Assurance & Frais'],
+        datasets: [{
+          data: [capital, interest, fees],
+          backgroundColor: [
+            '#0284c7', // Bleu Océan UEMOA - Capital
+            '#f59e0b', // Ambre / Or CIF - Intérêts
+            '#10b981'  // Émeraude CIF - Assurance
+          ],
+          borderWidth: 2,
+          borderColor: isDark ? '#1e293b' : '#ffffff',
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        animation: {
+          duration: 350
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            padding: 8,
+            cornerRadius: 6,
+            callbacks: {
+              label: (context) => {
+                const val = context.raw || 0;
+                const pct = Math.round((val / total) * 100);
+                return ` ${context.label}: ${val.toLocaleString('fr-FR')} FCFA (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  },
+
+  // 7. Full Simulator Financial Breakdown Donut/Pie Chart
+  renderSimulatorBreakdownPie(canvasId, capital, interest, fees) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    if (this.instances[canvasId]) {
+      this.instances[canvasId].destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const total = (capital || 0) + (interest || 0) + (fees || 0) || 1;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    this.instances[canvasId] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Capital Emprunté', 'Intérêts CreditFast', 'Assurance & Frais'],
+        datasets: [{
+          data: [capital, interest, fees],
+          backgroundColor: [
+            '#0284c7', // Bleu UEMOA
+            '#f59e0b', // Or CIF
+            '#10b981'  // Émeraude
+          ],
+          borderWidth: 2,
+          borderColor: isDark ? '#1e293b' : '#ffffff',
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '66%',
+        animation: {
+          duration: 350
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            padding: 10,
+            cornerRadius: 6,
+            callbacks: {
+              label: (context) => {
+                const val = context.raw || 0;
+                const pct = Math.round((val / total) * 100);
+                return ` ${context.label}: ${val.toLocaleString('fr-FR')} FCFA (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 };
 

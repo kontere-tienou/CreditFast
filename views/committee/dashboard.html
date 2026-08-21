@@ -73,26 +73,170 @@
   <!-- Committee Deliberation Table -->
   <div class="card" style="margin-top: 1.25rem;">
     <div class="card-header">
-      <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
-      <span class="badge badge-committee">Séance en cours</span>
+      <div>
+        <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
+        <p class="card-subtitle">Cliquez sur une ligne ou sur « Détails » pour afficher le volet d'analyse approfondie</p>
+      </div>
+      <span class="badge badge-committee"><i class="fas fa-circle-dot mr-1 text-emerald"></i> Séance en cours</span>
     </div>
     <div class="table-responsive">
       <table class="table-custom">
         <thead>
           <tr>
-            <th>N° Dossier</th>
-            <th>Client</th>
-            <th>Montant Demandé</th>
-            <th>Reste à Vivre</th>
-            <th>Score Explicable</th>
+            <th>Dossier & Emprunteur</th>
+            <th>Financement</th>
+            <th>Score Risque IA</th>
             <th>Avis Analyste</th>
-            <th>Décision</th>
+            <th style="text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody id="committee-requests-table-body">
           <!-- Dynamically Injected -->
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Sidedrawer Volet Latéral : Analyse Approfondie Dossier Comité -->
+  <div id="committee-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeCommitteeDrawer()">
+    <div id="committee-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail dossier comité">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="com-drawer-req-badge" style="font-family: var(--font-family-code); font-weight: 700;">#REQ-2026-0891</span>
+            <span id="com-drawer-risk-badge" class="badge badge-approved"><i class="fas fa-shield-check"></i> Risque Faible</span>
+            <span class="badge badge-committee" style="font-size: 0.68rem;">Séance Active</span>
+          </div>
+          <h3 id="com-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fatou Ndiaye</h3>
+          <p id="com-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Dossier d'octroi de crédit professionnel • Évaluation XAI</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeCommitteeDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Emprunteur & Demande de Financement -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-tie text-primary mr-1"></i> Fiche Emprunteur & Financement</h4>
+            <span id="com-drawer-client-id" class="badge badge-submitted" style="font-size: 0.68rem;">ID: CLI-0891</span>
+          </div>
+          <div style="display: flex; gap: 0.85rem; align-items: center; margin-bottom: 0.85rem;">
+            <img id="com-drawer-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div style="min-width: 0;">
+              <div id="com-drawer-client-name" style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="com-drawer-location" style="font-size: 0.76rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Dakar, Sénégal • Agence Médina</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Montant Sollicité</div>
+              <div id="com-drawer-amount" style="font-size: 1.1rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 500 000 F</div>
+              <div id="com-drawer-duration" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Durée : 12 mois</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Mensualité Estimée</div>
+              <div id="com-drawer-installment" style="font-size: 1.1rem; font-weight: 800; color: #047857; font-family: var(--font-family-code);">235 000 F</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Taux : 9.5% annuel</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Activité Déclarée</span>
+              <span id="com-drawer-activity" class="drawer-kv-value" style="font-weight: 600;">Commerce de gros & tissus</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Reste à Vivre Mensuel</span>
+              <span id="com-drawer-surplus" class="drawer-kv-value" style="color: #059669; font-weight: 700;">+ 385 000 FCFA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Scoring IA Explicable & Piliers XAI -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-brain-circuit text-emerald mr-1"></i> Diagnostic Scoring Explicable (XAI)</h4>
+            <span id="com-drawer-conf-badge" class="badge badge-approved"><i class="fas fa-check-double"></i> Confiance 94%</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-body); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+            <div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Score de Crédibilité Global</div>
+              <div style="display: flex; align-items: baseline; gap: 4px; margin-top: 2px;">
+                <span id="com-drawer-overall-score" style="font-size: 1.6rem; font-weight: 900; color: #059669;">90</span>
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">/100</span>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span class="badge badge-approved" id="com-drawer-capacity-badge" style="font-size: 0.74rem;"><i class="fas fa-check"></i> Reste à vivre certifié</span>
+              <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 3px;">Taux d'effort post-crédit : 28%</div>
+            </div>
+          </div>
+
+          <!-- Piliers XAI -->
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fas fa-mobile-screen-button text-primary mr-1"></i> Flux Mobile Money & Bancaires</span>
+              <strong id="com-drawer-pillar-cashflow" style="color: #059669;">92 / 100</strong>
+            </div>
+            <div class="progress-bar-container" style="height: 5px; margin-bottom: 3px;">
+              <div id="com-drawer-bar-cashflow" class="progress-bar" style="width: 92%; background: #10b981;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fas fa-id-card text-info mr-1"></i> Cold Start & Garanties Solidaires</span>
+              <strong id="com-drawer-pillar-coldstart" style="color: #059669;">88 / 100</strong>
+            </div>
+            <div class="progress-bar-container" style="height: 5px; margin-bottom: 3px;">
+              <div id="com-drawer-bar-coldstart" class="progress-bar" style="width: 88%; background: #3b82f6;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fas fa-shield-halved text-warning mr-1"></i> Stabilité & Historique Réciproque</span>
+              <strong id="com-drawer-pillar-stability" style="color: #059669;">85 / 100</strong>
+            </div>
+            <div class="progress-bar-container" style="height: 5px;">
+              <div id="com-drawer-bar-stability" class="progress-bar" style="width: 85%; background: #f59e0b;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Avis Analyste & Contrôle Conformité LBC/FT -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-clipboard-check text-info mr-1"></i> Avis Analyste & Filtrage LBC/FT</h4>
+            <span class="badge badge-approved"><i class="fas fa-shield-check"></i> Conforme UEMOA</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Recommandation Analyste Risque</span>
+              <p id="com-drawer-analyst-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Avis favorable. Chiffre d'affaires récurrent vérifié sur les 6 derniers mois. Caution solidaire validée par l'artisan référent.
+              </p>
+            </div>
+            <div class="drawer-grid-2">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Filtrage Sanctions & PPE</span>
+                <span class="badge badge-approved" style="align-self: flex-start;"><i class="fas fa-check"></i> RAS (0% Match)</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Gage & Suretés</span>
+                <span class="badge badge-submitted" style="align-self: flex-start;"><i class="fas fa-file-contract"></i> Acte RCCM Enregistré</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer" style="padding: 1rem 1.4rem; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <button class="btn btn-secondary" onclick="App.closeCommitteeDrawer()" style="padding: 0.6rem 1rem;">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <button class="btn btn-primary" onclick="App.openCommitteeModalFromDrawer()" style="padding: 0.6rem 1.25rem; font-weight: 700;">
+          <i class="fas fa-gavel mr-1"></i> Délibérer & Voter
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -113,16 +257,19 @@
       <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
         <i class="fas fa-arrow-left"></i> Séance en Cours
       </button>
-      <button class="btn btn-primary btn-sm" onclick="App.showToast('Extraction du registre des procès-verbaux scellés réussie', 'success')">
-        <i class="fas fa-file-pdf"></i> Télécharger PV Scellé
+      <button class="btn btn-primary btn-sm" onclick="App.downloadAllSignedPvsCsv()">
+        <i class="fas fa-file-export"></i> Exporter le Registre
       </button>
     </div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title"><i class="fas fa-file-signature text-emerald"></i> Procès-Verbaux Validés & Notifiés aux Agences</h3>
-      <span class="badge badge-approved">Certifiés SHA-256</span>
+      <div>
+        <h3 class="card-title"><i class="fas fa-file-signature text-emerald"></i> Procès-Verbaux Validés & Notifiés aux Agences</h3>
+        <p class="card-subtitle">Cliquez sur une ligne ou sur « Détails » pour ouvrir le procès-verbal scellé et les signatures</p>
+      </div>
+      <span class="badge badge-approved"><i class="fas fa-fingerprint mr-1"></i> Certifiés SHA-256</span>
     </div>
     <div class="table-responsive">
       <table class="table-custom">
@@ -130,52 +277,132 @@
           <tr>
             <th>Réf. PV / Dossier</th>
             <th>Emprunteur</th>
-            <th>Montant Accordé</th>
-            <th>Taux & Durée</th>
-            <th>Date Signature</th>
-            <th>Signataires</th>
-            <th>Empreinte SHA-256</th>
+            <th>Conditions Accordées</th>
+            <th>Validation & Sécurité</th>
+            <th style="text-align: right;">Action</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
-              <strong>PV-2026-0889</strong>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0889</div>
-            </td>
-            <td><strong>Seydou Keita</strong><br><small style="color: var(--text-muted);"><span class="fi fi-ml"></span> Bamako, Mali</small></td>
-            <td><strong class="amount-cell" style="color: #059669;">3 000 000 FCFA</strong></td>
-            <td>9.5% • 18 mois</td>
-            <td>18/08/2026</td>
-            <td><span class="badge badge-approved">3/3 Signatures</span></td>
-            <td><code style="font-size: 0.68rem; color: var(--text-muted);">9a8f...4e12</code></td>
-          </tr>
-          <tr>
-            <td>
-              <strong>PV-2026-0884</strong>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0884</div>
-            </td>
-            <td><strong>Aïssatou Ba</strong><br><small style="color: var(--text-muted);"><span class="fi fi-sn"></span> Thiès, Sénégal</small></td>
-            <td><strong class="amount-cell" style="color: #059669;">1 800 000 FCFA</strong></td>
-            <td>10.0% • 12 mois</td>
-            <td>17/08/2026</td>
-            <td><span class="badge badge-approved">3/3 Signatures</span></td>
-            <td><code style="font-size: 0.68rem; color: var(--text-muted);">bc72...8901</code></td>
-          </tr>
-          <tr>
-            <td>
-              <strong>PV-2026-0878</strong>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">#REQ-2026-0878</div>
-            </td>
-            <td><strong>Mahamadou Ouedraogo</strong><br><small style="color: var(--text-muted);"><span class="fi fi-bf"></span> Bobo, Burkina Faso</small></td>
-            <td><strong class="amount-cell" style="color: #ef4444;">REJET COLLÉGIAL</strong></td>
-            <td>Reste à vivre insuffisant</td>
-            <td>15/08/2026</td>
-            <td><span class="badge badge-rejected">Rejet Acté</span></td>
-            <td><code style="font-size: 0.68rem; color: var(--text-muted);">df14...aa33</code></td>
-          </tr>
+        <tbody id="signed-pvs-table-body">
+          <!-- Rendered dynamically by App.renderSignedPvTable() -->
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Sidedrawer Volet Latéral : Procès-Verbal Scellé & Décision de Comité -->
+  <div id="signed-pv-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeSignedPvDrawer()">
+    <div id="signed-pv-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail procès-verbal signé">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="pv-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">PV-2026-0889</span>
+            <span id="pv-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> Accord Collégial</span>
+            <span class="badge badge-committee" style="font-size: 0.68rem;">Scellé SHA-256</span>
+          </div>
+          <h3 id="pv-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Seydou Keita</h3>
+          <p id="pv-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Procès-Verbal Officiel de Décision du Comité de Crédit</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeSignedPvDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Synthèse de la Décision & Termes Validés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-contract text-primary mr-1"></i> Termes & Conditions Financières</h4>
+            <span id="pv-drawer-date" class="badge badge-submitted" style="font-size: 0.68rem;">18/08/2026</span>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Montant Validé</div>
+              <div id="pv-drawer-amount" style="font-size: 1.15rem; font-weight: 800; color: #059669; font-family: var(--font-family-code);">3 000 000 F</div>
+              <div id="pv-drawer-requested-diff" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Demande initiale : 3 000 000 F</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Modalités & Échéance</div>
+              <div id="pv-drawer-terms" style="font-size: 1.05rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">9.5% • 18 mois</div>
+              <div id="pv-drawer-monthly" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Échéance : ~190 400 F / mois</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Emprunteur & Activité</span>
+              <span id="pv-drawer-client-info" class="drawer-kv-value" style="font-weight: 600;">Seydou Keita (Menuiserie & BTP)</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Agence de Rattachement</span>
+              <span id="pv-drawer-agency" class="drawer-kv-value">Bamako Principale (Mali)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Collège des Signataires & Quorum -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-signature text-emerald mr-1"></i> Signatures Électroniques & Visas</h4>
+            <span id="pv-drawer-quorum-badge" class="badge badge-approved"><i class="fas fa-users-check"></i> Quorum 3/3</span>
+          </div>
+          <div id="pv-drawer-signers-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <!-- Rendered list of signers -->
+          </div>
+        </div>
+
+        <!-- Section 3 : Garanties & Conditions de Décaissement -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-shield-halved text-warning mr-1"></i> Sûretés & Modalités de Déblocage</h4>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Garanties & Cautions Enregistrées</span>
+              <p id="pv-drawer-guarantees" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10%
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Conditions Préalables au Décaissement</span>
+              <p id="pv-drawer-disbursement" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Décaissement sur présentation de facture proforma fournisseur acquittée.
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Motivation Collégiale du Comité</span>
+              <p id="pv-drawer-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Dossier solide avec marge opérationnelle démontrée.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 : Scellement Cryptographique & Horodatage -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-fingerprint text-info mr-1"></i> Intégrité & Empreinte SHA-256</h4>
+            <span class="badge badge-submitted" style="font-size: 0.68rem;">Horodatage Certifié</span>
+          </div>
+          <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">HASH SHA-256 IMMUABLE :</div>
+            <code id="pv-drawer-sha" style="font-size: 0.72rem; word-break: break-all; color: var(--primary-700); font-weight: 700;">9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer" style="padding: 1rem 1.4rem; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <button class="btn btn-secondary" onclick="App.closeSignedPvDrawer()" style="padding: 0.6rem 1rem;">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="App.notifyAgencyForPv()" style="padding: 0.6rem 0.9rem;" title="Notifier l'agence par SMS/WhatsApp">
+            <i class="fas fa-paper-plane mr-1 text-primary"></i> Notifier Agence
+          </button>
+          <button class="btn btn-primary" onclick="App.downloadSignedPvPdf()" style="padding: 0.6rem 1.15rem; font-weight: 700;">
+            <i class="fas fa-file-pdf mr-1"></i> Télécharger PV
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -245,43 +472,50 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>Caisse / Pays</th>
-            <th>Nombre de Crédits</th>
-            <th>Encours Total</th>
+            <th>Caisse & Territoire</th>
+            <th>Volume & Portefeuille</th>
             <th>Score Risque Moyen</th>
-            <th>Taux de Sinistralité</th>
+            <th>Sinistralité (PAR 30)</th>
             <th>Statut Conformité</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="fi fi-sn mr-1"></span> <strong>Sénégal (Dakar & Médina)</strong></td>
-            <td>145 dossiers</td>
-            <td class="amount-cell">54 200 000 FCFA</td>
+            <td><strong>Sénégal (Dakar & Médina)</strong></td>
+            <td>
+              <strong class="amount-cell">54 200 000 FCFA</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">145 dossiers</div>
+            </td>
             <td><strong>82 / 100</strong></td>
             <td><span style="color: #059669; font-weight: 600;">1.4%</span></td>
             <td><span class="badge badge-approved">100% Conforme</span></td>
           </tr>
           <tr>
-            <td><span class="fi fi-bf mr-1"></span> <strong>Burkina Faso (Ouagadougou)</strong></td>
-            <td>118 dossiers</td>
-            <td class="amount-cell">41 500 000 FCFA</td>
+            <td><strong>Burkina Faso (Ouagadougou)</strong></td>
+            <td>
+              <strong class="amount-cell">41 500 000 FCFA</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">118 dossiers</div>
+            </td>
             <td><strong>79 / 100</strong></td>
             <td><span style="color: #059669; font-weight: 600;">1.9%</span></td>
             <td><span class="badge badge-approved">100% Conforme</span></td>
           </tr>
           <tr>
-            <td><span class="fi fi-ml mr-1"></span> <strong>Mali (Bamako & Ségou)</strong></td>
-            <td>92 dossiers</td>
-            <td class="amount-cell">32 800 000 FCFA</td>
+            <td><strong>Mali (Bamako & Ségou)</strong></td>
+            <td>
+              <strong class="amount-cell">32 800 000 FCFA</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">92 dossiers</div>
+            </td>
             <td><strong>84 / 100</strong></td>
             <td><span style="color: #059669; font-weight: 600;">1.7%</span></td>
             <td><span class="badge badge-approved">100% Conforme</span></td>
           </tr>
           <tr>
-            <td><span class="fi fi-tg mr-1"></span> <strong>Togo (Lomé & Assigamé)</strong></td>
-            <td>65 dossiers</td>
-            <td class="amount-cell">13 500 000 FCFA</td>
+            <td><strong>Togo (Lomé & Assigamé)</strong></td>
+            <td>
+              <strong class="amount-cell">13 500 000 FCFA</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">65 dossiers</div>
+            </td>
             <td><strong>81 / 100</strong></td>
             <td><span style="color: #059669; font-weight: 600;">2.1%</span></td>
             <td><span class="badge badge-approved">100% Conforme</span></td>

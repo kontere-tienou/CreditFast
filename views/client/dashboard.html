@@ -133,54 +133,81 @@
     </div>
   </div>
 
-  <!-- COMPACT LOAN ESTIMATION COMPONENT (SIMULATION RAPIDE & ÉCHÉANCE MENSUELLE) -->
-  <div class="compact-estimator-card">
+  <!-- INTERACTIVE LOAN AMORTIZATION CALCULATOR COMPONENT (SIMULATION EN TEMPS RÉEL) -->
+  <div class="compact-estimator-card" id="client-amortization-calculator">
     <div class="compact-estimator-header">
       <div class="compact-estimator-title">
         <div class="compact-estimator-icon">
-          <i class="fas fa-wand-magic-sparkles"></i>
+          <i class="fas fa-calculator"></i>
         </div>
         <div>
-          <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--text-primary);">
-            Simulez votre Projet en 1 Clin d'Œil
-          </h3>
-          <p style="font-size: 0.76rem; color: var(--text-muted); margin: 2px 0 0 0;">
-            Ajustez le montant et la durée pour découvrir instantanément vos mensualités claires, transparentes et adaptées à votre activité.
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--text-primary);">
+              Calculateur d'Amortissement & Simulation de Prêt
+            </h3>
+            <span class="badge badge-client" style="font-size: 0.68rem; background: rgba(14, 165, 233, 0.15); color: var(--primary-700); border: 1px solid rgba(14, 165, 233, 0.3);">
+              <i class="fas fa-bolt mr-1"></i> Calcul Instantané en Direct
+            </span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 3px 0 0 0;">
+            Ajustez le montant et la durée pour visualiser en temps réel vos mensualités, les intérêts totaux et le tableau d'amortissement détaillé.
           </p>
         </div>
       </div>
-      <span class="badge badge-approved" style="font-size: 0.72rem;">
-        <i class="fas fa-tag mr-1"></i> Taux Transparent & Sans Frais Cachés
-      </span>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="badge badge-approved" style="font-size: 0.72rem;">
+          <i class="fas fa-shield-check mr-1"></i> Taux Dégressif UEMOA (1.2% / mois)
+        </span>
+      </div>
     </div>
 
+    <!-- Sliders & Financial Output Grid -->
     <div class="compact-estimator-grid">
       <!-- Sliders Column -->
       <div>
         <!-- Amount Slider -->
-        <div class="compact-slider-group">
+        <div class="compact-slider-group" style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1rem;">
           <div class="compact-slider-header">
-            <span class="compact-slider-label"><i class="fas fa-coins text-gold mr-1"></i> Montant dont vous avez besoin :</span>
-            <span class="compact-slider-val" id="compact-est-amount-val">2 500 000 FCFA</span>
+            <span class="compact-slider-label">
+              <i class="fas fa-coins text-gold mr-1"></i> Montant du Prêt Souhaité :
+            </span>
+            <span class="compact-slider-val" id="compact-est-amount-val" style="font-size: 1.15rem; color: var(--primary-700);">2 500 000 FCFA</span>
           </div>
-          <input type="range" id="compact-est-amount-range" min="200000" max="10000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
-          <div class="compact-presets-row">
+          <input type="range" id="compact-est-amount-range" min="200000" max="15000000" step="50000" value="2500000" class="form-range" style="width: 100%; cursor: pointer; accent-color: var(--primary-600);" oninput="App.updateCompactEstimator()">
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">
+            <span>200 000 FCFA</span>
+            <span>7 500 000 FCFA</span>
+            <span>15 000 000 FCFA</span>
+          </div>
+
+          <div class="compact-presets-row" style="margin-top: 0.6rem;">
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(500000)">500 000 F</button>
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(1000000)">1 000 000 F</button>
             <button type="button" class="compact-preset-chip active" id="chip-amount-2500000" onclick="App.setCompactPresetAmount(2500000)">2 500 000 F</button>
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(5000000)">5 000 000 F</button>
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(8000000)">8 000 000 F</button>
+            <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetAmount(12000000)">12 000 000 F</button>
           </div>
         </div>
 
         <!-- Duration Slider -->
-        <div class="compact-slider-group">
+        <div class="compact-slider-group" style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
           <div class="compact-slider-header">
-            <span class="compact-slider-label"><i class="fas fa-calendar-alt text-primary mr-1"></i> Durée idéale pour rembourser :</span>
-            <span class="compact-slider-val" id="compact-est-duration-val" style="color: var(--primary-700);">12 Mois</span>
+            <span class="compact-slider-label">
+              <i class="fas fa-calendar-days text-primary mr-1"></i> Durée de Remboursement :
+            </span>
+            <span class="compact-slider-val" id="compact-est-duration-val" style="font-size: 1.15rem; color: var(--primary-700);">12 Mois</span>
           </div>
-          <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateCompactEstimator()">
-          <div class="compact-presets-row">
+          <input type="range" id="compact-est-duration-range" min="3" max="36" step="1" value="12" class="form-range" style="width: 100%; cursor: pointer; accent-color: var(--primary-600);" oninput="App.updateCompactEstimator()">
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">
+            <span>3 Mois (Court terme)</span>
+            <span>18 Mois</span>
+            <span>36 Mois (3 Ans)</span>
+          </div>
+
+          <div class="compact-presets-row" style="margin-top: 0.6rem;">
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(6)">6 mois</button>
             <button type="button" class="compact-preset-chip active" id="chip-duration-12" onclick="App.setCompactPresetDuration(12)">12 mois</button>
             <button type="button" class="compact-preset-chip" onclick="App.setCompactPresetDuration(18)">18 mois</button>
@@ -190,35 +217,132 @@
         </div>
       </div>
 
-      <!-- Output Calculation Box -->
+      <!-- Output Calculation Box with Interactive Pie Chart & Monthly Breakdown -->
       <div class="compact-output-box">
-        <div class="compact-monthly-highlight">
-          <div class="compact-monthly-label">Votre Mensualité Tout Compris</div>
-          <div class="compact-monthly-amount" id="compact-est-monthly-val">235 000 FCFA</div>
-          <div style="font-size: 0.72rem; color: var(--cif-emerald-500); font-weight: 600;">
-            <i class="fas fa-circle-check mr-1"></i> Zéro surprise : assurance & accompagnement inclus
+        <!-- Monthly Payment Big Highlight -->
+        <div class="compact-monthly-highlight" style="background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%); padding: 0.85rem; border-radius: var(--radius-md);">
+          <div class="compact-monthly-label" style="color: var(--primary-700); font-weight: 700;">Mensualité Tout Compris Estimée</div>
+          <div class="compact-monthly-amount" id="compact-est-monthly-val" style="font-size: 1.85rem; color: var(--cif-emerald-600); margin: 0.25rem 0;">235 000 FCFA</div>
+          <div style="font-size: 0.74rem; color: var(--cif-emerald-600); font-weight: 600;">
+            <i class="fas fa-circle-check mr-1"></i> Remboursement constant mensuel • Aucun frais caché
           </div>
         </div>
 
-        <div class="compact-stats-row">
-          <div class="compact-stat-item">
-            <span class="compact-stat-label">Total tout inclus :</span>
-            <span class="compact-stat-val" id="compact-est-total-val">2 820 000 FCFA</span>
+        <!-- Monthly Breakdown Detailed Items -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin: 0.75rem 0; background: var(--bg-body); padding: 0.6rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <div>
+            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600;">Part Capital / mois</div>
+            <div id="compact-est-monthly-principal" style="font-size: 0.85rem; font-weight: 800; color: #0284c7; font-family: var(--font-family-code);">208 333 F</div>
           </div>
-          <div class="compact-stat-item">
-            <span class="compact-stat-label">Coût clair & maîtrisé :</span>
-            <span class="compact-stat-val" id="compact-est-cost-val" style="color: var(--cif-gold-700);">320 000 FCFA</span>
+          <div style="border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color);">
+            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600;">Intérêt Moyen / mois</div>
+            <div id="compact-est-monthly-interest" style="font-size: 0.85rem; font-weight: 800; color: #d97706; font-family: var(--font-family-code);">24 167 F</div>
+          </div>
+          <div>
+            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600;">Assurance / mois</div>
+            <div id="compact-est-monthly-insurance" style="font-size: 0.85rem; font-weight: 800; color: #059669; font-family: var(--font-family-code);">2 500 F</div>
           </div>
         </div>
 
+        <!-- Pie Chart / Donut Financial Breakdown -->
+        <div class="compact-pie-container" style="display: flex; align-items: center; justify-content: space-between; gap: 0.85rem; background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+          <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;">
+            <canvas id="compact-estimator-pie-chart" width="80" height="80"></canvas>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none;">
+              <i class="fas fa-chart-pie" style="font-size: 1rem; color: var(--primary-600); opacity: 0.85;"></i>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #0284c7; display: inline-block;"></span>
+                Capital Prêté (<span id="compact-pie-pct-capital">88%</span>)
+              </span>
+              <strong style="color: var(--text-primary); font-family: var(--font-family-code);" id="compact-pie-val-capital">2 500 000 F</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                Total Intérêts (<span id="compact-pie-pct-interest">11%</span>)
+              </span>
+              <strong style="color: #d97706; font-family: var(--font-family-code);" id="compact-pie-val-interest">290 000 F</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted);">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                Assurance & Frais (<span id="compact-pie-pct-fees">1%</span>)
+              </span>
+              <strong style="color: #059669; font-family: var(--font-family-code);" id="compact-pie-val-fees">30 000 F</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Stats Row -->
+        <div class="compact-stats-row" style="margin-bottom: 0.75rem;">
+          <div class="compact-stat-item" style="background: var(--bg-body); padding: 0.5rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span class="compact-stat-label">Total Intérêts Cumulés :</span>
+            <span class="compact-stat-val" id="compact-est-total-interest" style="color: #d97706; font-size: 0.95rem;">290 000 FCFA</span>
+          </div>
+          <div class="compact-stat-item" style="background: var(--bg-body); padding: 0.5rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span class="compact-stat-label">Montant Total à Rembourser :</span>
+            <span class="compact-stat-val" id="compact-est-total-val" style="color: var(--primary-700); font-size: 0.95rem;">2 820 000 FCFA</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="compact-actions-row">
-          <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center;" onclick="App.applyFromCompactEstimator()" title="Démarrer votre demande avec ces conditions personnalisées">
-            <i class="fas fa-paper-plane mr-1"></i> Concrétiser ce Prêt
+          <button class="btn btn-success btn-sm" style="flex: 1.4; justify-content: center; font-weight: 700; padding: 0.65rem 0.75rem;" onclick="App.applyFromCompactEstimator()" title="Démarrer votre demande avec ces conditions personnalisées">
+            <i class="fas fa-paper-plane mr-1"></i> Faire ma Demande de Prêt
           </button>
-          <button class="btn btn-secondary btn-sm" style="flex: 1; justify-content: center;" onclick="App.switchView('view-client-simulator')" title="Affiner votre budget et votre confort financier">
-            <i class="fas fa-sliders mr-1"></i> Personnaliser
+          <button class="btn btn-secondary btn-sm" id="btn-toggle-amortization-schedule" style="flex: 1; justify-content: center; font-weight: 600; padding: 0.65rem 0.75rem;" onclick="App.toggleAmortizationScheduleTable()" title="Dérouler le tableau d'amortissement complet mois par mois">
+            <i class="fas fa-table-list mr-1 text-primary"></i> <span id="label-toggle-amortization">Tableau d'Amortissement</span>
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Collapsible Interactive Amortization Schedule Table (Tableau d'Amortissement Détaillé Mois par Mois) -->
+    <div id="client-amortization-schedule-wrapper" style="display: none; margin-top: 1.25rem; border-top: 1px dashed var(--border-color); padding-top: 1.25rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+            <i class="fas fa-calendar-check text-primary mr-1"></i> Tableau d'Amortissement Simulé (<span id="amortization-table-summary-title">2 500 000 FCFA sur 12 Mois</span>)
+          </h4>
+          <p style="font-size: 0.74rem; color: var(--text-muted); margin: 2px 0 0 0;">
+            Échéancier prévisionnel complet avec ventilation du capital, des intérêts dégressifs et du solde restant dû.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" onclick="App.downloadSimulatedAmortizationPdf()" title="Exporter l'échéancier en format PDF">
+            <i class="fas fa-file-pdf mr-1 text-danger"></i> Exporter PDF
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.toggleAmortizationScheduleTable()" title="Masquer le tableau">
+            <i class="fas fa-chevron-up mr-1"></i> Réduire
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive" style="max-height: 320px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+        <table class="table-custom" style="font-size: 0.78rem;">
+          <thead style="position: sticky; top: 0; background: var(--bg-surface); z-index: 2; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <tr>
+              <th style="width: 70px;">Mois</th>
+              <th>Échéance</th>
+              <th style="text-align: right;">Solde Initial</th>
+              <th style="text-align: right;">Capital Amorti</th>
+              <th style="text-align: right;">Intérêts</th>
+              <th style="text-align: right;">Assurance</th>
+              <th style="text-align: right;">Mensualité Totale</th>
+              <th style="text-align: right;">Solde Restant Dû</th>
+            </tr>
+          </thead>
+          <tbody id="client-amortization-table-body">
+            <!-- Dynamically generated rows on slider change -->
+          </tbody>
+          <tfoot id="client-amortization-table-foot" style="position: sticky; bottom: 0; background: var(--bg-surface); font-weight: 800; border-top: 2px solid var(--border-color);">
+            <!-- Dynamically generated total row -->
+          </tfoot>
+        </table>
       </div>
     </div>
   </div>

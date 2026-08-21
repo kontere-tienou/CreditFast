@@ -148,6 +148,49 @@
           </div>
         </div>
 
+        <!-- Interactive Pie Chart Financial Breakdown -->
+        <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fas fa-chart-pie text-primary"></i> Répartition Visuelle du Remboursement
+            </div>
+            <span style="font-size: 0.68rem; color: var(--text-subtle);">Graphique Circulaire Dynamique</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-around; gap: 1rem;">
+            <div style="position: relative; width: 110px; height: 110px; flex-shrink: 0;">
+              <canvas id="sim-breakdown-pie-chart" width="110" height="110"></canvas>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none;">
+                <span id="sim-pie-center-val" style="font-size: 0.75rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">100%</span>
+              </div>
+            </div>
+
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #0284c7; display: inline-block;"></span>
+                  Capital (<span id="sim-pie-capital-pct">92%</span>)
+                </span>
+                <strong style="color: var(--text-primary); font-family: var(--font-family-code);" id="sim-pie-capital-val">2 500 000 F</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                  Intérêts (<span id="sim-pie-interest-pct">6%</span>)
+                </span>
+                <strong style="color: #d97706; font-family: var(--font-family-code);" id="sim-pie-interest-val">167 000 F</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  Assurance & Frais (<span id="sim-pie-fees-pct">2%</span>)
+                </span>
+                <strong style="color: #059669; font-family: var(--font-family-code);" id="sim-pie-fees-val">37 500 F</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Debt Ratio & Rest-to-Live Meter -->
         <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.78rem;">

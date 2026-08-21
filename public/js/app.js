@@ -566,8 +566,10 @@ const App = {
       this.renderAnalystDashboard();
     } else if (viewId === 'view-analyst-anomalies') {
       this.renderAnalystAnomalies();
-    } else if (viewId === 'view-role-committee' || viewId === 'view-committee-signed') {
+    } else if (viewId === 'view-role-committee') {
       this.renderCommitteeDashboard();
+    } else if (viewId === 'view-committee-signed') {
+      this.renderSignedPvTable();
     } else if (viewId === 'view-role-compliance' || viewId === 'view-compliance-screening') {
       this.renderComplianceDashboard();
     } else if (viewId === 'view-scoring-admin') {
@@ -677,7 +679,7 @@ const App = {
     if (!tbody) return;
 
     // Update Header Sort Icons & Active state
-    const sortKeys = ['request_number', 'client_name', 'requested_amount', 'purpose', 'status'];
+    const sortKeys = ['request_number', 'client_name', 'requested_amount', 'status'];
     sortKeys.forEach(k => {
       const thEl = document.querySelector(`.sortable-th[onclick*="'${k}'"]`);
       const iconEl = document.getElementById(`sort-icon-${k}`);
@@ -753,7 +755,7 @@ const App = {
     if (requests.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+          <td colspan="5" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
             <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--text-muted);"></i>
             <div style="font-weight: 600; color: var(--text-primary);">Aucune demande ne correspond à ce filtre.</div>
             <div style="font-size: 0.76rem; margin-top: 4px;">Sélectionnez l'onglet "Toutes" pour revoir l'ensemble des dossiers.</div>
@@ -765,13 +767,13 @@ const App = {
 
     tbody.innerHTML = requests.map(r => {
       const capacityBadge = r.repayment_capacity_status === 'SUFFICIENT'
-        ? `<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle mr-1"></i> Suffisante</span>`
-        : `<span class="badge badge-capacity-insufficient"><i class="fas fa-triangle-exclamation mr-1"></i> Insuffisante</span>`;
+        ? `<span class="badge badge-capacity-sufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-check-circle mr-1"></i> Capacité OK</span>`
+        : `<span class="badge badge-capacity-insufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-triangle-exclamation mr-1"></i> Taux > 33%</span>`;
 
       return `
         <tr class="schedule-table-row ${rowClass}" onclick="App.openAgentDrawer(${r.id})">
           <td>
-            <strong>${r.request_number}</strong>
+            <strong style="color: var(--primary-600); font-family: var(--font-mono);">${r.request_number}</strong>
             <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(r.created_at).toLocaleDateString('fr-FR')}</div>
           </td>
           <td>
@@ -785,19 +787,16 @@ const App = {
           </td>
           <td>
             <div>
-              <strong class="amount-cell" style="font-family: var(--font-mono);">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.duration_months} mois</div>
+              <strong class="amount-cell" style="font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.duration_months} mois • ${r.purpose ? r.purpose.substring(0, 20) + (r.purpose.length > 20 ? '...' : '') : 'Activité'}</div>
             </div>
           </td>
-          <td class="schedule-col-hide-mobile">
-            <div style="max-width: 220px; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${r.purpose || ''}">
-              ${r.purpose || 'Financement d\'activité'}
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+              ${AppInteractions.getStatusBadge(r.status)}
+              ${capacityBadge}
             </div>
           </td>
-          <td class="schedule-col-hide-tablet">
-            ${capacityBadge}
-          </td>
-          <td>${AppInteractions.getStatusBadge(r.status)}</td>
           <td style="text-align: right;">
             <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
               <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openAgentDrawer(${r.id})" title="Voir le volet détail">
@@ -1114,7 +1113,7 @@ const App = {
     if (filtered.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-subtle);">
+          <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-subtle);">
             <i class="fas fa-search" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
             Aucune inspection ne correspond aux filtres sélectionnés.
           </td>
@@ -1134,42 +1133,150 @@ const App = {
       const tCfg = typeLabels[item.guarantee_type] || { label: item.guarantee_type, icon: 'fa-shield', color: '#64748b' };
 
       return `
-        <tr>
+        <tr class="schedule-table-row" onclick="App.openInspectionDrawer(${item.id})">
           <td>
-            <strong>${item.requestNumber}</strong>
+            <strong style="color: var(--primary-600); font-family: var(--font-mono);">${item.requestNumber}</strong>
             <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${item.clientName}</div>
             <div style="font-size: 0.72rem; color: var(--text-subtle);">${item.city}, ${item.country}</div>
           </td>
           <td>
-            <span class="badge" style="background: rgba(14, 165, 233, 0.12); color: ${tCfg.color}; border: 1px solid ${tCfg.color}; font-size: 0.75rem;">
+            <span class="badge" style="background: rgba(14, 165, 233, 0.12); color: ${tCfg.color}; border: 1px solid ${tCfg.color}; font-size: 0.72rem; padding: 3px 7px;">
               <i class="fas ${tCfg.icon} mr-1"></i> ${tCfg.label}
             </span>
-          </td>
-          <td>
-            <div style="font-size: 0.82rem; color: var(--text-primary); font-weight: 500;">${item.description}</div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-top: 2px;">
-              <i class="fas fa-location-dot mr-1"></i> ${item.zone}
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${item.description}
             </div>
           </td>
-          <td><strong style="color: var(--text-primary);">${CreditScoringEngine.formatFCFA(item.declared_value)}</strong></td>
           <td>
-            ${isVerif 
-              ? `<strong style="color: #047857; font-weight: 700;">${CreditScoringEngine.formatFCFA(item.verified_value)}</strong>` 
-              : '<span style="color: var(--text-subtle); font-style: italic;">Non expertisé</span>'}
+            <div>
+              <span style="font-size: 0.7rem; color: var(--text-subtle);">Déclarée :</span>
+              <strong style="color: var(--text-primary); font-family: var(--font-mono); font-size: 0.82rem;"> ${CreditScoringEngine.formatFCFA(item.declared_value)}</strong>
+            </div>
+            <div style="margin-top: 2px;">
+              <span style="font-size: 0.7rem; color: var(--text-subtle);">Expertisée :</span>
+              ${isVerif 
+                ? `<strong style="color: #047857; font-weight: 700; font-family: var(--font-mono); font-size: 0.82rem;"> ${CreditScoringEngine.formatFCFA(item.verified_value)}</strong>` 
+                : '<span style="color: var(--text-subtle); font-style: italic; font-size: 0.72rem;"> En attente</span>'}
+            </div>
           </td>
           <td>
             ${isVerif 
-              ? `<span class="badge badge-approved"><i class="fas fa-check-circle"></i> Validée</span>`
-              : `<span class="badge badge-warning"><i class="fas fa-motorcycle"></i> À Visiter</span>`}
+              ? `<span class="badge badge-approved" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-check-circle"></i> Validée</span>`
+              : `<span class="badge badge-warning" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-motorcycle"></i> À Visiter</span>`}
+            <div style="font-size: 0.68rem; color: var(--text-subtle); margin-top: 2px;">
+              <i class="fas fa-location-dot"></i> ${item.zone}
+            </div>
           </td>
           <td style="text-align: right;">
-            <button class="btn ${isVerif ? 'btn-secondary' : 'btn-primary'} btn-sm" onclick="App.openInspectionModal(${item.id})">
-              <i class="fas ${isVerif ? 'fa-pen-to-square' : 'fa-clipboard-check'} mr-1"></i> ${isVerif ? 'Modifier' : 'Inspecter'}
-            </button>
+            <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openInspectionDrawer(${item.id})" title="Voir les détails complets en volet latéral">
+                <i class="fas fa-eye text-primary"></i> Détails
+              </button>
+              <button class="btn ${isVerif ? 'btn-secondary' : 'btn-primary'} btn-sm" onclick="event.stopPropagation(); App.openInspectionModal(${item.id})" title="${isVerif ? 'Modifier le rapport' : 'Remplir le rapport d\'inspection'}">
+                <i class="fas ${isVerif ? 'fa-pen-to-square' : 'fa-clipboard-check'}"></i>
+              </button>
+            </div>
           </td>
         </tr>
       `;
     }).join('');
+  },
+
+  currentInspectionDrawerId: null,
+
+  openInspectionDrawer(guaranteeId) {
+    const g = DB.findById('guarantees', guaranteeId);
+    if (!g) return;
+
+    this.currentInspectionDrawerId = guaranteeId;
+    const req = DB.findById('credit_requests', g.credit_request_id) || {};
+    const client = DB.findById('clients', req.client_id) || {};
+
+    const backdrop = document.getElementById('inspection-drawer-backdrop');
+    const drawer = document.getElementById('inspection-sidedrawer');
+    if (!drawer) return;
+
+    // Header values
+    const isVerif = g.verification_status === 'VERIFIED';
+    const typeBadge = document.getElementById('insp-drawer-type-badge');
+    const statusBadge = document.getElementById('insp-drawer-status-badge');
+    const titleEl = document.getElementById('insp-drawer-title');
+    const subtitleEl = document.getElementById('insp-drawer-subtitle');
+
+    if (typeBadge) typeBadge.innerHTML = `<i class="fas fa-shield"></i> ${g.guarantee_type || 'Garantie'}`;
+    if (statusBadge) {
+      statusBadge.className = isVerif ? 'badge badge-approved' : 'badge badge-warning';
+      statusBadge.innerHTML = isVerif ? '<i class="fas fa-check-circle"></i> Conforme & Validée' : '<i class="fas fa-clock"></i> Visite Terrain Requise';
+    }
+    if (titleEl) titleEl.textContent = `Inspection Garantie • ${req.request_number || 'REQ-2026-0891'}`;
+    if (subtitleEl) subtitleEl.textContent = `${client.city || 'Bamako'} • ${client.residential_zone || 'Zone Urbaine'}`;
+
+    // Section 1: Emprunteur & Prêt
+    const reqNumEl = document.getElementById('insp-drawer-req-num');
+    const clientAvatar = document.getElementById('insp-drawer-client-avatar');
+    const clientName = document.getElementById('insp-drawer-client-name');
+    const clientLoc = document.getElementById('insp-drawer-client-loc');
+    const loanAmount = document.getElementById('insp-drawer-loan-amount');
+    const covRatio = document.getElementById('insp-drawer-coverage-ratio');
+
+    if (reqNumEl) reqNumEl.textContent = req.request_number || 'REQ-2026-0891';
+    if (clientAvatar) clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || 'Client')}&background=4f46e5&color=fff`;
+    if (clientName) clientName.textContent = req.client_name || 'Fatou Ndiaye';
+    if (clientLoc) clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} (${client.residential_zone || 'Zone Urbaine'})`;
+    if (loanAmount) loanAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount || 2500000);
+
+    const valRetenue = g.verified_value || g.declared_value || 1000000;
+    const loanAmt = req.requested_amount || 2500000;
+    const covPct = Math.round((valRetenue / loanAmt) * 100);
+    if (covRatio) {
+      covRatio.textContent = `${covPct}%`;
+      covRatio.style.color = covPct >= 120 ? '#059669' : '#d97706';
+    }
+
+    // Section 2: Expertise Financière
+    const valDeclaredEl = document.getElementById('insp-drawer-val-declared');
+    const valVerifiedEl = document.getElementById('insp-drawer-val-verified');
+    const discountEl = document.getElementById('insp-drawer-discount-pct');
+    const evalStatusEl = document.getElementById('insp-drawer-eval-status');
+
+    if (valDeclaredEl) valDeclaredEl.textContent = CreditScoringEngine.formatFCFA(g.declared_value || 0);
+    if (valVerifiedEl) valVerifiedEl.textContent = isVerif ? CreditScoringEngine.formatFCFA(g.verified_value || 0) : 'En cours d\'expertise';
+    
+    const decVal = g.declared_value || 1;
+    const verVal = g.verified_value || decVal;
+    const discPct = Math.max(0, Math.round(((decVal - verVal) / decVal) * 100));
+    if (discountEl) discountEl.textContent = isVerif ? `${discPct}%` : 'N/A';
+    if (evalStatusEl) {
+      evalStatusEl.className = isVerif ? 'badge badge-approved' : 'badge badge-warning';
+      evalStatusEl.textContent = isVerif ? 'Expertise Validée' : 'À Chiffrer sur Site';
+    }
+
+    // Section 3: Constats Terrain
+    const descEl = document.getElementById('insp-drawer-desc');
+    const locEl = document.getElementById('insp-drawer-location');
+    const condEl = document.getElementById('insp-drawer-condition');
+    const repEl = document.getElementById('insp-drawer-reputation');
+    const notesEl = document.getElementById('insp-drawer-notes');
+
+    if (descEl) descEl.textContent = g.description || 'Description du gage';
+    if (locEl) locEl.textContent = `${req.city || 'Bamako'} - ${client.residential_zone || 'Secteur Commercial'}`;
+    if (condEl) condEl.textContent = g.condition ? `État : ${g.condition}` : 'Bon état / Conforme';
+    if (repEl) repEl.textContent = g.reputation ? `Avis : ${g.reputation}` : 'Très Favorable (Voisinage)';
+    if (notesEl) notesEl.textContent = g.agent_notes || (isVerif ? 'Visite sur site effectuée. Actifs constatés et en parfait état d\'exploitation.' : 'Visite physique programmée par l\'agent de crédit pour vérification d\'inventaire et état de fonctionnement.');
+
+    if (backdrop) backdrop.classList.add('active');
+  },
+
+  closeInspectionDrawer() {
+    const backdrop = document.getElementById('inspection-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
+  openInspectionModalFromDrawer() {
+    if (this.currentInspectionDrawerId) {
+      this.closeInspectionDrawer();
+      this.openInspectionModal(this.currentInspectionDrawerId);
+    }
   },
 
   filterInspections(filterType, btn) {
@@ -1476,8 +1583,10 @@ const App = {
         id: 101,
         credit_request_id: 3,
         document_type: 'FACTURE_PROFORMA_ACTUALISEE',
-        expected_doc_name: 'Nouvelle Facture Proforma Quincaillerie (< 30 jours)',
-        reason: 'Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté.',
+        expected_doc_name: 'Facture Proforma (< 30j)',
+        full_doc_name: 'Nouvelle Facture Proforma Quincaillerie (< 30 jours)',
+        short_motif: 'Date OCR obsolète (> 18 mois)',
+        reason: 'Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.',
         severity: 'CRITICAL',
         reminders_sent: 2,
         last_reminder: 'Il y a 2 jours',
@@ -1487,8 +1596,10 @@ const App = {
         id: 102,
         credit_request_id: 3,
         document_type: 'CNI_RECTO_VERSO',
-        expected_doc_name: 'Carte Nationale d\'Identité (Recto/Verso Certifié)',
-        reason: 'Document illisible / flou sur la date de validité.',
+        expected_doc_name: 'Carte Nationale d\'Identité (CNI)',
+        full_doc_name: 'Carte Nationale d\'Identité (Recto/Verso Certifié)',
+        short_motif: 'Scan flou / Illisible',
+        reason: 'Document illisible / flou sur la date de validité et numéro NINA/CNI.',
         severity: 'WARNING',
         reminders_sent: 1,
         last_reminder: 'Hier à 15h30',
@@ -1498,8 +1609,10 @@ const App = {
         id: 103,
         credit_request_id: 5,
         document_type: 'ENGAGEMENT_CAUTION_SOLIDAIRE',
-        expected_doc_name: 'Attestation d\'Engagement Caution Maître Artisan',
-        reason: 'Signature physique requise pour validation Cold Start au dossier.',
+        expected_doc_name: 'Engagement Caution Solidaire',
+        full_doc_name: 'Attestation d\'Engagement Caution Maître Artisan',
+        short_motif: 'Signature physique requise',
+        reason: 'Signature physique requise pour validation Cold Start au dossier d\'octroi.',
         severity: 'INFO',
         reminders_sent: 1,
         last_reminder: 'Ce matin à 09h00',
@@ -1509,8 +1622,10 @@ const App = {
         id: 104,
         credit_request_id: 2,
         document_type: 'ATTESTATION_NON_REDEVANCE',
-        expected_doc_name: 'Quittance CIE / Électricité Usine Ouaga',
-        reason: 'Justificatif d\'implantation du broyeur semi-industriel.',
+        expected_doc_name: 'Quittance Électricité CIE / Usine',
+        full_doc_name: 'Quittance CIE / Électricité Usine Ouaga',
+        short_motif: 'Compteur pro non justifié',
+        reason: 'Justificatif d\'implantation du broyeur semi-industriel et compteur professionnel.',
         severity: 'WARNING',
         reminders_sent: 0,
         last_reminder: 'Jamais relancé',
@@ -1529,22 +1644,19 @@ const App = {
       const reqNumber = req.request_number || 'REQ-2026-0000';
 
       return `
-        <tr>
+        <tr class="schedule-table-row" onclick="App.openComplementsDrawer(${item.id})">
           <td>
-            <strong>${reqNumber}</strong>
+            <strong style="color: var(--primary-600); font-family: var(--font-mono);">${reqNumber}</strong>
             <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${clientName}</div>
             <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.city || 'Lomé'}, ${req.country || 'Togo'}</div>
           </td>
           <td>
-            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">
+            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
               <i class="fas fa-file-lines text-primary mr-1"></i> ${item.expected_doc_name}
             </div>
-            <div style="font-size: 0.7rem; color: var(--text-subtle); font-family: var(--font-mono);">${item.document_type}</div>
-          </td>
-          <td>
-            <div style="font-size: 0.78rem; color: ${item.severity === 'CRITICAL' ? '#b91c1c' : (item.severity === 'WARNING' ? '#b45309' : 'var(--text-secondary)')}; font-weight: 500;">
-              <i class="fas ${item.severity === 'CRITICAL' ? 'fa-ban text-danger' : 'fa-triangle-exclamation text-warning'} mr-1"></i>
-              ${item.reason}
+            <div style="font-size: 0.72rem; color: ${item.severity === 'CRITICAL' ? '#b91c1c' : (item.severity === 'WARNING' ? '#b45309' : 'var(--text-muted)')}; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 4px;">
+              <i class="fas ${item.severity === 'CRITICAL' ? 'fa-ban text-danger' : 'fa-triangle-exclamation text-warning'}"></i>
+              <span style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.short_motif}</span>
             </div>
           </td>
           <td>
@@ -1552,23 +1664,164 @@ const App = {
             <div style="font-size: 0.7rem; color: var(--text-subtle);">${item.reminders_sent} relance${item.reminders_sent > 1 ? 's' : ''} transmise${item.reminders_sent > 1 ? 's' : ''}</div>
           </td>
           <td>
-            <span class="badge ${item.status === 'ANOMALY_OPEN' ? 'badge-rejected' : 'badge-verification'}">
-              ${item.status === 'ANOMALY_OPEN' ? 'Anomalie Rejet' : 'En Attente'}
-            </span>
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+              <span class="badge ${item.status === 'ANOMALY_OPEN' ? 'badge-rejected' : 'badge-verification'}" style="font-size: 0.68rem; padding: 2px 6px;">
+                ${item.status === 'ANOMALY_OPEN' ? 'Anomalie Rejet' : 'En Attente'}
+              </span>
+              <span class="badge ${item.severity === 'CRITICAL' ? 'badge-danger' : 'badge-warning'}" style="font-size: 0.65rem; padding: 2px 5px;">
+                ${item.severity === 'CRITICAL' ? 'Bloquant' : 'Requis'}
+              </span>
+            </div>
           </td>
           <td style="text-align: right;">
-            <div style="display: flex; gap: 0.35rem; justify-content: flex-end;">
-              <button class="btn btn-secondary btn-sm" onclick="App.triggerDocReminder(${item.id}, '${clientName.replace(/'/g, "\\'")}', '${item.expected_doc_name.replace(/'/g, "\\'")}')" title="Envoyer une relance par SMS/WhatsApp">
-                <i class="fas fa-paper-plane text-primary"></i> Relancer
+            <div style="display: flex; gap: 0.35rem; justify-content: flex-end; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openComplementsDrawer(${item.id})" title="Voir les détails complets en volet latéral">
+                <i class="fas fa-eye text-primary"></i> Détails
               </button>
-              <button class="btn btn-primary btn-sm" onclick="App.markDocReceived(${item.id})" title="Marquer comme reçu et conforme">
-                <i class="fas fa-check"></i> Reçu
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.triggerDocReminder(${item.id}, '${clientName.replace(/'/g, "\\'")}', '${(item.full_doc_name || item.expected_doc_name).replace(/'/g, "\\'")}')" title="Envoyer une relance par SMS/WhatsApp">
+                <i class="fas fa-paper-plane"></i>
               </button>
             </div>
           </td>
         </tr>
       `;
     }).join('');
+  },
+
+  currentComplementDrawerId: null,
+
+  openComplementsDrawer(itemId) {
+    const items = [
+      {
+        id: 101,
+        credit_request_id: 3,
+        document_type: 'FACTURE_PROFORMA_ACTUALISEE',
+        expected_doc_name: 'Nouvelle Facture Proforma Quincaillerie (< 30 jours)',
+        reason: 'Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.',
+        severity: 'CRITICAL',
+        reminders_sent: 2,
+        last_reminder: 'Il y a 2 jours',
+        status: 'ANOMALY_OPEN'
+      },
+      {
+        id: 102,
+        credit_request_id: 3,
+        document_type: 'CNI_RECTO_VERSO',
+        expected_doc_name: 'Carte Nationale d\'Identité (Recto/Verso Certifié)',
+        reason: 'Document illisible / flou sur la date de validité et numéro NINA/CNI.',
+        severity: 'WARNING',
+        reminders_sent: 1,
+        last_reminder: 'Hier à 15h30',
+        status: 'PENDING_UPLOAD'
+      },
+      {
+        id: 103,
+        credit_request_id: 5,
+        document_type: 'ENGAGEMENT_CAUTION_SOLIDAIRE',
+        expected_doc_name: 'Attestation d\'Engagement Caution Maître Artisan',
+        reason: 'Signature physique requise pour validation Cold Start au dossier d\'octroi.',
+        severity: 'INFO',
+        reminders_sent: 1,
+        last_reminder: 'Ce matin à 09h00',
+        status: 'PENDING_UPLOAD'
+      },
+      {
+        id: 104,
+        credit_request_id: 2,
+        document_type: 'ATTESTATION_NON_REDEVANCE',
+        expected_doc_name: 'Quittance CIE / Électricité Usine Ouaga',
+        reason: 'Justificatif d\'implantation du broyeur semi-industriel et compteur professionnel.',
+        severity: 'WARNING',
+        reminders_sent: 0,
+        last_reminder: 'Jamais relancé',
+        status: 'PENDING_UPLOAD'
+      }
+    ];
+
+    const item = items.find(i => i.id == itemId) || items[0];
+    this.currentComplementDrawerId = item.id;
+
+    const req = DB.findById('credit_requests', item.credit_request_id) || {};
+    const client = DB.findById('clients', req.client_id) || {};
+
+    const backdrop = document.getElementById('complements-drawer-backdrop');
+    const drawer = document.getElementById('complements-sidedrawer');
+    if (!drawer) return;
+
+    // Badges & Headers
+    const sevBadge = document.getElementById('comp-drawer-severity-badge');
+    const statBadge = document.getElementById('comp-drawer-status-badge');
+    const titleEl = document.getElementById('comp-drawer-title');
+    const subtitleEl = document.getElementById('comp-drawer-subtitle');
+
+    if (sevBadge) {
+      sevBadge.className = item.severity === 'CRITICAL' ? 'badge badge-rejected' : 'badge badge-warning';
+      sevBadge.innerHTML = item.severity === 'CRITICAL' ? '<i class="fas fa-ban"></i> Bloquant Comité' : '<i class="fas fa-triangle-exclamation"></i> Action Requise';
+    }
+    if (statBadge) {
+      statBadge.className = item.status === 'ANOMALY_OPEN' ? 'badge badge-rejected' : 'badge badge-submitted';
+      statBadge.textContent = item.status === 'ANOMALY_OPEN' ? 'Anomalie Rejetée' : 'En Attente GED';
+    }
+    if (titleEl) titleEl.textContent = `Pièce Requise • ${req.request_number || 'REQ-2026-0891'}`;
+    if (subtitleEl) subtitleEl.textContent = `${client.name || req.client_name || 'Client Emprunteur'} • ${req.city || 'Bamako'}`;
+
+    // Section 1: Client
+    const reqNumEl = document.getElementById('comp-drawer-req-num');
+    const clientAvatar = document.getElementById('comp-drawer-client-avatar');
+    const clientName = document.getElementById('comp-drawer-client-name');
+    const clientLoc = document.getElementById('comp-drawer-client-loc');
+    const clientPhone = document.getElementById('comp-drawer-client-phone');
+    const loanAmt = document.getElementById('comp-drawer-loan-amount');
+
+    if (reqNumEl) reqNumEl.textContent = req.request_number || 'REQ-2026-0891';
+    if (clientAvatar) clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || client.name || 'Client')}&background=4f46e5&color=fff`;
+    if (clientName) clientName.textContent = req.client_name || client.name || 'Fatou Ndiaye';
+    if (clientLoc) clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'}`;
+    if (clientPhone) clientPhone.textContent = client.phone || '+223 77 45 67 89';
+    if (loanAmt) loanAmt.textContent = CreditScoringEngine.formatFCFA(req.requested_amount || 2500000);
+
+    // Section 2: Document & Motif
+    const docTypeEl = document.getElementById('comp-drawer-doc-type');
+    const docNameEl = document.getElementById('comp-drawer-doc-name');
+    const reasonEl = document.getElementById('comp-drawer-reason');
+
+    if (docTypeEl) docTypeEl.textContent = item.document_type;
+    if (docNameEl) docNameEl.textContent = item.expected_doc_name;
+    if (reasonEl) reasonEl.textContent = item.reason;
+
+    // Section 3: Reminders
+    const remCountEl = document.getElementById('comp-drawer-reminders-count');
+    if (remCountEl) remCountEl.textContent = `${item.reminders_sent} relance${item.reminders_sent > 1 ? 's' : ''} envoyée${item.reminders_sent > 1 ? 's' : ''}`;
+
+    if (backdrop) backdrop.classList.add('active');
+  },
+
+  closeComplementsDrawer() {
+    const backdrop = document.getElementById('complements-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
+  triggerReminderFromDrawer() {
+    if (!this.currentComplementDrawerId) return;
+    const clientName = document.getElementById('comp-drawer-client-name')?.textContent || 'l\'emprunteur';
+    const docName = document.getElementById('comp-drawer-doc-name')?.textContent || 'le document attendu';
+    this.triggerDocReminder(this.currentComplementDrawerId, clientName, docName);
+  },
+
+  markDocReceivedFromDrawer() {
+    if (!this.currentComplementDrawerId) return;
+    this.markDocReceived(this.currentComplementDrawerId);
+    this.closeComplementsDrawer();
+  },
+
+  triggerDrawerFileUpload() {
+    this.showToast('Scanner de document initié : analyse OCR et vérification de conformité en cours...', 'info');
+    setTimeout(() => {
+      if (this.currentComplementDrawerId) {
+        this.markDocReceived(this.currentComplementDrawerId);
+        this.closeComplementsDrawer();
+      }
+    }, 1200);
   },
 
   triggerDocReminder(docId, clientName, docName) {
@@ -1927,6 +2180,8 @@ const App = {
   },
 
   // [ROLE 4] COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
+  activeCommitteeDossierId: null,
+
   renderCommitteeDashboard() {
     const tbody = document.getElementById('committee-requests-table-body');
     if (!tbody) return;
@@ -1935,32 +2190,331 @@ const App = {
     const pendingReqs = DB.get('credit_requests').filter(r => r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS');
 
     tbody.innerHTML = pendingReqs.map(r => {
-      const evalData = CreditScoringEngine.evaluateDossier(r.id);
+      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+      const riskBadgeClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
+      const riskLabel = evalData.riskLevel === 'FAIBLE' ? 'Risque Faible' : (evalData.riskLevel === 'MODERE' ? 'Risque Modéré' : evalData.riskLevel || 'Faible');
+
       return `
-        <tr>
-          <td><strong>${r.request_number}</strong></td>
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher les détails dans le volet latéral">
           <td>
-            <strong>${r.client_name}</strong>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.city} • N° ${r.client_id}</div>
+            <div style="font-family: var(--font-family-code); font-size: 0.8rem; font-weight: 700; color: var(--primary-700);">${r.request_number}</div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary); margin-top: 1px;">${r.client_name}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${r.city || 'Bamako'}, ${r.country || 'Mali'}</div>
           </td>
-          <td><span class="amount-cell">${CreditScoringEngine.formatFCFA(r.requested_amount)}</span> (${r.duration_months} mois)</td>
           <td>
-            <span class="badge ${r.repayment_capacity_status === 'SUFFICIENT' ? 'badge-capacity-sufficient' : 'badge-capacity-insufficient'}">
-              ${r.repayment_capacity_status === 'SUFFICIENT' ? 'Reste à vivre suffisant' : 'Insuffisant'}
-            </span>
+            <strong class="amount-cell" style="color: var(--primary-700); font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">${r.duration_months} mois • Crédit Spot</div>
           </td>
           <td>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor};">${evalData.overallScore}</span>
-              <span style="font-size: 0.7rem; color: var(--text-subtle);">/100 (Confiance: ${evalData.confidenceScore}%)</span>
+              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || '#059669'};">${evalData.overallScore || 85}</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">/100</span>
+              <span class="badge ${riskBadgeClass}" style="font-size: 0.65rem;">${riskLabel}</span>
             </div>
           </td>
           <td>
-            <span class="badge badge-analysis"><i class="fas fa-thumbs-up"></i> Avis Favorable Analyste</span>
+            <span class="badge badge-analysis" style="font-size: 0.7rem;"><i class="fas fa-thumbs-up"></i> Favorable</span>
+          </td>
+          <td style="text-align: right;">
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Voir tous les détails du dossier en volet latéral">
+                <i class="fas fa-eye text-primary"></i> Détails
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Délibérer, ajuster les termes et voter">
+                <i class="fas fa-gavel"></i> Voter
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  openCommitteeDrawer(dossierId) {
+    this.activeCommitteeDossierId = dossierId;
+    const req = DB.findById('credit_requests', dossierId);
+    if (!req) return;
+
+    const evalData = CreditScoringEngine.evaluateDossier(dossierId) || {};
+    const client = DB.findById('clients', req.client_id) || {};
+    const review = DB.get('credit_reviews').find(r => r.credit_request_id == req.id) || {};
+
+    const backdrop = document.getElementById('committee-drawer-backdrop');
+    if (!backdrop) return;
+
+    // Badges & Header
+    const reqBadge = document.getElementById('com-drawer-req-badge');
+    const riskBadge = document.getElementById('com-drawer-risk-badge');
+    const titleEl = document.getElementById('com-drawer-title');
+    const subtitleEl = document.getElementById('com-drawer-subtitle');
+
+    if (reqBadge) reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
+    if (titleEl) titleEl.textContent = req.client_name || client.name || 'Emprunteur';
+    if (subtitleEl) subtitleEl.textContent = `Dossier de crédit • ${req.city || client.city || 'UEMOA'}, ${req.country || 'UEMOA'} • Décision Comité`;
+
+    if (riskBadge) {
+      const riskClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
+      riskBadge.className = `badge ${riskClass}`;
+      riskBadge.innerHTML = `<i class="fas fa-shield-check"></i> ${evalData.riskLevel === 'FAIBLE' ? 'Risque Faible' : (evalData.riskLevel === 'MODERE' ? 'Risque Modéré' : evalData.riskLevel || 'Faible')}`;
+    }
+
+    // Section 1 : Emprunteur & Demande
+    const clientIdEl = document.getElementById('com-drawer-client-id');
+    const avatarEl = document.getElementById('com-drawer-avatar');
+    const clientNameEl = document.getElementById('com-drawer-client-name');
+    const locEl = document.getElementById('com-drawer-location');
+    const amountEl = document.getElementById('com-drawer-amount');
+    const durationEl = document.getElementById('com-drawer-duration');
+    const installmentEl = document.getElementById('com-drawer-installment');
+    const activityEl = document.getElementById('com-drawer-activity');
+    const surplusEl = document.getElementById('com-drawer-surplus');
+
+    if (clientIdEl) clientIdEl.textContent = `ID: CLI-${req.client_id || '0891'}`;
+    if (avatarEl) avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
+    if (clientNameEl) clientNameEl.textContent = req.client_name;
+    if (locEl) locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} • Agence Principale`;
+    if (amountEl) amountEl.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    if (durationEl) durationEl.textContent = `Durée : ${req.duration_months} mois • Crédit Spot`;
+
+    // Monthly installment calculation
+    const rAmount = req.requested_amount || 2500000;
+    const rDur = req.duration_months || 12;
+    const estMonthly = Math.round((rAmount * (1 + 0.095 * (rDur / 12))) / rDur);
+    if (installmentEl) installmentEl.textContent = CreditScoringEngine.formatFCFA(estMonthly);
+
+    if (activityEl) activityEl.textContent = client.activity || req.activity || 'Commerce général & négoce';
+    if (surplusEl) {
+      const surplus = req.disposable_income || client.disposable_income || 385000;
+      surplusEl.textContent = `+ ${CreditScoringEngine.formatFCFA(surplus)}`;
+    }
+
+    // Section 2 : Scoring XAI
+    const confBadge = document.getElementById('com-drawer-conf-badge');
+    const overallScoreEl = document.getElementById('com-drawer-overall-score');
+    const capBadge = document.getElementById('com-drawer-capacity-badge');
+
+    if (confBadge) confBadge.innerHTML = `<i class="fas fa-check-double"></i> Confiance ${evalData.confidenceScore || 94}%`;
+    if (overallScoreEl) {
+      overallScoreEl.textContent = evalData.overallScore || req.score || 88;
+      overallScoreEl.style.color = evalData.riskColor || '#059669';
+    }
+    if (capBadge) {
+      const isSufficient = req.repayment_capacity_status === 'SUFFICIENT';
+      capBadge.className = `badge ${isSufficient ? 'badge-approved' : 'badge-rejected'}`;
+      capBadge.innerHTML = `<i class="fas ${isSufficient ? 'fa-check' : 'fa-triangle-exclamation'}"></i> ${isSufficient ? 'Reste à vivre certifié' : 'Capacité insuffisante'}`;
+    }
+
+    // Pillar progress bars
+    const scoreVal = evalData.overallScore || 88;
+    const pCash = Math.min(98, Math.max(60, scoreVal + 2));
+    const pCold = Math.min(95, Math.max(55, scoreVal - 2));
+    const pStab = Math.min(95, Math.max(50, scoreVal - 5));
+
+    const pCashEl = document.getElementById('com-drawer-pillar-cashflow');
+    const pColdEl = document.getElementById('com-drawer-pillar-coldstart');
+    const pStabEl = document.getElementById('com-drawer-pillar-stability');
+    const bCashEl = document.getElementById('com-drawer-bar-cashflow');
+    const bColdEl = document.getElementById('com-drawer-bar-coldstart');
+    const bStabEl = document.getElementById('com-drawer-bar-stability');
+
+    if (pCashEl) pCashEl.textContent = `${pCash} / 100`;
+    if (pColdEl) pColdEl.textContent = `${pCold} / 100`;
+    if (pStabEl) pStabEl.textContent = `${pStab} / 100`;
+    if (bCashEl) bCashEl.style.width = `${pCash}%`;
+    if (bColdEl) bColdEl.style.width = `${pCold}%`;
+    if (bStabEl) bStabEl.style.width = `${pStab}%`;
+
+    // Section 3 : Analyst Notes
+    const notesEl = document.getElementById('com-drawer-analyst-notes');
+    if (notesEl) {
+      notesEl.textContent = review.analyst_comment || `Avis d'octroi favorable émis par l'analyste risque. Activité vérifiée avec chiffre d'affaires récurrent sur les 6 derniers mois. Ratio d'endettement sain (${Math.round((estMonthly / (estMonthly + 385000)) * 100)}%).`;
+    }
+
+    // Show backdrop & trigger CSS transition
+    backdrop.classList.add('active');
+  },
+
+  closeCommitteeDrawer() {
+    const backdrop = document.getElementById('committee-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
+  openCommitteeModalFromDrawer() {
+    this.closeCommitteeDrawer();
+    if (this.activeCommitteeDossierId && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === 'function') {
+      window.AppInteractions.openCommitteeModal(this.activeCommitteeDossierId);
+    }
+  },
+
+  // Signed PV Registry Data & Sidedrawer
+  signedPvsRegistry: [
+    {
+      ref: 'PV-2026-0889',
+      req_number: '#REQ-2026-0889',
+      client_name: 'Seydou Keita',
+      country: 'Mali',
+      country_code: 'ml',
+      city: 'Bamako',
+      activity: 'Menuiserie métallique & BTP léger',
+      agency: 'Caisse Bamako Principale (Mali)',
+      decision: 'ACCORD',
+      decision_label: 'Accord Collégial Unanime',
+      amount_granted: 3000000,
+      amount_requested: 3000000,
+      rate: '9.5% annuel',
+      duration_months: 18,
+      terms: '9.5% • 18 mois',
+      monthly_payment: 190417,
+      date_signed: '18/08/2026',
+      time_signed: '16:45 GMT',
+      quorum: '3/3 Signatures',
+      sha: '9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01',
+      sha_short: '9a8f...4e12',
+      signers: [
+        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '18/08/2026 16:30', cert: 'Token UEMOA #991' },
+        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '18/08/2026 16:38', cert: 'Token UEMOA #812' },
+        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '18/08/2026 16:45', cert: 'Token UEMOA #405' }
+      ],
+      guarantees: 'Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10% (300 000 FCFA).',
+      disbursement_conditions: 'Décaissement échelonné : 70% sur facture proforma fournisseur et 30% après PV de réception des matériaux.',
+      committee_notes: 'Dossier jugé très solide. Rentabilité démontrée avec marge opérationnelle supérieure à 35%. Reste à vivre vérifié.'
+    },
+    {
+      ref: 'PV-2026-0884',
+      req_number: '#REQ-2026-0884',
+      client_name: 'Aïssatou Ba',
+      country: 'Sénégal',
+      country_code: 'sn',
+      city: 'Thiès',
+      activity: 'Transformation agroalimentaire & fruits séchés',
+      agency: 'Caisse Thiès Centre (Sénégal)',
+      decision: 'ACCORD',
+      decision_label: 'Accord sous Quotité Ajustée',
+      amount_granted: 1800000,
+      amount_requested: 2200000,
+      rate: '10.0% annuel',
+      duration_months: 12,
+      terms: '10.0% • 12 mois',
+      monthly_payment: 165000,
+      date_signed: '17/08/2026',
+      time_signed: '14:20 GMT',
+      quorum: '3/3 Signatures',
+      sha: 'bc723819a1234ef987654321fedcba0987654321fedcba0987654321fedcba09',
+      sha_short: 'bc72...8901',
+      signers: [
+        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '17/08/2026 14:05', cert: 'Token UEMOA #991' },
+        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '17/08/2026 14:12', cert: 'Token UEMOA #812' },
+        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '17/08/2026 14:20', cert: 'Token UEMOA #405' }
+      ],
+      guarantees: 'Nantissement matériel séchoir solaire + Engagement solidaire GIE des productrices de Thiès.',
+      disbursement_conditions: 'Paiement direct au fabricant de séchoir solaire agréé avec facture acquittée.',
+      committee_notes: 'Quotité ramenée à 1 800 000 FCFA pour maintenir le taux d\'effort en dessous du seuil de 30%.'
+    },
+    {
+      ref: 'PV-2026-0878',
+      req_number: '#REQ-2026-0878',
+      client_name: 'Mahamadou Ouedraogo',
+      country: 'Burkina Faso',
+      country_code: 'bf',
+      city: 'Bobo-Dioulasso',
+      activity: 'Transport interurbain & logistique',
+      agency: 'Caisse Bobo 2000 (Burkina Faso)',
+      decision: 'REJET',
+      decision_label: 'Rejet Collégial Unanime',
+      amount_granted: 0,
+      amount_requested: 4500000,
+      rate: 'N/A',
+      duration_months: 0,
+      terms: 'Refus d\'octroi',
+      monthly_payment: 0,
+      date_signed: '15/08/2026',
+      time_signed: '11:15 GMT',
+      quorum: 'Rejet Acté',
+      sha: 'df14aa33e99887766554433221100ffeeddccbbaa99887766554433221100ffe',
+      sha_short: 'df14...aa33',
+      signers: [
+        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Visa de Rejet Signé', date: '15/08/2026 11:00', cert: 'Token UEMOA #991' },
+        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Visa de Rejet Signé', date: '15/08/2026 11:08', cert: 'Token UEMOA #812' },
+        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Visa de Rejet Signé', date: '15/08/2026 11:15', cert: 'Token UEMOA #405' }
+      ],
+      guarantees: 'Garanties présentées jugées insuffisantes au regard de la charge d\'endettement externe constatée.',
+      disbursement_conditions: 'N/A - Dossier classé sans suite. Notification de refus motivé transmise à l\'agence locale.',
+      committee_notes: 'Reste à vivre négatif après intégration des encours externes déclarés à la Centrale des Risques BCEAO.'
+    },
+    {
+      ref: 'PV-2026-0865',
+      req_number: '#REQ-2026-0865',
+      client_name: 'Koffi Mensah',
+      country: 'Togo',
+      country_code: 'tg',
+      city: 'Lomé',
+      activity: 'Grossiste Quincaillerie & Outillage',
+      agency: 'Caisse Lomé Grand Marché (Togo)',
+      decision: 'ACCORD',
+      decision_label: 'Accord Collégial',
+      amount_granted: 3500000,
+      amount_requested: 3500000,
+      rate: '9.0% annuel',
+      duration_months: 24,
+      terms: '9.0% • 24 mois',
+      monthly_payment: 172083,
+      date_signed: '12/08/2026',
+      time_signed: '17:10 GMT',
+      quorum: '3/3 Signatures',
+      sha: '44a9f812cb0033445566778899aabbccddeeff00112233445566778899aabbcc',
+      sha_short: '44a9...bbcc',
+      signers: [
+        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '12/08/2026 16:50', cert: 'Token UEMOA #991' },
+        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '12/08/2026 17:02', cert: 'Token UEMOA #812' },
+        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '12/08/2026 17:10', cert: 'Token UEMOA #405' }
+      ],
+      guarantees: 'Nantissement de stock commercial 120% + Caution solidaire du groupement des commerçants.',
+      disbursement_conditions: 'Virement direct sur compte fournisseur quincaillerie sur présentation du bon de commande validé.',
+      committee_notes: 'Historique de remboursement irréprochable sur les précédents cycles. Stock à rotation rapide.'
+    }
+  ],
+
+  activeSignedPvRef: null,
+
+  renderSignedPvTable() {
+    const tbody = document.getElementById('signed-pvs-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = this.signedPvsRegistry.map(pv => {
+      const isApproved = pv.decision === 'ACCORD';
+
+      return `
+        <tr class="schedule-table-row" onclick="App.openSignedPvDrawer('${pv.ref}')" style="cursor: pointer;" title="Cliquer pour afficher les détails du procès-verbal scellé">
+          <td>
+            <strong style="font-family: var(--font-family-code); font-size: 0.85rem; color: var(--primary-700);">${pv.ref}</strong>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${pv.req_number}</div>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="AppInteractions.openCommitteeModal(${r.id})">
-              <i class="fas fa-gavel"></i> Délibérer & Voter
+            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary);">${pv.client_name}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${pv.city}, ${pv.country}</div>
+          </td>
+          <td>
+            ${isApproved 
+              ? `<strong class="amount-cell" style="color: #059669; font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(pv.amount_granted)}</strong>
+                 <div style="font-size: 0.72rem; color: var(--text-muted);">${pv.terms}</div>`
+              : `<strong class="amount-cell" style="color: #ef4444; font-size: 0.9rem;">REJET COLLÉGIAL</strong>
+                 <div style="font-size: 0.72rem; color: var(--text-muted);">Refus motivé</div>`
+            }
+          </td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+              <span class="badge ${isApproved ? 'badge-approved' : 'badge-rejected'}" style="font-size: 0.68rem;">
+                <i class="fas ${isApproved ? 'fa-check' : 'fa-times'}"></i> ${pv.quorum}
+              </span>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">${pv.date_signed}</span>
+            </div>
+            <div style="font-size: 0.68rem; color: var(--text-subtle); font-family: var(--font-family-code); margin-top: 2px;">
+              SHA: ${pv.sha_short}
+            </div>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openSignedPvDrawer('${pv.ref}')" title="Voir les détails complets du PV scellé">
+              <i class="fas fa-eye text-primary"></i> Détails
             </button>
           </td>
         </tr>
@@ -1968,9 +2522,529 @@ const App = {
     }).join('');
   },
 
+  openSignedPvDrawer(pvRef) {
+    this.activeSignedPvRef = pvRef;
+    const pv = this.signedPvsRegistry.find(p => p.ref === pvRef);
+    if (!pv) return;
+
+    const backdrop = document.getElementById('signed-pv-drawer-backdrop');
+    if (!backdrop) return;
+
+    const isApproved = pv.decision === 'ACCORD';
+
+    // Header & Badges
+    const refBadge = document.getElementById('pv-drawer-ref-badge');
+    const statusBadge = document.getElementById('pv-drawer-status-badge');
+    const titleEl = document.getElementById('pv-drawer-title');
+    const subtitleEl = document.getElementById('pv-drawer-subtitle');
+
+    if (refBadge) refBadge.textContent = pv.ref;
+    if (statusBadge) {
+      statusBadge.className = `badge ${isApproved ? 'badge-approved' : 'badge-rejected'}`;
+      statusBadge.innerHTML = `<i class="fas ${isApproved ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${pv.decision_label}`;
+    }
+    if (titleEl) titleEl.textContent = pv.client_name;
+    if (subtitleEl) subtitleEl.textContent = `Procès-Verbal Officiel scellé • ${pv.city}, ${pv.country} • ${pv.req_number}`;
+
+    // Section 1 : Termes financiers
+    const dateEl = document.getElementById('pv-drawer-date');
+    const amountEl = document.getElementById('pv-drawer-amount');
+    const diffEl = document.getElementById('pv-drawer-requested-diff');
+    const termsEl = document.getElementById('pv-drawer-terms');
+    const monthlyEl = document.getElementById('pv-drawer-monthly');
+    const clientInfoEl = document.getElementById('pv-drawer-client-info');
+    const agencyEl = document.getElementById('pv-drawer-agency');
+
+    if (dateEl) dateEl.textContent = `${pv.date_signed} (${pv.time_signed})`;
+    if (amountEl) {
+      amountEl.textContent = isApproved ? CreditScoringEngine.formatFCFA(pv.amount_granted) : '0 FCFA';
+      amountEl.style.color = isApproved ? '#059669' : '#ef4444';
+    }
+    if (diffEl) {
+      diffEl.textContent = `Demande initiale : ${CreditScoringEngine.formatFCFA(pv.amount_requested)}`;
+    }
+    if (termsEl) termsEl.textContent = pv.terms;
+    if (monthlyEl) {
+      monthlyEl.textContent = isApproved ? `Échéance : ~${CreditScoringEngine.formatFCFA(pv.monthly_payment)} / mois` : 'Sans échéance (Dossier rejeté)';
+    }
+    if (clientInfoEl) clientInfoEl.textContent = `${pv.client_name} (${pv.activity})`;
+    if (agencyEl) agencyEl.textContent = pv.agency;
+
+    // Section 2 : Signers
+    const quorumBadge = document.getElementById('pv-drawer-quorum-badge');
+    if (quorumBadge) {
+      quorumBadge.className = `badge ${isApproved ? 'badge-approved' : 'badge-rejected'}`;
+      quorumBadge.innerHTML = `<i class="fas ${isApproved ? 'fa-users-check' : 'fa-ban'}"></i> ${pv.quorum}`;
+    }
+
+    const signersList = document.getElementById('pv-drawer-signers-list');
+    if (signersList && pv.signers) {
+      signersList.innerHTML = pv.signers.map(s => `
+        <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">${s.name}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">${s.role} • <span style="font-family: var(--font-family-code); color: var(--primary-700);">${s.cert}</span></div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge ${isApproved ? 'badge-approved' : 'badge-rejected'}" style="font-size: 0.68rem;">
+              <i class="fas fa-check-double mr-1"></i> ${s.status}
+            </span>
+            <div style="font-size: 0.68rem; color: var(--text-subtle); margin-top: 2px;">${s.date}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Section 3 : Guarantees & Notes
+    const guarEl = document.getElementById('pv-drawer-guarantees');
+    const disbEl = document.getElementById('pv-drawer-disbursement');
+    const notesEl = document.getElementById('pv-drawer-notes');
+
+    if (guarEl) guarEl.textContent = pv.guarantees;
+    if (disbEl) disbEl.textContent = pv.disbursement_conditions;
+    if (notesEl) notesEl.textContent = pv.committee_notes;
+
+    // Section 4 : SHA
+    const shaEl = document.getElementById('pv-drawer-sha');
+    if (shaEl) shaEl.textContent = pv.sha;
+
+    backdrop.classList.add('active');
+  },
+
+  closeSignedPvDrawer() {
+    const backdrop = document.getElementById('signed-pv-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
+  downloadSignedPvPdf() {
+    const pv = this.signedPvsRegistry.find(p => p.ref === this.activeSignedPvRef);
+    const ref = pv ? pv.ref : 'PV-2026-0889';
+    this.showToast(`Génération du Procès-Verbal officiel ${ref} certifié SHA-256 en cours...`, 'info');
+    setTimeout(() => {
+      this.showToast(`Procès-Verbal ${ref} téléchargé avec succès (Format PDF A/3 conforme UEMOA)`, 'success');
+    }, 800);
+  },
+
+  downloadAllSignedPvsCsv() {
+    this.showToast('Export du registre complet des décisions scellées au format CSV/Excel...', 'info');
+    setTimeout(() => {
+      this.showToast('Registre des procès-verbaux scellés exporté avec succès (4 actes validés)', 'success');
+    }, 600);
+  },
+
+  notifyAgencyForPv() {
+    const pv = this.signedPvsRegistry.find(p => p.ref === this.activeSignedPvRef);
+    if (!pv) return;
+    this.showToast(`Notification de décision pour ${pv.client_name} transmise à ${pv.agency} via passerelle SMS & Messagerie`, 'success');
+  },
+
+  showSignedPvDetails(ref, client, amount, terms, date, sha) {
+    this.openSignedPvDrawer(ref);
+  },
+
   // [ROLE 5] RESPONSABLE CONFORMITÉ LBC / FT / FP
+  complianceScreeningRegistry: [
+    {
+      id: 'SCR-2026-0942',
+      date: 'Aujourd\'hui 09:42',
+      full_date: '21/08/2026 09:42 GMT',
+      client_name: 'Ibrahim Ould Mohamed',
+      country: 'Mali',
+      city: 'Gao & Bamako',
+      agency: 'Caisse Grand Marché (Bamako, Mali)',
+      id_number: 'NINA : 01-78-05-14-9981-ML',
+      dob: 'Né le 14/05/1978 à Gao',
+      aliases: 'Ibrahim Mohamed, Abou Khalil, El-Ibrahimi',
+      profession: 'Négoce transfrontalier & Logistique',
+      list_type: 'Sanctions UEMOA / ONU',
+      legal_framework: 'Résolution Conseil de Sécurité ONU 2374 (2017) & Décret Ministériel UEMOA Gel des avoirs',
+      match_score: 98,
+      match_label: 'Match 98%',
+      status: 'BLOCKED',
+      status_label: 'Blocage Conservatoire',
+      measure_badge: 'badge-rejected',
+      officer: 'Mamadou Traoré (Conformité LBC)',
+      findings: 'Concordance biométrique et patronymique avec l\'entité inscrite sur la liste consolidée du Comité des Sanctions ONU. Compte et opérations immédiatement suspendus. Notification automatique émise à la CENTIF-Mali sous réf. CENTIF-ML-2026-0418.',
+      sha: '4e81fa02cb778899aa112233445566778899aabbccddeeff0011223344556677',
+      is_doubt_cleared: false,
+      steps: [
+        { title: 'Contrôle Automatisé API Screening Multi-Registres', time: '09:42:01', status: 'Alerte Rouge (Match 98%)', badge: 'badge-rejected' },
+        { title: 'Examen de Non-Homonymie & Validation Pièce', time: '09:44:15', status: 'Homonymie confirmée (NINA & Date naissance concordants)', badge: 'badge-rejected' },
+        { title: 'Blocage Conservatoire des Comptes & Flux', time: '09:45:00', status: 'Acté & Verrouillé', badge: 'badge-rejected' },
+        { title: 'Télétransmission Bordereau Réglementaire CENTIF', time: '09:46:30', status: 'Bordereau #DOS-CENTIF-0418 transmis', badge: 'badge-approved' }
+      ]
+    },
+    {
+      id: 'SCR-2026-0915',
+      date: 'Aujourd\'hui 08:15',
+      full_date: '21/08/2026 08:15 GMT',
+      client_name: 'Ousmane Coulibaly',
+      country: 'Burkina Faso',
+      city: 'Ouagadougou',
+      agency: 'Caisse Ouaga 2000 (Burkina Faso)',
+      id_number: 'CNIB : B11489201 (Burkina Faso)',
+      dob: 'Né le 22/09/1982 à Bobo-Dioulasso',
+      aliases: 'Ousmane C., El Hadj Coulibaly',
+      profession: 'Élu Municipal & Promoteur Immobilier',
+      list_type: 'Base PPE Régionale',
+      legal_framework: 'Directive UEMOA N°02/2015/CM relative à la Lutte contre le Blanchiment & Personnes Politiquement Exposées',
+      match_score: 74,
+      match_label: 'Exposé (PPE)',
+      status: 'PPE_ENHANCED',
+      status_label: 'Diligence Renforcée',
+      measure_badge: 'badge-warning',
+      officer: 'Mamadou Traoré (Conformité LBC)',
+      findings: 'Personne Politiquement Exposée (Adjoint au Maire). Justificatifs de patrimoine et d\'origine licite des fonds requis. Validation obligatoire par la Direction des Risques avant tout décaissement de concours financier.',
+      sha: '7f92a105dd889900bb2233445566778899aabbccddeeff001122334455667788',
+      is_doubt_cleared: false,
+      steps: [
+        { title: 'Filtrage Registre PEP / Déclaration d\'Intérêt', time: '08:15:10', status: 'Signalement PPE Identifié (Niveau 2)', badge: 'badge-warning' },
+        { title: 'Questionnaire Renforcé Origine des Fonds', time: '08:22:00', status: 'Déclaration transmise & en cours d\'analyse', badge: 'badge-submitted' },
+        { title: 'Contrôle Absence Sanctions / Gel des Avoirs', time: '08:25:30', status: 'Aucune sanction internationale (0%)', badge: 'badge-approved' }
+      ]
+    },
+    {
+      id: 'SCR-2026-0888',
+      date: 'Hier 16:30',
+      full_date: '20/08/2026 16:30 GMT',
+      client_name: 'Fatou Ndiaye',
+      country: 'Sénégal',
+      city: 'Dakar',
+      agency: 'Caisse Médina (Dakar, Sénégal)',
+      id_number: 'CNI CEDEAO : 1756 1990 04182',
+      dob: 'Née le 03/11/1990 à Dakar',
+      aliases: 'Aucun alias répertorié',
+      profession: 'Commerçante & Importatrice Textile',
+      list_type: 'Base Globale GAFI',
+      legal_framework: 'Contrôle de Routine Conforme LBC / FT (Recommandations GAFI 10 & 11)',
+      match_score: 0,
+      match_label: 'RAS (0%)',
+      status: 'CLEARED',
+      status_label: 'Autorisé sans Réserve',
+      measure_badge: 'badge-approved',
+      officer: 'Mamadou Traoré (Conformité LBC)',
+      findings: 'Filtrage complet négatif sur l\'ensemble des registres (ONU, UEMOA, OFAC, CENTIF-SN). Dossier validé pour ouverture de compte et octroi de crédit.',
+      sha: '1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809',
+      is_doubt_cleared: true,
+      steps: [
+        { title: 'Contrôle Sanctions ONU / UEMOA / GAFI', time: '16:30:05', status: 'Conformité Totale (0% match)', badge: 'badge-approved' },
+        { title: 'Vérification Pièce d\'Identité CEDEAO', time: '16:30:45', status: 'Document authentique & valide', badge: 'badge-approved' },
+        { title: 'Feu Vert Conformité Délivré', time: '16:31:00', status: 'Autorisation automatique enregistrée', badge: 'badge-approved' }
+      ]
+    },
+    {
+      id: 'SCR-2026-0870',
+      date: 'Hier 14:10',
+      full_date: '20/08/2026 14:10 GMT',
+      client_name: 'Koffi Mensah',
+      country: 'Togo',
+      city: 'Lomé',
+      agency: 'Caisse Grand Marché (Lomé, Togo)',
+      id_number: 'Carte Nationale : TG-0982-2021',
+      dob: 'Né le 19/07/1985 à Lomé',
+      aliases: 'Aucun alias',
+      profession: 'Grossiste Quincaillerie',
+      list_type: 'Base Globale GAFI',
+      legal_framework: 'Contrôle Périodique de Routine KYC / LBC-FT',
+      match_score: 0,
+      match_label: 'RAS (0%)',
+      status: 'CLEARED',
+      status_label: 'Autorisé sans Réserve',
+      measure_badge: 'badge-approved',
+      officer: 'Mamadou Traoré (Conformité LBC)',
+      findings: 'Aucune correspondance négative. Profil client sain, activité commerciale conforme aux opérations déclarées.',
+      sha: '89ab01cd23ef456789ab01cd23ef456789ab01cd23ef456789ab01cd23ef4567',
+      is_doubt_cleared: true,
+      steps: [
+        { title: 'Screening Sanctions Internationales', time: '14:10:02', status: 'Conformité Validée (0%)', badge: 'badge-approved' },
+        { title: 'Attestation de Non-Inscription Registre CENTIF', time: '14:10:30', status: 'Bordereau archivé', badge: 'badge-approved' }
+      ]
+    },
+    {
+      id: 'SCR-2026-0855',
+      date: '19/08/2026 11:20',
+      full_date: '19/08/2026 11:20 GMT',
+      client_name: 'Cheikh Tidiane Diop',
+      country: 'Sénégal',
+      city: 'Saint-Louis',
+      agency: 'Caisse Saint-Louis (Sénégal)',
+      id_number: 'CNI CEDEAO : 1882 1988 09912',
+      dob: 'Né le 12/01/1988 à Saint-Louis',
+      aliases: 'Tidiane Diop',
+      profession: 'Artisan Pêcheur & Mareyeur',
+      list_type: 'Base Sanctions UEMOA',
+      match_score: 18,
+      match_label: 'Homonymie Écartée',
+      status: 'DOUBT_CLEARED',
+      status_label: 'Levée de Doute Validée',
+      measure_badge: 'badge-approved',
+      officer: 'Mamadou Traoré (Conformité LBC)',
+      findings: 'Simple homonymie patronymique avec un tiers sanctionné. Après vérification de l\'acte de naissance et du numéro national d\'identification, le doute est levé. Dossier régularisé.',
+      sha: '33445566778899aabbccddeeff00112233445566778899aabbccddeeff001122',
+      is_doubt_cleared: true,
+      steps: [
+        { title: 'Détection Initiale Homonymie (18%)', time: '11:20:00', status: 'Alerte Faible Intensité', badge: 'badge-warning' },
+        { title: 'Comparaison Biométrique & Date de Naissance', time: '11:23:40', status: 'Non-Concordance Certifiée', badge: 'badge-approved' },
+        { title: 'Levée de Doute Formelle par l\'Officier', time: '11:25:00', status: 'Dossier Débloqué', badge: 'badge-approved' }
+      ]
+    }
+  ],
+
+  activeComplianceScreeningId: null,
+
   renderComplianceDashboard() {
-    // Refresh screening status
+    this.renderComplianceScreeningTable();
+  },
+
+  renderComplianceScreeningTable() {
+    const tbody = document.getElementById('compliance-screening-table-body');
+    if (!tbody) return;
+
+    const countBadge = document.getElementById('screening-count-badge');
+    if (countBadge) {
+      countBadge.textContent = `${this.complianceScreeningRegistry.length} Contrôles Récents`;
+    }
+
+    tbody.innerHTML = this.complianceScreeningRegistry.map(item => {
+      let scoreColor = '#10b981';
+      if (item.match_score >= 80) scoreColor = '#ef4444';
+      else if (item.match_score > 0) scoreColor = '#f59e0b';
+
+      return `
+        <tr class="schedule-table-row" onclick="App.openComplianceScreeningDrawer('${item.id}')" style="cursor: pointer;" title="Cliquer pour afficher les détails du contrôle et les diligences">
+          <td>
+            <strong>${item.date}</strong>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); font-family: var(--font-family-code);">${item.id}</div>
+          </td>
+          <td>
+            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary);">${item.client_name}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${item.city}, ${item.country}</div>
+          </td>
+          <td>
+            <span class="badge ${item.list_type.includes('Sanctions') ? 'badge-rejected' : (item.list_type.includes('PPE') ? 'badge-warning' : 'badge-submitted')}" style="font-size: 0.68rem;">
+              ${item.list_type}
+            </span>
+          </td>
+          <td>
+            <span class="badge ${item.measure_badge}" style="font-size: 0.74rem;">
+              <i class="fas ${item.match_score >= 80 ? 'fa-ban' : (item.match_score > 0 ? 'fa-triangle-exclamation' : 'fa-circle-check')} mr-1"></i>${item.status_label}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openComplianceScreeningDrawer('${item.id}')" title="Voir les détails approfondis du filtrage">
+              <i class="fas fa-eye text-primary"></i> Détails
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  openComplianceScreeningDrawer(scrId) {
+    this.activeComplianceScreeningId = scrId;
+    const item = this.complianceScreeningRegistry.find(s => s.id === scrId);
+    if (!item) return;
+
+    const backdrop = document.getElementById('compliance-screening-drawer-backdrop');
+    if (!backdrop) return;
+
+    // Header & Badges
+    const refBadge = document.getElementById('scr-drawer-ref-badge');
+    const statusBadge = document.getElementById('scr-drawer-status-badge');
+    const titleEl = document.getElementById('scr-drawer-title');
+    const subtitleEl = document.getElementById('scr-drawer-subtitle');
+
+    if (refBadge) refBadge.textContent = `#${item.id}`;
+    if (statusBadge) {
+      statusBadge.className = `badge ${item.measure_badge}`;
+      statusBadge.innerHTML = `<i class="fas ${item.match_score >= 80 ? 'fa-ban' : (item.match_score > 0 ? 'fa-shield-halved' : 'fa-circle-check')}"></i> ${item.status_label}`;
+    }
+    if (titleEl) titleEl.textContent = item.client_name;
+    if (subtitleEl) subtitleEl.textContent = `Dossier d'investigation réglementaire • ${item.city} (${item.country}) • ${item.id}`;
+
+    // Section 1 : Fiche d'identification
+    const dateEl = document.getElementById('scr-drawer-date');
+    const avatarEl = document.getElementById('scr-drawer-avatar');
+    const fullnameEl = document.getElementById('scr-drawer-fullname');
+    const locEl = document.getElementById('scr-drawer-location');
+    const idnumEl = document.getElementById('scr-drawer-idnum');
+    const dobEl = document.getElementById('scr-drawer-dob');
+    const matchScoreEl = document.getElementById('scr-drawer-match-score');
+    const confEl = document.getElementById('scr-drawer-confidence');
+    const aliasesEl = document.getElementById('scr-drawer-aliases');
+    const profEl = document.getElementById('scr-drawer-profession');
+
+    if (dateEl) dateEl.textContent = item.full_date;
+    if (avatarEl) {
+      const bgColor = item.match_score >= 80 ? 'ef4444' : (item.match_score > 0 ? 'f59e0b' : '10b981');
+      avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.client_name)}&background=${bgColor}&color=fff`;
+    }
+    if (fullnameEl) fullnameEl.textContent = item.client_name;
+    if (locEl) locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${item.city} (${item.country}) • ${item.agency}`;
+    if (idnumEl) idnumEl.textContent = item.id_number;
+    if (dobEl) dobEl.textContent = item.dob;
+    if (matchScoreEl) {
+      matchScoreEl.textContent = item.match_label;
+      matchScoreEl.style.color = item.match_score >= 80 ? '#ef4444' : (item.match_score > 0 ? '#f59e0b' : '#10b981');
+    }
+    if (confEl) {
+      confEl.textContent = item.match_score >= 80 ? 'Index de similarité : Très Élevé' : (item.match_score > 0 ? 'Index de similarité : Modéré' : 'Index de similarité : Nul (Conforme)');
+    }
+    if (aliasesEl) aliasesEl.textContent = item.aliases;
+    if (profEl) profEl.textContent = item.profession;
+
+    // Section 2 : Registres & Textes
+    const listTypeBadge = document.getElementById('scr-drawer-list-type');
+    const legalEl = document.getElementById('scr-drawer-legal-framework');
+    const findingsEl = document.getElementById('scr-drawer-findings');
+
+    if (listTypeBadge) {
+      listTypeBadge.className = `badge ${item.list_type.includes('Sanctions') ? 'badge-rejected' : (item.list_type.includes('PPE') ? 'badge-warning' : 'badge-submitted')}`;
+      listTypeBadge.textContent = item.list_type;
+    }
+    if (legalEl) legalEl.textContent = item.legal_framework;
+    if (findingsEl) findingsEl.textContent = item.findings;
+
+    // Section 3 : Diligences & Étapes
+    const officerBadge = document.getElementById('scr-drawer-officer');
+    if (officerBadge) officerBadge.textContent = item.officer;
+
+    const stepsList = document.getElementById('scr-drawer-steps-list');
+    if (stepsList && item.steps) {
+      stepsList.innerHTML = item.steps.map(s => `
+        <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">${s.title}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-clock mr-1"></i>${s.time}</div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge ${s.badge}" style="font-size: 0.68rem;">
+              ${s.status}
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Section 4 : SHA-256
+    const shaEl = document.getElementById('scr-drawer-sha');
+    if (shaEl) shaEl.textContent = item.sha;
+
+    // Toggle doubt button appearance
+    const doubtBtn = document.getElementById('scr-drawer-doubt-btn');
+    if (doubtBtn) {
+      if (item.is_doubt_cleared) {
+        doubtBtn.innerHTML = '<i class="fas fa-undo mr-1 text-warning"></i> Réactiver Alerte';
+      } else {
+        doubtBtn.innerHTML = '<i class="fas fa-user-check mr-1 text-primary"></i> Lever le Doute';
+      }
+    }
+
+    backdrop.classList.add('active');
+  },
+
+  closeComplianceScreeningDrawer() {
+    const backdrop = document.getElementById('compliance-screening-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
+  toggleDoubtClearance() {
+    const item = this.complianceScreeningRegistry.find(s => s.id === this.activeComplianceScreeningId);
+    if (!item) return;
+
+    if (!item.is_doubt_cleared) {
+      item.is_doubt_cleared = true;
+      item.status = 'DOUBT_CLEARED';
+      item.status_label = 'Levée de Doute Validée';
+      item.measure_badge = 'badge-approved';
+      item.findings += ' [ACTE DU CONTRÔLEUR : Non-homonymie formellement constatée et certifiée par pièce justificative].';
+      item.steps.push({
+        title: 'Levée de Doute Validée par l\'Analyste Conformité',
+        time: 'À l\'instant',
+        status: 'Conforme & Débloqué',
+        badge: 'badge-approved'
+      });
+      this.showToast(`Levée de doute enregistrée avec succès pour ${item.client_name}. Dossier débloqué.`, 'success');
+    } else {
+      item.is_doubt_cleared = false;
+      item.status = 'BLOCKED';
+      item.status_label = 'Blocage Conservatoire';
+      item.measure_badge = 'badge-rejected';
+      this.showToast(`Alerte de conformité réactivée pour ${item.client_name}. Mesure conservatoire rétablie.`, 'warning');
+    }
+
+    this.renderComplianceScreeningTable();
+    this.openComplianceScreeningDrawer(item.id);
+  },
+
+  downloadScreeningReportPdf() {
+    const item = this.complianceScreeningRegistry.find(s => s.id === this.activeComplianceScreeningId);
+    const ref = item ? item.id : 'SCR-2026-0942';
+    const name = item ? item.client_name : 'Cible';
+    this.showToast(`Génération du Rapport d'Investigation Conformité LBC/FT pour ${name} (${ref})...`, 'info');
+    setTimeout(() => {
+      this.showToast(`Rapport d'Investigation ${ref} certifié SHA-256 téléchargé avec succès (Format PDF A/3)`, 'success');
+    }, 800);
+  },
+
+  runLiveComplianceScreening() {
+    const nameInput = document.getElementById('screening-full-name-input');
+    const countrySelect = document.getElementById('screening-country-select');
+    const query = nameInput ? nameInput.value.trim() : '';
+    const countryCode = countrySelect ? countrySelect.value : 'ALL';
+
+    if (!query) {
+      this.showToast('Veuillez saisir un nom ou une raison sociale à contrôler', 'warning');
+      return;
+    }
+
+    this.showToast(`Interrogation des registres ONU, UEMOA & base PPE pour « ${query} »...`, 'info');
+
+    setTimeout(() => {
+      // Check if already in registry
+      let match = this.complianceScreeningRegistry.find(s => s.client_name.toLowerCase().includes(query.toLowerCase()));
+
+      if (!match) {
+        // Create a new screening entry
+        const countryNames = { ML: 'Mali', BF: 'Burkina Faso', SN: 'Sénégal', TG: 'Togo', BJ: 'Bénin', ALL: 'UEMOA' };
+        const country = countryNames[countryCode] || 'UEMOA';
+        const newId = `SCR-2026-0${Math.floor(100 + Math.random() * 899)}`;
+        match = {
+          id: newId,
+          date: 'À l\'instant',
+          full_date: `21/08/2026 ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} GMT`,
+          client_name: query,
+          country: country,
+          city: country === 'Mali' ? 'Bamako' : (country === 'Sénégal' ? 'Dakar' : (country === 'Burkina Faso' ? 'Ouagadougou' : 'Caisse Régionale')),
+          agency: `Caisse Centrale (${country})`,
+          id_number: `ID-VERIF-${Math.floor(100000 + Math.random() * 900000)}`,
+          dob: 'Date de naissance vérifiée sur document officiel',
+          aliases: 'Aucun alias suspect',
+          profession: 'Activité commerciale déclarée',
+          list_type: 'Base Globale GAFI & UEMOA',
+          legal_framework: 'Filtrage Réglementaire Standard LBC/FT',
+          match_score: 0,
+          match_label: 'RAS (0%)',
+          status: 'CLEARED',
+          status_label: 'Autorisé sans Réserve',
+          measure_badge: 'badge-approved',
+          officer: 'Mamadou Traoré (Conformité LBC)',
+          findings: `Contrôle instantané en temps réel effectué pour ${query}. Aucune correspondance sur les listes de sanctions régionales UEMOA, ONU ou PPE.`,
+          sha: 'a1b2c3d4e5f67890123456789012345678901234567890123456789012345678',
+          is_doubt_cleared: true,
+          steps: [
+            { title: 'Interrogation API Directe Sanctions ONU / UEMOA', time: 'À l\'instant', status: '0% Concordance', badge: 'badge-approved' },
+            { title: 'Recherche Base Personnes Politiquement Exposées', time: 'À l\'instant', status: 'Non Répertorié', badge: 'badge-approved' },
+            { title: 'Certification Conformité', time: 'À l\'instant', status: 'Autorisé', badge: 'badge-approved' }
+          ]
+        };
+        this.complianceScreeningRegistry.unshift(match);
+        this.renderComplianceScreeningTable();
+      }
+
+      this.showToast(`Contrôle terminé pour ${match.client_name} : ${match.status_label}`, match.match_score >= 80 ? 'error' : (match.match_score > 0 ? 'warning' : 'success'));
+      this.openComplianceScreeningDrawer(match.id);
+    }, 600);
   },
 
   // 5. General Controls
@@ -3336,6 +4410,35 @@ const App = {
         eligibilityBadge.className = 'badge badge-verification';
         eligibilityBadge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Étude Approfondie Requise';
       }
+    }
+
+    // Update Full Simulator Pie Chart & Percentages
+    const totalRepaidSim = Math.round(amount + totalInterest + feesAndInsurance);
+    const simPctCapital = Math.round((amount / totalRepaidSim) * 100);
+    const simPctInterest = Math.round((totalInterest / totalRepaidSim) * 100);
+    const simPctFees = Math.max(1, 100 - simPctCapital - simPctInterest);
+
+    const simPieCapVal = document.getElementById('sim-pie-capital-val');
+    const simPieIntVal = document.getElementById('sim-pie-interest-val');
+    const simPieFeesVal = document.getElementById('sim-pie-fees-val');
+    const simPieCapPct = document.getElementById('sim-pie-capital-pct');
+    const simPieIntPct = document.getElementById('sim-pie-interest-pct');
+    const simPieFeesPct = document.getElementById('sim-pie-fees-pct');
+
+    if (simPieCapVal) simPieCapVal.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (simPieIntVal) simPieIntVal.textContent = CreditScoringEngine.formatFCFA(Math.round(totalInterest));
+    if (simPieFeesVal) simPieFeesVal.textContent = CreditScoringEngine.formatFCFA(feesAndInsurance);
+    if (simPieCapPct) simPieCapPct.textContent = `${simPctCapital}%`;
+    if (simPieIntPct) simPieIntPct.textContent = `${simPctInterest}%`;
+    if (simPieFeesPct) simPieFeesPct.textContent = `${simPctFees}%`;
+
+    if (window.AppCharts && typeof window.AppCharts.renderSimulatorBreakdownPie === 'function') {
+      window.AppCharts.renderSimulatorBreakdownPie(
+        'sim-breakdown-pie-chart',
+        amount,
+        Math.round(totalInterest),
+        feesAndInsurance
+      );
     }
   },
 
@@ -4808,8 +5911,10 @@ const App = {
   },
 
   // ==========================================================================
-  // [FEATURE] COMPACT LOAN ESTIMATION COMPONENT (BORROWER DASHBOARD)
+  // [FEATURE] INTERACTIVE LOAN AMORTIZATION CALCULATOR (BORROWER DASHBOARD)
   // ==========================================================================
+  isAmortizationScheduleOpen: false,
+
   updateCompactEstimator() {
     const amountSlider = document.getElementById('compact-est-amount-range');
     const durationSlider = document.getElementById('compact-est-duration-range');
@@ -4823,23 +5928,64 @@ const App = {
     if (amountValEl) amountValEl.textContent = CreditScoringEngine.formatFCFA(amount);
     if (durationValEl) durationValEl.textContent = `${duration} Mois`;
 
-    // Monthly interest rate: 1.2% per month (standard UEMOA microfinance scale)
+    // Standard UEMOA microfinance scale: 1.2% per month (14.4% per annum degressive)
     const rateMonthly = 0.012;
-    const monthlyPayment = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
-    const totalPayments = monthlyPayment * duration;
-    const totalInterest = totalPayments - amount;
+    const monthlyPaymentRaw = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    const totalPayments = monthlyPaymentRaw * duration;
+    const totalInterest = Math.round(totalPayments - amount);
     const insuranceAndFees = Math.round(amount * 0.012);
-    const monthlyTotal = Math.round(monthlyPayment + (insuranceAndFees / duration));
+    const monthlyInsurance = Math.round(insuranceAndFees / duration);
+    const monthlyTotal = Math.round(monthlyPaymentRaw + monthlyInsurance);
     const totalCost = Math.round(totalInterest + insuranceAndFees);
     const totalRepaid = Math.round(amount + totalCost);
 
+    // Monthly breakdown portions
+    const avgMonthlyPrincipal = Math.round(amount / duration);
+    const avgMonthlyInterest = Math.round(totalInterest / duration);
+
     const monthlyValEl = document.getElementById('compact-est-monthly-val');
     const totalValEl = document.getElementById('compact-est-total-val');
+    const totalInterestEl = document.getElementById('compact-est-total-interest');
     const costValEl = document.getElementById('compact-est-cost-val');
+    const monthlyPrincipalEl = document.getElementById('compact-est-monthly-principal');
+    const monthlyInterestEl = document.getElementById('compact-est-monthly-interest');
+    const monthlyInsuranceEl = document.getElementById('compact-est-monthly-insurance');
 
     if (monthlyValEl) monthlyValEl.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
     if (totalValEl) totalValEl.textContent = CreditScoringEngine.formatFCFA(totalRepaid);
+    if (totalInterestEl) totalInterestEl.textContent = CreditScoringEngine.formatFCFA(totalInterest);
     if (costValEl) costValEl.textContent = CreditScoringEngine.formatFCFA(totalCost);
+    if (monthlyPrincipalEl) monthlyPrincipalEl.textContent = CreditScoringEngine.formatFCFA(avgMonthlyPrincipal);
+    if (monthlyInterestEl) monthlyInterestEl.textContent = CreditScoringEngine.formatFCFA(avgMonthlyInterest);
+    if (monthlyInsuranceEl) monthlyInsuranceEl.textContent = CreditScoringEngine.formatFCFA(monthlyInsurance);
+
+    // Update compact pie chart & breakdown percentages
+    const pctCapital = Math.round((amount / totalRepaid) * 100);
+    const pctInterest = Math.round((totalInterest / totalRepaid) * 100);
+    const pctFees = Math.max(1, 100 - pctCapital - pctInterest);
+
+    const pieValCapital = document.getElementById('compact-pie-val-capital');
+    const pieValInterest = document.getElementById('compact-pie-val-interest');
+    const pieValFees = document.getElementById('compact-pie-val-fees');
+    const piePctCapital = document.getElementById('compact-pie-pct-capital');
+    const piePctInterest = document.getElementById('compact-pie-pct-interest');
+    const piePctFees = document.getElementById('compact-pie-pct-fees');
+
+    if (pieValCapital) pieValCapital.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (pieValInterest) pieValInterest.textContent = CreditScoringEngine.formatFCFA(totalInterest);
+    if (pieValFees) pieValFees.textContent = CreditScoringEngine.formatFCFA(insuranceAndFees);
+    if (piePctCapital) piePctCapital.textContent = `${pctCapital}%`;
+    if (piePctInterest) piePctInterest.textContent = `${pctInterest}%`;
+    if (piePctFees) piePctFees.textContent = `${pctFees}%`;
+
+    if (window.AppCharts && typeof window.AppCharts.renderLoanBreakdownPie === 'function') {
+      window.AppCharts.renderLoanBreakdownPie(
+        'compact-estimator-pie-chart',
+        amount,
+        totalInterest,
+        insuranceAndFees
+      );
+    }
 
     // Update active preset chips
     document.querySelectorAll('.compact-preset-chip').forEach(chip => chip.classList.remove('active'));
@@ -4847,6 +5993,106 @@ const App = {
     const durationChip = document.getElementById(`chip-duration-${duration}`);
     if (amountChip) amountChip.classList.add('active');
     if (durationChip) durationChip.classList.add('active');
+
+    // Update Amortization Schedule Table
+    this.renderAmortizationScheduleTable(amount, duration, rateMonthly, monthlyInsurance);
+  },
+
+  renderAmortizationScheduleTable(amount, duration, rateMonthly, monthlyInsurance) {
+    const tbody = document.getElementById('client-amortization-table-body');
+    const tfoot = document.getElementById('client-amortization-table-foot');
+    const titleEl = document.getElementById('amortization-table-summary-title');
+    if (!tbody) return;
+
+    if (titleEl) {
+      titleEl.textContent = `${CreditScoringEngine.formatFCFA(amount)} sur ${duration} Mois (${rateMonthly * 100}%/mois)`;
+    }
+
+    let remainingBalance = amount;
+    const monthlyPaymentConstant = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    let totalPrincipalAmortized = 0;
+    let sumInterest = 0;
+    let sumInsurance = 0;
+    let sumTotalPayment = 0;
+
+    let rowsHtml = '';
+    const now = new Date();
+
+    for (let month = 1; month <= duration; month++) {
+      const initialBalance = remainingBalance;
+      const interestMonth = Math.round(initialBalance * rateMonthly);
+      let principalMonth = Math.round(monthlyPaymentConstant - interestMonth);
+      if (month === duration || principalMonth > initialBalance) {
+        principalMonth = initialBalance;
+      }
+      const totalMonth = principalMonth + interestMonth + monthlyInsurance;
+      remainingBalance = Math.max(0, initialBalance - principalMonth);
+
+      totalPrincipalAmortized += principalMonth;
+      sumInterest += interestMonth;
+      sumInsurance += monthlyInsurance;
+      sumTotalPayment += totalMonth;
+
+      const dueDate = new Date(now.getFullYear(), now.getMonth() + month, 5);
+      const dueDateStr = dueDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      rowsHtml += `
+        <tr style="transition: background 0.15s ease;">
+          <td><span class="badge ${month === 1 ? 'badge-approved' : 'badge-submitted'}" style="font-size: 0.68rem; font-weight: 700;">Mois ${month}</span></td>
+          <td style="color: var(--text-secondary); font-size: 0.76rem;"><i class="fas fa-calendar-day mr-1 text-primary"></i>${dueDateStr}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: var(--text-primary);">${CreditScoringEngine.formatFCFA(initialBalance)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #0284c7; font-weight: 700;">${CreditScoringEngine.formatFCFA(principalMonth)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #d97706; font-weight: 600;">${CreditScoringEngine.formatFCFA(interestMonth)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #059669;">${CreditScoringEngine.formatFCFA(monthlyInsurance)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); font-weight: 800; color: var(--text-primary); background: rgba(16, 185, 129, 0.04);">${CreditScoringEngine.formatFCFA(totalMonth)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); font-weight: 600; color: ${remainingBalance === 0 ? '#10b981' : 'var(--text-muted)'};">${CreditScoringEngine.formatFCFA(remainingBalance)}</td>
+        </tr>
+      `;
+    }
+
+    tbody.innerHTML = rowsHtml;
+
+    if (tfoot) {
+      tfoot.innerHTML = `
+        <tr style="background: var(--bg-surface); font-size: 0.82rem;">
+          <td colspan="2" style="text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-primary);">TOTAUX CUMULÉS</td>
+          <td style="text-align: right; font-family: var(--font-family-code);">-</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #0284c7;">${CreditScoringEngine.formatFCFA(totalPrincipalAmortized)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #d97706;">${CreditScoringEngine.formatFCFA(sumInterest)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #059669;">${CreditScoringEngine.formatFCFA(sumInsurance)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: var(--cif-emerald-600); font-size: 0.92rem;">${CreditScoringEngine.formatFCFA(sumTotalPayment)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); color: #10b981;">0 FCFA (Soldé)</td>
+        </tr>
+      `;
+    }
+  },
+
+  toggleAmortizationScheduleTable() {
+    const wrapper = document.getElementById('client-amortization-schedule-wrapper');
+    const labelEl = document.getElementById('label-toggle-amortization');
+    if (!wrapper) return;
+
+    this.isAmortizationScheduleOpen = !this.isAmortizationScheduleOpen;
+    if (this.isAmortizationScheduleOpen) {
+      wrapper.style.display = 'block';
+      if (labelEl) labelEl.textContent = 'Masquer l\'Échéancier';
+      wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      wrapper.style.display = 'none';
+      if (labelEl) labelEl.textContent = 'Tableau d\'Amortissement';
+    }
+  },
+
+  downloadSimulatedAmortizationPdf() {
+    const amountSlider = document.getElementById('compact-est-amount-range');
+    const durationSlider = document.getElementById('compact-est-duration-range');
+    const amount = amountSlider ? parseInt(amountSlider.value, 10) : 2500000;
+    const duration = durationSlider ? parseInt(durationSlider.value, 10) : 12;
+
+    this.showToast(`Génération du Tableau d'Amortissement Prévisionnel (${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois)...`, 'info');
+    setTimeout(() => {
+      this.showToast(`Échéancier Prévisionnel de Prêt téléchargé avec succès (Format PDF A/4)`, 'success');
+    }, 700);
   },
 
   setCompactPresetAmount(amount) {

@@ -110,40 +110,31 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier" style="min-width: 140px;">
+            <th class="sortable-th" onclick="App.sortAgentTable('request_number')" title="Cliquer pour trier par N° Dossier" style="width: 18%; min-width: 140px;">
               <div class="th-content">
                 <span>N° Dossier</span>
                 <i class="fas fa-sort sort-icon" id="sort-icon-request_number"></i>
               </div>
             </th>
-            <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur" style="min-width: 170px;">
+            <th class="sortable-th" onclick="App.sortAgentTable('client_name')" title="Cliquer pour trier par Nom de l'emprunteur" style="width: 26%; min-width: 180px;">
               <div class="th-content">
                 <span>Client Emprunteur</span>
                 <i class="fas fa-sort sort-icon" id="sort-icon-client_name"></i>
               </div>
             </th>
-            <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant" style="min-width: 140px;">
+            <th class="sortable-th" onclick="App.sortAgentTable('requested_amount')" title="Cliquer pour trier par Montant" style="width: 20%; min-width: 150px;">
               <div class="th-content">
-                <span>Montant Demandé</span>
+                <span>Montant & Durée</span>
                 <i class="fas fa-sort sort-icon" id="sort-icon-requested_amount"></i>
               </div>
             </th>
-            <th class="sortable-th schedule-col-hide-mobile" onclick="App.sortAgentTable('purpose')" title="Cliquer pour trier par Objet du prêt" style="min-width: 180px;">
+            <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut" style="width: 20%; min-width: 160px;">
               <div class="th-content">
-                <span>Objet du Prêt</span>
-                <i class="fas fa-sort sort-icon" id="sort-icon-purpose"></i>
-              </div>
-            </th>
-            <th class="schedule-col-hide-tablet" style="min-width: 120px;">
-              <span>Capacité</span>
-            </th>
-            <th class="sortable-th" onclick="App.sortAgentTable('status')" title="Cliquer pour trier par Statut" style="min-width: 130px;">
-              <div class="th-content">
-                <span>Statut</span>
+                <span>Statut & Capacité</span>
                 <i class="fas fa-sort sort-icon" id="sort-icon-status"></i>
               </div>
             </th>
-            <th style="min-width: 140px; text-align: right;">Action / Volet</th>
+            <th style="width: 16%; min-width: 130px; text-align: right;">Action / Volet</th>
           </tr>
         </thead>
         <tbody id="agent-pipeline-table-body">

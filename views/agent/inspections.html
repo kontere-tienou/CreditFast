@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <!-- Inspections Table -->
+  <!-- Inspections Table (5 Colonnes Optimisées & Détails en Sidedrawer) -->
   <div class="card">
     <div class="card-header">
       <h3 class="card-title"><i class="fas fa-list text-primary mr-2"></i> Registre des Inspections Matérielles & Cautions Solidaires</h3>
@@ -108,13 +108,11 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>N° Dossier & Emprunteur</th>
-            <th>Type de Garantie</th>
-            <th>Description & Localisation Terrain</th>
-            <th>Valeur Déclarée</th>
-            <th>Valeur Expertisée</th>
-            <th>Statut Contrôle</th>
-            <th style="text-align: right;">Action Agent</th>
+            <th style="width: 22%; min-width: 170px;">Dossier & Emprunteur</th>
+            <th style="width: 18%; min-width: 140px;">Type de Garantie</th>
+            <th style="width: 22%; min-width: 160px;">Valorisation (Déclarée / Retenue)</th>
+            <th style="width: 18%; min-width: 130px;">Statut Contrôle</th>
+            <th style="width: 20%; min-width: 150px; text-align: right;">Action / Détails</th>
           </tr>
         </thead>
         <tbody id="agent-inspections-table-body">
@@ -123,4 +121,142 @@
       </table>
     </div>
   </div>
+
+  <!-- Sidedrawer Volet Latéral : Détail Approfondi Inspection & Caution -->
+  <div id="inspection-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeInspectionDrawer()">
+    <div id="inspection-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail inspection et caution">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="insp-drawer-type-badge"><i class="fas fa-shield"></i> Garantie</span>
+            <span id="insp-drawer-status-badge" class="badge badge-approved"><i class="fas fa-check"></i> Validée</span>
+          </div>
+          <h3 id="insp-drawer-title" class="schedule-drawer-title" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0;">Inspection • Dossier REQ-2026-0891</h3>
+          <p id="insp-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Contrôle physique, valorisation et garanties</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeInspectionDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Emprunteur & Dossier -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur Associé</h4>
+            <span id="insp-drawer-req-num" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.7rem;">REQ-2026-0891</span>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem;">
+            <img id="insp-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div style="min-width: 0;">
+              <div id="insp-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="insp-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali (Zone Urbaine)</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Montant du Prêt</span>
+              <span id="insp-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">2 500 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Taux Couverture Garantie</span>
+              <span id="insp-drawer-coverage-ratio" class="drawer-kv-value" style="color: #059669; font-weight: 700;">140%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Valorisation Financière & Expertise -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-scale-balanced text-warning mr-1"></i> Expertise Financière</h4>
+            <span id="insp-drawer-eval-status" class="badge badge-approved">Conforme</span>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.75rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Valeur Déclarée Client</div>
+              <div id="insp-drawer-val-declared" style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-family-code);">3 500 000 F</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Valeur Retenue Expert</div>
+              <div id="insp-drawer-val-verified" style="font-size: 0.95rem; font-weight: 800; color: #047857; font-family: var(--font-family-code);">3 400 000 F</div>
+            </div>
+          </div>
+          <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+              <span style="color: var(--text-muted);">Décote / Dépréciation appliquée :</span>
+              <strong id="insp-drawer-discount-pct" style="color: var(--text-primary);">3.0%</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Gage enregistré au RCCM :</span>
+              <span class="badge badge-approved" style="font-size: 0.65rem;"><i class="fas fa-check"></i> Acte Enregistré</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Constats & Détails Terrain -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-clipboard-list text-info mr-1"></i> Constats sur Site</h4>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Description Complète du Bien</span>
+              <span id="insp-drawer-desc" class="drawer-kv-value" style="font-weight: 600; color: var(--text-primary);">Stock de 450 rouleaux de tissus Wax Super-Bazin et dentelles importées</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Localisation Exacte</span>
+              <span id="insp-drawer-location" class="drawer-kv-value">Grand Marché de Bamako, Rue 314, Boutique 12</span>
+            </div>
+            <div class="drawer-grid-2">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">État & Conservabilité</span>
+                <span id="insp-drawer-condition" class="badge badge-approved" style="align-self: flex-start;">Bon état / Rotation rapide</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Avis Enquête Voisinage</span>
+                <span id="insp-drawer-reputation" class="badge badge-submitted" style="align-self: flex-start;">Très Favorable</span>
+              </div>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Observations Détaillées de l'Agent</span>
+              <p id="insp-drawer-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Visite sur site effectuée le 14/08/2026. Stock physique vérifié, conforme aux factures d'achat et aux déclarations du registre d'inventaire.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 : Justificatifs & Photos Terrain -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-camera text-emerald mr-1"></i> Pièces & Preuves Terrain</h4>
+            <span class="badge badge-submitted">2 Photos Géolocalisées</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; text-align: center; background: var(--bg-body);">
+              <i class="fas fa-image text-primary" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+              <span style="font-size: 0.7rem; font-weight: 600; color: var(--text-primary); display: block;">Vue_Ensemble_Stock.jpg</span>
+              <span style="font-size: 0.65rem; color: var(--text-subtle);">Horodatée GPS 12.6392°N</span>
+            </div>
+            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; text-align: center; background: var(--bg-body);">
+              <i class="fas fa-file-contract text-warning" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+              <span style="font-size: 0.7rem; font-weight: 600; color: var(--text-primary); display: block;">Acte_Gage_RCCM.pdf</span>
+              <span style="font-size: 0.65rem; color: var(--text-subtle);">Signé & Enregistré</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeInspectionDrawer()">Fermer</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="insp-drawer-btn-edit" class="btn btn-primary btn-sm" onclick="App.openInspectionModalFromDrawer()">
+            <i class="fas fa-pen-to-square mr-1"></i> Modifier / Ré-inspecter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
