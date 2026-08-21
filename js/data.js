@@ -2,7 +2,7 @@
  * CRÉDIT FAST - RELATIONAL DATABASE V2
  * Conforme au Guide Explicatif du Modèle de Données V2 (26 Tables Relationnelles)
  * Intègre : loans, loan_repayments, scoring_models, scoring_rules, Cold Start, residential_zone, confidence_score
- * Confédération des Institutions Financières d'Afrique de l'Ouest (CIF - DigiCoop-WA+)
+ * Confédération des Institutions Financières d'Afrique de l'Ouest (CreditFast - DigiCoop-WA+)
  */
 
 const STORAGE_KEY = 'CREDIT_FAST_DATABASE_V2';
@@ -21,13 +21,13 @@ const DEFAULT_DATABASE = {
     { id: 1, role_id: 1, first_name: 'Ali', last_name: 'Diallo', phone: '+223 70 12 34 56', email: 'ali.diallo@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' },
     { id: 2, role_id: 2, first_name: 'Adama', last_name: 'Traore', phone: '+223 90 23 45 67', email: 'adama.traore@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-03.jpg', country: 'Togo' },
     { id: 3, role_id: 3, first_name: 'Mariam', last_name: 'Keita', phone: '+223 66 34 56 78', email: 'mariam.keita@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-01.jpg', country: 'Mali' },
-    { id: 4, role_id: 4, first_name: 'Faratigi', last_name: 'Ndiaye', phone: '+223 77 45 67 89', email: 'fatou.ndiaye@gmail.com', status: 'ACTIVE', avatar: 'images/profil/profil01-02.jpg', country: 'Sénégal' },
+    { id: 4, role_id: 4, first_name: 'Faratigi', last_name: 'Ndiaye', phone: '+223 77 45 67 89', email: 'fatou.ndiaye@gmail.com', status: 'ACTIVE', avatar: 'images/profil/profil01-02.jpg', country: 'Mali' },
     { id: 5, role_id: 5, first_name: 'Bakary', last_name: 'Sanou', phone: '+223 76 56 78 90', email: 'bakary.sanou@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' }
   ],
 
-  // 3. Clients (avec format ID CIF : Code Caisse + Code Agence + N° Incrémentiel, residential_zone)
+  // 3. Clients (avec format ID CreditFast : Code Caisse + Code Agence + N° Incrémentiel, residential_zone)
   clients: [
-    { id: 1, user_id: 4, client_number: 'SN-DKR-008821', date_of_birth: '1988-04-12', address: 'Quartier Médina, Rue 22', city: 'Dakar', residential_zone: 'Zone Urbaine Commerciale', occupation: 'Commerçante / Grossiste Textiles', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-01T10:00:00Z', is_cold_start: false },
+    { id: 1, user_id: 4, client_number: 'ML-BKO-008821', date_of_birth: '1988-04-12', address: 'Quartier Grand Marché, Rue 314', city: 'Bamako', residential_zone: 'Zone Urbaine Commerciale', occupation: 'Commerçante / Grossiste Textiles', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-01T10:00:00Z', is_cold_start: false },
     { id: 2, user_id: 6, client_number: 'BF-OUA-004419', date_of_birth: '1982-11-03', address: 'Secteur 15, Ouaga 2000', city: 'Ouagadougou', residential_zone: 'Zone Péri-urbaine Industrielle', occupation: 'Transformateur Agroalimentaire', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-05T11:30:00Z', is_cold_start: false },
     { id: 3, user_id: 7, client_number: 'TG-LOM-003190', date_of_birth: '1991-07-25', address: 'Grand Marché Assigamé', city: 'Lomé', residential_zone: 'Zone Urbaine Dense', occupation: 'Import-Export Quincaillerie', kyc_status: 'PENDING_DOCUMENT', institution_verified_at: null, is_cold_start: false },
     { id: 4, user_id: 8, client_number: 'BJ-COT-005512', date_of_birth: '1985-09-18', address: 'Zone Industrielle Akpakpa', city: 'Cotonou', residential_zone: 'Zone Péri-urbaine Mixte', occupation: 'Aviculteur & Éleveur', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-08T09:15:00Z', is_cold_start: false },
@@ -36,14 +36,14 @@ const DEFAULT_DATABASE = {
 
   // 4. KYC Documents
   kyc_documents: [
-    { id: 1, client_id: 1, document_type: 'CNI_CEDEAO', document_number: 'SEN-19880412001', file_path: 'cni_fatou.pdf', status: 'VALIDATED', verified_by: 2, verified_at: '2026-08-01T10:30:00Z' },
+    { id: 1, client_id: 1, document_type: 'CNI_CEDEAO', document_number: 'MLI-19880412001', file_path: 'cni_fatou.pdf', status: 'VALIDATED', verified_by: 2, verified_at: '2026-08-01T10:30:00Z' },
     { id: 2, client_id: 2, document_type: 'PASSPORT', document_number: 'BFA-B0912441', file_path: 'pass_amadou.pdf', status: 'VALIDATED', verified_by: 1, verified_at: '2026-08-05T12:00:00Z' },
     { id: 3, client_id: 3, document_type: 'CNI', document_number: 'TGO-4412993', file_path: 'cni_kodjo.pdf', status: 'TO_COMPLETE', verified_by: 2, verified_at: '2026-08-10T15:00:00Z' }
   ],
 
   // 5. Activities (avec start_date et calcul de l'ancienneté)
   activities: [
-    { id: 1, client_id: 1, activity_type: 'COMMERCE_GROS_DETAIL', sector: 'Textile & Prêt-à-porter', description: 'Boutique physique + revente en gros au marché HLM', start_date: '2020-03-01', location: 'Dakar Médina', monthly_revenue: 1850000, status: 'ACTIVE' },
+    { id: 1, client_id: 1, activity_type: 'COMMERCE_GROS_DETAIL', sector: 'Textile & Prêt-à-porter', description: 'Boutique physique + revente en gros au Grand Marché de Bamako', start_date: '2020-03-01', location: 'Bamako Grand Marché', monthly_revenue: 1850000, status: 'ACTIVE' },
     { id: 2, client_id: 2, activity_type: 'AGRO_TRANSFORMATION', sector: 'Transformation Céréalière', description: 'Unité semi-industrielle de mouture et ensachage maïs/soja', start_date: '2022-06-15', location: 'Zone artisanale Ouaga', monthly_revenue: 3200000, status: 'ACTIVE' },
     { id: 3, client_id: 3, activity_type: 'QUINCAILLERIE_BTP', sector: 'BTP & Outillage', description: 'Distribution outillage et matériaux légers', start_date: '2024-02-01', location: 'Lomé Assigamé', monthly_revenue: 1200000, status: 'ACTIVE' },
     { id: 4, client_id: 4, activity_type: 'ELEVAGE_AVICOLE', sector: 'Aviculture Moderne', description: 'Ferme avicole de 3000 pondeuses', start_date: '2021-09-01', location: 'Calavi / Cotonou', monthly_revenue: 2100000, status: 'ACTIVE' },
@@ -183,8 +183,8 @@ const DEFAULT_DATABASE = {
       submitted_at: '2026-08-11T09:30:00Z',
       created_at: '2026-08-11T09:30:00Z',
       client_name: 'Fatou Ndiaye',
-      country: 'Sénégal',
-      city: 'Dakar',
+      country: 'Mali',
+      city: 'Bamako',
       score: 82,
       confidence_score: 94,
       is_cold_start: false
@@ -293,9 +293,9 @@ const DEFAULT_DATABASE = {
 
   // 15. Documents
   documents: [
-    { id: 1, credit_request_id: 1, document_type: 'FACTURE_PROFORMA', original_filename: 'Facture_Proforma_Wax_SOTIBA.pdf', file_path: 'assets/docs/facture_wax.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:35:00Z', status: 'VALIDATED' },
-    { id: 2, credit_request_id: 1, document_type: 'RELEVE_BANCAIRE', original_filename: 'Releve_Compte_6_Mois_CIF.pdf', file_path: 'assets/docs/releve_sn.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:36:00Z', status: 'VALIDATED' },
-    { id: 3, credit_request_id: 1, document_type: 'REGISTRE_COMMERCE', original_filename: 'RCCM_Dakar_SN-DKR-2020-B-142.pdf', file_path: 'assets/docs/rccm.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:37:00Z', status: 'VALIDATED' },
+    { id: 1, credit_request_id: 1, document_type: 'FACTURE_PROFORMA', original_filename: 'Facture_Proforma_Wax_BATEXI.pdf', file_path: 'assets/docs/facture_wax.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:35:00Z', status: 'VALIDATED' },
+    { id: 2, credit_request_id: 1, document_type: 'RELEVE_BANCAIRE', original_filename: 'Releve_Compte_6_Mois_CreditFast.pdf', file_path: 'assets/docs/releve_sn.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:36:00Z', status: 'VALIDATED' },
+    { id: 3, credit_request_id: 1, document_type: 'REGISTRE_COMMERCE', original_filename: 'RCCM_Bamako_ML-BKO-2020-B-142.pdf', file_path: 'assets/docs/rccm.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:37:00Z', status: 'VALIDATED' },
     { id: 4, credit_request_id: 3, document_type: 'FACTURE_ACHAT', original_filename: 'Facture_Quincaillerie_Togo.pdf', file_path: 'assets/docs/facture_tg.pdf', mime_type: 'application/pdf', uploaded_by: 7, uploaded_at: '2026-08-14T11:05:00Z', status: 'FLAGGED' }
   ],
 
@@ -304,11 +304,11 @@ const DEFAULT_DATABASE = {
     {
       id: 1,
       document_id: 1,
-      extracted_text: 'SOTIBA TEXTILE DAKAR - FACTURE PROFORMA N° 2026-8812\nClient: FATOU NDIAYE\nObjet: 120 pièces Super Wax Hollandais\nMontant Total TTC: 2 480 000 FCFA\nDate: 08/08/2026',
+      extracted_text: 'BATEXI TEXTILE BAMAKO - FACTURE PROFORMA N° 2026-8812\nClient: FATOU NDIAYE\nObjet: 120 pièces Super Wax Hollandais\nMontant Total TTC: 2 480 000 FCFA\nDate: 08/08/2026',
       extraction_status: 'EXTRACTED',
       extraction_confidence: 0.96,
       extracted_data: {
-        fournisseur: 'SOTIBA TEXTILE DAKAR',
+        fournisseur: 'BATEXI TEXTILE BAMAKO',
         client_nom: 'FATOU NDIAYE',
         montant_ttc: 2480000,
         date_facture: '2026-08-08',
@@ -319,7 +319,7 @@ const DEFAULT_DATABASE = {
     {
       id: 2,
       document_id: 2,
-      extracted_text: 'CONFEDERATION DES INSTITUTIONS FINANCIERES - RELEVE DE COMPTE\nTitulaire: Mme Fatou Ndiaye\nSolde Moyen Mensuel: 1 320 000 FCFA\nMouvements Créditeurs 6 mois: 11 100 000 FCFA\nDate relevé: 31/07/2026',
+      extracted_text: 'CONFEDERATION DES INSTITUTIONS FINANCIERES - RELEVE DE COMPTE CREDITFAST BAMAKO\nTitulaire: Mme Fatou Ndiaye\nSolde Moyen Mensuel: 1 320 000 FCFA\nMouvements Créditeurs 6 mois: 11 100 000 FCFA\nDate relevé: 31/07/2026',
       extraction_status: 'EXTRACTED',
       extraction_confidence: 0.94,
       extracted_data: {
@@ -412,8 +412,8 @@ const DEFAULT_DATABASE = {
       rule_name: 'Consolidation Multi-Caisses UEMOA',
       description: 'Détection d’un compte d’épargne inactif supplémentaire à la caisse de Thiès (Sénégal) sans déclaration initiale dans la fiche KYC.',
       detected_value: 'Caisse Thiès (Solde: 180 000 FCFA)',
-      expected_value: 'Déclaration centralisée CIF',
-      engine: 'Passerelle Régionale CIF-WA+',
+      expected_value: 'Déclaration centralisée CreditFast',
+      engine: 'Passerelle Régionale CreditFast-WA+',
       status: 'OPEN',
       resolved_by: null,
       resolved_at: null,
@@ -469,15 +469,15 @@ const DEFAULT_DATABASE = {
   credit_score_factors: [
     { id: 1, credit_analysis_id: 1, scoring_rule_id: 1, factor_name: 'Capacité nette de remboursement', factor_type: 'FINANCIAL', score: 25, weight: 0.25, explanation: 'Reste à vivre net de 420 000 FCFA couvre 1.78x l’échéance mensuelle.' },
     { id: 2, credit_analysis_id: 1, scoring_rule_id: 2, factor_name: 'Historique de crédit & Remboursements', factor_type: 'BEHAVIOR', score: 19, weight: 0.20, explanation: '100% des échéances passées réglées sans aucun jour de retard (0 days late).' },
-    { id: 3, credit_analysis_id: 1, scoring_rule_id: 3, factor_name: 'Discipline d’épargne CIF', factor_type: 'BEHAVIOR', score: 14, weight: 0.15, explanation: 'Solde moyen de 1 320 000 FCFA avec 24 versements enregistrés au trimestre.' },
-    { id: 4, credit_analysis_id: 1, scoring_rule_id: 4, factor_name: 'Ancienneté & Stabilité activité', factor_type: 'BUSINESS', score: 14, weight: 0.15, explanation: 'Activité formelle établie depuis plus de 6 ans à Dakar Médina.' },
+    { id: 3, credit_analysis_id: 1, scoring_rule_id: 3, factor_name: 'Discipline d’épargne CreditFast', factor_type: 'BEHAVIOR', score: 14, weight: 0.15, explanation: 'Solde moyen de 1 320 000 FCFA avec 24 versements enregistrés au trimestre.' },
+    { id: 4, credit_analysis_id: 1, scoring_rule_id: 4, factor_name: 'Ancienneté & Stabilité activité', factor_type: 'BUSINESS', score: 14, weight: 0.15, explanation: 'Activité formelle établie depuis plus de 6 ans à Bamako Grand Marché.' },
     { id: 5, credit_analysis_id: 1, scoring_rule_id: 5, factor_name: 'Garanties & Pièces OCR', factor_type: 'INTEGRITY', score: 10, weight: 0.10, explanation: 'Stock de wax vérifié (3.4M FCFA) et facture proforma authentifiée (96% OCR).' }
   ],
 
   // 20. Human Validations
   human_validations: [
-    { id: 1, credit_request_id: 1, document_id: 1, validator_id: 1, validation_type: 'FACTURE_PROFORMA', decision: 'VALIDATED', comment: 'Facture proforma SOTIBA authentifiée auprès du fournisseur.', validated_at: '2026-08-12T14:30:00Z' },
-    { id: 2, credit_request_id: 1, document_id: 2, validator_id: 1, validation_type: 'RELEVE_BANCAIRE', decision: 'VALIDATED', comment: 'Relevé certifié par le chef d’agence CIF Dakar.', validated_at: '2026-08-12T14:35:00Z' }
+    { id: 1, credit_request_id: 1, document_id: 1, validator_id: 1, validation_type: 'FACTURE_PROFORMA', decision: 'VALIDATED', comment: 'Facture proforma BATEXI authentifiée auprès du fournisseur.', validated_at: '2026-08-12T14:30:00Z' },
+    { id: 2, credit_request_id: 1, document_id: 2, validator_id: 1, validation_type: 'RELEVE_BANCAIRE', decision: 'VALIDATED', comment: 'Relevé certifié par le chef d’agence CreditFast Bamako.', validated_at: '2026-08-12T14:35:00Z' }
   ],
 
   // 21. Credit Reviews

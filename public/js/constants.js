@@ -1,7 +1,7 @@
 /**
  * CRÉDIT FAST - JAVASCRIPT CONSTANTS & ROLE DEFINITIONS
  * Configuration stricte des 5 espaces métiers indépendants
- * Confédération des Institutions Financières d'Afrique de l'Ouest (CIF - DigiCoop-WA+)
+ * Plateforme Régionale d'Inclusion Financière & Octroi de Crédit (CreditFast - UEMOA)
  */
 
 const APP_CONSTANTS = {
@@ -143,7 +143,7 @@ const APP_CONSTANTS = {
         {
           title: 'Rapports & Traçabilité',
           items: [
-            { id: 'nav-com-reports', target: 'view-committee-reports', icon: 'fa-chart-pie', label: 'Rapports d’Octroi CIF' },
+            { id: 'nav-com-reports', target: 'view-committee-reports', icon: 'fa-chart-pie', label: 'Rapports d’Octroi CreditFast' },
             { id: 'nav-com-audit', target: 'view-audit-logs', icon: 'fa-file-contract', label: 'Déclarations & Journal d’Audit' }
           ]
         }
@@ -159,13 +159,13 @@ const APP_CONSTANTS = {
       email: 'fatou.ndiaye@gmail.com',
       phone: '+223 77 45 67 89',
       password: 'demo',
-      name: 'Fatou Ndiaye',
+      name: 'Faratigi Ndiaye',
       title: 'Emprunteuse • Commerçante Grossiste',
-      location: 'Dakar, Sénégal (Caisse Médina)',
-      countryCode: 'SN',
-      countryName: 'Sénégal (Dakar)',
-      countryFlag: 'sn',
-      clientNumber: 'SN-DKR-008821',
+      location: 'Bamako, Mali (Agence Grand Marché)',
+      countryCode: 'ML',
+      countryName: 'Mali (Bamako)',
+      countryFlag: 'ml',
+      clientNumber: 'ML-BKO-008821',
       avatar: 'images/profil/profil01-02.jpg',
       badge: 'Demandeur',
       badgeColor: '#10b981',
@@ -174,7 +174,7 @@ const APP_CONSTANTS = {
     {
       id: 'demo-agent',
       role: 'CREDIT_OFFICER',
-      email: 'adama.traore@cif-ao.org',
+      email: 'adama.traore@creditfast.org',
       phone: '+223 90 23 45 67',
       password: 'demo',
       name: 'Adama Traore',
@@ -191,12 +191,12 @@ const APP_CONSTANTS = {
     {
       id: 'demo-analyst',
       role: 'ANALYST',
-      email: 'ali.diallo@cif-ao.org',
+      email: 'ali.diallo@creditfast.org',
       phone: '+223 70 12 34 56',
       password: 'demo',
       name: 'Ali Diallo',
       title: 'Analyste Risque Senior',
-      location: 'Ouagadougou, Burkina Faso (Siège CIF)',
+      location: 'Ouagadougou, Burkina Faso (Siège CreditFast)',
       countryCode: 'BF',
       countryName: 'Burkina Faso (UEMOA)',
       countryFlag: 'bf',
@@ -208,12 +208,12 @@ const APP_CONSTANTS = {
     {
       id: 'demo-committee',
       role: 'COMMITTEE',
-      email: 'moussa.keita@cif-ao.org',
+      email: 'moussa.keita@creditfast.org',
       phone: '+223 66 34 56 78',
       password: 'demo',
       name: 'Moussa Keita',
       title: 'Président Comité & Conformité LBC/FT',
-      location: 'Bamako, Mali (Caisse Régionale)',
+      location: 'Bamako, Mali (Direction Régionale)',
       countryCode: 'ML',
       countryName: 'Mali (Bamako)',
       countryFlag: 'ml',
@@ -278,7 +278,7 @@ const APP_CONSTANTS = {
         id: 101,
         category: 'APPLICATION',
         title: 'Demande en cours d’analyse',
-        desc: 'Votre dossier #REQ-2026-0891 (2 500 000 FCFA) est en cours d’évaluation par le service des risques CIF.',
+        desc: 'Votre dossier #REQ-2026-0891 (2 500 000 FCFA) est en cours d’évaluation par le service des risques CreditFast.',
         tag: '#REQ-2026-0891',
         time: 'Il y a 15 min',
         icon: 'fa-folder-open',
@@ -341,7 +341,7 @@ const APP_CONSTANTS = {
         id: 203,
         category: 'COMPLEMENT',
         title: 'Pièce Complémentaire Régularisée',
-        desc: 'Quittance Senelec mise à jour et certifiée pour l’emprunteur Mamadou Diop.',
+        desc: 'Facture EDM-SA mise à jour et certifiée pour l’emprunteur Mamadou Diop.',
         tag: 'GED Rapprochement',
         time: 'Il y a 3h',
         icon: 'fa-file-circle-check',
@@ -367,7 +367,7 @@ const APP_CONSTANTS = {
       {
         id: 302,
         category: 'SCORING',
-        title: 'Scoring V2 Calculé - Fatou Ndiaye',
+        title: 'Scoring Calculé - Faratigi Ndiaye',
         desc: 'Score global de 82/100 (Confiance 94%). Reste à vivre net conforme aux normes UEMOA.',
         tag: 'Scoring Explicable',
         time: 'Il y a 45 min',

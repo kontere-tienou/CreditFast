@@ -1853,6 +1853,58 @@ button.mobile-search-btn,
   border: 1px solid var(--danger-border);
 }
 
+/* Document Expiration (< 30 days) Alert and Highlighting */
+.doc-card-expiring-soon {
+  border: 2px solid #ef4444 !important;
+  background: #fff8f8 !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.16) !important;
+  position: relative;
+  transition: all 0.25s ease-in-out;
+}
+
+[data-theme="dark"] .doc-card-expiring-soon {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
+}
+
+.doc-card-expiring-soon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  z-index: 2;
+}
+
+.doc-card-expiring-soon .doc-icon-box {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+[data-theme="dark"] .doc-card-expiring-soon .doc-icon-box {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+}
+
+.badge-expiring-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[data-theme="dark"] .badge-expiring-danger {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+
 /* ==========================================================================
    Cards & Layout Grids
    ========================================================================== */

@@ -1,7 +1,7 @@
 /**
  * CRÉDIT FAST - APPLICATION CONTROLLER & ROLE ROUTER V2
  * Gestion dynamique des 5 espaces métiers indépendants (Sidebar, Dashboard & Écrans dédiés)
- * Confédération des Institutions Financières d'Afrique de l'Ouest (CIF - DigiCoop-WA+)
+ * Confédération des Institutions Financières d'Afrique de l'Ouest (CreditFast - DigiCoop-WA+)
  */
 
 const App = {
@@ -23,6 +23,7 @@ const App = {
     this.initComplianceScreening();
     this.initNotifications();
     this.initServiceWorkerAndOffline();
+    this.checkAndHighlightExpiringDocs();
 
     // Check existing auth session or auto-load default persona
     const savedUser = localStorage.getItem('AUTH_USER');
@@ -297,7 +298,7 @@ const App = {
 
     if (avatarImg) avatarImg.src = user.avatar;
     if (avatarFlag) {
-      const flagCode = user.countryFlag || (user.id === 'demo-client' ? 'sn' : user.id === 'demo-agent' ? 'tg' : user.id === 'demo-committee' ? 'ml' : user.id === 'demo-compliance' ? 'bj' : 'bf');
+      const flagCode = user.countryFlag || (user.id === 'demo-client' ? 'ml' : user.id === 'demo-agent' ? 'tg' : user.id === 'demo-committee' ? 'ml' : user.id === 'demo-compliance' ? 'bj' : 'bf');
       avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis"></span>`;
     }
     if (userName) userName.textContent = user.name;
@@ -418,7 +419,7 @@ const App = {
     }
 
     // Dynamic Topbar Flag & Country sync based on logged-in user profile
-    const userCountryCode = user.countryCode || (user.id === 'demo-client' ? 'SN' : user.id === 'demo-agent' ? 'TG' : user.id === 'demo-committee' ? 'ML' : user.id === 'demo-compliance' ? 'BJ' : 'BF');
+    const userCountryCode = user.countryCode || (user.id === 'demo-client' ? 'ML' : user.id === 'demo-agent' ? 'TG' : user.id === 'demo-committee' ? 'ML' : user.id === 'demo-compliance' ? 'BJ' : 'BF');
     this.updateUserCountry(userCountryCode);
   },
 
@@ -547,6 +548,8 @@ const App = {
     // Execute role-specific initializers
     if (viewId === 'view-role-client' || viewId === 'view-client-requests') {
       this.renderBorrowerDashboard();
+    } else if (viewId === 'view-client-documents') {
+      this.checkAndHighlightExpiringDocs();
     } else if (viewId === 'view-client-schedule') {
       this.renderClientSchedule();
     } else if (viewId === 'view-client-simulator') {
@@ -594,8 +597,8 @@ const App = {
 
     const nameEl = document.getElementById('borrower-banner-name');
     const numEl = document.getElementById('borrower-member-num');
-    if (nameEl) nameEl.textContent = this.currentUser ? this.currentUser.name : 'Fatou Ndiaye';
-    if (numEl) numEl.textContent = client ? client.client_number : 'SN-DKR-008821';
+    if (nameEl) nameEl.textContent = this.currentUser ? this.currentUser.name : 'Faratigi Ndiaye';
+    if (numEl) numEl.textContent = client ? client.client_number : 'ML-BKO-008821';
 
     const activeAmount = document.getElementById('borrower-active-amount');
     const activePurpose = document.getElementById('borrower-active-purpose');
@@ -867,12 +870,12 @@ const App = {
     const btnSms = document.getElementById('agent-drawer-btn-sms');
     const btnCall = document.getElementById('agent-drawer-btn-call');
 
-    if (clientNumberEl) clientNumberEl.textContent = client.client_number || 'SN-DKR-008821';
+    if (clientNumberEl) clientNumberEl.textContent = client.client_number || 'ML-BKO-008821';
     if (clientAvatarEl) clientAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
     if (clientOccEl) clientOccEl.textContent = client.occupation || activity.sector || 'Commerçant / Entrepreneur';
-    if (clientLocEl) clientLocEl.textContent = `${req.city || client.city || 'Dakar'}, ${req.country || 'Sénégal'} (${client.residential_zone || 'Zone Urbaine'})`;
-    if (clientPhoneEl) clientPhoneEl.textContent = user.phone || '+221 77 450 88 21';
+    if (clientLocEl) clientLocEl.textContent = `${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} (${client.residential_zone || 'Zone Urbaine'})`;
+    if (clientPhoneEl) clientPhoneEl.textContent = user.phone || '+223 77 450 88 21';
     if (clientEmailEl) clientEmailEl.textContent = user.email || 'fatou.ndiaye@gmail.com';
     if (clientKycEl) {
       const isKycOk = client.kyc_status === 'VERIFIED';
@@ -883,7 +886,7 @@ const App = {
       btnSms.setAttribute('onclick', `App.triggerDocReminder(${req.id}, '${req.client_name.replace(/'/g, "\\'")}', 'Relance de justificatifs')`);
     }
     if (btnCall) {
-      btnCall.setAttribute('onclick', `App.showToast('Appel direct initié vers ${user.phone || '+221 77 450 88 21'}', 'info')`);
+      btnCall.setAttribute('onclick', `App.showToast('Appel direct initié vers ${user.phone || '+223 77 450 88 21'}', 'info')`);
     }
 
     // Financial capacity card
@@ -1202,11 +1205,11 @@ const App = {
 
     document.getElementById('insp-guarantee-id').value = g.id;
     document.getElementById('modal-insp-title').textContent = `Inspection de Garantie • Dossier ${req.request_number || 'N/A'}`;
-    document.getElementById('insp-client-name').textContent = `${req.client_name || 'Client CIF'} • N° CIF : ${client.client_number || 'SN-DKR-008821'}`;
+    document.getElementById('insp-client-name').textContent = `${req.client_name || 'Client CreditFast'} • N° Client : ${client.client_number || 'ML-BKO-008821'}`;
     document.getElementById('insp-guarantee-type').textContent = `${g.guarantee_type} • ${g.description}`;
     document.getElementById('insp-declared-val').value = CreditScoringEngine.formatFCFA(g.declared_value);
     document.getElementById('insp-verified-val').value = g.verified_value || g.declared_value || 1000000;
-    document.getElementById('insp-location').value = `${req.city || 'Dakar'} - ${client.residential_zone || 'Zone Commerciale'}`;
+    document.getElementById('insp-location').value = `${req.city || 'Bamako'} - ${client.residential_zone || 'Zone Commerciale'}`;
     document.getElementById('insp-notes').value = g.verified_at ? `Contrôle sur site effectué avec succès. Actifs conformes au descriptif.` : `Visite d'atelier effectuée. Matériel en bon état de fonctionnement, couverture suffisante.`;
 
     const statusBadge = document.getElementById('insp-status-badge');
@@ -1281,8 +1284,8 @@ const App = {
       const clientReqs = requests.filter(r => r.client_id == c.id);
       const user = DB.findById('users', c.user_id) || {};
 
-      const fullName = user.first_name ? `${user.first_name} ${user.last_name}` : (clientReqs[0]?.client_name || 'Sociétaire CIF');
-      const country = user.country || clientReqs[0]?.country || 'Sénégal';
+      const fullName = user.first_name ? `${user.first_name} ${user.last_name}` : (clientReqs[0]?.client_name || 'Sociétaire CreditFast');
+      const country = user.country || clientReqs[0]?.country || 'Mali';
       const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=0ea5e9&color=fff`;
 
       const savingsBalance = clientAccounts.reduce((sum, a) => sum + (a.balance || 0), 0);
@@ -1629,9 +1632,9 @@ const App = {
       return {
         ...a,
         request_number: req.request_number || `REQ-2026-000${a.credit_request_id || 1}`,
-        client_name: req.client_name || 'Client CIF',
-        country: req.country || 'Sénégal',
-        city: req.city || 'Dakar',
+        client_name: req.client_name || 'Client CreditFast',
+        country: req.country || 'Mali',
+        city: req.city || 'Bamako',
         category: a.category || (isOcr ? 'OCR' : (isNetwork ? 'NETWORK' : 'FINANCIAL')),
         rule_name: a.rule_name || a.anomaly_type || 'Règle de Contrôle Automatisé',
         engine: a.engine || (a.document_id ? 'Moteur OCR Tesseract V2.2' : 'Calculateur Risque & Solvabilité V2')
@@ -2111,6 +2114,12 @@ const App = {
           const logoutModal = document.getElementById('modal-confirm-logout');
           if (logoutModal && logoutModal.style.display !== 'none') {
             this.closeLogoutConfirmModal();
+          }
+          if (typeof this.closeClientRequestDrawer === 'function') {
+            this.closeClientRequestDrawer();
+          }
+          if (typeof this.closeScheduleDrawer === 'function') {
+            this.closeScheduleDrawer();
           }
         }
       });
@@ -2775,8 +2784,8 @@ const App = {
 
   submitNewCreditRequest() {
     const clientName = document.getElementById('wiz-fullname')?.value || 'Fatou Ndiaye';
-    const city = document.getElementById('wiz-city')?.value || 'Dakar';
-    const country = document.getElementById('wiz-country')?.value || 'Sénégal';
+    const city = document.getElementById('wiz-city')?.value || 'Bamako';
+    const country = document.getElementById('wiz-country')?.value || 'Mali';
     const amount = Number(document.getElementById('wiz-amount')?.value || 2500000);
     const months = Number(document.getElementById('wiz-duration')?.value || 12);
     const purpose = document.getElementById('wiz-purpose')?.value || 'Achat de stock conteneur tissus wax et bazin riche';
@@ -2974,6 +2983,168 @@ const App = {
   // CLIENT / DEMANDEUR EXTENDED FEATURES & INTERACTIONS
   // =========================================================================
 
+  /**
+   * Analyse et met en surbrillance rouge les pièces justificatives dont la date d'échéance / validité
+   * expire dans les 30 prochains jours (ou déjà expirées).
+   * @param {Object} options Options de calcul (referenceDate, maxDaysAlert, etc.)
+   */
+  checkAndHighlightExpiringDocs(options = {}) {
+    const grid = document.getElementById('client-documents-grid');
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll('.doc-card-item');
+    const now = options.referenceDate ? new Date(options.referenceDate) : new Date();
+    const thresholdDays = typeof options.thresholdDays === 'number' ? options.thresholdDays : 30;
+
+    let expiringCount = 0;
+    const expiringDocs = [];
+
+    cards.forEach(card => {
+      const validityStr = card.dataset.validityDate;
+      if (!validityStr) {
+        card.setAttribute('data-is-expiring', 'false');
+        return;
+      }
+
+      const validityDate = new Date(validityStr + 'T23:59:59');
+      if (isNaN(validityDate.getTime())) {
+        card.setAttribute('data-is-expiring', 'false');
+        return;
+      }
+
+      // Difference in days (rounded up to full day)
+      const diffTime = validityDate.getTime() - now.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const titleEl = card.querySelector('h4');
+      const docTitle = titleEl ? titleEl.textContent.trim() : 'Document';
+      const validityContainer = card.querySelector('.doc-validity-row');
+      const headerBadgeSlot = card.querySelector('.doc-header-badge-slot');
+      const footerStatusBadge = card.querySelector('.doc-footer-status');
+
+      const formattedValidityDate = validityDate.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+
+      if (diffDays <= thresholdDays) {
+        // Document validity is within the next 30 days (or expired) -> HIGHLIGHT IN RED
+        expiringCount++;
+        expiringDocs.push({
+          title: docTitle,
+          days: diffDays,
+          dateStr: formattedValidityDate,
+          isExpired: diffDays < 0
+        });
+
+        card.classList.add('doc-card-expiring-soon');
+        card.setAttribute('data-is-expiring', 'true');
+        card.setAttribute('data-days-remaining', String(diffDays));
+
+        // Red urgent header badge
+        if (headerBadgeSlot) {
+          if (diffDays < 0) {
+            headerBadgeSlot.innerHTML = `
+              <span class="badge badge-rejected" style="background:#fee2e2; color:#b91c1c; border:1px solid #f87171; font-weight:700; font-size:0.68rem;">
+                <i class="fas fa-triangle-exclamation mr-1"></i> Expiré (-${Math.abs(diffDays)} j)
+              </span>
+            `;
+          } else {
+            headerBadgeSlot.innerHTML = `
+              <span class="badge badge-expiring-danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #f87171; font-weight:700; font-size:0.68rem;">
+                <i class="fas fa-clock-rotate-left mr-1"></i> Expire dans ${diffDays} j
+              </span>
+            `;
+          }
+        }
+
+        // Highlight validity text line in bold red with icon
+        if (validityContainer) {
+          const statusLabel = diffDays < 0 
+            ? `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expiré depuis ${Math.abs(diffDays)} j)</span>`
+            : `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expire dans ${diffDays} jour${diffDays > 1 ? 's' : ''})</span>`;
+          validityContainer.innerHTML = `<strong>Échéance Validité :</strong> ${statusLabel}`;
+        }
+
+        // Update footer badge to red action required
+        if (footerStatusBadge) {
+          footerStatusBadge.className = 'badge badge-rejected';
+          footerStatusBadge.style.background = '#fee2e2';
+          footerStatusBadge.style.color = '#b91c1c';
+          footerStatusBadge.style.borderColor = '#f87171';
+          footerStatusBadge.innerHTML = `<i class="fas fa-triangle-exclamation mr-1"></i> Validité &lt; 30j • Renouveler`;
+        }
+      } else {
+        // Valid for more than 30 days -> standard approved appearance
+        card.classList.remove('doc-card-expiring-soon');
+        card.setAttribute('data-is-expiring', 'false');
+        card.setAttribute('data-days-remaining', String(diffDays));
+
+        if (headerBadgeSlot) {
+          headerBadgeSlot.innerHTML = '';
+        }
+
+        if (validityContainer) {
+          validityContainer.innerHTML = `<strong>Validité :</strong> <span style="color: var(--text-secondary);">${formattedValidityDate} (En cours de validité)</span>`;
+        }
+
+        if (footerStatusBadge) {
+          footerStatusBadge.className = 'badge badge-approved';
+          footerStatusBadge.style.background = '';
+          footerStatusBadge.style.color = '';
+          footerStatusBadge.style.borderColor = '';
+          footerStatusBadge.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Validé & Conforme`;
+        }
+      }
+    });
+
+    // Update filter badge counter
+    const countBadge = document.getElementById('expiring-filter-count');
+    if (countBadge) {
+      countBadge.textContent = expiringCount;
+    }
+
+    // Dynamic top alert banner in documents view
+    const alertContainer = document.getElementById('client-docs-expiring-alert');
+    if (alertContainer) {
+      if (expiringCount > 0) {
+        alertContainer.innerHTML = `
+          <div class="anomaly-item critical" style="margin-bottom: 1.5rem; border-left: 4px solid #ef4444; background: #fff5f5; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);">
+            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                <i class="fas fa-triangle-exclamation"></i>
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+                  <h5 style="color: #b91c1c; font-size: 0.95rem; font-weight: 700; margin: 0;">
+                    Alerte Validité : ${expiringCount} document(s) expirent dans moins de 30 jours
+                  </h5>
+                  <span class="badge badge-rejected" style="background:#fee2e2; color:#b91c1c; border:1px solid #f87171; font-weight:700;">
+                    Action Requise
+                  </span>
+                </div>
+                <p style="color: #7f1d1d; font-size: 0.82rem; margin: 0 0 0.75rem 0; line-height: 1.5;">
+                  Les pièces surlignées en rouge (${expiringDocs.map(d => `<strong>${d.title}</strong> [échéance : ${d.dateStr}, ${d.days}j]`).join(', ')}) doivent être renouvelées pour garantir la conformité réglementaire UEMOA et éviter tout blocage du décaissement.
+                </p>
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                  <button class="btn btn-sm btn-primary" style="background: #dc2626; border-color: #dc2626;" onclick="document.getElementById('client-file-input').click()">
+                    <i class="fas fa-cloud-arrow-up mr-1"></i> Téléverser une pièce actualisée
+                  </button>
+                  <button class="btn btn-sm btn-secondary" onclick="App.filterClientDocs('EXPIRING', document.getElementById('btn-filter-expiring'))">
+                    <i class="fas fa-filter mr-1"></i> Afficher uniquement les pièces à renouveler (${expiringCount})
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        alertContainer.innerHTML = '';
+      }
+    }
+  },
+
   filterClientDocs(category, buttonEl) {
     const buttons = document.querySelectorAll('#doc-filter-buttons button');
     buttons.forEach(b => {
@@ -2987,7 +3158,11 @@ const App = {
 
     const cards = document.querySelectorAll('#client-documents-grid .doc-card-item');
     cards.forEach(card => {
-      if (category === 'ALL' || card.dataset.category === category) {
+      if (category === 'ALL') {
+        card.style.display = 'block';
+      } else if (category === 'EXPIRING') {
+        card.style.display = card.getAttribute('data-is-expiring') === 'true' ? 'block' : 'none';
+      } else if (card.dataset.category === category) {
         card.style.display = 'block';
       } else {
         card.style.display = 'none';
@@ -3004,15 +3179,26 @@ const App = {
     setTimeout(() => {
       const grid = document.getElementById('client-documents-grid');
       if (grid) {
+        // Calculate new document validity (e.g. 30 days from now for proforma/quote)
+        const now = new Date();
+        const futureDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const yyyy = futureDate.getFullYear();
+        const mm = String(futureDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(futureDate.getDate()).padStart(2, '0');
+        const validityIso = `${yyyy}-${mm}-${dd}`;
+
         const newCard = document.createElement('div');
         newCard.className = 'card doc-card-item';
         newCard.dataset.category = 'INVOICE';
+        newCard.dataset.validityDate = validityIso;
         newCard.style.padding = '1.25rem';
         newCard.style.position = 'relative';
+        newCard.style.cursor = 'pointer';
+        newCard.onclick = () => this.showToast(`Aperçu sécurisé du document ${file.name}`, 'info');
         newCard.innerHTML = `
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
             <div style="display: flex; gap: 0.75rem; align-items: center;">
-              <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+              <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
                 <i class="fas fa-file-circle-check"></i>
               </div>
               <div>
@@ -3020,21 +3206,25 @@ const App = {
                 <span style="font-size: 0.72rem; color: var(--text-subtle);">${(file.size / 1024).toFixed(0)} Ko • Téléversé à l'instant</span>
               </div>
             </div>
+            <div class="doc-header-badge-slot"></div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-            <div><strong>Analyse IA :</strong> Données extraites avec succès</div>
-            <div><strong>Conformité :</strong> Certifié sans anomalie</div>
+            <div><strong>Analyse IA OCR :</strong> Données extraites avec succès (100%)</div>
+            <div class="doc-validity-row"><strong>Échéance Validité :</strong> ${futureDate.toLocaleDateString('fr-FR')} (30 jours)</div>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
-            <span class="badge badge-approved"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
-            <button class="btn btn-secondary btn-sm" onclick="App.showToast('Aperçu du document...', 'info')">
-              <i class="fas fa-eye"></i> Aperçu
+            <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.showToast('Aperçu du document...', 'info')">
+              <i class="fas fa-eye"></i> Aperçu Sécurisé
             </button>
           </div>
         `;
         grid.prepend(newCard);
+
+        // Re-evaluate highlighting on all cards
+        this.checkAndHighlightExpiringDocs();
       }
-      this.showToast(`Document "${file.name}" extrait et transmis à votre analyste !`, 'success');
+      this.showToast(`Document "${file.name}" extrait, validé et transmis à votre conseiller !`, 'success');
       event.target.value = '';
     }, 1200);
   },
@@ -3245,13 +3435,13 @@ const App = {
     const amount = amountRange ? parseInt(amountRange.value, 10) : 2500000;
     const duration = durationRange ? parseInt(durationRange.value, 10) : 12;
 
-    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CIF' });
+    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CreditFast' });
     this.showToast(`Simulation transférée dans votre demande : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
   },
 
   scheduleInstallments: [
-    { number: 1, dueDate: '05/07/2026', principal: 196250, interest: 25000, insurance: 13750, total: 235000, remaining: 2303750, status: 'PAID', paidDate: '04/07/2026 à 14:22', provider: 'Orange Money (+221 77 540 88 12)', receiptRef: 'REC-2026-0704', txnId: 'OM-SN-8821-0704' },
-    { number: 2, dueDate: '05/08/2026', principal: 198212, interest: 23038, insurance: 13750, total: 235000, remaining: 2105538, status: 'PAID', paidDate: '05/08/2026 à 09:45', provider: 'Wave (+221 77 540 88 12)', receiptRef: 'REC-2026-0805', txnId: 'WV-SN-8821-0805' },
+    { number: 1, dueDate: '05/07/2026', principal: 196250, interest: 25000, insurance: 13750, total: 235000, remaining: 2303750, status: 'PAID', paidDate: '04/07/2026 à 14:22', provider: 'Orange Money Mali (+223 77 540 88 12)', receiptRef: 'REC-2026-0704', txnId: 'OM-ML-8821-0704' },
+    { number: 2, dueDate: '05/08/2026', principal: 198212, interest: 23038, insurance: 13750, total: 235000, remaining: 2105538, status: 'PAID', paidDate: '05/08/2026 à 09:45', provider: 'Wave Mali (+223 77 540 88 12)', receiptRef: 'REC-2026-0805', txnId: 'WV-ML-8821-0805' },
     { number: 3, dueDate: '05/09/2026', principal: 200195, interest: 21055, insurance: 13750, total: 235000, remaining: 1905343, status: 'DUE', paidDate: null, provider: null, receiptRef: null, txnId: null },
     { number: 4, dueDate: '05/10/2026', principal: 202196, interest: 19054, insurance: 13750, total: 235000, remaining: 1703147, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
     { number: 5, dueDate: '05/11/2026', principal: 204218, interest: 17032, insurance: 13750, total: 235000, remaining: 1498929, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
@@ -3507,6 +3697,299 @@ const App = {
     if (backdrop) backdrop.classList.remove('active');
   },
 
+  // =========================================================================
+  // [FEATURE] VOLET LATÉRAL DE DÉTAIL D'UNE DEMANDE DE CRÉDIT (DEMANDEUR)
+  // =========================================================================
+  openClientRequestDrawer(identifier = 'REQ-2026-0891') {
+    let req = null;
+    if (typeof identifier === 'number') {
+      req = DB.findById('credit_requests', identifier);
+    } else {
+      req = DB.data.credit_requests.find(r => r.request_number === identifier || r.id === identifier);
+    }
+
+    const historicalMap = {
+      'REQ-2026-0891': {
+        request_number: 'REQ-2026-0891',
+        submitted_at: '11/08/2026',
+        agency: 'Agence Grand Marché (Bamako, Mali)',
+        purpose: 'Achat de stock tissus wax pour la fête de Tabaski',
+        amount: 2500000,
+        duration: 12,
+        monthly: 235000,
+        rate: '1.20% / mois dégressif (14.4% l\'an UEMOA)',
+        insurance: '13 750 FCFA / mois (Incluse)',
+        totalCost: 320000,
+        disbursement: 'Mobile Money (Wave/Orange) ou Guichet Caisse',
+        status: 'ANALYSIS',
+        statusBadge: '<span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque (Score: 78/100)</span>',
+        stepBadge: 'Étape 4 sur 6',
+        steps: [
+          { name: '1. Dépôt & Enregistrement', date: '11/08/2026 à 10:14', state: 'done', desc: 'Dossier constitué et enregistré au guichet digital CreditFast' },
+          { name: '2. Extraction OCR & Contrôle Pièces', date: '11/08/2026 à 14:30', state: 'done', desc: '4/4 pièces certifiées conformes par l\'IA OCR' },
+          { name: '3. Calcul Capacité & Reste à Vivre', date: '12/08/2026 à 09:05', state: 'done', desc: 'Reste à vivre mensuel net : 325 000 FCFA (Conforme UEMOA)' },
+          { name: '4. Revue Approfondie Analyste Risque', date: 'En cours d\'instruction', state: 'active', desc: 'Score calculé : 78/100 • Avis favorable sous réserve de validation' },
+          { name: '5. Vote & Décision Comité de Crédit', date: 'Prévu le 20/08/2026', state: 'pending', desc: 'Examen collégial et signature électronique du PV' },
+          { name: '6. Déblocage & Mise à Disposition', date: 'Sous 24h après accord', state: 'pending', desc: 'Versement direct par virement ou portefeuille Mobile Money' }
+        ],
+        docs: [
+          { name: 'Facture_Proforma_Wax_BATEXI.pdf', type: 'Devis & Proforma', size: '1.4 Mo' },
+          { name: 'Releve_Compte_6_Mois_CreditFast.pdf', type: 'Relevé Bancaire', size: '2.8 Mo' },
+          { name: 'RCCM_Bamako_ML-BKO-2020-B-142.pdf', type: 'Registre Commerce', size: '890 Ko' },
+          { name: 'CNI_Biometrique_Ndiaye.pdf', type: 'Identité Client', size: '1.1 Mo' }
+        ],
+        guarantee: {
+          type: 'Stock de Marchandise & Rouleaux Bazin',
+          declared: '3 800 000 FCFA',
+          verified: '3 400 000 FCFA',
+          statusBadge: '<span class="badge badge-approved"><i class="fas fa-circle-check"></i> Contrôlée & Conforme</span>',
+          desc: 'Stock de rouleaux de tissus wax hollandais et bazin riche entreposé en boutique Grand Marché (constat physique par l\'Agent Adama Traore).'
+        },
+        actions: 'ACTIVE'
+      },
+      'REQ-2025-0412': {
+        request_number: 'REQ-2025-0412',
+        submitted_at: '14/04/2025',
+        agency: 'Agence Grand Marché (Bamako, Mali)',
+        purpose: 'Équipement machine à coudre industrielle double entraînement',
+        amount: 1200000,
+        duration: 10,
+        monthly: 132000,
+        rate: '1.20% / mois dégressif',
+        insurance: '6 600 FCFA / mois (Soldée)',
+        totalCost: 120000,
+        disbursement: 'Virement Agence',
+        status: 'APPROVED',
+        statusBadge: '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
+        stepBadge: 'Dossier Clôturé (100%)',
+        steps: [
+          { name: '1. Demande Déposée', date: '14/04/2025', state: 'done', desc: 'Financement d\'équipement professionnel' },
+          { name: '2. Documents & Devis Validés', date: '14/04/2025', state: 'done', desc: 'Devis machine Brother validé' },
+          { name: '3. Capacité Financière Conforme', date: '15/04/2025', state: 'done', desc: 'Ratio d\'endettement : 22%' },
+          { name: '4. Validation Analyste Risque', date: '16/04/2025', state: 'done', desc: 'Score de crédit : 84/100' },
+          { name: '5. Décision Comité Favorable', date: '17/04/2025', state: 'done', desc: 'Accord unanime du Comité' },
+          { name: '6. Déblocage & 10 Remboursements Réglés', date: 'Février 2026', state: 'done', desc: '10/10 échéances honorées sans aucun retard. Quittance finale délivrée.' }
+        ],
+        docs: [
+          { name: 'Facture_Machine_Industrielle_Brother.pdf', type: 'Facture Achat', size: '1.1 Mo' },
+          { name: 'Contrat_Pret_Signe_CF-2025-0412.pdf', type: 'Contrat Prêt', size: '2.2 Mo' },
+          { name: 'Attestation_Fin_Engagement_Soldé.pdf', type: 'Quittance Clôture', size: '650 Ko' }
+        ],
+        guarantee: {
+          type: 'Gage sur Matériel Professionnel',
+          declared: '1 500 000 FCFA',
+          verified: '1 500 000 FCFA',
+          statusBadge: '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Mainlevée Délivrée</span>',
+          desc: 'Gage mobilier sur machine à coudre industrielle. Mainlevée totale actée suite au remboursement intégral.'
+        },
+        actions: 'CLOSED'
+      },
+      'REQ-2024-0199': {
+        request_number: 'REQ-2024-0199',
+        submitted_at: '03/02/2024',
+        agency: 'Agence Grand Marché (Bamako, Mali)',
+        purpose: 'Fonds de roulement boutique Médina & mercerie',
+        amount: 800000,
+        duration: 6,
+        monthly: 140000,
+        rate: '1.20% / mois dégressif',
+        insurance: '4 400 FCFA / mois (Soldée)',
+        totalCost: 40000,
+        disbursement: 'Orange Money',
+        status: 'APPROVED',
+        statusBadge: '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
+        stepBadge: 'Dossier Clôturé (100%)',
+        steps: [
+          { name: '1. Demande Déposée', date: '03/02/2024', state: 'done', desc: 'Microcrédit fonds de roulement' },
+          { name: '2. Pièces Déposées', date: '03/02/2024', state: 'done', desc: 'Pièce d\'identité et quittance EDM' },
+          { name: '3. Instruction Rapide', date: '04/02/2024', state: 'done', desc: 'Confort de trésorerie avéré' },
+          { name: '4. Scoring Automatisé Conforme', date: '04/02/2024', state: 'done', desc: 'Score de crédit : 80/100' },
+          { name: '5. Approbation Caisse', date: '05/02/2024', state: 'done', desc: 'Accord délégué agence' },
+          { name: '6. Prêt Soldé en Août 2024', date: 'Août 2024', state: 'done', desc: '6/6 mensualités payées à bonne date.' }
+        ],
+        docs: [
+          { name: 'Contrat_CreditFast_2024_0199.pdf', type: 'Contrat Prêt', size: '1.8 Mo' },
+          { name: 'Attestation_Solde_Pret_2024.pdf', type: 'Quittance Finale', size: '540 Ko' }
+        ],
+        guarantee: {
+          type: 'Nantissement d\'Épargne Bloquée',
+          declared: '400 000 FCFA',
+          verified: '400 000 FCFA',
+          statusBadge: '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Caution Libérée</span>',
+          desc: 'Nantissement partiel sur compte sur livret CreditFast. Fonds débloqués et restitués.'
+        },
+        actions: 'CLOSED'
+      }
+    };
+
+    const data = historicalMap[identifier] || (req ? {
+      request_number: req.request_number,
+      submitted_at: req.submitted_at ? new Date(req.submitted_at).toLocaleDateString('fr-FR') : '11/08/2026',
+      agency: 'Agence Grand Marché (Bamako, Mali)',
+      purpose: req.purpose || 'Financement d\'activité professionnelle',
+      amount: req.requested_amount || 2500000,
+      duration: req.duration_months || 12,
+      monthly: req.estimated_monthly_payment || 235000,
+      rate: '1.20% / mois dégressif',
+      insurance: 'Assurance incluse',
+      totalCost: Math.round((req.requested_amount || 2500000) * 0.12),
+      disbursement: 'Mobile Money / Caisse',
+      status: req.status || 'ANALYSIS',
+      statusBadge: AppInteractions.getStatusBadge(req.status || 'ANALYSIS'),
+      stepBadge: req.status === 'APPROVED' ? 'Accordé' : 'En cours',
+      steps: [
+        { name: '1. Demande Déposée', date: 'Enregistrée', state: 'done', desc: 'Dossier créé' },
+        { name: '2. Contrôle Pièces', date: 'Validé', state: 'done', desc: 'Documents analysés' },
+        { name: '3. Analyse Financière', date: 'Validé', state: 'done', desc: 'Reste à vivre calculé' },
+        { name: '4. Décision & Déblocage', date: 'En cours', state: req.status === 'APPROVED' ? 'done' : 'active', desc: 'Traitement final' }
+      ],
+      docs: [
+        { name: 'Dossier_Financement_' + req.request_number + '.pdf', type: 'Dossier Numérique', size: '1.5 Mo' }
+      ],
+      guarantee: {
+        type: 'Garantie déclarée',
+        declared: CreditScoringEngine.formatFCFA(req.requested_amount || 2000000),
+        verified: CreditScoringEngine.formatFCFA(req.requested_amount || 2000000),
+        statusBadge: '<span class="badge badge-approved">Conforme</span>',
+        desc: 'Garanties enregistrées pour ce dossier.'
+      },
+      actions: req.status === 'APPROVED' ? 'CLOSED' : 'ACTIVE'
+    } : historicalMap['REQ-2026-0891']);
+
+    // Fill Drawer Elements
+    const titleEl = document.getElementById('crd-drawer-title');
+    const subtitleEl = document.getElementById('crd-drawer-subtitle');
+    const amountEl = document.getElementById('crd-drawer-amount');
+    const statusEl = document.getElementById('crd-drawer-status');
+    const purposeEl = document.getElementById('crd-drawer-purpose');
+
+    if (titleEl) titleEl.textContent = `Dossier #${data.request_number}`;
+    if (subtitleEl) subtitleEl.textContent = `Déposé le ${data.submitted_at} • ${data.agency}`;
+    if (amountEl) amountEl.textContent = CreditScoringEngine.formatFCFA(data.amount);
+    if (statusEl) statusEl.innerHTML = data.statusBadge;
+    if (purposeEl) purposeEl.textContent = data.purpose;
+
+    // Financial Values
+    const durVal = document.getElementById('crd-drawer-duration-val');
+    const durBadge = document.getElementById('crd-drawer-duration-badge');
+    const monVal = document.getElementById('crd-drawer-monthly-val');
+    const rateVal = document.getElementById('crd-drawer-rate-val');
+    const insVal = document.getElementById('crd-drawer-insurance-val');
+    const costVal = document.getElementById('crd-drawer-cost-val');
+    const disbVal = document.getElementById('crd-drawer-disbursement-val');
+
+    if (durVal) durVal.textContent = `${data.duration} Mois`;
+    if (durBadge) durBadge.textContent = `${data.duration} Mois`;
+    if (monVal) monVal.textContent = CreditScoringEngine.formatFCFA(data.monthly);
+    if (rateVal) rateVal.textContent = data.rate;
+    if (insVal) insVal.textContent = data.insurance;
+    if (costVal) costVal.textContent = CreditScoringEngine.formatFCFA(data.totalCost);
+    if (disbVal) disbVal.textContent = data.disbursement;
+
+    // Stepper
+    const stepBadge = document.getElementById('crd-drawer-step-badge');
+    if (stepBadge) stepBadge.textContent = data.stepBadge;
+
+    const stepperContainer = document.getElementById('crd-drawer-stepper-container');
+    if (stepperContainer && data.steps) {
+      stepperContainer.innerHTML = data.steps.map((st, idx) => {
+        const isDone = st.state === 'done';
+        const isActive = st.state === 'active';
+        const icon = isDone ? '<i class="fas fa-check"></i>' : (isActive ? '<i class="fas fa-spinner fa-spin"></i>' : String(idx + 1));
+        const dotBg = isDone ? 'var(--primary-600)' : (isActive ? 'var(--cif-gold-500)' : 'var(--border-color)');
+        const dotColor = (isDone || isActive) ? '#fff' : 'var(--text-muted)';
+        const titleColor = isActive ? 'var(--primary-700)' : 'var(--text-primary)';
+
+        return `
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; position: relative;">
+            <div style="width: 26px; height: 26px; border-radius: 50%; background: ${dotBg}; color: ${dotColor}; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;">
+              ${icon}
+            </div>
+            <div style="flex: 1; padding-bottom: 0.35rem; border-bottom: 1px dashed var(--border-color);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-weight: 700; font-size: 0.82rem; color: ${titleColor};">${st.name}</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">${st.date}</div>
+              </div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">${st.desc}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Documents GED
+    const docsCount = document.getElementById('crd-drawer-docs-count');
+    const docsList = document.getElementById('crd-drawer-docs-list');
+    if (docsCount) docsCount.textContent = `${data.docs ? data.docs.length : 0} pièces`;
+    if (docsList && data.docs) {
+      docsList.innerHTML = data.docs.map(doc => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0.75rem; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div style="color: var(--primary-600); font-size: 1rem;"><i class="fas fa-file-pdf"></i></div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.78rem; color: var(--text-primary);">${doc.name}</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">${doc.type} • ${doc.size}</div>
+            </div>
+          </div>
+          <span class="badge badge-approved" style="font-size: 0.65rem; padding: 2px 6px;">
+            <i class="fas fa-check-circle mr-1"></i> Certifié
+          </span>
+        </div>
+      `).join('');
+    }
+
+    // Guarantee
+    const guarStatus = document.getElementById('crd-drawer-guar-status');
+    const guarContent = document.getElementById('crd-drawer-guar-content');
+    if (guarStatus && data.guarantee) guarStatus.innerHTML = data.guarantee.statusBadge;
+    if (guarContent && data.guarantee) {
+      guarContent.innerHTML = `
+        <div style="font-weight: 700; margin-bottom: 3px; color: var(--text-primary);">${data.guarantee.type}</div>
+        <p style="margin: 0 0 6px 0; font-size: 0.78rem; color: var(--text-muted);">${data.guarantee.desc}</p>
+        <div style="display: flex; gap: 1rem; font-size: 0.74rem;">
+          <span>Valeur déclarée : <strong style="font-family: var(--font-family-code);">${data.guarantee.declared}</strong></span>
+          <span>Valeur retenue : <strong style="font-family: var(--font-family-code); color: var(--cif-emerald-700);">${data.guarantee.verified}</strong></span>
+        </div>
+      `;
+    }
+
+    // Footer Actions
+    const footerActions = document.getElementById('crd-drawer-footer-actions');
+    if (footerActions) {
+      if (data.actions === 'ACTIVE') {
+        footerActions.innerHTML = `
+          <button class="btn btn-secondary btn-sm" onclick="App.closeClientRequestDrawer(); App.openDossier360('${data.request_number}')">
+            <i class="fas fa-file-invoice mr-1"></i> Récapitulatif 360°
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.closeClientRequestDrawer(); App.switchView('view-client-documents')">
+            <i class="fas fa-paperclip mr-1"></i> Pièces GED
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="App.closeClientRequestDrawer(); App.switchView('view-client-advisor')">
+            <i class="fas fa-comment-dots mr-1"></i> Contacter Conseiller
+          </button>
+        `;
+      } else {
+        footerActions.innerHTML = `
+          <button class="btn btn-success btn-sm" onclick="App.showToast('Téléchargement de l\\'attestation officielle de solde & quittance pour le dossier ${data.request_number}...', 'success')">
+            <i class="fas fa-certificate mr-1"></i> Attestation de Solde PDF
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="App.closeClientRequestDrawer(); App.switchView('view-client-schedule')">
+            <i class="fas fa-receipt mr-1"></i> Historique Règlements
+          </button>
+        `;
+      }
+    }
+
+    // Open Backdrop
+    const backdrop = document.getElementById('client-request-drawer-backdrop');
+    if (backdrop) backdrop.classList.add('active');
+  },
+
+  closeClientRequestDrawer() {
+    const backdrop = document.getElementById('client-request-drawer-backdrop');
+    if (backdrop) backdrop.classList.remove('active');
+  },
+
   openClientPaymentModal(dueIndex = 3, amount = 235000) {
     const modal = document.getElementById('client-payment-modal');
     const dueLabel = document.getElementById('payment-modal-due-label');
@@ -3544,7 +4027,7 @@ const App = {
     const selectedProvider = document.querySelector('input[name="momo_provider"]:checked')?.value || 'Orange Money';
 
     this.closeClientPaymentModal();
-    this.showToast(`Requête USSD envoyée vers le +221 ${phone} (${selectedProvider})...`, 'info');
+    this.showToast(`Requête USSD envoyée vers le +223 ${phone} (${selectedProvider})...`, 'info');
 
     setTimeout(() => {
       // Mark installment #3 as paid in schedule state
@@ -3552,9 +4035,9 @@ const App = {
       if (targetInstallment) {
         targetInstallment.status = 'PAID';
         targetInstallment.paidDate = `20/08/2026 à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
-        targetInstallment.provider = `${selectedProvider} (+221 ${phone})`;
+        targetInstallment.provider = `${selectedProvider} (+223 ${phone})`;
         targetInstallment.receiptRef = 'REC-2026-0905-8821';
-        targetInstallment.txnId = `MOMO-SN-${Date.now().toString().slice(-6)}`;
+        targetInstallment.txnId = `MOMO-ML-${Date.now().toString().slice(-6)}`;
       }
 
       // Re-render the schedule table and metrics
@@ -4578,18 +5061,18 @@ const App = {
         fields: [
           { label: "N° Carte Nationale", value: "1 756 1989 00412" },
           { label: "Nom & Prénom", value: "NDIAYE Fatou" },
-          { label: "Date de Naissance", value: "14/03/1989 (Dakar)" },
-          { label: "Nationalité", value: "Sénégalaise (CEDEAO / UEMOA)" },
-          { label: "Délivrée le", value: "15/03/2019 par DAF Dakar" },
+          { label: "Date de Naissance", value: "14/03/1989 (Bamako)" },
+          { label: "Nationalité", value: "Malienne (CEDEAO / UEMOA)" },
+          { label: "Délivrée le", value: "15/03/2019 par Police Bamako" },
           { label: "Date d'Expiration", value: "14/03/2029 (En cours de validité)" },
-          { label: "Puce Biométrique", value: "UID-SN-882104-OK" }
+          { label: "Puce Biométrique", value: "UID-ML-882104-OK" }
         ],
         sheetHtml: `
           <div style="border: 2px solid #15803d; border-radius: 12px; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-            <!-- Header Senegal -->
+            <!-- Header Mali -->
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #15803d; padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
               <div style="font-size: 0.75rem; font-weight: 800; color: #15803d; text-transform: uppercase; line-height: 1.3;">
-                RÉPUBLIQUE DU SÉNÉGAL<br><span style="font-size: 0.65rem; color: #047857;">COMMUNAUTÉ ÉCONOMIQUE DES ÉTATS DE L'AFRIQUE DE L'OUEST</span>
+                RÉPUBLIQUE DU MALI<br><span style="font-size: 0.65rem; color: #047857;">COMMUNAUTÉ ÉCONOMIQUE DES ÉTATS DE L'AFRIQUE DE L'OUEST</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.4rem;">
                 <div style="width: 28px; height: 18px; background: linear-gradient(to right, #15803d 33.3%, #facc15 33.3%, #facc15 66.6%, #dc2626 66.6%); border-radius: 2px; border: 1px solid rgba(0,0,0,0.2);"></div>
@@ -4606,7 +5089,7 @@ const App = {
               <div style="font-size: 0.76rem; color: #334155; line-height: 1.6;">
                 <div><span style="font-weight: 700; color: #0f172a;">NOM :</span> NDIAYE</div>
                 <div><span style="font-weight: 700; color: #0f172a;">PRÉNOM :</span> Fatou</div>
-                <div><span style="font-weight: 700; color: #0f172a;">NÉ LE :</span> 14/03/1989 à Dakar</div>
+                <div><span style="font-weight: 700; color: #0f172a;">NÉ LE :</span> 14/03/1989 à Bamako</div>
                 <div><span style="font-weight: 700; color: #0f172a;">SEXE :</span> F • <span style="font-weight: 700; color: #0f172a;">TAILLE :</span> 1.68 m</div>
                 <div><span style="font-weight: 700; color: #0f172a;">N° IDENTIFIANT :</span> <strong style="font-family: monospace; color: #1e40af;">1 756 1989 00412</strong></div>
                 <div><span style="font-weight: 700; color: #0f172a;">VALIDITÉ :</span> 15/03/2019 - 14/03/2029</div>
@@ -4615,58 +5098,58 @@ const App = {
 
             <!-- MRZ Band -->
             <div style="margin-top: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.6rem; font-family: monospace; font-size: 0.72rem; color: #0f172a; letter-spacing: 2px; line-height: 1.4;">
-              IDSNANDIAYE<<FATOU<<<<<<<<<<<<<<<<<<<<<<<<<<<br>
-              17561989004128SEN8903144F2903141<<<<<<<<<<<<6
+              IDMLNDIAYE<<FATOU<<<<<<<<<<<<<<<<<<<<<<<<<<<br>
+              17561989004128MLI8903144F2903141<<<<<<<<<<<<6
             </div>
 
             <!-- Hologram stamp watermark -->
             <div style="position: absolute; bottom: 20px; right: 25px; border: 2px dashed rgba(21, 128, 61, 0.4); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; transform: rotate(-15deg); color: rgba(21, 128, 61, 0.6); font-size: 0.65rem; font-weight: 900; text-align: center; pointer-events: none;">
-              SÉNÉGAL<br>OFFICIEL<br>UEMOA
+              MALI<br>OFFICIEL<br>UEMOA
             </div>
           </div>
         `
       },
       rccm: {
         title: "Extrait Registre du Commerce et du Crédit Mobilier (RCCM)",
-        meta: "PDF • 850 Ko • Greffe Tribunal de Commerce de Dakar",
+        meta: "PDF • 850 Ko • Greffe Tribunal de Commerce de Bamako",
         badgeClass: "badge-approved",
         badgeHtml: "<i class=\"fas fa-check-circle\"></i> RCCM Authentifié",
         iconClass: "fas fa-landmark",
         confidenceScore: "99.9%",
-        filename: "RCCM_Confection_Fatou_Dakar.pdf",
+        filename: "RCCM_Confection_Fatou_Bamako.pdf",
         fields: [
-          { label: "N° Immatriculation RCCM", value: "SN.DKR.2022.A.18402" },
-          { label: "NINEA (Fiscal)", value: "008923412 2A2" },
+          { label: "N° Immatriculation RCCM", value: "ML.BKO.2022.A.18402" },
+          { label: "NIF (Fiscal)", value: "008923412 2A2" },
           { label: "Dénomination Commerciale", value: "ATELIER COUTURE & WAX FATOU" },
           { label: "Forme Juridique", value: "Entreprise Individuelle (Artisanat)" },
           { label: "Date Immatriculation", value: "18/02/2022" },
-          { label: "Siège Social", value: "Médina Rue 22 x 15, Dakar (Sénégal)" },
+          { label: "Siège Social", value: "Grand Marché Rue 314, Bamako (Mali)" },
           { label: "Activité Déclarée", value: "Confection textile, négoce de tissus et prêt-à-porter" }
         ],
         sheetHtml: `
           <div style="border: 2px solid #334155; padding: 2rem; background: #ffffff; color: #0f172a; font-family: serif;">
             <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-              <h4 style="font-size: 1.1rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">OHADA - RÉPUBLIQUE DU SÉNÉGAL</h4>
-              <h5 style="font-size: 0.9rem; margin: 4px 0 0 0; color: #475569;">TRIBUNAL DE COMMERCE HORS CLASSE DE DAKAR</h5>
+              <h4 style="font-size: 1.1rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">OHADA - RÉPUBLIQUE DU MALI</h4>
+              <h5 style="font-size: 0.9rem; margin: 4px 0 0 0; color: #475569;">TRIBUNAL DE COMMERCE DE BAMAKO</h5>
               <div style="font-size: 0.8rem; font-weight: 700; color: #047857; margin-top: 6px;">EXTRAIT D'IMMATRICULATION AU RCCM</div>
             </div>
 
             <div style="font-size: 0.82rem; line-height: 1.8; color: #1e293b;">
-              <p><strong>N° DU DOSSIER :</strong> SN.DKR.2022.A.18402 • <strong>NINEA :</strong> 008923412 2A2</p>
+              <p><strong>N° DU DOSSIER :</strong> ML.BKO.2022.A.18402 • <strong>NIF :</strong> 008923412 2A2</p>
               <p><strong>DÉNOMINATION :</strong> ATELIER DE COUTURE & WAX FATOU</p>
-              <p><strong>EXPLOITANT :</strong> NDIAYE Fatou (Nationalité Sénégalaise)</p>
+              <p><strong>EXPLOITANT :</strong> NDIAYE Fatou (Nationalité Malienne)</p>
               <p><strong>OBJET SOCIAL :</strong> Fabrication, confection artisanale de vêtements traditionnels et modernes, importation et distribution de textiles Wax, Bazin et soieries.</p>
-              <p><strong>ADRESSE DE L'ÉTABLISSEMENT :</strong> Rue 22 x 15 Médina, Dakar</p>
+              <p><strong>ADRESSE DE L'ÉTABLISSEMENT :</strong> Grand Marché Rue 314, Bamako</p>
               <p><strong>DATE DE DÉBUT D'ACTIVITÉ :</strong> 01 Février 2022</p>
             </div>
 
             <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
               <div style="font-size: 0.72rem; color: #64748b; font-family: sans-serif;">
-                Délivré à Dakar le 18/02/2022<br>Certifié conforme par le Greffe
+                Délivré à Bamako le 18/02/2022<br>Certifié conforme par le Greffe
               </div>
               <div style="text-align: center;">
                 <div style="border: 2px solid #dc2626; color: #dc2626; font-size: 0.65rem; font-weight: 900; padding: 0.5rem 0.75rem; border-radius: 4px; transform: rotate(-5deg); display: inline-block;">
-                  GREFFE TRIBUNAL DE COMMERCE<br>DAKAR - SÉNÉGAL<br>ENREGISTRÉ
+                  GREFFE TRIBUNAL DE COMMERCE<br>BAMAKO - MALI<br>ENREGISTRÉ
                 </div>
               </div>
             </div>
@@ -4715,7 +5198,7 @@ const App = {
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.85rem; margin-bottom: 1.5rem; font-size: 0.78rem;">
               <div style="font-weight: 700; color: #0f172a; margin-bottom: 3px;">CLIENT DESTINATAIRE :</div>
               <div>Mme Fatou NDIAYE • Atelier Couture & Confection</div>
-              <div>Médina Rue 22 x 15, Dakar (Sénégal) • Tél : +221 77 540 88 12</div>
+              <div>Grand Marché Rue 314, Bamako (Mali) • Tél : +223 77 540 88 12</div>
             </div>
 
             <!-- Items Table -->
@@ -4745,14 +5228,17 @@ const App = {
             </table>
 
             <!-- Totals -->
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+              <div style="font-size: 0.72rem; color: #64748b;">
+                Modalité : Livraison contre paiement CreditFast / Agence Grand Marché Bamako
+              </div>
               <div style="width: 250px; font-size: 0.8rem;">
                 <div style="display: flex; justify-content: space-between; padding: 0.3rem 0;">
                   <span>Sous-total HT :</span>
                   <span>2 300 000 FCFA</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid #e2e8f0;">
-                  <span>Fret maritime & Assurance :</span>
+                  <span>Fret & Assurance :</span>
                   <span>200 000 FCFA</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; font-weight: 800; font-size: 0.95rem; color: #0284c7;">
@@ -4765,7 +5251,7 @@ const App = {
             <!-- Footer Cachet -->
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
               <div style="font-size: 0.7rem; color: #64748b;">
-                Modalité : Livraison contre paiement CIF / Caisse Médina Dakar
+                Délivré pour instruction de crédit • Agence CreditFast Grand Marché
               </div>
               <div style="border: 2px solid #0369a1; color: #0369a1; font-weight: 800; font-size: 0.68rem; padding: 0.4rem 0.8rem; border-radius: 4px; transform: rotate(-3deg);">
                 ÉTS TEXTILES ASSIGAMÉ<br>POUR ACCORD ET VENTE
@@ -4775,18 +5261,18 @@ const App = {
         `
       },
       senelec: {
-        title: "Quittance d'Électricité Senelec (Justificatif Domicile)",
-        meta: "PDF • 920 Ko • Senelec Agence Médina Dakar",
+        title: "Quittance d'Électricité EDM-SA (Justificatif Domicile)",
+        meta: "PDF • 920 Ko • Énergie du Mali (EDM-SA) Bamako",
         badgeClass: "badge-approved",
         badgeHtml: "<i class=\"fas fa-check-circle\"></i> Domicile Certifié",
         iconClass: "fas fa-bolt",
         confidenceScore: "99.5%",
-        filename: "Quittance_Senelec_Fatou_Ndiaye.pdf",
+        filename: "Facture_EDM_Fatou_Ndiaye.pdf",
         fields: [
-          { label: "Organisme Émetteur", value: "SENELEC Sénégal" },
+          { label: "Organisme Émetteur", value: "EDM-SA (Énergie du Mali)" },
           { label: "N° Police / Compteur", value: "884-2190-33" },
           { label: "Titulaire Abonnement", value: "Mme Fatou NDIAYE" },
-          { label: "Adresse Fournie", value: "Rue 22 x 15 Médina, Dakar" },
+          { label: "Adresse Fournie", value: "Grand Marché Rue 314, Bamako" },
           { label: "Période Facturée", value: "Juillet 2026" },
           { label: "Statut Règlement", value: "Acquitté / 0 F solde impayé" }
         ],
@@ -4794,8 +5280,8 @@ const App = {
           <div style="background: #ffffff; padding: 2rem; border: 1px solid #e2e8f0; color: #1e293b; font-family: sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f59e0b; padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
               <div>
-                <h4 style="font-size: 1.2rem; font-weight: 900; color: #d97706; margin: 0;">SENELEC</h4>
-                <div style="font-size: 0.72rem; color: #64748b;">Société Nationale d'Électricité du Sénégal</div>
+                <h4 style="font-size: 1.2rem; font-weight: 900; color: #d97706; margin: 0;">EDM-SA</h4>
+                <div style="font-size: 0.72rem; color: #64748b;">Société Énergie du Mali (EDM-SA) • Direction Bamako</div>
               </div>
               <span class="badge badge-approved" style="font-size: 0.75rem; padding: 0.35rem 0.6rem;">
                 <i class="fas fa-check"></i> FACTURE ACQUITTÉE
@@ -4806,8 +5292,8 @@ const App = {
               <div style="background: #fefce8; padding: 0.75rem; border-radius: 6px; border: 1px solid #fef08a;">
                 <div style="font-weight: 700; color: #854d0e; margin-bottom: 4px;">ABONNÉ / TITULAIRE :</div>
                 <div>NDIAYE Fatou</div>
-                <div>Rue 22 x 15 Médina Dakar</div>
-                <div>Code Distr. : DKR-MED-04</div>
+                <div>Grand Marché Rue 314, Bamako</div>
+                <div>Code Distr. : BKO-GM-04</div>
               </div>
               <div style="background: #f8fafc; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0;">
                 <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">DONNÉES COMPTEUR :</div>
@@ -4825,8 +5311,8 @@ const App = {
         `
       },
       guarantee: {
-        title: "Attestation de Nantissement d'Épargne CIF",
-        meta: "PDF • 1.8 Mo • Caisse CIF Médina Dakar",
+        title: "Attestation de Nantissement d'Épargne CreditFast",
+        meta: "PDF • 1.8 Mo • Agence CreditFast Grand Marché Bamako",
         badgeClass: "badge-approved",
         badgeHtml: "<i class=\"fas fa-check-circle\"></i> Sûreté Enregistrée",
         iconClass: "fas fa-shield-halved",
@@ -4834,46 +5320,46 @@ const App = {
         filename: "Attestation_Nantissement_Epargne.pdf",
         fields: [
           { label: "Type de Sûreté", value: "Gage Espèces & Nantissement Compte Épargne" },
-          { label: "N° Compte Gagiste", value: "SN-DKR-SAV-004128" },
+          { label: "N° Compte Gagiste", value: "ML-BKO-SAV-004128" },
           { label: "Titulaire du Compte", value: "Mme Fatou NDIAYE" },
           { label: "Montant Bloqué", value: "500 000 FCFA" },
           { label: "Taux de Couverture", value: "20% du Prêt Principal" },
-          { label: "Caisse Dépositaire", value: "Caisse Mutuelle CIF Médina Dakar" }
+          { label: "Caisse Dépositaire", value: "Agence CreditFast Grand Marché Bamako" }
         ],
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 2px solid #4f46e5; border-radius: 8px; color: #1e293b; font-family: sans-serif;">
             <div style="text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-              <h4 style="font-size: 1.1rem; font-weight: 800; color: #4f46e5; margin: 0;">CONFÉDÉRATION DES INSTITUTIONS FINANCIÈRES (CIF)</h4>
-              <h5 style="font-size: 0.85rem; color: #64748b; margin: 4px 0 0 0;">Caisse Mutuelle d'Épargne et de Crédit - Agence Médina Dakar</h5>
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: #4f46e5; margin: 0;">RÉSEAU RÉGIONAL CREDITFAST</h4>
+              <h5 style="font-size: 0.85rem; color: #64748b; margin: 4px 0 0 0;">Caisse d'Épargne et de Crédit - Agence Grand Marché Bamako</h5>
               <div style="font-size: 0.8rem; font-weight: 800; color: #15803d; margin-top: 6px;">ACTE DE NANTISSEMENT D'ÉPARGNE LIQUIDE</div>
             </div>
 
             <div style="font-size: 0.8rem; line-height: 1.8;">
-              <p>Par les présentes, la soussignée <strong>Mme Fatou NDIAYE</strong> consent à titre de garantie solidaire le nantissement à hauteur de <strong>500 000 FCFA</strong> de son compte d'épargne N° <code>SN-DKR-SAV-004128</code> ouvert auprès de la Caisse CIF Médina.</p>
+              <p>Par les présentes, la soussignée <strong>Mme Fatou NDIAYE</strong> consent à titre de garantie solidaire le nantissement à hauteur de <strong>500 000 FCFA</strong> de son compte d'épargne N° <code>ML-BKO-SAV-004128</code> ouvert auprès de l'Agence CreditFast Grand Marché Bamako.</p>
               <p>Cette sûreté liquide garantit le remboursement effectif du prêt N° <code>REQ-2026-0895</code> d'un montant de 2 500 000 FCFA consenti pour une durée de 12 mois.</p>
             </div>
 
             <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
               <div style="font-size: 0.72rem; color: #64748b;">
-                Fait à Dakar, le 12/08/2026<br>Visa du Chef d'Agence CIF
+                Fait à Bamako, le 12/08/2026<br>Visa du Chef d'Agence CreditFast
               </div>
               <div style="border: 2px solid #4f46e5; color: #4f46e5; font-size: 0.68rem; font-weight: 800; padding: 0.4rem 0.8rem; border-radius: 4px;">
-                CAISSE CIF MÉDINA<br>SERVICE ENGAGEMENTS
+                AGENCE CREDITFAST GRAND MARCHÉ<br>SERVICE ENGAGEMENTS
               </div>
             </div>
           </div>
         `
       },
       contract: {
-        title: "Contrat Cadre de Financement & Prêt Électronique CIF",
+        title: "Contrat Cadre de Financement & Prêt Électronique CreditFast",
         meta: "PDF • 2.2 Mo • Signé Numériquement via OTP UEMOA",
         badgeClass: "badge-approved",
         badgeHtml: "<i class=\"fas fa-signature\"></i> Signé & Scellé",
         iconClass: "fas fa-file-contract",
         confidenceScore: "100%",
-        filename: "Contrat_Pret_CIF_2026_0895.pdf",
+        filename: "Contrat_Pret_CreditFast_2026_0895.pdf",
         fields: [
-          { label: "Contrat N°", value: "CTR-CIF-DKR-2026-0895" },
+          { label: "Contrat N°", value: "CTR-CF-BKO-2026-0895" },
           { label: "Emprunteur", value: "Mme Fatou NDIAYE" },
           { label: "Montant du Financement", value: "2 500 000 FCFA" },
           { label: "Taux d'Intérêt", value: "1.20% / mois dégressif (14.4% l'an)" },
@@ -4884,19 +5370,19 @@ const App = {
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 2px solid #047857; border-radius: 8px; color: #1e293b; font-family: serif;">
             <div style="text-align: center; border-bottom: 2px solid #047857; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-              <h4 style="font-size: 1.15rem; font-weight: 900; color: #047857; margin: 0; font-family: sans-serif;">DIGICOOP-WA+ • CONTRAT DE CRÉDIT CIF</h4>
-              <div style="font-size: 0.76rem; color: #64748b; font-family: sans-serif; margin-top: 3px;">CONTRAT N° CTR-CIF-DKR-2026-0895</div>
+              <h4 style="font-size: 1.15rem; font-weight: 900; color: #047857; margin: 0; font-family: sans-serif;">CREDITFAST • CONTRAT DE CRÉDIT RÉGIONAL</h4>
+              <div style="font-size: 0.76rem; color: #64748b; font-family: sans-serif; margin-top: 3px;">CONTRAT N° CTR-CF-BKO-2026-0895</div>
             </div>
 
             <div style="font-size: 0.8rem; line-height: 1.8;">
-              <p><strong>ARTICLE 1 - OBJET :</strong> La Caisse CIF accorde à Mme Fatou NDIAYE un prêt professionnel d'un montant de <strong>2 500 000 FCFA</strong> destiné à l'acquisition de stock commercial de textile.</p>
+              <p><strong>ARTICLE 1 - OBJET :</strong> CreditFast accorde à Mme Fatou NDIAYE un prêt professionnel d'un montant de <strong>2 500 000 FCFA</strong> destiné à l'acquisition de stock commercial de textile.</p>
               <p><strong>ARTICLE 2 - REMBOURSEMENT :</strong> L'emprunteur s'engage à rembourser le prêt selon l'échéancier mensuel dégressif annexé, en 12 termes égaux de <strong>235 000 FCFA</strong> prélevés via Mobile Money ou guichet.</p>
-              <p><strong>ARTICLE 3 - DISPOSITIF COLD START :</strong> Ce prêt bénéficie du programme d'inclusion financière DigiCoop-WA+ sans pénalité d'absence d'historique bancaire préalable.</p>
+              <p><strong>ARTICLE 3 - DISPOSITIF COLD START :</strong> Ce prêt bénéficie du programme d'inclusion financière CreditFast sans pénalité d'absence d'historique bancaire préalable.</p>
             </div>
 
             <div style="margin-top: 2rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 0.85rem; font-family: sans-serif; font-size: 0.74rem;">
               <div style="font-weight: 700; color: #15803d; margin-bottom: 2px;"><i class="fas fa-certificate mr-1"></i> SIGNATURE ÉLECTRONIQUE CERTIFIÉE</div>
-              <div style="color: #334155;">Signé par Fatou NDIAYE (OTP +221 77 540 88 12) • Horodatage certifié SHA-256 : <code>9f83ab20...551c4a</code></div>
+              <div style="color: #334155;">Signé par Fatou NDIAYE (OTP +223 77 540 88 12) • Horodatage certifié SHA-256 : <code>9f83ab20...551c4a</code></div>
             </div>
           </div>
         `

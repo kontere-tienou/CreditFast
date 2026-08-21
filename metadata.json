@@ -1,6 +1,6 @@
 {
   "name": "Crédit Fast",
-  "description": "Plateforme bancaire multi-rôles : Espaces dédiés Demandeur, Agent de Crédit, Analyste Risque V2, Comité de Crédit et Conformité LBC/FT/FP pour la CIF UEMOA.",
+  "description": "Plateforme bancaire multi-rôles : Espaces dédiés Demandeur, Agent de Crédit, Analyste Risque V2, Comité de Crédit et Conformité LBC/FT/FP pour CreditFast UEMOA.",
   "requestFramePermissions": [
     "camera"
   ],

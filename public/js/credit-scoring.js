@@ -21,7 +21,7 @@ const CreditScoringEngine = {
     const totalObligations = Number(monthlyExpenses || 0) + Number(existingDebt || 0);
     const disposableIncome = totalIncome - totalObligations;
 
-    // Échéance mensuelle constante avec taux dégressif microfinance CIF (1.5% mensuel)
+    // Échéance mensuelle constante avec taux dégressif microfinance CreditFast (1.5% mensuel)
     const monthlyRate = 0.015;
     const months = Number(durationMonths) || 12;
     const amount = Number(requestedAmount) || 0;
@@ -154,7 +154,7 @@ const CreditScoringEngine = {
     const factorScoresMap = {
       REPAYMENT_CAPACITY: { name: 'Capacité nette de remboursement', score: repaymentCapacityScore, text: `Reste à vivre net de ${this.formatFCFA(capacity.disposableIncome)} (Ratio ${capacity.coverageRatio}x).` },
       CREDIT_HISTORY: { name: 'Comportement crédits antérieurs', score: creditHistoryScore, text: isColdStart ? 'Primo-demandeur (Poids redistribué sans pénalité).' : 'Historique des remboursements régulier sans impayé.' },
-      SAVINGS_DISCIPLINE: { name: 'Discipline d’épargne CIF', score: savingsScore, text: isColdStart ? 'Aucun historique d’épargne requis pour ce profil.' : `Solde moyen constaté de ${this.formatFCFA(savings.average_balance || 0)}.` },
+      SAVINGS_DISCIPLINE: { name: 'Discipline d’épargne CreditFast', score: savingsScore, text: isColdStart ? 'Aucun historique d’épargne requis pour ce profil.' : `Solde moyen constaté de ${this.formatFCFA(savings.average_balance || 0)}.` },
       ACTIVITY_STABILITY: { name: 'Stabilité & Ancienneté activité', score: activityScore, text: `Activité (${activity.sector || 'Commerce'}) active depuis ${yearsActive} an(s).` },
       GUARANTEE_COVERAGE: { name: 'Garanties & Cautions', score: guaranteeScore, text: guarantee.verification_status === 'VERIFIED' ? `Garantie vérifiée et valorisée à ${this.formatFCFA(guarantee.verified_value)}.` : 'Garantie déclarée en attente de vérification physique.' },
       OCR_DOCUMENT_INTEGRITY: { name: 'Rapprochement OCR & Pièces', score: documentScore, text: anomalies.length > 0 ? `${anomalies.length} anomalie(s) détectée(s) sur les justificatifs.` : 'Justificatifs cohérents sans divergence.' },

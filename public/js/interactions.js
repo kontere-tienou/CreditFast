@@ -205,6 +205,45 @@ const AppInteractions = {
   },
 
   /**
+   * Ouvre le volet latéral de détails d'une demande de crédit (Demandeur)
+   */
+  openClientRequestDrawer(identifier) {
+    if (window.App && typeof window.App.openClientRequestDrawer === 'function') {
+      window.App.openClientRequestDrawer(identifier);
+    }
+  },
+
+  /**
+   * Ferme le volet latéral de détails d'une demande de crédit (Demandeur)
+   */
+  closeClientRequestDrawer() {
+    if (window.App && typeof window.App.closeClientRequestDrawer === 'function') {
+      window.App.closeClientRequestDrawer();
+    } else {
+      const backdrop = document.getElementById('client-request-drawer-backdrop');
+      if (backdrop) backdrop.classList.remove('active');
+    }
+  },
+
+  /**
+   * Analyse et met en surbrillance rouge les documents expirant dans les 30 prochains jours
+   */
+  checkAndHighlightExpiringDocs(options) {
+    if (window.App && typeof window.App.checkAndHighlightExpiringDocs === 'function') {
+      return window.App.checkAndHighlightExpiringDocs(options);
+    }
+  },
+
+  /**
+   * Filtre les pièces justificatives du demandeur
+   */
+  filterClientDocs(category, buttonEl) {
+    if (window.App && typeof window.App.filterClientDocs === 'function') {
+      return window.App.filterClientDocs(category, buttonEl);
+    }
+  },
+
+  /**
    * Ouvre la modale de prise de rendez-vous avec le conseiller
    */
   openAppointmentModal() {
@@ -348,6 +387,47 @@ const AppInteractions = {
           </div>
         `;
       }
+    }
+
+    // Populate Synthesis Box (Norme Note de Présentation CreditFast Page 4)
+    const synthesisBox = document.getElementById('modal-scoring-synthesis-box');
+    if (synthesisBox) {
+      const posFactors = evalData.factors.filter(f => f.is_positive).map(f => f.name).slice(0, 3).join(', ') || 'Revenus réguliers, activité identifiable, capacité d\'épargne';
+      const negFactors = evalData.factors.filter(f => !f.is_positive).map(f => f.name).join(', ') || (anomalies.length > 0 ? 'Écart sur justificatif OCR' : 'Ratio d\'endettement à surveiller');
+      const recommendedAction = evalData.overallScore >= 75 
+        ? 'Validation & transmission au Comité de Crédit' 
+        : (evalData.overallScore >= 55 
+            ? 'Validation sous réserve / vérification humaine des garanties' 
+            : 'Vérification approfondie / demande de pièces complémentaires');
+
+      synthesisBox.innerHTML = `
+        <div class="card" style="background: var(--surface-card-subtle); border: 1.5px solid var(--border-subtle); overflow: hidden; border-radius: var(--radius-md);">
+          <div style="background: rgba(79, 70, 229, 0.08); padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--primary-700);"><i class="fas fa-file-contract mr-1"></i> Synthèse Décisionnelle • Norme CreditFast</span>
+            <span class="badge ${evalData.overallScore >= 70 ? 'badge-approved' : 'badge-verification'}" style="font-size: 0.72rem;">Score : ${evalData.overallScore} / 100</span>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.76rem;">
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 6px 12px; font-weight: 700; width: 35%; color: var(--text-subtle); background: rgba(0,0,0,0.02);">Score Calculé</td>
+                <td style="padding: 6px 12px; font-weight: 800; color: ${evalData.overallScore >= 70 ? 'var(--cif-emerald-500)' : 'var(--cif-gold-700)'};">${evalData.overallScore} / 100 <span style="font-weight: normal; color: var(--text-muted); font-size: 0.7rem;">(Confiance IA : ${evalData.confidenceScore}%)</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 6px 12px; font-weight: 700; color: var(--cif-emerald-500); background: rgba(16, 185, 129, 0.03);">Facteurs favorables</td>
+                <td style="padding: 6px 12px; color: var(--text-main); font-weight: 600;"><i class="fas fa-check-circle text-emerald mr-1"></i> ${posFactors}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 6px 12px; font-weight: 700; color: var(--cif-gold-700); background: rgba(245, 158, 11, 0.03);">Facteurs à vérifier</td>
+                <td style="padding: 6px 12px; color: var(--text-main);"><i class="fas fa-triangle-exclamation text-warning mr-1"></i> ${negFactors}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; font-weight: 700; color: var(--primary-700); background: rgba(79, 70, 229, 0.03);">Action recommandée</td>
+                <td style="padding: 6px 12px; font-weight: 700; color: var(--primary-700);"><i class="fas fa-user-check mr-1"></i> ${recommendedAction}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
     // Populate Factors

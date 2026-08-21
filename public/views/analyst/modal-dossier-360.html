@@ -8,7 +8,7 @@
         <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
           <i class="fas fa-folder-open text-primary mr-1"></i> Dossier <span id="modal-dossier-ref">REQ-2026-0891</span>
         </h3>
-        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Dakar, Sénégal • SN-DKR-008821</p>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Bamako, Mali • ML-BKO-008821</p>
       </div>
       <div style="display: flex; align-items: center; gap: 0.75rem;" id="modal-header-actions">
         <button class="btn btn-secondary btn-sm" id="modal-cold-start-btn" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
@@ -93,10 +93,15 @@
         <!-- Right: Explainable Multi-Factor Scoring & Recommendation -->
         <div>
           <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">
-            <i class="fas fa-scale-balanced text-primary mr-1"></i> Décomposition des Facteurs (Scoring V2)
+            <i class="fas fa-scale-balanced text-primary mr-1"></i> Grille d'Explicabilité & Facteurs (Norme CreditFast)
           </h4>
           
-          <div style="height: 180px; margin-bottom: 1rem;">
+          <!-- Synthetic Matrix (Page 4 de la Note de Présentation) -->
+          <div id="modal-scoring-synthesis-box" style="margin-bottom: 1rem;">
+            <!-- Rendered Dynamically by JS -->
+          </div>
+
+          <div style="height: 170px; margin-bottom: 1rem;">
             <canvas id="modal-radar-canvas"></canvas>
           </div>
 

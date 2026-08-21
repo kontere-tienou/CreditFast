@@ -6,7 +6,7 @@
   <div class="page-header">
     <div>
       <h2 class="page-title"><i class="fas fa-folder-tree text-primary mr-2"></i> Mes Demandes de Prêt & Dossiers</h2>
-      <p class="page-subtitle">Suivi en temps réel de l'état d'instruction de vos dossiers de microcrédit CIF</p>
+      <p class="page-subtitle">Suivi en temps réel de l'état d'instruction de vos dossiers de microcrédit CreditFast</p>
     </div>
     <div class="page-actions">
       <button class="btn btn-primary" onclick="App.openNewLoanModal()">
@@ -50,7 +50,7 @@
         </div>
         <div>
           <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Agence Instructrice</div>
-          <div style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Médina Dakar</div>
+          <div style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Grand Marché Bamako (Mali)</div>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
     </div>
   </div>
 
-  <!-- Historical Applications Table -->
+  <!-- Historical Applications Table (Max 5 Colonnes & Volet Latéral Sidedrawer) -->
   <div class="card">
     <div class="card-header">
       <div>
@@ -117,61 +117,229 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>Réf. Dossier</th>
-            <th>Date Dépôt</th>
-            <th>Objet du Prêt</th>
-            <th>Montant</th>
-            <th>Durée</th>
-            <th>Taux / Échéance</th>
-            <th>Statut Final</th>
-            <th>Actions</th>
+            <th style="width: 18%;">Réf. Dossier</th>
+            <th style="width: 14%;">Date Dépôt</th>
+            <th style="width: 32%;">Objet du Financement</th>
+            <th style="width: 18%;">Montant Demandé</th>
+            <th style="width: 18%;">Statut & Détails</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong style="color: var(--primary-600); font-family: var(--font-family-code);">REQ-2026-0891</strong></td>
+          <tr onclick="App.openClientRequestDrawer('REQ-2026-0891')" style="cursor: pointer;" title="Cliquer pour afficher les détails du dossier dans le volet latéral">
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <strong style="color: var(--primary-600); font-family: var(--font-family-code);">REQ-2026-0891</strong>
+                <span class="badge badge-analysis" style="font-size: 0.65rem; padding: 2px 6px;">Actif</span>
+              </div>
+            </td>
             <td>11/08/2026</td>
-            <td>Achat de stock tissus wax Tabaski</td>
-            <td class="amount-cell">2 500 000 FCFA</td>
-            <td>12 mois</td>
-            <td>235 000 FCFA/m</td>
-            <td><span class="badge badge-analysis"><i class="fas fa-spinner fa-spin"></i> En cours d'analyse</span></td>
             <td>
-              <button class="btn btn-secondary btn-sm" onclick="App.openDossier360('REQ-2026-0891')">
-                <i class="fas fa-eye"></i> Suivre
-              </button>
+              <div style="font-weight: 600; color: var(--text-primary);">Achat de stock tissus wax Tabaski</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">Agence Grand Marché (Bamako)</div>
+            </td>
+            <td>
+              <div class="amount-cell" style="font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">2 500 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">12 mois • 235 000 F/m</div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                <span class="badge badge-analysis"><i class="fas fa-spinner fa-spin"></i> En cours</span>
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openClientRequestDrawer('REQ-2026-0891')" title="Ouvrir le volet latéral de détails">
+                  <i class="fas fa-arrow-right-to-bracket"></i> Détails
+                </button>
+              </div>
             </td>
           </tr>
-          <tr>
-            <td><strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2025-0412</strong></td>
+          <tr onclick="App.openClientRequestDrawer('REQ-2025-0412')" style="cursor: pointer;" title="Cliquer pour afficher les détails du dossier dans le volet latéral">
+            <td>
+              <strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2025-0412</strong>
+            </td>
             <td>14/04/2025</td>
-            <td>Équipement machine à coudre industrielle</td>
-            <td class="amount-cell">1 200 000 FCFA</td>
-            <td>10 mois</td>
-            <td>132 000 FCFA/m</td>
-            <td><span class="badge badge-approved"><i class="fas fa-check-double"></i> Remboursé & Clôturé</span></td>
             <td>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'attestation de solde pour REQ-2025-0412', 'success')">
-                <i class="fas fa-certificate"></i> Attestation
-              </button>
+              <div style="font-weight: 600; color: var(--text-primary);">Équipement machine à coudre industrielle</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">Agence Grand Marché (Bamako)</div>
+            </td>
+            <td>
+              <div class="amount-cell" style="font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">1 200 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">10 mois • 132 000 F/m</div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                <span class="badge badge-approved"><i class="fas fa-check-double"></i> Clôturé</span>
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openClientRequestDrawer('REQ-2025-0412')" title="Ouvrir le volet latéral de détails">
+                  <i class="fas fa-arrow-right-to-bracket"></i> Détails
+                </button>
+              </div>
             </td>
           </tr>
-          <tr>
-            <td><strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2024-0199</strong></td>
-            <td>03/02/2024</td>
-            <td>Fonds de roulement boutique Médina</td>
-            <td class="amount-cell">800 000 FCFA</td>
-            <td>6 mois</td>
-            <td>140 000 FCFA/m</td>
-            <td><span class="badge badge-approved"><i class="fas fa-check-double"></i> Remboursé & Clôturé</span></td>
+          <tr onclick="App.openClientRequestDrawer('REQ-2024-0199')" style="cursor: pointer;" title="Cliquer pour afficher les détails du dossier dans le volet latéral">
             <td>
-              <button class="btn btn-secondary btn-sm" onclick="App.showToast('Téléchargement de l\'attestation de solde pour REQ-2024-0199', 'success')">
-                <i class="fas fa-certificate"></i> Attestation
-              </button>
+              <strong style="color: var(--text-primary); font-family: var(--font-family-code);">REQ-2024-0199</strong>
+            </td>
+            <td>03/02/2024</td>
+            <td>
+              <div style="font-weight: 600; color: var(--text-primary);">Fonds de roulement boutique Médina</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">Agence Grand Marché (Bamako)</div>
+            </td>
+            <td>
+              <div class="amount-cell" style="font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">800 000 FCFA</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">6 mois • 140 000 F/m</div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                <span class="badge badge-approved"><i class="fas fa-check-double"></i> Clôturé</span>
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openClientRequestDrawer('REQ-2024-0199')" title="Ouvrir le volet latéral de détails">
+                  <i class="fas fa-arrow-right-to-bracket"></i> Détails
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       SIDEDRAWER : VOLET LATÉRAL DE DÉTAILS DE LA DEMANDE DE CRÉDIT
+       ==================================================================== -->
+  <div id="client-request-drawer-backdrop" class="schedule-drawer-backdrop" onclick="if(event.target === this) App.closeClientRequestDrawer()">
+    <div class="schedule-drawer" style="max-width: 560px;">
+      <!-- Drawer Header -->
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-title-box">
+          <div class="schedule-drawer-icon" style="background: var(--cif-primary-50); color: var(--cif-primary-600);">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <div>
+            <h3 id="crd-drawer-title" style="font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--text-primary);">Dossier #REQ-2026-0891</h3>
+            <p id="crd-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Déposé le 11/08/2026 • Agence Grand Marché Bamako</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeClientRequestDrawer()" title="Fermer le volet latéral">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Body -->
+      <div class="schedule-drawer-body">
+        <!-- Hero Amount & Status Card -->
+        <div class="schedule-drawer-hero">
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">
+            Montant du Financement Demandé
+          </div>
+          <div id="crd-drawer-amount" style="font-size: 1.85rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">
+            2 500 000 FCFA
+          </div>
+          <div id="crd-drawer-status" style="margin-top: 8px;">
+            <span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque</span>
+          </div>
+          <div id="crd-drawer-purpose" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 8px; font-weight: 500;">
+            Achat de stock tissus wax pour la fête de Tabaski
+          </div>
+        </div>
+
+        <!-- Panel 1: Conditions Financières & Échéances -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-calculator text-primary"></i> Modalités Financières & Échéances
+            </h4>
+            <span id="crd-drawer-duration-badge" class="badge badge-submitted">12 Mois</span>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Durée du Prêt</span>
+              <span class="drawer-kv-value" id="crd-drawer-duration-val">12 Mois</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Mensualité tout compris</span>
+              <span class="drawer-kv-value" id="crd-drawer-monthly-val" style="color: var(--primary-700); font-family: var(--font-family-code);">235 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Taux Dégressif UEMOA</span>
+              <span class="drawer-kv-value" id="crd-drawer-rate-val">1.20% / mois</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Assurance Emprunteur</span>
+              <span class="drawer-kv-value" id="crd-drawer-insurance-val">13 750 FCFA / mois</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Coût Global du Crédit</span>
+              <span class="drawer-kv-value" id="crd-drawer-cost-val" style="color: var(--cif-gold-700); font-family: var(--font-family-code);">320 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Versement des Fonds</span>
+              <span class="drawer-kv-value" id="crd-drawer-disbursement-val">Mobile Money & Agence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Parcours d'Instruction & Étapes Clés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-route text-primary"></i> Parcours d'Instruction en Direct
+            </h4>
+            <span id="crd-drawer-step-badge" class="badge badge-analysis" style="font-size: 0.68rem;">Étape 4 / 6</span>
+          </div>
+          <div id="crd-drawer-stepper-container" style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <!-- Stepper Dynamic Nodes -->
+          </div>
+        </div>
+
+        <!-- Panel 3: Pièces Justificatives Associées -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-file-shield text-emerald"></i> Pièces & Justificatifs GED
+            </h4>
+            <span id="crd-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 pièces</span>
+          </div>
+          <div id="crd-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Dynamic docs list -->
+          </div>
+        </div>
+
+        <!-- Panel 4: Garanties & Sûretés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-shield-halved text-warning"></i> Garanties & Sûretés
+            </h4>
+            <span id="crd-drawer-guar-status" class="badge badge-approved" style="font-size: 0.68rem;">Vérifiée</span>
+          </div>
+          <div id="crd-drawer-guar-content" style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
+            <!-- Dynamic guarantee content -->
+          </div>
+        </div>
+
+        <!-- Panel 5: Agence & Conseiller Dédié -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-user-tie text-primary"></i> Agence & Conseiller Attitré
+            </h4>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <img src="images/profil/profil01-03.jpg" alt="Agent" class="user-avatar" style="width: 44px; height: 44px;">
+            <div style="flex: 1;">
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-primary);">Adama Traore</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted);">Conseiller Clientèle Professionnelle & Microcrédit</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-600); font-weight: 600;">Agence Grand Marché (Bamako, Mali) • +223 20 22 44 00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary" onclick="App.closeClientRequestDrawer()">
+          Fermer
+        </button>
+        <div id="crd-drawer-footer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <!-- Dynamic Action Buttons -->
+        </div>
+      </div>
     </div>
   </div>
 </section>
