@@ -6,7 +6,8 @@
   <div class="page-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
     <div>
       <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
-      <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
+      <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CF-DKR-8821 • </p>
+      <!-- Taux UEMOA Dégressif 12.0% l'an -->
     </div>
     <div class="page-actions" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
       <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
@@ -80,7 +81,7 @@
           <i class="fas fa-mobile-screen-button"></i>
         </div>
         <div>
-          <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+          <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">PaiementMobile Money</h4>
           <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Paiement instantané sans déplacement • Quittance numérique et SMS immédiat</p>
         </div>
       </div>
@@ -106,7 +107,7 @@
     <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
       <div>
         <h3 class="card-title"><i class="fas fa-list-ol text-primary mr-1"></i> Échéancier de Remboursement (12 Mois)</h3>
-        <p class="card-subtitle">Montant : 2 500 000 FCFA • Taux effectif : 12.0% annuel dégressif • Cliquez sur une ligne pour voir le détail complet</p>
+        <p class="card-subtitle">Montant : 2 500 000 FCFA  • Cliquez sur une ligne pour voir le détail complet</p>
       </div>
       <!-- Filter Tabs -->
       <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
@@ -196,21 +197,21 @@
             <strong id="drawer-val-principal" style="font-family: var(--font-family-code);">200 195 FCFA</strong>
           </div>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+          <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
             <span style="display: flex; align-items: center; gap: 6px;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-gold-500);"></span>
               <span>Intérêts Dégressifs (12% l'an)</span>
             </span>
             <strong id="drawer-val-interest" style="font-family: var(--font-family-code);">21 055 FCFA</strong>
-          </div>
+          </div> -->
 
-          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+          <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
             <span style="display: flex; align-items: center; gap: 6px;">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-emerald-500);"></span>
               <span>Prime d'Assurance Emprunteur</span>
             </span>
             <strong id="drawer-val-insurance" style="font-family: var(--font-family-code);">13 750 FCFA</strong>
-          </div>
+          </div> -->
 
           <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
             <span style="color: var(--text-muted); font-weight: 600;">Capital Restant Dû après échéance :</span>
@@ -242,7 +243,7 @@
             <span id="drawer-val-receipt" style="font-weight: 600; font-family: var(--font-family-code);">Générée après paiement</span>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Certification UEMOA :</span>
+            <span style="color: var(--text-muted);">Certification :</span>
             <span style="color: var(--cif-emerald-600); font-weight: 600;"><i class="fas fa-check-circle"></i> Sceau Digital DigiCoop</span>
           </div>
         </div>
