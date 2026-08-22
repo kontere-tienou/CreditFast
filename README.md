@@ -35,7 +35,7 @@ Le projet est structuré avec une séparation claire et modulaire des dossiers s
 │   │
 │   ├── committee/                     # RÔLE 4 : Comité d'Octroi & Conformité
 │   │   ├── dashboard.html             # Sessions du comité & votes collégiaux
-│   │   ├── compliance.html            # Contrôles LBC-FT, PPE & sanctions UEMOA
+│   │   ├── dossier.html               # Dossier de deliberation
 │   │   ├── audit-logs.html            # Piste d'audit & journalisation des actions
 │   │   └── modal-committee.html       # Procès-verbal de délibération d'octroi
 │   │
