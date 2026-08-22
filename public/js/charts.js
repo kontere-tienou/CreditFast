@@ -148,7 +148,7 @@ const AppCharts = {
     this.instances[canvasId] = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Burkina Faso', 'Sénégal', 'Bénin', 'Togo', 'Mali'],
+        labels: ['Grand Marché', 'Badalabougou', 'Dabanani', 'Sotuba', 'Faladié'],
         datasets: [{
           label: 'Encours Microcrédits (M FCFA)',
           data: [98, 85, 62, 54, 43],

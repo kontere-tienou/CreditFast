@@ -1648,7 +1648,7 @@ const App = {
           <td>
             <strong style="color: var(--primary-600); font-family: var(--font-mono);">${reqNumber}</strong>
             <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${clientName}</div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.city || 'Lomé'}, ${req.country || 'Togo'}</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.city || 'Bamako'}, ${req.country || 'Mali'}</div>
           </td>
           <td>
             <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -2383,11 +2383,11 @@ const App = {
       ref: 'PV-2026-0884',
       req_number: '#REQ-2026-0884',
       client_name: 'Aïssatou Ba',
-      country: 'Sénégal',
-      country_code: 'sn',
-      city: 'Thiès',
+      country: 'Mali',
+      country_code: 'ml',
+      city: 'Bamako',
       activity: 'Transformation agroalimentaire & fruits séchés',
-      agency: 'Caisse Thiès Centre (Sénégal)',
+      agency: 'Caisse Bamako Badalabougou (Mali)',
       decision: 'ACCORD',
       decision_label: 'Accord sous Quotité Ajustée',
       amount_granted: 1800000,
@@ -2406,7 +2406,7 @@ const App = {
         { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '17/08/2026 14:12', cert: 'Token UEMOA #812' },
         { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '17/08/2026 14:20', cert: 'Token UEMOA #405' }
       ],
-      guarantees: 'Nantissement matériel séchoir solaire + Engagement solidaire GIE des productrices de Thiès.',
+      guarantees: 'Nantissement matériel séchoir solaire + Engagement solidaire GIE des productrices de Bamako.',
       disbursement_conditions: 'Paiement direct au fabricant de séchoir solaire agréé avec facture acquittée.',
       committee_notes: 'Quotité ramenée à 1 800 000 FCFA pour maintenir le taux d\'effort en dessous du seuil de 30%.'
     },
@@ -2414,11 +2414,11 @@ const App = {
       ref: 'PV-2026-0878',
       req_number: '#REQ-2026-0878',
       client_name: 'Mahamadou Ouedraogo',
-      country: 'Burkina Faso',
-      country_code: 'bf',
-      city: 'Bobo-Dioulasso',
+      country: 'Mali',
+      country_code: 'ml',
+      city: 'Bamako',
       activity: 'Transport interurbain & logistique',
-      agency: 'Caisse Bobo 2000 (Burkina Faso)',
+      agency: 'Caisse Bamako Dabanani (Mali)',
       decision: 'REJET',
       decision_label: 'Rejet Collégial Unanime',
       amount_granted: 0,
@@ -2445,11 +2445,11 @@ const App = {
       ref: 'PV-2026-0865',
       req_number: '#REQ-2026-0865',
       client_name: 'Koffi Mensah',
-      country: 'Togo',
-      country_code: 'tg',
-      city: 'Lomé',
+      country: 'Mali',
+      country_code: 'ml',
+      city: 'Bamako',
       activity: 'Grossiste Quincaillerie & Outillage',
-      agency: 'Caisse Lomé Grand Marché (Togo)',
+      agency: 'Caisse Bamako Grand Marché (Mali)',
       decision: 'ACCORD',
       decision_label: 'Accord Collégial',
       amount_granted: 3500000,
@@ -2679,15 +2679,15 @@ const App = {
       date: 'Aujourd\'hui 08:15',
       full_date: '21/08/2026 08:15 GMT',
       client_name: 'Ousmane Coulibaly',
-      country: 'Burkina Faso',
-      city: 'Ouagadougou',
-      agency: 'Caisse Ouaga 2000 (Burkina Faso)',
-      id_number: 'CNIB : B11489201 (Burkina Faso)',
-      dob: 'Né le 22/09/1982 à Bobo-Dioulasso',
+      country: 'Mali',
+      city: 'Bamako',
+      agency: 'Caisse Bamako Badalabougou (Mali)',
+      id_number: 'NINA : 1829 1982 04182',
+      dob: 'Né le 22/09/1982 à Sikasso',
       aliases: 'Ousmane C., El Hadj Coulibaly',
       profession: 'Élu Municipal & Promoteur Immobilier',
-      list_type: 'Base PPE Régionale',
-      legal_framework: 'Directive UEMOA N°02/2015/CM relative à la Lutte contre le Blanchiment & Personnes Politiquement Exposées',
+      list_type: 'Base PPE Nationale & UEMOA',
+      legal_framework: 'Directive UEMOA relative à la Lutte contre le Blanchiment & Personnes Politiquement Exposées',
       match_score: 74,
       match_label: 'Exposé (PPE)',
       status: 'PPE_ENHANCED',
@@ -2708,11 +2708,11 @@ const App = {
       date: 'Hier 16:30',
       full_date: '20/08/2026 16:30 GMT',
       client_name: 'Fatou Ndiaye',
-      country: 'Sénégal',
-      city: 'Dakar',
-      agency: 'Caisse Médina (Dakar, Sénégal)',
-      id_number: 'CNI CEDEAO : 1756 1990 04182',
-      dob: 'Née le 03/11/1990 à Dakar',
+      country: 'Mali',
+      city: 'Bamako',
+      agency: 'Caisse Bamako Grand Marché (Mali)',
+      id_number: 'NINA : 1756 1990 04182',
+      dob: 'Née le 03/11/1990 à Bamako',
       aliases: 'Aucun alias répertorié',
       profession: 'Commerçante & Importatrice Textile',
       list_type: 'Base Globale GAFI',
@@ -2723,12 +2723,12 @@ const App = {
       status_label: 'Autorisé sans Réserve',
       measure_badge: 'badge-approved',
       officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Filtrage complet négatif sur l\'ensemble des registres (ONU, UEMOA, OFAC, CENTIF-SN). Dossier validé pour ouverture de compte et octroi de crédit.',
+      findings: 'Filtrage complet négatif sur l\'ensemble des registres (ONU, UEMOA, OFAC, CENTIF-Mali). Dossier validé pour ouverture de compte et octroi de crédit.',
       sha: '1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809',
       is_doubt_cleared: true,
       steps: [
         { title: 'Contrôle Sanctions ONU / UEMOA / GAFI', time: '16:30:05', status: 'Conformité Totale (0% match)', badge: 'badge-approved' },
-        { title: 'Vérification Pièce d\'Identité CEDEAO', time: '16:30:45', status: 'Document authentique & valide', badge: 'badge-approved' },
+        { title: 'Vérification Carte NINA', time: '16:30:45', status: 'Document authentique & valide', badge: 'badge-approved' },
         { title: 'Feu Vert Conformité Délivré', time: '16:31:00', status: 'Autorisation automatique enregistrée', badge: 'badge-approved' }
       ]
     },
@@ -2737,11 +2737,11 @@ const App = {
       date: 'Hier 14:10',
       full_date: '20/08/2026 14:10 GMT',
       client_name: 'Koffi Mensah',
-      country: 'Togo',
-      city: 'Lomé',
-      agency: 'Caisse Grand Marché (Lomé, Togo)',
-      id_number: 'Carte Nationale : TG-0982-2021',
-      dob: 'Né le 19/07/1985 à Lomé',
+      country: 'Mali',
+      city: 'Bamako',
+      agency: 'Caisse Bamako Dabanani (Mali)',
+      id_number: 'NINA : ML-0982-2021',
+      dob: 'Né le 19/07/1985 à Bamako',
       aliases: 'Aucun alias',
       profession: 'Grossiste Quincaillerie',
       list_type: 'Base Globale GAFI',
@@ -2765,13 +2765,13 @@ const App = {
       date: '19/08/2026 11:20',
       full_date: '19/08/2026 11:20 GMT',
       client_name: 'Cheikh Tidiane Diop',
-      country: 'Sénégal',
-      city: 'Saint-Louis',
-      agency: 'Caisse Saint-Louis (Sénégal)',
-      id_number: 'CNI CEDEAO : 1882 1988 09912',
-      dob: 'Né le 12/01/1988 à Saint-Louis',
+      country: 'Mali',
+      city: 'Bamako',
+      agency: 'Caisse Bamako Faladié (Mali)',
+      id_number: 'NINA : 1882 1988 09912',
+      dob: 'Né le 12/01/1988 à Kayes',
       aliases: 'Tidiane Diop',
-      profession: 'Artisan Pêcheur & Mareyeur',
+      profession: 'Artisan Menuisier & Ébéniste',
       list_type: 'Base Sanctions UEMOA',
       match_score: 18,
       match_label: 'Homonymie Écartée',
@@ -3006,22 +3006,22 @@ const App = {
 
       if (!match) {
         // Create a new screening entry
-        const countryNames = { ML: 'Mali', BF: 'Burkina Faso', SN: 'Sénégal', TG: 'Togo', BJ: 'Bénin', ALL: 'UEMOA' };
-        const country = countryNames[countryCode] || 'UEMOA';
+        const countryNames = { ML: 'Mali', ALL: 'Mali' };
+        const country = 'Mali';
         const newId = `SCR-2026-0${Math.floor(100 + Math.random() * 899)}`;
         match = {
           id: newId,
           date: 'À l\'instant',
           full_date: `21/08/2026 ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} GMT`,
           client_name: query,
-          country: country,
-          city: country === 'Mali' ? 'Bamako' : (country === 'Sénégal' ? 'Dakar' : (country === 'Burkina Faso' ? 'Ouagadougou' : 'Caisse Régionale')),
-          agency: `Caisse Centrale (${country})`,
-          id_number: `ID-VERIF-${Math.floor(100000 + Math.random() * 900000)}`,
+          country: 'Mali',
+          city: 'Bamako',
+          agency: 'Caisse Bamako Grand Marché (Mali)',
+          id_number: `NINA-${Math.floor(100000 + Math.random() * 900000)}`,
           dob: 'Date de naissance vérifiée sur document officiel',
           aliases: 'Aucun alias suspect',
           profession: 'Activité commerciale déclarée',
-          list_type: 'Base Globale GAFI & UEMOA',
+          list_type: 'Base Globale GAFI & CENTIF Mali',
           legal_framework: 'Filtrage Réglementaire Standard LBC/FT',
           match_score: 0,
           match_label: 'RAS (0%)',
@@ -5731,14 +5731,14 @@ const App = {
     let mockData = {};
     if (presetKey === 'cni') {
       mockData = {
-        type: 'CNI_BIOMETRIQUE_UEMOA',
-        typeLabel: 'Carte Nationale d\'Identité Biométrique CEDEAO/UEMOA',
-        docNumber: 'CNI-BF-2026-992104',
+        type: 'CARTE_NATIONALE_IDENTITE',
+        typeLabel: 'Carte d\'Identité Nationale Biométrique NINA',
+        docNumber: 'NINA-ML-2026-992104',
         holderName: 'Oumar Traoré',
-        phone: '+226 76 11 22 33',
-        country: 'Burkina Faso',
-        city: 'Ouagadougou - Secteur 15 (Patte d\'Oie)',
-        issuer: 'Office National d\'Identification (Burkina Faso)',
+        phone: '+223 76 11 22 33',
+        country: 'Mali',
+        city: 'Bamako - Quartier Badalabougou',
+        issuer: 'Ministère de l\'Administration Territoriale (Mali)',
         issueDate: '04/01/2025',
         expiryDate: '03/01/2035',
         hash: 'SHA256:7c9e012fa89b4412...09e8bf'
@@ -5747,11 +5747,11 @@ const App = {
       mockData = {
         type: 'FACTURE_NORMALISEE_DGI',
         typeLabel: 'Facture Normalisée DGI avec Timbre Électronique',
-        docNumber: 'FAC-DGI-SN-2026-4401',
+        docNumber: 'FAC-DGI-ML-2026-4401',
         holderName: 'Établissements Bois & Outillage Moderne',
         amount: '1 200 000 FCFA',
-        rccm: 'SN-DKR-2022-B-9912',
-        issuer: 'Direction Générale des Impôts et Domaines (Sénégal)',
+        rccm: 'ML-BKO-2022-B-9912',
+        issuer: 'Direction Générale des Impôts (Mali)',
         issueDate: '14/08/2026',
         hash: 'RSA2048-CERT:4a5c90fe...1142ab'
       };
@@ -6403,15 +6403,15 @@ const App = {
         `
       },
       proforma: {
-        title: "Facture Proforma Fournisseur Stock Wax Assigamé",
-        meta: "PDF • 1.4 Mo • Éts Textile Assigamé Lomé (Togo)",
+        title: "Facture Proforma Fournisseur Stock Wax Bamako",
+        meta: "PDF • 1.4 Mo • Éts Textile Grand Marché Bamako (Mali)",
         badgeClass: "badge-approved",
         badgeHtml: "<i class=\"fas fa-check-circle\"></i> Devis & Proforma Validé",
         iconClass: "fas fa-file-invoice-dollar",
         confidenceScore: "99.8%",
         filename: "Facture_Proforma_PF-2026-0881.pdf",
         fields: [
-          { label: "Fournisseur", value: "Établissements Textile Assigamé & Cie" },
+          { label: "Fournisseur", value: "Établissements Textile Grand Marché & Cie" },
           { label: "Réf Devis Proforma", value: "PF-2026-0881" },
           { label: "Date d'Émission", value: "08 Août 2026" },
           { label: "Validité de l'Offre", value: "30 Jours (jusqu'au 07/09/2026)" },
@@ -6425,10 +6425,10 @@ const App = {
             <!-- Supplier Header -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1rem; margin-bottom: 1.5rem;">
               <div>
-                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0284c7; margin: 0;">ÉTS TEXTILES ASSIGAMÉ & CIE</h4>
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0284c7; margin: 0;">ÉTS TEXTILES GRAND MARCHÉ & CIE</h4>
                 <div style="font-size: 0.76rem; color: #64748b; margin-top: 3px;">
-                  Grand Marché de Lomé - Allée Centrale N° 44 • Togo<br>
-                  Tél : +228 90 22 41 80 • NIF : 1002934811
+                  Grand Marché de Bamako - Allée Centrale N° 44 • Mali<br>
+                  Tél : +223 70 22 41 80 • NIF : 1002934811
                 </div>
               </div>
               <div style="text-align: right;">

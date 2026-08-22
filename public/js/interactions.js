@@ -692,7 +692,7 @@ const AppInteractions = {
 
             <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
               <div style="font-size: 0.76rem; color: var(--text-subtle);">
-                <i class="fas fa-building mr-1"></i> Agence CIF : <strong>Dakar Plateau / Centre</strong>
+                <i class="fas fa-building mr-1"></i> Agence CreditFast : <strong>Bamako Grand Marché</strong>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="AppInteractions.closeModal('dossier-modal'); App.switchView('view-client-advisor');">
                 <i class="fas fa-headset mr-1"></i> Échanger avec mon Conseiller

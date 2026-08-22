@@ -61,10 +61,10 @@
       <div id="modal-wizard-step-1" class="modal-wizard-step-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
-            <i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC
+            <i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles 
           </h4>
           <button type="button" class="btn btn-primary-subtle btn-sm" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
-            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR  / NINA (Caméra)</strong>
           </button>
         </div>
 
@@ -72,8 +72,8 @@
         <div id="modal-wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
           <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
-            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
-            <p id="modal-wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Pièce d'Identité Certifiée</h5>
+            <p id="modal-wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec succès.</p>
           </div>
           <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
             <i class="fas fa-rotate"></i> Re-scanner
@@ -92,7 +92,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pays de Résidence (UEMOA)</label>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pays de Résidence</label>
             <select id="wiz-country" class="form-control">
               <option value="Mali" selected>Mali (Bamako)</option>
               <option value="Sénégal">Sénégal (Dakar)</option>
@@ -139,7 +139,7 @@
           </div>
 
           <div id="modal-wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
-            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations s'adaptent à votre capacité réelle de remboursement et à vos garanties de proximité.
+            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast:</strong> L'absence d'historique n'est pas pénalisée. Les pondérations s'adaptent à votre capacité réelle de remboursement et à vos garanties de proximité.
           </div>
         </div>
 
@@ -321,10 +321,10 @@
               </div>
               <h5 style="margin-bottom: 0.25rem; font-size: 0.9rem; font-weight: 700;">Joindre un Fichier (PDF / Photo)</h5>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-                Format PDF, JPEG ou PNG avec extraction OCR automatique des montants.
+                Format PDF, JPEG ou PNG .
               </p>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document joint avec succès (Devis_Fournisseur_Lome.pdf)', 'success')" style="width: 100%; justify-content: center;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document joint avec succès (Devis_Fournisseur_bko.pdf)', 'success')" style="width: 100%; justify-content: center;">
               <i class="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
             </button>
           </div>
@@ -344,7 +344,7 @@
           <label style="display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; margin: 0; font-size: 0.78rem; color: var(--text-primary);">
             <input type="checkbox" id="modal-wiz-consent" checked style="margin-top: 2px; accent-color: var(--cif-emerald-500);">
             <span>
-              Je certifie l'exactitude des informations fournies et j'autorise la Caisse CreditFast à instruire ma demande de financement selon les normes de l'UEMOA.
+              Je certifie l'exactitude des informations fournies et j'autorise la Caisse CreditFast à instruire ma demande de financement selon les normes.
             </span>
           </label>
         </div>

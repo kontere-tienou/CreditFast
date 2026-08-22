@@ -47,7 +47,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <h4 style="margin: 0;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
           <button type="button" class="btn btn-primary-subtle btn-sm" id="btn-wizard-scan-cni" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
-            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR / NINA (Caméra)</strong>
           </button>
         </div>
 
@@ -55,8 +55,8 @@
         <div id="wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
           <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
-            <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
-            <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+            <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée</h5>
+            <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec succès.</p>
           </div>
           <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
             <i class="fas fa-rotate"></i> Re-scanner
@@ -75,7 +75,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Pays de Résidence (UEMOA)</label>
+            <label class="form-label">Pays de Résidence </label>
             <select id="wiz-country" class="form-control">
               <option value="Mali">Mali</option>
               <option value="Burkina Faso">Burkina Faso</option>
@@ -122,7 +122,7 @@
           </div>
 
           <div id="wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
-            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
+            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
           </div>
         </div>
 
@@ -289,7 +289,7 @@
               </div>
               <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Sélectionner un Fichier PDF / Image</h5>
               <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Formats acceptés : PDF, JPEG, PNG (Moteur OCR Crédit Fast automatique).
+                Formats acceptés : PDF, JPEG, PNG .
               </p>
             </div>
             <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document factice chargé avec succès (Facture_Bois_Mali.pdf)', 'success')" style="width: 100%; justify-content: center;">
@@ -303,7 +303,7 @@
           <i class="fas fa-file-circle-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
             <h5 style="color: var(--emerald); font-weight: 700;">Document Officiel Vérifié par QR Code</h5>
-            <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée DGI / UEMOA attachée avec succès au dossier.</p>
+            <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée  attachée avec succès au dossier.</p>
           </div>
         </div>
 

@@ -370,7 +370,7 @@
         </div>
 
         <!-- Security and Regulatory Footer Strip -->
-        <div class="auth-footer-trust">
+        <!-- <div class="auth-footer-trust">
           <div class="auth-trust-item">
             <i class="fas fa-building-columns"></i>
             <span>Conforme aux normes prudentielles <strong>BCEAO / UEMOA</strong></span>
@@ -379,7 +379,7 @@
             <i class="fas fa-fingerprint"></i>
             <span>Traçabilité & Journalisation intégrale des accès</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -442,13 +442,13 @@
             <h6>Réseau Régional CreditFast</h6>
             <span style="font-size: 0.62rem; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.15); padding: 1px 5px; border-radius: 4px;">UEMOA</span>
           </div>
-          <div class="sidebar-flags-row">
+          <!-- <div class="sidebar-flags-row">
             <span class="sidebar-flag-circle" title="Burkina Faso (Ouagadougou)" onclick="App.updateUserCountry('BF'); App.showToast('Caisse active sélectionnée : Burkina Faso', 'info');"><span class="fi fi-bf fis"></span></span>
             <span class="sidebar-flag-circle" title="Togo (Lomé)" onclick="App.updateUserCountry('TG'); App.showToast('Caisse active sélectionnée : Togo', 'info');"><span class="fi fi-tg fis"></span></span>
             <span class="sidebar-flag-circle" title="Bénin (Cotonou)" onclick="App.updateUserCountry('BJ'); App.showToast('Caisse active sélectionnée : Bénin', 'info');"><span class="fi fi-bj fis"></span></span>
             <span class="sidebar-flag-circle" title="Sénégal (Dakar)" onclick="App.updateUserCountry('SN'); App.showToast('Caisse active sélectionnée : Sénégal', 'info');"><span class="fi fi-sn fis"></span></span>
             <span class="sidebar-flag-circle" title="Mali (Bamako)" onclick="App.updateUserCountry('ML'); App.showToast('Caisse active sélectionnée : Mali', 'info');"><span class="fi fi-ml fis"></span></span>
-          </div>
+          </div> -->
         </div>
       </div>
       <button type="button" class="btn btn-danger-subtle btn-sm btn-action-logout sidebar-logout-btn" id="sidebar-logout-btn" onclick="App.openLogoutConfirmModal(); return false;" title="Se Déconnecter" style="margin-top: 0.65rem; width: 100%; justify-content: center; font-size: 0.8rem;">
@@ -472,25 +472,25 @@
           <i class="fas fa-bars"></i>
         </button>
     
-        <!-- Global Quick Search (Desktop & Expandable Mobile) -->
+        <!-- Global Quick Search (Desktop & Expandable Mobile)
         <div class="search-container" id="topbar-search-container">
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="global-search-input" class="search-input" placeholder="Rechercher...">
           <button id="search-close-mobile-btn" class="search-close-mobile-btn" title="Fermer la recherche">
             <i class="fas fa-times"></i>
           </button>
-        </div>
+        </div> -->
     
-        <!-- Mobile Search Trigger Button (Only visible on small mobile screens) -->
+        <!-- Mobile Search Trigger Button (Only visible on small mobile screens)
         <button id="mobile-search-trigger-btn" class="topbar-action-btn mobile-search-btn" title="Ouvrir la recherche rapide">
           <i class="fas fa-search"></i>
-        </button>
+        </button> -->
     
-        <!-- Live Date & Real-Time Clock Display -->
+        <!-- Live Date & Real-Time Clock Display 
         <div class="topbar-datetime" id="topbar-datetime" title="Heure locale réseau CreditFast / UEMOA">
           <i class="far fa-clock"></i>
           <span id="topbar-clock-display">Chargement...</span>
-        </div>
+        </div>-->
       </div>
     
       <div class="topbar-right">
@@ -1381,10 +1381,10 @@
                     <span class="drawer-kv-label">Mensualité tout compris</span>
                     <span class="drawer-kv-value" id="crd-drawer-monthly-val" style="color: var(--primary-700); font-family: var(--font-family-code);">235 000 FCFA</span>
                   </div>
-                  <div class="drawer-kv">
+                  <!-- <div class="drawer-kv">
                     <span class="drawer-kv-label">Taux Dégressif UEMOA</span>
                     <span class="drawer-kv-value" id="crd-drawer-rate-val">1.20% / mois</span>
-                  </div>
+                  </div> -->
                   <div class="drawer-kv">
                     <span class="drawer-kv-label">Assurance Emprunteur</span>
                     <span class="drawer-kv-value" id="crd-drawer-insurance-val">13 750 FCFA / mois</span>
@@ -1417,7 +1417,7 @@
               <div class="drawer-panel">
                 <div class="drawer-panel-header">
                   <h4 class="drawer-panel-title">
-                    <i class="fas fa-file-shield text-emerald"></i> Pièces & Justificatifs GED
+                    <i class="fas fa-file-shield text-emerald"></i> Pièces & Justificatifs 
                   </h4>
                   <span id="crd-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 pièces</span>
                 </div>
@@ -1479,7 +1479,8 @@
         <div class="page-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
           <div>
             <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
-            <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CF-DKR-8821 • Taux UEMOA Dégressif 12.0% l'an</p>
+            <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CF-DKR-8821 • </p>
+            <!-- Taux UEMOA Dégressif 12.0% l'an -->
           </div>
           <div class="page-actions" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
             <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
@@ -1553,7 +1554,7 @@
                 <i class="fas fa-mobile-screen-button"></i>
               </div>
               <div>
-                <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">Remboursement Express par Mobile Money UEMOA</h4>
+                <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">PaiementMobile Money</h4>
                 <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Paiement instantané sans déplacement • Quittance numérique et SMS immédiat</p>
               </div>
             </div>
@@ -1579,7 +1580,7 @@
           <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
             <div>
               <h3 class="card-title"><i class="fas fa-list-ol text-primary mr-1"></i> Échéancier de Remboursement (12 Mois)</h3>
-              <p class="card-subtitle">Montant : 2 500 000 FCFA • Taux effectif : 12.0% annuel dégressif • Cliquez sur une ligne pour voir le détail complet</p>
+              <p class="card-subtitle">Montant : 2 500 000 FCFA  • Cliquez sur une ligne pour voir le détail complet</p>
             </div>
             <!-- Filter Tabs -->
             <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
@@ -1669,21 +1670,21 @@
                   <strong id="drawer-val-principal" style="font-family: var(--font-family-code);">200 195 FCFA</strong>
                 </div>
       
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+                <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
                   <span style="display: flex; align-items: center; gap: 6px;">
                     <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-gold-500);"></span>
                     <span>Intérêts Dégressifs (12% l'an)</span>
                   </span>
                   <strong id="drawer-val-interest" style="font-family: var(--font-family-code);">21 055 FCFA</strong>
-                </div>
+                </div> -->
       
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+                <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
                   <span style="display: flex; align-items: center; gap: 6px;">
                     <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-emerald-500);"></span>
                     <span>Prime d'Assurance Emprunteur</span>
                   </span>
                   <strong id="drawer-val-insurance" style="font-family: var(--font-family-code);">13 750 FCFA</strong>
-                </div>
+                </div> -->
       
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
                   <span style="color: var(--text-muted); font-weight: 600;">Capital Restant Dû après échéance :</span>
@@ -1715,7 +1716,7 @@
                   <span id="drawer-val-receipt" style="font-weight: 600; font-family: var(--font-family-code);">Générée après paiement</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="color: var(--text-muted);">Certification UEMOA :</span>
+                  <span style="color: var(--text-muted);">Certification :</span>
                   <span style="color: var(--cif-emerald-600); font-weight: 600;"><i class="fas fa-check-circle"></i> Sceau Digital DigiCoop</span>
                 </div>
               </div>
@@ -1743,7 +1744,7 @@
         <div class="page-header">
           <div>
             <h2 class="page-title"><i class="fas fa-folder-closed text-primary mr-2"></i> Mes Pièces Justificatives & Devis</h2>
-            <p class="page-subtitle">Espace sécurisé de gestion documentaire, contrôle de validité et vérification par Reconnaissance Optique de Caractères (OCR)</p>
+            <p class="page-subtitle">Espace sécurisé de gestion documentaire, contrôle de validité et vérification par Reconnaissance Optique de Caractères </p>
           </div>
           <div class="page-actions">
             <button class="btn btn-primary" onclick="document.getElementById('client-file-input').click()">
@@ -1762,7 +1763,7 @@
         <div class="anomaly-item info" style="margin-bottom: 1.5rem; border-left: 4px solid var(--cif-emerald-500);">
           <i class="fas fa-shield-check anomaly-icon" style="color: var(--cif-emerald-600);"></i>
           <div class="anomaly-content">
-            <h5 style="color: var(--cif-emerald-700);">Dossier documentaire conforme aux normes UEMOA</h5>
+            <h5 style="color: var(--cif-emerald-700);">Dossier documentaire conforme aux normes</h5>
             <p>Vos pièces justificatives pour la demande #REQ-2026-0891 ont été extraites avec succès et certifiées par le module OCR CreditFast. Les pièces dont la date d'échéance approche sont automatiquement signalées en rouge pour renouvellement anticipé.</p>
           </div>
         </div>
@@ -1825,7 +1826,7 @@
               <div><strong>Ajouté le :</strong> 11/08/2026 à 10:15</div>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
-              <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
+              <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i>  Validé 100%</span>
               <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('cni')">
                 <i class="fas fa-eye"></i> Aperçu Sécurisé
               </button>
@@ -2211,7 +2212,7 @@
                 <div>
                   <h3 class="card-title"><i class="fas fa-receipt text-emerald"></i> Résultats de la Simulation</h3>
                   <div style="font-size: 0.73rem; color: var(--emerald); font-weight: 600;" id="sim-scoring-mode-label">
-                    <i class="fas fa-seedling"></i> Modèle Cold Start UEMOA Appliqué
+                    <i class="fas fa-seedling"></i> Modèle Cold Start  Appliqué
                   </div>
                 </div>
                 <span class="badge badge-approved" id="sim-eligibility-badge"><i class="fas fa-circle-check"></i> Éligible CreditFast</span>
@@ -2289,10 +2290,10 @@
       
               <!-- Debt Ratio & Rest-to-Live Meter -->
               <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.78rem;">
+                <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.78rem;">
                   <span>Taux d'Endettement Projeté :</span>
                   <strong id="sim-ratio-output" style="color: #047857;">26.1% (Norme UEMOA ≤ 33%)</strong>
-                </div>
+                </div> -->
                 <div style="width: 100%; height: 8px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.5rem;">
                   <div id="sim-ratio-bar" style="width: 26.1%; height: 100%; background: #10b981; border-radius: var(--radius-full); transition: width 0.3s ease;"></div>
                 </div>
@@ -2707,7 +2708,7 @@
             <div class="stat-content">
               <div class="stat-value" id="insp-kpi-verified">14.6M</div>
               <div class="stat-label">Valeur Garanties Vérifiées</div>
-              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% conformes UEMOA</div>
+              <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% conformes </div>
             </div>
           </div>
       
@@ -3273,11 +3274,11 @@
       <section id="view-role-analyst" class="app-view">
         <div class="page-header">
           <div class="page-title-group">
-            <h1>Supervision des Risques & Scoring Explicable V2</h1>
+            <h1>Supervision des Risques & Scoring Explicable</h1>
             <div class="page-breadcrumb">
-              <span>CreditFast UEMOA</span> <i class="fas fa-chevron-right"></i>
-              <a href="#">Supervision Microcrédit V2</a> <i class="fas fa-chevron-right"></i>
-              <span>Vue Régionale UEMOA</span>
+              <span>CreditFast </span> <i class="fas fa-chevron-right"></i>
+              <a href="#">Supervision Microcrédit </a> <i class="fas fa-chevron-right"></i>
+              <span>Vue Régionale </span>
             </div>
           </div>
           <div class="page-actions">
@@ -3321,7 +3322,7 @@
             <div class="stat-content">
               <div class="stat-value">96.8%</div>
               <div class="stat-label">Taux de Recouvrement</div>
-              <div class="stat-trend up"><i class="fas fa-check"></i> Objectif UEMOA atteint</div>
+              <div class="stat-trend up"><i class="fas fa-check"></i> Objectif  atteint</div>
             </div>
           </div>
       
@@ -3361,7 +3362,7 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title"><i class="fas fa-chart-pie text-emerald"></i> Profil de Risque</h3>
-                <p class="card-subtitle">Répartition basée sur le moteur de scoring explicable V2</p>
+                <p class="card-subtitle">Répartition basée sur le moteur de scoring explicable </p>
               </div>
             </div>
             <div class="card-body" style="height: 320px;">
@@ -3383,7 +3384,7 @@
           </div>
       
           <!-- Quick Compliance Watchlist Card -->
-          <div class="card">
+          <!-- <div class="card">
             <div class="card-header">
               <h3 class="card-title"><i class="fas fa-fingerprint text-danger"></i> Surveillance LBC / FT / FP</h3>
               <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">Voir Tout</button>
@@ -3406,7 +3407,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       
         <!-- CREDITFAST IMPACT & METRICS SECTION (NOTE DE PRÉSENTATION CREDITFAST-DIGICOOP-WA+) -->
@@ -3414,7 +3415,7 @@
           <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
             <div>
               <h3 class="card-title"><i class="fas fa-chart-line text-emerald mr-1"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)</h3>
-              <p class="card-subtitle">Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako / UEMOA)</p>
+              <p class="card-subtitle">Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako )</p>
             </div>
             <span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Modèle Hybride & Responsable</span>
           </div>
@@ -3435,7 +3436,7 @@
                   <span class="badge badge-approved" style="font-size: 0.68rem;">Précision Haute</span>
                 </div>
                 <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-500);">96.4% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">de taux de lecture</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Rapprochement CNI UEMOA, factures proforma & devis</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Rapprochement NINA UEMOA, factures proforma & devis</div>
               </div>
       
               <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
@@ -3867,7 +3868,7 @@
                   <img id="com-drawer-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
                   <div style="min-width: 0;">
                     <div id="com-drawer-client-name" style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">Fatou Ndiaye</div>
-                    <div id="com-drawer-location" style="font-size: 0.76rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Dakar, Sénégal • Agence Médina</div>
+                    <div id="com-drawer-location" style="font-size: 0.76rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali • Agence Marché Médine</div>
                   </div>
                 </div>
                 <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
@@ -4207,13 +4208,13 @@
       
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-earth-africa text-primary"></i> Répartition des Crédits par Pays & Caisses Membres CreditFast</h3>
+            <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Répartition des Crédits par Caisses & Agences CreditFast (Bamako)</h3>
           </div>
           <div class="table-responsive">
             <table class="table-custom">
               <thead>
                 <tr>
-                  <th>Caisse & Territoire</th>
+                  <th>Caisse & Agence Bamako</th>
                   <th>Volume & Portefeuille</th>
                   <th>Score Risque Moyen</th>
                   <th>Sinistralité (PAR 30)</th>
@@ -4222,7 +4223,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Sénégal (Dakar & Médina)</strong></td>
+                  <td><strong>Bamako Centre (Grand Marché & Dabanani)</strong></td>
                   <td>
                     <strong class="amount-cell">54 200 000 FCFA</strong>
                     <div style="font-size: 0.72rem; color: var(--text-subtle);">145 dossiers</div>
@@ -4232,7 +4233,7 @@
                   <td><span class="badge badge-approved">100% Conforme</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Burkina Faso (Ouagadougou)</strong></td>
+                  <td><strong>Bamako Marché Médine (Commune II)</strong></td>
                   <td>
                     <strong class="amount-cell">41 500 000 FCFA</strong>
                     <div style="font-size: 0.72rem; color: var(--text-subtle);">118 dossiers</div>
@@ -4242,7 +4243,7 @@
                   <td><span class="badge badge-approved">100% Conforme</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Mali (Bamako & Ségou)</strong></td>
+                  <td><strong>Bamako Rive Droite (Badalabougou & Quartier du Fleuve)</strong></td>
                   <td>
                     <strong class="amount-cell">32 800 000 FCFA</strong>
                     <div style="font-size: 0.72rem; color: var(--text-subtle);">92 dossiers</div>
@@ -4252,7 +4253,7 @@
                   <td><span class="badge badge-approved">100% Conforme</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Togo (Lomé & Assigamé)</strong></td>
+                  <td><strong>Bamako Commune VI (Faladié & Sogoniko)</strong></td>
                   <td>
                     <strong class="amount-cell">13 500 000 FCFA</strong>
                     <div style="font-size: 0.72rem; color: var(--text-subtle);">65 dossiers</div>
@@ -4727,7 +4728,7 @@
       <section id="view-scoring-admin" class="app-view" style="display: none;">
         <div class="page-header">
           <div class="page-title-group">
-            <h1>Administration des Modèles de Scoring V2</h1>
+            <h1>Administration des Modèles de Scoring</h1>
             <div class="page-breadcrumb">
               <span>Gouvernance des Algorithmes</span> <i class="fas fa-chevron-right"></i>
               <span>Modèle Standard vs Cold Start (Inclusion)</span>
@@ -4740,7 +4741,7 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <h3 class="card-title"><i class="fas fa-code-branch text-primary"></i> Modèle Standard UEMOA (V2.1)</h3>
+                <h3 class="card-title"><i class="fas fa-code-branch text-primary"></i> Modèle Standard </h3>
                 <p class="card-subtitle">Actif • Pour clients avec historique bancaire ou d'épargne</p>
               </div>
               <span class="badge badge-approved">ACTIF</span>
@@ -4805,7 +4806,7 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <h3 class="card-title"><i class="fas fa-seedling text-emerald"></i> Modèle Cold Start Inclusion (V1.0)</h3>
+                <h3 class="card-title"><i class="fas fa-seedling text-emerald"></i> Modèle Cold Start Inclusion </h3>
                 <p class="card-subtitle">Actif • Pour primo-demandeurs sans antécédents financiers</p>
               </div>
               <span class="badge badge-approved">ACTIF</span>
@@ -4906,7 +4907,7 @@
                 <div>
                   <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
                     <span>Conformité KYC & Rapprochement OCR :</span>
-                    <span id="cs-sim-ocr-val" style="color: var(--primary-700);">95% (CNI Certifiée)</span>
+                    <span id="cs-sim-ocr-val" style="color: var(--primary-700);">95% (NINA Certifiée)</span>
                   </div>
                   <input type="range" id="cs-sim-ocr" min="40" max="100" step="5" value="95" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
                 </div>
@@ -4991,7 +4992,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
                 <h4 style="margin: 0;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
                 <button type="button" class="btn btn-primary-subtle btn-sm" id="btn-wizard-scan-cni" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
-                  <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+                  <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR / NINA (Caméra)</strong>
                 </button>
               </div>
       
@@ -4999,8 +5000,8 @@
               <div id="wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
                 <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
                 <div class="anomaly-content">
-                  <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
-                  <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+                  <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée</h5>
+                  <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec succès.</p>
                 </div>
                 <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
                   <i class="fas fa-rotate"></i> Re-scanner
@@ -5019,7 +5020,7 @@
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label">Pays de Résidence (UEMOA)</label>
+                  <label class="form-label">Pays de Résidence </label>
                   <select id="wiz-country" class="form-control">
                     <option value="Mali">Mali</option>
                     <option value="Burkina Faso">Burkina Faso</option>
@@ -5066,7 +5067,7 @@
                 </div>
       
                 <div id="wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
-                  <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
+                  <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
                 </div>
               </div>
       
@@ -5233,7 +5234,7 @@
                     </div>
                     <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Sélectionner un Fichier PDF / Image</h5>
                     <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
-                      Formats acceptés : PDF, JPEG, PNG (Moteur OCR Crédit Fast automatique).
+                      Formats acceptés : PDF, JPEG, PNG .
                     </p>
                   </div>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document factice chargé avec succès (Facture_Bois_Mali.pdf)', 'success')" style="width: 100%; justify-content: center;">
@@ -5247,7 +5248,7 @@
                 <i class="fas fa-file-circle-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
                 <div class="anomaly-content">
                   <h5 style="color: var(--emerald); font-weight: 700;">Document Officiel Vérifié par QR Code</h5>
-                  <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée DGI / UEMOA attachée avec succès au dossier.</p>
+                  <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée  attachée avec succès au dossier.</p>
                 </div>
               </div>
       
@@ -5529,7 +5530,7 @@
             <span class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-shield-halved"></i> Filtrage LBC/FT : RAS</span>
           </div>
           <span id="com-analyst-notes">
-            « Capacité nette vérifiée (730k FCFA vs mensualité 235k FCFA), stocks de tissus nantis à 140% et antécédents de paiement irréprochables sur la Caisse Médina. »
+            « Capacité nette vérifiée (730k FCFA vs mensualité 235k FCFA), stocks de tissus nantis à 140% et antécédents de paiement irréprochables sur la Caisse Bamako Marché Médine. »
           </span>
         </div>
       </div>
@@ -6033,7 +6034,7 @@
         <h4 style="font-size: 1.1rem; font-weight: 800; margin: 0; color: white;">
           <i class="fas fa-mobile-screen mr-2"></i> Règlement d'Échéance CreditFast
         </h4>
-        <span style="font-size: 0.76rem; color: #d1fae5;">Paiement sécurisé par passerelle Mobile Money UEMOA</span>
+        <span style="font-size: 0.76rem; color: #d1fae5;">Paiement sécurisé par passerelle Mobile Money </span>
       </div>
       <button class="modal-close-btn" style="color: white; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="App.closeClientPaymentModal()">
         <i class="fas fa-times"></i>
@@ -6456,10 +6457,10 @@
       <div id="modal-wizard-step-1" class="modal-wizard-step-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-primary);">
-            <i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC
+            <i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles 
           </h4>
           <button type="button" class="btn btn-primary-subtle btn-sm" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
-            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR CNI / NINA (Caméra)</strong>
+            <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR  / NINA (Caméra)</strong>
           </button>
         </div>
 
@@ -6467,8 +6468,8 @@
         <div id="modal-wizard-identity-qr-badge" class="anomaly-item info" style="display: none; margin-bottom: 1.25rem;">
           <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
-            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Pièce d'Identité Certifiée par QR Code UEMOA</h5>
-            <p id="modal-wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">CNI Biométrique authentifiée avec succès.</p>
+            <h5 style="color: var(--emerald, #059669); font-weight: 700;">Pièce d'Identité Certifiée</h5>
+            <p id="modal-wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec succès.</p>
           </div>
           <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
             <i class="fas fa-rotate"></i> Re-scanner
@@ -6487,7 +6488,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pays de Résidence (UEMOA)</label>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pays de Résidence</label>
             <select id="wiz-country" class="form-control">
               <option value="Mali" selected>Mali (Bamako)</option>
               <option value="Sénégal">Sénégal (Dakar)</option>
@@ -6534,7 +6535,7 @@
           </div>
 
           <div id="modal-wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
-            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast UEMOA :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations s'adaptent à votre capacité réelle de remboursement et à vos garanties de proximité.
+            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast:</strong> L'absence d'historique n'est pas pénalisée. Les pondérations s'adaptent à votre capacité réelle de remboursement et à vos garanties de proximité.
           </div>
         </div>
 
@@ -6716,10 +6717,10 @@
               </div>
               <h5 style="margin-bottom: 0.25rem; font-size: 0.9rem; font-weight: 700;">Joindre un Fichier (PDF / Photo)</h5>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-                Format PDF, JPEG ou PNG avec extraction OCR automatique des montants.
+                Format PDF, JPEG ou PNG .
               </p>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document joint avec succès (Devis_Fournisseur_Lome.pdf)', 'success')" style="width: 100%; justify-content: center;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document joint avec succès (Devis_Fournisseur_bko.pdf)', 'success')" style="width: 100%; justify-content: center;">
               <i class="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
             </button>
           </div>
@@ -6739,7 +6740,7 @@
           <label style="display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; margin: 0; font-size: 0.78rem; color: var(--text-primary);">
             <input type="checkbox" id="modal-wiz-consent" checked style="margin-top: 2px; accent-color: var(--cif-emerald-500);">
             <span>
-              Je certifie l'exactitude des informations fournies et j'autorise la Caisse CreditFast à instruire ma demande de financement selon les normes de l'UEMOA.
+              Je certifie l'exactitude des informations fournies et j'autorise la Caisse CreditFast à instruire ma demande de financement selon les normes.
             </span>
           </label>
         </div>

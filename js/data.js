@@ -18,35 +18,35 @@ const DEFAULT_DATABASE = {
 
   // 2. Users
   users: [
-    { id: 1, role_id: 1, first_name: 'Ali', last_name: 'Diallo', phone: '+223 70 12 34 56', email: 'ali.diallo@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' },
-    { id: 2, role_id: 2, first_name: 'Adama', last_name: 'Traore', phone: '+223 90 23 45 67', email: 'adama.traore@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-03.jpg', country: 'Togo' },
-    { id: 3, role_id: 3, first_name: 'Mariam', last_name: 'Keita', phone: '+223 66 34 56 78', email: 'mariam.keita@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-01.jpg', country: 'Mali' },
+    { id: 1, role_id: 1, first_name: 'Ali', last_name: 'Diallo', phone: '+223 70 12 34 56', email: 'ali.diallo@creditfast.ml', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Mali' },
+    { id: 2, role_id: 2, first_name: 'Adama', last_name: 'Traore', phone: '+223 90 23 45 67', email: 'adama.traore@creditfast.ml', status: 'ACTIVE', avatar: 'images/profil/profil01-03.jpg', country: 'Mali' },
+    { id: 3, role_id: 3, first_name: 'Mariam', last_name: 'Keita', phone: '+223 66 34 56 78', email: 'mariam.keita@creditfast.ml', status: 'ACTIVE', avatar: 'images/profil/profil01-01.jpg', country: 'Mali' },
     { id: 4, role_id: 4, first_name: 'Faratigi', last_name: 'Ndiaye', phone: '+223 77 45 67 89', email: 'fatou.ndiaye@gmail.com', status: 'ACTIVE', avatar: 'images/profil/profil01-02.jpg', country: 'Mali' },
-    { id: 5, role_id: 5, first_name: 'Bakary', last_name: 'Sanou', phone: '+223 76 56 78 90', email: 'bakary.sanou@cif-ao.org', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Burkina Faso' }
+    { id: 5, role_id: 5, first_name: 'Bakary', last_name: 'Sanou', phone: '+223 76 56 78 90', email: 'bakary.sanou@creditfast.ml', status: 'ACTIVE', avatar: 'images/profil/profil01-04.jpg', country: 'Mali' }
   ],
 
   // 3. Clients (avec format ID CreditFast : Code Caisse + Code Agence + N° Incrémentiel, residential_zone)
   clients: [
     { id: 1, user_id: 4, client_number: 'ML-BKO-008821', date_of_birth: '1988-04-12', address: 'Quartier Grand Marché, Rue 314', city: 'Bamako', residential_zone: 'Zone Urbaine Commerciale', occupation: 'Commerçante / Grossiste Textiles', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-01T10:00:00Z', is_cold_start: false },
-    { id: 2, user_id: 6, client_number: 'BF-OUA-004419', date_of_birth: '1982-11-03', address: 'Secteur 15, Ouaga 2000', city: 'Ouagadougou', residential_zone: 'Zone Péri-urbaine Industrielle', occupation: 'Transformateur Agroalimentaire', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-05T11:30:00Z', is_cold_start: false },
-    { id: 3, user_id: 7, client_number: 'TG-LOM-003190', date_of_birth: '1991-07-25', address: 'Grand Marché Assigamé', city: 'Lomé', residential_zone: 'Zone Urbaine Dense', occupation: 'Import-Export Quincaillerie', kyc_status: 'PENDING_DOCUMENT', institution_verified_at: null, is_cold_start: false },
-    { id: 4, user_id: 8, client_number: 'BJ-COT-005512', date_of_birth: '1985-09-18', address: 'Zone Industrielle Akpakpa', city: 'Cotonou', residential_zone: 'Zone Péri-urbaine Mixte', occupation: 'Aviculteur & Éleveur', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-08T09:15:00Z', is_cold_start: false },
+    { id: 2, user_id: 6, client_number: 'ML-BKO-004419', date_of_birth: '1982-11-03', address: 'Secteur Badalabougou, Rue 22', city: 'Bamako', residential_zone: 'Zone Péri-urbaine Industrielle', occupation: 'Transformateur Agroalimentaire', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-05T11:30:00Z', is_cold_start: false },
+    { id: 3, user_id: 7, client_number: 'ML-BKO-003190', date_of_birth: '1991-07-25', address: 'Marché Dabanani, Rue 102', city: 'Bamako', residential_zone: 'Zone Urbaine Dense', occupation: 'Import-Export Quincaillerie', kyc_status: 'PENDING_DOCUMENT', institution_verified_at: null, is_cold_start: false },
+    { id: 4, user_id: 8, client_number: 'ML-BKO-005512', date_of_birth: '1985-09-18', address: 'Zone Industrielle Sotuba', city: 'Bamako', residential_zone: 'Zone Péri-urbaine Mixte', occupation: 'Aviculteur & Éleveur', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-08T09:15:00Z', is_cold_start: false },
     { id: 5, user_id: 9, client_number: 'ML-BKO-009023', date_of_birth: '1996-05-20', address: 'Quartier Faladié', city: 'Bamako', residential_zone: 'Zone Rurale / Périphérique', occupation: 'Jeune Artisan Menuisier', kyc_status: 'VERIFIED', institution_verified_at: '2026-08-16T14:00:00Z', is_cold_start: true } // Nouveau client Cold Start
   ],
 
   // 4. KYC Documents
   kyc_documents: [
     { id: 1, client_id: 1, document_type: 'CNI_CEDEAO', document_number: 'MLI-19880412001', file_path: 'cni_fatou.pdf', status: 'VALIDATED', verified_by: 2, verified_at: '2026-08-01T10:30:00Z' },
-    { id: 2, client_id: 2, document_type: 'PASSPORT', document_number: 'BFA-B0912441', file_path: 'pass_amadou.pdf', status: 'VALIDATED', verified_by: 1, verified_at: '2026-08-05T12:00:00Z' },
-    { id: 3, client_id: 3, document_type: 'CNI', document_number: 'TGO-4412993', file_path: 'cni_kodjo.pdf', status: 'TO_COMPLETE', verified_by: 2, verified_at: '2026-08-10T15:00:00Z' }
+    { id: 2, client_id: 2, document_type: 'PASSPORT', document_number: 'MLI-B0912441', file_path: 'pass_amadou.pdf', status: 'VALIDATED', verified_by: 1, verified_at: '2026-08-05T12:00:00Z' },
+    { id: 3, client_id: 3, document_type: 'CNI', document_number: 'MLI-4412993', file_path: 'cni_kodjo.pdf', status: 'TO_COMPLETE', verified_by: 2, verified_at: '2026-08-10T15:00:00Z' }
   ],
 
   // 5. Activities (avec start_date et calcul de l'ancienneté)
   activities: [
     { id: 1, client_id: 1, activity_type: 'COMMERCE_GROS_DETAIL', sector: 'Textile & Prêt-à-porter', description: 'Boutique physique + revente en gros au Grand Marché de Bamako', start_date: '2020-03-01', location: 'Bamako Grand Marché', monthly_revenue: 1850000, status: 'ACTIVE' },
-    { id: 2, client_id: 2, activity_type: 'AGRO_TRANSFORMATION', sector: 'Transformation Céréalière', description: 'Unité semi-industrielle de mouture et ensachage maïs/soja', start_date: '2022-06-15', location: 'Zone artisanale Ouaga', monthly_revenue: 3200000, status: 'ACTIVE' },
-    { id: 3, client_id: 3, activity_type: 'QUINCAILLERIE_BTP', sector: 'BTP & Outillage', description: 'Distribution outillage et matériaux légers', start_date: '2024-02-01', location: 'Lomé Assigamé', monthly_revenue: 1200000, status: 'ACTIVE' },
-    { id: 4, client_id: 4, activity_type: 'ELEVAGE_AVICOLE', sector: 'Aviculture Moderne', description: 'Ferme avicole de 3000 pondeuses', start_date: '2021-09-01', location: 'Calavi / Cotonou', monthly_revenue: 2100000, status: 'ACTIVE' },
+    { id: 2, client_id: 2, activity_type: 'AGRO_TRANSFORMATION', sector: 'Transformation Céréalière', description: 'Unité semi-industrielle de mouture et ensachage maïs/soja', start_date: '2022-06-15', location: 'Zone artisanale Sotuba, Bamako', monthly_revenue: 3200000, status: 'ACTIVE' },
+    { id: 3, client_id: 3, activity_type: 'QUINCAILLERIE_BTP', sector: 'BTP & Outillage', description: 'Distribution outillage et matériaux légers', start_date: '2024-02-01', location: 'Marché Dabanani, Bamako', monthly_revenue: 1200000, status: 'ACTIVE' },
+    { id: 4, client_id: 4, activity_type: 'ELEVAGE_AVICOLE', sector: 'Aviculture Moderne', description: 'Ferme avicole de 3000 pondeuses', start_date: '2021-09-01', location: 'Zone Périphérique, Bamako', monthly_revenue: 2100000, status: 'ACTIVE' },
     { id: 5, client_id: 5, activity_type: 'ARTISANAT_BOIS', sector: 'Menuiserie & Mobilier', description: 'Atelier de fabrication meubles artisanaux', start_date: '2026-01-10', location: 'Faladié, Bamako', monthly_revenue: 650000, status: 'ACTIVE' }
   ],
 
@@ -61,17 +61,17 @@ const DEFAULT_DATABASE = {
 
   // 7. Financial Accounts
   financial_accounts: [
-    { id: 1, client_id: 1, account_number: 'CPT-CIF-SN-00918', account_type: 'EPARGNE_COLLECTEE', balance: 1450000, opened_at: '2022-03-15', status: 'ACTIVE' },
-    { id: 2, client_id: 2, account_number: 'CPT-CIF-BF-04421', account_type: 'COURANT_COMMERCIAL', balance: 2800000, opened_at: '2021-08-20', status: 'ACTIVE' },
-    { id: 3, client_id: 3, account_number: 'CPT-CIF-TG-01124', account_type: 'EPARGNE_LIBRE', balance: 350000, opened_at: '2024-01-10', status: 'ACTIVE' },
-    { id: 4, client_id: 5, account_number: 'CPT-CIF-ML-00055', account_type: 'EPARGNE_NOUVELLE', balance: 75000, opened_at: '2026-07-01', status: 'ACTIVE' }
+    { id: 1, client_id: 1, account_number: 'CPT-CF-ML-00918', account_type: 'EPARGNE_COLLECTEE', balance: 1450000, opened_at: '2022-03-15', status: 'ACTIVE' },
+    { id: 2, client_id: 2, account_number: 'CPT-CF-ML-04421', account_type: 'COURANT_COMMERCIAL', balance: 2800000, opened_at: '2021-08-20', status: 'ACTIVE' },
+    { id: 3, client_id: 3, account_number: 'CPT-CF-ML-01124', account_type: 'EPARGNE_LIBRE', balance: 350000, opened_at: '2024-01-10', status: 'ACTIVE' },
+    { id: 4, client_id: 5, account_number: 'CPT-CF-ML-00055', account_type: 'EPARGNE_NOUVELLE', balance: 75000, opened_at: '2026-07-01', status: 'ACTIVE' }
   ],
 
   // 8. Account Transactions
   account_transactions: [
-    { id: 1, account_id: 1, transaction_type: 'DEPOT', amount: 150000, transaction_date: '2026-08-10T14:20:00Z', reference: 'DEP-SN-9981', description: 'Versement recettes hebdomadaires textile' },
-    { id: 2, account_id: 1, transaction_type: 'RETRAIT', amount: 80000, transaction_date: '2026-08-04T09:15:00Z', reference: 'RET-SN-9921', description: 'Paiement fournisseur cotonnade' },
-    { id: 3, account_id: 2, transaction_type: 'DEPOT', amount: 650000, transaction_date: '2026-08-12T16:45:00Z', reference: 'VIR-BF-0012', description: 'Règlement client coopérative céréales' }
+    { id: 1, account_id: 1, transaction_type: 'DEPOT', amount: 150000, transaction_date: '2026-08-10T14:20:00Z', reference: 'DEP-ML-9981', description: 'Versement recettes hebdomadaires textile' },
+    { id: 2, account_id: 1, transaction_type: 'RETRAIT', amount: 80000, transaction_date: '2026-08-04T09:15:00Z', reference: 'RET-ML-9921', description: 'Paiement fournisseur cotonnade' },
+    { id: 3, account_id: 2, transaction_type: 'DEPOT', amount: 650000, transaction_date: '2026-08-12T16:45:00Z', reference: 'VIR-ML-0012', description: 'Règlement client coopérative céréales' }
   ],
 
   // 9. Savings History
@@ -206,8 +206,8 @@ const DEFAULT_DATABASE = {
       submitted_at: '2026-08-12T14:15:00Z',
       created_at: '2026-08-12T14:15:00Z',
       client_name: 'Amadou Sanogo',
-      country: 'Burkina Faso',
-      city: 'Ouagadougou',
+      country: 'Mali',
+      city: 'Bamako',
       score: 88,
       confidence_score: 96,
       is_cold_start: false
@@ -229,8 +229,8 @@ const DEFAULT_DATABASE = {
       submitted_at: '2026-08-14T11:00:00Z',
       created_at: '2026-08-14T11:00:00Z',
       client_name: 'Kodjo Mensah',
-      country: 'Togo',
-      city: 'Lomé',
+      country: 'Mali',
+      city: 'Bamako',
       score: 54,
       confidence_score: 72,
       is_cold_start: false
@@ -252,8 +252,8 @@ const DEFAULT_DATABASE = {
       submitted_at: '2026-08-08T16:20:00Z',
       created_at: '2026-08-08T16:20:00Z',
       client_name: 'Gérard Dossou',
-      country: 'Bénin',
-      city: 'Cotonou',
+      country: 'Mali',
+      city: 'Bamako',
       score: 79,
       confidence_score: 91,
       is_cold_start: false
@@ -287,16 +287,16 @@ const DEFAULT_DATABASE = {
   guarantees: [
     { id: 1, credit_request_id: 1, guarantee_type: 'STOCK_MARCHANDISE', description: 'Stock de rouleaux de tissus wax et bazin en boutique', declared_value: 3800000, verified_value: 3400000, verification_status: 'VERIFIED', verified_by: 2, verified_at: '2026-08-11T16:00:00Z' },
     { id: 2, credit_request_id: 2, guarantee_type: 'EQUIPEMENT_MATERIEL', description: 'Parc machine existant + gage sur nouveau broyeur', declared_value: 7500000, verified_value: 7000000, verification_status: 'VERIFIED', verified_by: 1, verified_at: '2026-08-13T10:00:00Z' },
-    { id: 3, credit_request_id: 3, guarantee_type: 'CAUTION_SOLIDAIRE', description: 'Caution d’un commerçant grossiste d’Assigamé', declared_value: 2000000, verified_value: 0, verification_status: 'UNVERIFIED', verified_by: null, verified_at: null },
+    { id: 3, credit_request_id: 3, guarantee_type: 'CAUTION_SOLIDAIRE', description: 'Caution d’un commerçant grossiste de Dabanani (Bamako)', declared_value: 2000000, verified_value: 0, verification_status: 'UNVERIFIED', verified_by: null, verified_at: null },
     { id: 4, credit_request_id: 5, guarantee_type: 'CAUTION_SOLIDAIRE', description: 'Caution solidaire du Maître Artisan Menuisier', declared_value: 1200000, verified_value: 1000000, verification_status: 'VERIFIED', verified_by: 2, verified_at: '2026-08-17T11:00:00Z' }
   ],
 
   // 15. Documents
   documents: [
     { id: 1, credit_request_id: 1, document_type: 'FACTURE_PROFORMA', original_filename: 'Facture_Proforma_Wax_BATEXI.pdf', file_path: 'assets/docs/facture_wax.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:35:00Z', status: 'VALIDATED' },
-    { id: 2, credit_request_id: 1, document_type: 'RELEVE_BANCAIRE', original_filename: 'Releve_Compte_6_Mois_CreditFast.pdf', file_path: 'assets/docs/releve_sn.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:36:00Z', status: 'VALIDATED' },
+    { id: 2, credit_request_id: 1, document_type: 'RELEVE_BANCAIRE', original_filename: 'Releve_Compte_6_Mois_CreditFast_Bamako.pdf', file_path: 'assets/docs/releve_bko.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:36:00Z', status: 'VALIDATED' },
     { id: 3, credit_request_id: 1, document_type: 'REGISTRE_COMMERCE', original_filename: 'RCCM_Bamako_ML-BKO-2020-B-142.pdf', file_path: 'assets/docs/rccm.pdf', mime_type: 'application/pdf', uploaded_by: 4, uploaded_at: '2026-08-11T09:37:00Z', status: 'VALIDATED' },
-    { id: 4, credit_request_id: 3, document_type: 'FACTURE_ACHAT', original_filename: 'Facture_Quincaillerie_Togo.pdf', file_path: 'assets/docs/facture_tg.pdf', mime_type: 'application/pdf', uploaded_by: 7, uploaded_at: '2026-08-14T11:05:00Z', status: 'FLAGGED' }
+    { id: 4, credit_request_id: 3, document_type: 'FACTURE_ACHAT', original_filename: 'Facture_Quincaillerie_Bamako.pdf', file_path: 'assets/docs/facture_bko.pdf', mime_type: 'application/pdf', uploaded_by: 7, uploaded_at: '2026-08-14T11:05:00Z', status: 'FLAGGED' }
   ],
 
   // 16. Document Extractions (OCR Result)
@@ -409,9 +409,9 @@ const DEFAULT_DATABASE = {
       anomaly_type: 'MULTI_COMPTE_RESEAU',
       category: 'NETWORK',
       severity: 'WARNING',
-      rule_name: 'Consolidation Multi-Caisses UEMOA',
-      description: 'Détection d’un compte d’épargne inactif supplémentaire à la caisse de Thiès (Sénégal) sans déclaration initiale dans la fiche KYC.',
-      detected_value: 'Caisse Thiès (Solde: 180 000 FCFA)',
+      rule_name: 'Consolidation Multi-Caisses Bamako',
+      description: 'Détection d’un compte d’épargne inactif supplémentaire à la caisse de Badalabougou (Bamako) sans déclaration initiale dans la fiche KYC.',
+      detected_value: 'Caisse Badalabougou (Solde: 180 000 FCFA)',
       expected_value: 'Déclaration centralisée CreditFast',
       engine: 'Passerelle Régionale CreditFast-WA+',
       status: 'OPEN',
