@@ -5,7 +5,7 @@
  * Confédération des Institutions Financières d'Afrique de l'Ouest (CreditFast - DigiCoop-WA+)
  */
 
-const STORAGE_KEY = "CREDIT_FAST_DATABASE_V2";
+const STORAGE_KEY = "CREDIT_FAST_DATABASE_V3";
 
 const DEFAULT_DATABASE = {
   // 1. Roles (4 Profils Métiers)
@@ -955,7 +955,7 @@ const DEFAULT_DATABASE = {
         "La date extraite par OCR sur la facture d’outillage (12/01/2025) est antérieure de plus de 18 mois au dépôt du dossier.",
       detected_value: "12/01/2025",
       expected_value: "Moins de 30 jours (< 16/07/2026)",
-      engine: "Moteur OCR Tesseract V2.2",
+      engine: "Moteur OCR Tesseract",
       status: "OPEN",
       resolved_by: null,
       resolved_at: null,
@@ -993,7 +993,7 @@ const DEFAULT_DATABASE = {
         "Le reste à vivre calculé (100 000 FCFA) ne couvre pas l’échéance mensuelle estimée du crédit (195 000 FCFA). Ratio critique de 0.51x.",
       detected_value: "100 000 F vs 195 000 F (0.51x)",
       expected_value: "Ratio ≥ 1.30x (Reste à vivre > 253 500 F)",
-      engine: "Moteur Solvabilité V2",
+      engine: "Moteur Solvabilité",
       status: "OPEN",
       resolved_by: null,
       resolved_at: null,
@@ -1012,7 +1012,7 @@ const DEFAULT_DATABASE = {
         "Détection d’un compte d’épargne inactif supplémentaire à la caisse de Badalabougou (Bamako) sans déclaration initiale dans la fiche KYC.",
       detected_value: "Caisse Badalabougou (Solde: 180 000 FCFA)",
       expected_value: "Déclaration centralisée CreditFast",
-      engine: "Passerelle Régionale CreditFast-WA+",
+      engine: "Passerelle Régionale CreditFast",
       status: "OPEN",
       resolved_by: null,
       resolved_at: null,
@@ -1031,7 +1031,7 @@ const DEFAULT_DATABASE = {
         "Absence d’antécédents bancaires et d’épargne historique. Basculement automatique vers le modèle de pondération Cold Start.",
       detected_value: "0 mois d’historique bancaire",
       expected_value: "Actif en Mode Cold Start (+30 pts)",
-      engine: "Sélecteur de Modèle V2",
+      engine: "Sélecteur de Modèle Prudentiel",
       status: "RESOLVED",
       resolved_by: 1,
       resolved_at: "2026-08-17T10:15:00Z",
@@ -1282,6 +1282,12 @@ class DatabaseStore {
   }
 
   init() {
+    // Purge legacy storage keys
+    const legacyKeys = ["CREDIT_FAST_DATABASE_V2", "CREDIT_FAST_DATABASE_V1", "CREDIT_FAST_DATABASE", "CREDIT_FAST_DB"];
+    legacyKeys.forEach(k => {
+      try { localStorage.removeItem(k); } catch (e) {}
+    });
+
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) {
       this.data = JSON.parse(JSON.stringify(DEFAULT_DATABASE));

@@ -9156,6 +9156,21 @@ const App = {
 
     return docs[docKey] || docs.proforma;
   },
+
+  clearAllStorageAndReset() {
+    try {
+      localStorage.clear();
+      if (window.DB) {
+        window.DB.init();
+      }
+      this.showToast("Stockage local réinitialisé avec succès", "success");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (e) {
+      console.error("Erreur lors de la réinitialisation du stockage", e);
+    }
+  },
 };
 
 window.App = App;
