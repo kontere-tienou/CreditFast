@@ -2311,6 +2311,401 @@ const App = {
     AppInteractions.renderRequestsTable();
   },
 
+  // Sidedrawer Volet Latéral : Instruction & Analyse Risque 360°
+  currentAnalystDrawerId: null,
+  activeAnalystColdStartOverride: null,
+
+  openAnalystDossierDrawer(dossierId, coldStartOverride = null) {
+    this.currentAnalystDrawerId = dossierId;
+    if (coldStartOverride !== null) {
+      this.activeAnalystColdStartOverride = coldStartOverride;
+    }
+
+    const req = DB.findById("credit_requests", dossierId);
+    if (!req) return;
+
+    const evalData =
+      CreditScoringEngine.evaluateDossier(
+        dossierId,
+        this.activeAnalystColdStartOverride,
+      ) || {};
+    const client = DB.findById("clients", req.client_id) || {};
+    const docs = DB.get("documents").filter(
+      (d) => d.credit_request_id == req.id,
+    );
+    const anomalies = DB.get("anomalies").filter(
+      (a) => a.credit_request_id == req.id,
+    );
+
+    const backdrop = document.getElementById("analyst-drawer-backdrop");
+    if (!backdrop) return;
+
+    // Badges & Header
+    const refBadge = document.getElementById("analyst-drawer-ref-badge");
+    const modelBadge = document.getElementById("analyst-drawer-model-badge");
+    const statusBadge = document.getElementById("analyst-drawer-status-badge");
+    const titleEl = document.getElementById("analyst-drawer-title");
+    const subtitleEl = document.getElementById("analyst-drawer-subtitle");
+    const toggleBtn = document.getElementById("analyst-drawer-toggle-coldstart");
+
+    if (refBadge)
+      refBadge.textContent = req.request_number || `REQ-2026-${req.id}`;
+    if (titleEl)
+      titleEl.textContent = req.client_name || client.name || "Emprunteur";
+    if (subtitleEl) {
+      subtitleEl.textContent = `Fiche d'Instruction Analytique 360° • Bamako (${req.city || "Grand Marché"}), Mali`;
+    }
+
+    if (modelBadge) {
+      if (evalData.isColdStart) {
+        modelBadge.className = "badge badge-warning";
+        modelBadge.innerHTML = `<i class="fas fa-seedling"></i> Mode Cold Start`;
+      } else {
+        modelBadge.className = "badge badge-submitted";
+        modelBadge.innerHTML = `<i class="fas fa-history"></i> Modèle Standard`;
+      }
+    }
+
+    if (statusBadge) {
+      statusBadge.className = `badge ${
+        req.status === "APPROVED"
+          ? "badge-approved"
+          : req.status === "REJECTED"
+            ? "badge-rejected"
+            : "badge-submitted"
+      }`;
+      statusBadge.textContent =
+        req.status === "ANALYSIS"
+          ? "En Analyse"
+          : req.status === "COMMITTEE"
+            ? "En Comité"
+            : req.status === "VERIFICATION_REQUIRED"
+              ? "Vérif. Requise"
+              : req.status || "En Cours";
+    }
+
+    if (toggleBtn) {
+      toggleBtn.innerHTML = evalData.isColdStart
+        ? `<i class="fas fa-history text-primary"></i> Passer en Standard`
+        : `<i class="fas fa-seedling text-emerald"></i> Simuler Cold Start`;
+    }
+
+    // Hero Score
+    const scoreValEl = document.getElementById("analyst-drawer-score-val");
+    const riskTagEl = document.getElementById("analyst-drawer-risk-tag");
+    const confEl = document.getElementById("analyst-drawer-confidence");
+
+    if (scoreValEl) {
+      scoreValEl.textContent = evalData.overallScore || req.score || 70;
+      scoreValEl.style.color = evalData.riskColor || "var(--primary-700)";
+    }
+    if (riskTagEl) {
+      const riskClass =
+        evalData.riskLevel === "CRITIQUE"
+          ? "badge-rejected"
+          : evalData.riskLevel === "ELEVE"
+            ? "badge-warning"
+            : "badge-approved";
+      riskTagEl.className = `badge ${riskClass}`;
+      riskTagEl.innerHTML = `<i class="fas fa-shield-halved mr-1"></i> ${
+        evalData.riskLevel === "FAIBLE"
+          ? "Risque Faible"
+          : evalData.riskLevel === "MODERE"
+            ? "Risque Modéré"
+            : evalData.riskLevel || "Faible"
+      }`;
+    }
+    if (confEl) {
+      confEl.innerHTML = `Indice de Confiance : <strong class="text-emerald">${
+        evalData.confidenceScore || 90
+      }%</strong>`;
+    }
+
+    // Section 1 : Emprunteur & Capacité
+    const clientIdEl = document.getElementById("analyst-drawer-client-id");
+    const avatarEl = document.getElementById("analyst-drawer-client-avatar");
+    const clientNameEl = document.getElementById("analyst-drawer-client-name");
+    const clientActEl = document.getElementById(
+      "analyst-drawer-client-activity",
+    );
+    const clientLocEl = document.getElementById("analyst-drawer-client-loc");
+    const incomeEl = document.getElementById("analyst-drawer-income");
+    const expensesEl = document.getElementById("analyst-drawer-expenses");
+    const disposableEl = document.getElementById("analyst-drawer-disposable");
+    const installmentEl = document.getElementById("analyst-drawer-installment");
+    const capBannerEl = document.getElementById("analyst-drawer-cap-banner");
+
+    if (clientIdEl)
+      clientIdEl.textContent =
+        client.client_number || `ML-BKO-00${req.client_id || 1}00`;
+    if (avatarEl) {
+      avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        req.client_name,
+      )}&background=4f46e5&color=fff`;
+    }
+    if (clientNameEl) clientNameEl.textContent = req.client_name;
+    if (clientActEl)
+      clientActEl.textContent = `${
+        client.occupation || client.activity || req.activity || "Commerçante / Grossiste"
+      } • ${client.seniority_years || 5} ans d'activité`;
+    if (clientLocEl) {
+      clientLocEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> Bamako (${
+        req.city || "Grand Marché"
+      }), Mali • Agence Régionale`;
+    }
+
+    const income = evalData.capacity?.totalIncome || 800000;
+    const expenses = evalData.capacity?.totalExpenses || 380000;
+    const disposable =
+      evalData.capacity?.disposableIncome || income - expenses;
+    const installment =
+      evalData.capacity?.monthlyInstallment ||
+      Math.round(
+        (req.requested_amount * 1.095) / (req.duration_months || 12),
+      );
+    const isSufficient = disposable >= installment;
+
+    if (incomeEl) incomeEl.textContent = CreditScoringEngine.formatFCFA(income);
+    if (expensesEl)
+      expensesEl.textContent = CreditScoringEngine.formatFCFA(expenses);
+    if (disposableEl) {
+      disposableEl.textContent = CreditScoringEngine.formatFCFA(disposable);
+      disposableEl.style.color = isSufficient ? "#059669" : "#dc2626";
+    }
+    if (installmentEl)
+      installmentEl.textContent = CreditScoringEngine.formatFCFA(installment);
+
+    if (capBannerEl) {
+      capBannerEl.className = `capacity-comparison ${isSufficient ? "pass" : "fail"}`;
+      capBannerEl.innerHTML = isSufficient
+        ? `<i class="fas fa-circle-check text-emerald mr-1"></i> <strong>Capacité Nette Validée :</strong> Le reste à vivre (${CreditScoringEngine.formatFCFA(
+            disposable,
+          )}) couvre <strong>${Math.round(
+            (disposable / installment) * 100,
+          )}%</strong> de la mensualité (${CreditScoringEngine.formatFCFA(
+            installment,
+          )}).`
+        : `<i class="fas fa-circle-xmark text-danger mr-1"></i> <strong>Alerte Capacité :</strong> Le reste à vivre (${CreditScoringEngine.formatFCFA(
+            disposable,
+          )}) est insuffisant pour honorer la mensualité (${CreditScoringEngine.formatFCFA(
+            installment,
+          )}).`;
+    }
+
+    // Section 2 : Documents GED & OCR
+    const docsCountEl = document.getElementById("analyst-drawer-docs-count");
+    const docsListEl = document.getElementById("analyst-drawer-docs-list");
+    if (docsCountEl)
+      docsCountEl.textContent = `${docs.length} document${
+        docs.length > 1 ? "s" : ""
+      }`;
+    if (docsListEl) {
+      if (docs.length === 0) {
+        docsListEl.innerHTML = `<div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; padding: 0.5rem;">Aucune pièce rattachée</div>`;
+      } else {
+        docsListEl.innerHTML = docs
+          .map(
+            (d) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.65rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas ${
+                d.doc_type === "NINA"
+                  ? "fa-id-card text-primary"
+                  : d.doc_type === "RCCM"
+                    ? "fa-building text-info"
+                    : d.doc_type === "FACTURE"
+                      ? "fa-file-invoice text-emerald"
+                      : "fa-file-lines text-warning"
+              }"></i>
+              <div>
+                <div style="font-weight: 700; font-size: 0.78rem; color: var(--text-primary);">${
+                  d.doc_name || d.name || d.doc_type
+                }</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">Score OCR : <strong class="text-emerald">${
+                  d.ocr_confidence || 98
+                }%</strong> • Certifié Conforme</div>
+              </div>
+            </div>
+            <span class="badge ${
+              d.status === "VERIFIED" ? "badge-approved" : "badge-submitted"
+            }" style="font-size: 0.65rem;">
+              <i class="fas ${
+                d.status === "VERIFIED" ? "fa-check" : "fa-clock"
+              } mr-1"></i> ${d.status === "VERIFIED" ? "Validé" : "En révision"}
+            </span>
+          </div>
+        `,
+          )
+          .join("");
+      }
+    }
+
+    // Section 3 : Signaux & Anomalies
+    const anomCountEl = document.getElementById("analyst-drawer-anom-count");
+    const anomListEl = document.getElementById("analyst-drawer-anomalies-list");
+    if (anomCountEl) {
+      anomCountEl.textContent = `${anomalies.length} alerte${
+        anomalies.length > 1 ? "s" : ""
+      }`;
+      anomCountEl.className = `badge ${
+        anomalies.length > 0 ? "badge-warning" : "badge-approved"
+      }`;
+    }
+    if (anomListEl) {
+      if (anomalies.length === 0) {
+        anomListEl.innerHTML = `<div style="font-size: 0.75rem; color: #059669; background: rgba(16, 185, 129, 0.08); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(16, 185, 129, 0.2);"><i class="fas fa-check-circle mr-1"></i> Aucun signal d'anomalie ou risque de fraude détecté.</div>`;
+      } else {
+        anomListEl.innerHTML = anomalies
+          .map(
+            (a) => `
+          <div style="padding: 0.5rem 0.65rem; background: rgba(245, 158, 11, 0.08); border-radius: var(--radius-sm); border: 1px solid rgba(245, 158, 11, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+              <strong style="font-size: 0.76rem; color: #b45309;"><i class="fas fa-triangle-exclamation mr-1"></i> ${
+                a.anomaly_type || "Contrôle automatique"
+              }</strong>
+              <span class="badge ${
+                a.severity === "HIGH" ? "badge-rejected" : "badge-warning"
+              }" style="font-size: 0.65rem;">${a.severity || "Moyen"}</span>
+            </div>
+            <p style="font-size: 0.72rem; color: var(--text-primary); margin: 0; line-height: 1.35;">${
+              a.description || "Vérification requise sur cette pièce."
+            }</p>
+          </div>
+        `,
+          )
+          .join("");
+      }
+    }
+
+    // Section 4 : Explicabilité Multi-Facteurs
+    const factorsListEl = document.getElementById(
+      "analyst-drawer-factors-list",
+    );
+    if (factorsListEl) {
+      const factors = evalData.factors || [
+        {
+          name: "Capacité Financière & Reste à Vivre",
+          score: isSufficient ? 92 : 45,
+          weight: 35,
+          desc: "Revenus déclarés et flux d'activité stables sur le marché de Bamako.",
+        },
+        {
+          name: "Stabilité d'Activité & Ancienneté",
+          score: 88,
+          weight: 25,
+          desc: "Implantation commerciale pérenne (> 5 ans dans la commune).",
+        },
+        {
+          name: "Qualité des Garanties Proposées",
+          score: 85,
+          weight: 20,
+          desc: "Stock gagé et caution solidaire d'artisan certifiée.",
+        },
+        {
+          name: "Fiabilité & Extraction OCR GED",
+          score: 96,
+          weight: 10,
+          desc: "Concordance parfaite des données NINA et quittance EDM.",
+        },
+        {
+          name: "Historique & Relations Bancaires",
+          score: evalData.isColdStart ? 80 : 90,
+          weight: 10,
+          desc: evalData.isColdStart
+            ? "Primo-demandeur : scoring enrichi sur comportement mobile money."
+            : "Aucun impayé antérieur enregistré.",
+        },
+      ];
+
+      factorsListEl.innerHTML = factors
+        .map(
+          (f) => `
+        <div style="background: var(--bg-surface-secondary); padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+            <span style="font-weight: 700; font-size: 0.78rem; color: var(--text-primary);">${
+              f.name
+            }</span>
+            <span style="font-family: var(--font-family-code); font-weight: 800; font-size: 0.82rem; color: ${
+              f.score >= 70
+                ? "#059669"
+                : f.score >= 50
+                  ? "#d97706"
+                  : "#dc2626"
+            };">${f.score}/100</span>
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.3;">${
+            f.desc
+          }</div>
+        </div>
+      `,
+        )
+        .join("");
+    }
+
+    // Open Backdrop
+    backdrop.classList.add("active");
+  },
+
+  closeAnalystDossierDrawer() {
+    const backdrop = document.getElementById("analyst-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
+  },
+
+  toggleColdStartInDrawer() {
+    if (!this.currentAnalystDrawerId) return;
+    const current = this.activeAnalystColdStartOverride;
+    const next = current === null ? true : !current;
+    this.openAnalystDossierDrawer(this.currentAnalystDrawerId, next);
+    this.showToast(
+      `Simulation basculée en mode ${next ? "COLD START (Primo-Demandeur)" : "STANDARD"}`,
+      "info",
+    );
+  },
+
+  submitAnalystReviewFromDrawer() {
+    if (!this.currentAnalystDrawerId) return;
+    const recoSelect = document.getElementById("analyst-drawer-reco-select");
+    const notesInput = document.getElementById("analyst-drawer-notes-input");
+    const reco = recoSelect ? recoSelect.value : "FAVORABLE";
+    const notes = notesInput
+      ? notesInput.value
+      : "Dossier vérifié et transmis.";
+
+    DB.insert("credit_reviews", {
+      credit_request_id: this.currentAnalystDrawerId,
+      analyst_id: 1,
+      review_status:
+        reco === "FAVORABLE"
+          ? "CONFORME"
+          : reco === "RESERVE"
+            ? "AVEC_RESERVE"
+            : "NON_CONFORME",
+      analyst_decision: reco,
+      comments: notes,
+      created_at: new Date().toISOString(),
+    });
+
+    DB.update("credit_requests", this.currentAnalystDrawerId, {
+      status: "COMMITTEE",
+    });
+
+    this.showToast(
+      `Dossier #${this.currentAnalystDrawerId} transmis avec succès au Comité de Crédit !`,
+      "success",
+    );
+    this.closeAnalystDossierDrawer();
+    AppInteractions.renderRequestsTable();
+  },
+
+  requestComplementFromAnalystDrawer() {
+    if (!this.currentAnalystDrawerId) return;
+    this.showToast(
+      `Demande de contre-expertise terrain transmise à l'Agent de Crédit pour le dossier #${this.currentAnalystDrawerId}`,
+      "info",
+    );
+    this.closeAnalystDossierDrawer();
+  },
+
   // [ROLE 3 - PAGE 2] DÉTECTION DES ANOMALIES & CONTRÔLES RISQUES
   analystAnomFilter: "ALL",
   analystAnomSearch: "",
@@ -2424,9 +2819,9 @@ const App = {
     if (filtered.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+          <td colspan="5" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
             <i class="fas fa-shield-check" style="font-size: 2rem; color: var(--cif-emerald-500); margin-bottom: 0.75rem; display: block;"></i>
-            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">Aucune anomalie ne correspond aux filtres appliqués</div>
+            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">Aucune anomalie ne correspond aux critères</div>
             <div style="font-size: 0.8rem; margin-top: 0.25rem;">Tous les dossiers sous ces critères sont intègres ou déjà traités.</div>
           </td>
         </tr>
@@ -2458,62 +2853,44 @@ const App = {
               : "fa-calculator text-warning";
 
         return `
-        <tr id="anomaly-row-${item.id}" class="anomaly-table-row ${!isOpen ? "anomaly-row-resolved" : ""}">
+        <tr id="anomaly-row-${item.id}" class="schedule-table-row ${!isOpen ? "anomaly-row-resolved" : ""}" onclick="App.openAnomalyDrawer(${item.id})" style="cursor: pointer;" title="Cliquer pour afficher le diagnostic approfondi dans le volet latéral">
+          <!-- Col 1 : Dossier & Emprunteur (Essentiel sans sous-texte) -->
           <td>
-            <a href="javascript:void(0)" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" style="font-weight: 700; color: var(--cif-primary-600); text-decoration: none;">
-              ${item.request_number} <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 2px;"></i>
-            </a>
-            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${item.client_name}</div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">
-              <i class="fas fa-location-dot mr-1"></i> ${item.city}, ${item.country}
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary);">${item.client_name}</span>
+              <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; font-size: 0.68rem;">${item.request_number}</span>
             </div>
           </td>
-          <td>${sevBadge}</td>
+
+          <!-- Col 2 : Anomalie & Règle (Essentiel sans sous-texte) -->
           <td>
-            <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">
+            <div style="font-weight: 600; font-size: 0.84rem; color: var(--text-primary);">
               <i class="fas ${typeIcon} mr-1"></i> ${item.rule_name}
             </div>
-            <div style="font-size: 0.7rem; color: var(--text-subtle); font-family: var(--font-mono);">${item.anomaly_type}</div>
           </td>
-          <td>
-            <div style="font-size: 0.8rem; color: var(--text-primary); max-width: 280px; line-height: 1.4;">
-              ${item.description}
-            </div>
-          </td>
-          <td>
-            <div style="font-size: 0.78rem;">
-              <div style="color: ${isCritical ? "#b91c1c" : "#b45309"}; font-weight: 600;">
-                <i class="fas fa-xmark text-danger mr-1"></i> ${item.detected_value || "N/A"}
-              </div>
-              <div style="color: #047857; font-size: 0.72rem; margin-top: 2px;">
-                <i class="fas fa-check text-emerald mr-1"></i> ${item.expected_value || "Conforme"}
-              </div>
-            </div>
-          </td>
-          <td>
-            <span class="badge" style="background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.3); font-size: 0.72rem;">
-              <i class="fas fa-microchip mr-1"></i> ${item.engine}
-            </span>
-          </td>
+
+          <!-- Col 3 : Gravité (Essentiel sans sous-texte) -->
+          <td>${sevBadge}</td>
+
+          <!-- Col 4 : Statut (Essentiel sans sous-texte) -->
           <td>${statusBadge}</td>
+
+          <!-- Col 5 : Action -->
           <td style="text-align: right;">
-            <div style="display: flex; gap: 0.35rem; justify-content: flex-end; flex-wrap: wrap;">
-              <button class="btn btn-primary btn-sm" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" title="Inspecter le dossier à 360°">
-                <i class="fas fa-magnifying-glass mr-1"></i> 360°
+            <div style="display: flex; gap: 0.35rem; justify-content: flex-end; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openAnomalyDrawer(${item.id})" title="Ouvrir le volet latéral de diagnostic">
+                <i class="fas fa-magnifying-glass-chart mr-1"></i> Détails
               </button>
               ${
                 isOpen
                   ? `
-                <button class="btn btn-secondary btn-sm" onclick="App.resolveAnomaly(${item.id})" title="Lever cette anomalie après vérification manuelle">
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.resolveAnomaly(${item.id})" title="Lever cette anomalie après vérification">
                   <i class="fas fa-check text-emerald"></i> Lever
-                </button>
-                <button class="btn btn-secondary btn-sm" onclick="App.requestFieldCheckForAnomaly(${item.id})" title="Demander une contre-expertise terrain à l'Agent">
-                  <i class="fas fa-motorcycle text-warning"></i> Terrain
                 </button>
               `
                   : `
-                <button class="btn btn-secondary btn-sm" onclick="App.reopenAnomaly(${item.id})" title="Rouvrir le signalement">
-                  <i class="fas fa-rotate text-muted"></i> Rouvrir
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.reopenAnomaly(${item.id})" title="Rouvrir le signalement">
+                  <i class="fas fa-rotate text-muted"></i>
                 </button>
               `
               }
@@ -2616,6 +2993,234 @@ const App = {
         updatedRow.classList.add("resolved-flash");
       }
     }, 200);
+  },
+
+  currentAnomalyDrawerId: null,
+
+  openAnomalyDrawer(anomalyId) {
+    this.currentAnomalyDrawerId = anomalyId;
+    const a = DB.findById("anomalies", anomalyId);
+    if (!a) return;
+
+    const req = DB.findById("credit_requests", a.credit_request_id) || {};
+    const client = DB.findById("clients", req.client_id) || {};
+    const doc = a.document_id ? DB.findById("documents", a.document_id) : null;
+    const evalData = CreditScoringEngine.evaluateDossier(req.id) || {};
+
+    const backdrop = document.getElementById("anomaly-drawer-backdrop");
+    if (!backdrop) return;
+
+    const isCritical = a.severity === "CRITICAL";
+    const isWarning = a.severity === "WARNING";
+    const isOpen = a.status === "OPEN";
+
+    // Header badges & text
+    const refBadge = document.getElementById("anom-drawer-ref-badge");
+    const sevBadge = document.getElementById("anom-drawer-sev-badge");
+    const statusBadge = document.getElementById("anom-drawer-status-badge");
+    const titleEl = document.getElementById("anom-drawer-title");
+    const subtitleEl = document.getElementById("anom-drawer-subtitle");
+
+    if (refBadge) refBadge.textContent = req.request_number || `REQ-2026-${req.id || "00"}`;
+    if (sevBadge) {
+      sevBadge.className = `badge ${isCritical ? "badge-rejected" : isWarning ? "badge-warning" : "badge-submitted"}`;
+      sevBadge.innerHTML = `<i class="fas ${isCritical ? "fa-circle-exclamation" : isWarning ? "fa-triangle-exclamation" : "fa-info-circle"} mr-1"></i> ${isCritical ? "Critique" : isWarning ? "Élevé" : "Informatif"}`;
+    }
+    if (statusBadge) {
+      statusBadge.className = `badge ${isOpen ? "badge-verification" : "badge-approved"}`;
+      statusBadge.innerHTML = `<i class="fas ${isOpen ? "fa-clock" : "fa-check"} mr-1"></i> ${isOpen ? "Ouvert" : "Résolu"}`;
+    }
+    if (titleEl) titleEl.textContent = a.rule_name || a.anomaly_type || "Anomalie Prudentielle";
+    if (subtitleEl) {
+      subtitleEl.textContent = `Contrôle de conformité ${a.category || "OCR"} • Règle #${a.id}`;
+    }
+
+    // Hero diagnostic banner
+    const heroBanner = document.getElementById("anom-drawer-hero-banner");
+    const typeName = document.getElementById("anom-drawer-type-name");
+    const engineBadge = document.getElementById("anom-drawer-engine-badge");
+    const detectedDate = document.getElementById("anom-drawer-detected-date");
+
+    if (heroBanner) {
+      heroBanner.style.background = isCritical
+        ? "linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.05))"
+        : isWarning
+          ? "linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03))"
+          : "linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(16, 185, 129, 0.04))";
+      heroBanner.style.borderColor = isCritical ? "rgba(239, 68, 68, 0.25)" : "rgba(245, 158, 11, 0.25)";
+    }
+    if (typeName) {
+      typeName.textContent = a.anomaly_type || "ANOMALIE_GENERALE";
+      typeName.style.color = isCritical ? "#b91c1c" : isWarning ? "#b45309" : "#4f46e5";
+    }
+    if (engineBadge) {
+      engineBadge.innerHTML = `<i class="fas fa-microchip mr-1"></i> ${a.engine || "Moteur Prudentiel CreditFast"}`;
+    }
+    if (detectedDate) {
+      detectedDate.textContent = a.created_at
+        ? `Détecté le ${new Date(a.created_at).toLocaleDateString("fr-FR")} à ${new Date(a.created_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
+        : "Détecté lors de l'instruction automatique";
+    }
+
+    // Section 1: Emprunteur & Demande
+    const clientAvatar = document.getElementById("anom-drawer-client-avatar");
+    const clientName = document.getElementById("anom-drawer-client-name");
+    const clientLoc = document.getElementById("anom-drawer-client-loc");
+    const loanAmount = document.getElementById("anom-drawer-loan-amount");
+    const riskScore = document.getElementById("anom-drawer-risk-score");
+
+    const clientDisplayName = req.client_name || client.name || "Emprunteur";
+    if (clientAvatar) {
+      clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(clientDisplayName)}&background=4f46e5&color=fff`;
+    }
+    if (clientName) clientName.textContent = clientDisplayName;
+    if (clientLoc) {
+      clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> Bamako (${req.city || "Grand Marché"}), Mali`;
+    }
+    if (loanAmount) {
+      loanAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount || 2500000);
+    }
+    if (riskScore) {
+      const sc = evalData.overallScore || req.score || 70;
+      riskScore.textContent = `${sc} / 100`;
+      riskScore.style.color = evalData.riskColor || (sc >= 70 ? "#059669" : sc >= 50 ? "#d97706" : "#dc2626");
+    }
+
+    // Section 2: Diagnostic & Rapprochement
+    const categoryBadge = document.getElementById("anom-drawer-category-badge");
+    const descEl = document.getElementById("anom-drawer-desc");
+    const valDetected = document.getElementById("anom-drawer-val-detected");
+    const valExpected = document.getElementById("anom-drawer-val-expected");
+
+    if (categoryBadge) {
+      categoryBadge.textContent =
+        a.category === "OCR"
+          ? "Contrôle OCR"
+          : a.category === "NETWORK"
+            ? "Réseau & Multi-Comptes"
+            : "Solvabilité & Capacité";
+    }
+    if (descEl) descEl.textContent = a.description || "Aucune description spécifique disponible.";
+    if (valDetected) valDetected.textContent = a.detected_value || "Incohérence constatée";
+    if (valExpected) valExpected.textContent = a.expected_value || "Conforme aux normes prudentielles";
+
+    // Section 3: Pièce Justificative GED
+    const docPanel = document.getElementById("anom-drawer-doc-panel");
+    const docOcrScore = document.getElementById("anom-drawer-doc-ocr-score");
+    const docName = document.getElementById("anom-drawer-doc-name");
+    const docType = document.getElementById("anom-drawer-doc-type");
+    const docStatus = document.getElementById("anom-drawer-doc-status");
+
+    if (docPanel) {
+      if (doc || a.document_id) {
+        docPanel.style.display = "block";
+        if (docOcrScore) docOcrScore.textContent = `Score OCR : ${doc ? (doc.ocr_confidence || 95) : 94}%`;
+        if (docName) docName.textContent = doc ? (doc.doc_name || doc.name || doc.doc_type) : "Pièce Justificative Proforma.pdf";
+        if (docType) docType.textContent = `Type : ${doc ? doc.doc_type : "FACTURE"} • Rattaché au dossier`;
+        if (docStatus) {
+          docStatus.className = `badge ${isOpen ? "badge-warning" : "badge-approved"}`;
+          docStatus.textContent = isOpen ? "À rectifier" : "Conforme";
+        }
+      } else {
+        docPanel.style.display = "none";
+      }
+    }
+
+    // Section 4: Traitement & Décision
+    const resBadge = document.getElementById("anom-drawer-resolution-badge");
+    const resInfo = document.getElementById("anom-drawer-resolved-info");
+    const resComment = document.getElementById("anom-drawer-resolved-comment");
+    const resMeta = document.getElementById("anom-drawer-resolved-meta");
+    const formRes = document.getElementById("anom-drawer-form-resolution");
+    const btnResolve = document.getElementById("anom-drawer-btn-resolve");
+    const commentInput = document.getElementById("anom-drawer-comment-input");
+
+    if (resBadge) {
+      resBadge.className = `badge ${isOpen ? "badge-verification" : "badge-approved"}`;
+      resBadge.textContent = isOpen ? "En Attente de Levée" : "Levée Validée";
+    }
+
+    if (isOpen) {
+      if (resInfo) resInfo.style.display = "none";
+      if (formRes) formRes.style.display = "block";
+      if (btnResolve) {
+        btnResolve.style.display = "inline-flex";
+        btnResolve.innerHTML = `<i class="fas fa-check mr-1"></i> Lever l'Anomalie`;
+      }
+      if (commentInput) commentInput.value = "";
+    } else {
+      if (resInfo) resInfo.style.display = "block";
+      if (resComment) resComment.textContent = a.resolution_comment || "Anomalie contrôlée et régularisée par l'analyste risque.";
+      if (resMeta) {
+        resMeta.textContent = `Régularisé le ${a.resolved_at ? new Date(a.resolved_at).toLocaleDateString("fr-FR") : "17/08/2026"} par Analyste Risque`;
+      }
+      if (formRes) formRes.style.display = "none";
+      if (btnResolve) {
+        btnResolve.style.display = "inline-flex";
+        btnResolve.innerHTML = `<i class="fas fa-rotate mr-1"></i> Rouvrir l'Anomalie`;
+      }
+    }
+
+    // Open Drawer
+    backdrop.classList.add("active");
+  },
+
+  closeAnomalyDrawer() {
+    const backdrop = document.getElementById("anomaly-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
+  },
+
+  openDossierFromAnomalyDrawer() {
+    if (!this.currentAnomalyDrawerId) return;
+    const a = DB.findById("anomalies", this.currentAnomalyDrawerId);
+    if (!a) return;
+    this.closeAnomalyDrawer();
+    this.openAnalystDossierDrawer(a.credit_request_id);
+  },
+
+  resolveAnomalyFromDrawer() {
+    if (!this.currentAnomalyDrawerId) return;
+    const a = DB.findById("anomalies", this.currentAnomalyDrawerId);
+    if (!a) return;
+
+    if (a.status === "OPEN") {
+      const commentInput = document.getElementById("anom-drawer-comment-input");
+      const comment =
+        commentInput && commentInput.value.trim()
+          ? commentInput.value.trim()
+          : "Anomalie contrôlée et levée après vérification contradictoire.";
+
+      DB.update("anomalies", this.currentAnomalyDrawerId, {
+        status: "RESOLVED",
+        resolved_by: this.currentUser ? this.currentUser.id : 1,
+        resolved_at: new Date().toISOString(),
+        resolution_comment: comment,
+      });
+
+      DB.addAuditLog(
+        this.currentUser ? this.currentUser.id : 1,
+        "ANOMALIE_LEVEE_ANALYSTE",
+        "anomalies",
+        this.currentAnomalyDrawerId,
+        `Anomalie #${this.currentAnomalyDrawerId} (${a.anomaly_type}) levée avec succès.`,
+      );
+
+      this.showToast(
+        `Anomalie #${this.currentAnomalyDrawerId} levée avec succès.`,
+        "success",
+      );
+      this.closeAnomalyDrawer();
+      this.renderAnalystAnomalies();
+    } else {
+      this.reopenAnomaly(this.currentAnomalyDrawerId);
+      this.closeAnomalyDrawer();
+    }
+  },
+
+  requestFieldCheckFromAnomalyDrawer() {
+    if (!this.currentAnomalyDrawerId) return;
+    this.requestFieldCheckForAnomaly(this.currentAnomalyDrawerId);
+    this.closeAnomalyDrawer();
   },
 
   requestFieldCheckForAnomaly(anomalyId) {
@@ -2965,21 +3570,25 @@ const App = {
     const titleEl = document.getElementById("com-drawer-title");
     const subtitleEl = document.getElementById("com-drawer-subtitle");
 
-    const isAmadou =
-      req.client_name === "Amadou Sanogo" ||
-      req.id === 2 ||
-      req.client_id === 2;
-    const reqCity = isAmadou
-      ? "Bamako (Badalabougou)"
-      : req.city && !req.city.toLowerCase().includes("ouaga")
-        ? req.city
-        : "Bamako";
-    const reqCountry = isAmadou
-      ? "Mali"
-      : req.country && !req.country.toLowerCase().includes("burkina")
-        ? req.country
-        : "Mali";
-    const locText = `${reqCity}, ${reqCountry}`;
+    // Malian Locations & Agencies Mapping for all borrowers
+    const malianAgenciesMap = {
+      1: { district: "Grand Marché", agency: "Agence Marché Médine", occupation: "Commerçante / Grossiste Textiles", client_num: "ML-BKO-008821" },
+      2: { district: "Badalabougou", agency: "Agence Badalabougou", occupation: "Transformateur Agroalimentaire", client_num: "ML-BKO-004419" },
+      3: { district: "Dabanani", agency: "Agence Dabanani", occupation: "Import-Export Quincaillerie", client_num: "ML-BKO-003190" },
+      4: { district: "Sotuba", agency: "Agence Sotuba", occupation: "Aviculteur & Éleveur", client_num: "ML-BKO-005512" },
+      5: { district: "Faladié", agency: "Agence Faladié", occupation: "Jeune Artisan Menuisier", client_num: "ML-BKO-009023" },
+    };
+
+    const clientKey = req.client_id || req.id;
+    const malianInfo = malianAgenciesMap[clientKey] || {
+      district: req.city && req.city !== "UEMOA" ? req.city : "Grand Marché",
+      agency: "Agence Principale",
+      occupation: "Activité commerciale & artisanat",
+      client_num: `ML-BKO-00${clientKey}00`,
+    };
+
+    const locDistrict = `Bamako (${malianInfo.district})`;
+    const locText = `${locDistrict}, Mali`;
 
     if (reqBadge)
       reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
@@ -3012,12 +3621,12 @@ const App = {
     const surplusEl = document.getElementById("com-drawer-surplus");
 
     if (clientIdEl)
-      clientIdEl.textContent = `ID: CLI-${req.client_id || "2"}`;
+      clientIdEl.textContent = `ID: ${client.client_number || malianInfo.client_num || "CLI-" + clientKey}`;
     if (avatarEl)
       avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
     if (locEl) {
-      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${locText} • Agence Principale`;
+      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${locText} • ${malianInfo.agency}`;
     }
     if (amountEl)
       amountEl.textContent = CreditScoringEngine.formatFCFA(
@@ -3035,7 +3644,7 @@ const App = {
 
     if (activityEl)
       activityEl.textContent =
-        client.activity || req.activity || "Commerce général & négoce";
+        client.occupation || malianInfo.occupation || client.activity || req.activity || "Commerce général & négoce";
     if (surplusEl) {
       const surplus =
         req.disposable_income || client.disposable_income || 385000;

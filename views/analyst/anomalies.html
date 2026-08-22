@@ -184,19 +184,169 @@
         <thead>
           <tr>
             <th scope="col">Dossier & Emprunteur</th>
+            <th scope="col">Anomalie & Règle</th>
             <th scope="col">Gravité</th>
-            <th scope="col">Règle & Type</th>
-            <th scope="col">Description & Diagnostic</th>
-            <th scope="col">Constat vs Attendu</th>
-            <th scope="col">Moteur Détecteur</th>
             <th scope="col">Statut</th>
-            <th scope="col" style="text-align: right;">Actions Analyste</th>
+            <th scope="col" style="text-align: right;">Action</th>
           </tr>
         </thead>
         <tbody id="analyst-anomalies-table-body">
           <!-- Dynamically Rendered -->
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Sidedrawer Volet Latéral : Détail Approfondi de l'Anomalie & Diagnostic Risque -->
+  <div id="anomaly-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnomalyDrawer()">
+    <div id="anomaly-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet diagnostic approfondi anomalie risque">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <span class="badge badge-submitted" id="anom-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0893</span>
+            <span id="anom-drawer-sev-badge" class="badge badge-rejected"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>
+            <span id="anom-drawer-status-badge" class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>
+          </div>
+          <h3 id="anom-drawer-title" class="schedule-drawer-title" style="font-size: 1.08rem; font-weight: 800; color: var(--text-primary); margin: 0;">Validité Temporelle Pièce Proforma</h3>
+          <p id="anom-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Contrôle de conformité OCR & Règles Prudentielles</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeAnomalyDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Hero Diagnostic & Engine Banner -->
+        <div class="drawer-hero-banner" id="anom-drawer-hero-banner" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.05)); border-color: rgba(239, 68, 68, 0.25); padding: 0.9rem 1.15rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <div class="drawer-hero-label" id="anom-drawer-type-label">Type d'Anomalie Détectée</div>
+              <div id="anom-drawer-type-name" style="font-size: 1.15rem; font-weight: 800; color: #b91c1c; font-family: var(--font-family-code);">DATE_INCOHERENTE</div>
+            </div>
+            <div style="text-align: right;">
+              <span id="anom-drawer-engine-badge" class="badge" style="background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.3); font-size: 0.74rem;">
+                <i class="fas fa-microchip mr-1"></i> Moteur OCR Tesseract V2.2
+              </span>
+              <div id="anom-drawer-detected-date" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 3px;">
+                Détecté le 14/08/2026 à 11:12
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1 : Emprunteur & Dossier Associé -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Demande Associée</h4>
+            <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-view-dossier" onclick="App.openDossierFromAnomalyDrawer()" style="font-size: 0.72rem; padding: 0.25rem 0.55rem;">
+              <i class="fas fa-magnifying-glass-chart mr-1"></i> Dossier 360°
+            </button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <img id="anom-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 42px; height: 42px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div>
+              <div id="anom-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Kodjo Mensah</div>
+              <div id="anom-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Montant du Crédit</span>
+              <span id="anom-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">1 800 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Score Risque Actuel</span>
+              <span id="anom-drawer-risk-score" class="drawer-kv-value" style="font-weight: 800; color: #dc2626;">31 / 100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Diagnostic Détaillé & Rapprochement -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-magnifying-glass-chart text-warning mr-1"></i> Rapprochement & Constats</h4>
+            <span id="anom-drawer-category-badge" class="badge badge-submitted">Contrôle OCR</span>
+          </div>
+          
+          <div style="margin-bottom: 0.75rem;">
+            <label class="form-label" style="font-size: 0.75rem; color: var(--text-muted);">Description du Risque Identifié</label>
+            <p id="anom-drawer-desc" style="background: var(--bg-surface-secondary); padding: 0.7rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.78rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+              La date extraite par OCR sur la facture d'outillage est antérieure de plus de 18 mois au dépôt du dossier.
+            </p>
+          </div>
+
+          <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+            <div class="drawer-metric-box" style="border-left: 3px solid #dc2626;">
+              <div class="drawer-kv-label" style="color: #dc2626; font-weight: 700;"><i class="fas fa-xmark mr-1"></i> Valeur Détectée (Anormale)</div>
+              <div id="anom-drawer-val-detected" style="font-size: 0.88rem; font-weight: 700; color: #b91c1c; font-family: var(--font-family-code); margin-top: 3px;">12/01/2025</div>
+            </div>
+            <div class="drawer-metric-box" style="border-left: 3px solid #059669;">
+              <div class="drawer-kv-label" style="color: #059669; font-weight: 700;"><i class="fas fa-check mr-1"></i> Valeur Attendue / Norme</div>
+              <div id="anom-drawer-val-expected" style="font-size: 0.88rem; font-weight: 700; color: #047857; font-family: var(--font-family-code); margin-top: 3px;">Moins de 30 jours (&lt; 16/07/2026)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Pièce Justificative GED Associée -->
+        <div class="drawer-panel" id="anom-drawer-doc-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-info mr-1"></i> Document & Extraction Numérique</h4>
+            <span id="anom-drawer-doc-ocr-score" class="badge badge-submitted">OCR: 94%</span>
+          </div>
+          <div id="anom-drawer-doc-content" style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.75rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <i class="fas fa-file-pdf text-danger" style="font-size: 1.25rem;"></i>
+              <div>
+                <div id="anom-drawer-doc-name" style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Facture Proforma Outillage.pdf</div>
+                <div id="anom-drawer-doc-type" style="font-size: 0.7rem; color: var(--text-muted);">Type : FACTURE • Rattaché le 14/08/2026</div>
+              </div>
+            </div>
+            <span id="anom-drawer-doc-status" class="badge badge-warning">À rectifier</span>
+          </div>
+        </div>
+
+        <!-- Section 4 : Traitement Contradictoire & Décision -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Résolution & Justification</h4>
+            <span id="anom-drawer-resolution-badge" class="badge badge-verification">En Attente</span>
+          </div>
+          
+          <div id="anom-drawer-resolved-info" style="display: none; background: rgba(16, 185, 129, 0.08); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(16, 185, 129, 0.25); margin-bottom: 0.75rem;">
+            <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 3px;">
+              <i class="fas fa-check-circle mr-1"></i> Signalement Levé & Régularisé
+            </div>
+            <p id="anom-drawer-resolved-comment" style="font-size: 0.74rem; color: var(--text-primary); margin: 0; line-height: 1.4;">
+              Contrôle contradictoire effectué. Pièce rectifiée intégrée.
+            </p>
+            <div id="anom-drawer-resolved-meta" style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+              Levée par Analyste Risque #1 le 17/08/2026
+            </div>
+          </div>
+
+          <div id="anom-drawer-form-resolution">
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.75rem;">Commentaire d'Instruction / Motif de Levée</label>
+              <textarea id="anom-drawer-comment-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Indiquez le constat contradictoire ou la justification de levée..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAnomalyDrawer()">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-field" onclick="App.requestFieldCheckFromAnomalyDrawer()" title="Demander une contre-expertise terrain">
+            <i class="fas fa-motorcycle text-warning mr-1"></i> Contre-Expertise Terrain
+          </button>
+          <button class="btn btn-primary btn-sm" id="anom-drawer-btn-resolve" onclick="App.resolveAnomalyFromDrawer()">
+            <i class="fas fa-check mr-1"></i> Lever l'Anomalie
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>

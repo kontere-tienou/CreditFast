@@ -3438,8 +3438,8 @@
         <div class="grid-dashboard-main" style="margin-top: 1.25rem;">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><i class="fas fa-globe-africa text-primary"></i> Encours par Pays Membre (CreditFast UEMOA)</h3>
-              <span class="badge badge-submitted">5 Pays UEMOA</span>
+              <h3 class="card-title"><i class="fas fa-globe-africa text-primary"></i> Encours par Quartier de Bamako (CreditFast MALI)</h3>
+              <span class="badge badge-submitted">Les Ville/Quartiers  du Mali </span>
             </div>
             <div class="card-body" style="height: 280px;">
               <canvas id="regional-chart-canvas"></canvas>
@@ -3474,68 +3474,158 @@
         </div>
       
         <!-- CREDITFAST IMPACT & METRICS SECTION (NOTE DE PRÉSENTATION CREDITFAST-DIGICOOP-WA+) -->
-        <div class="card" style="margin-top: 1.25rem; border: 1px solid var(--border-subtle);">
-          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div class="card" style="margin-top: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05); border-radius: var(--radius-lg); overflow: hidden;">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 1.15rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
             <div>
-              <h3 class="card-title"><i class="fas fa-chart-line text-emerald mr-1"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)</h3>
-              <p class="card-subtitle">Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako )</p>
+              <h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-chart-line text-emerald" style="font-size: 1.1rem;"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)
+              </h3>
+              <p class="card-subtitle" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+                Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako)
+              </p>
             </div>
-            <span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Modèle Hybride & Responsable</span>
+            <span class="impact-metric-badge green" style="font-size: 0.75rem; padding: 0.35rem 0.8rem;">
+              <i class="fas fa-circle-check"></i> Modèle Hybride & Responsable
+            </span>
           </div>
-          <div class="card-body">
-            <div class="grid-3" style="gap: 1rem;">
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Temps Moyen de Pré-Analyse</span>
-                  <span class="badge badge-approved" style="font-size: 0.68rem;">-85% vs manuel</span>
+          <div class="card-body" style="padding: 1.35rem 1.5rem; background: var(--bg-app);">
+            <div class="impact-metric-grid">
+              <!-- Card 1 : Temps Moyen de Pré-Analyse -->
+              <div class="impact-metric-card theme-indigo">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon indigo">
+                      <i class="fas fa-bolt-lightning"></i>
+                    </div>
+                    <span class="impact-metric-title">Temps Moyen de Pré-Analyse</span>
+                  </div>
+                  <span class="impact-metric-badge green">-85% vs manuel</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">15 min <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(au lieu de 48h)</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Instruction accélérée dès réception des pièces au guichet</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value indigo">15 min</span>
+                    <span class="impact-metric-subvalue">(au lieu de 48h)</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 85%; background: linear-gradient(90deg, #4f46e5, #818cf8);"></div>
+                  </div>
+                  <p class="impact-metric-desc">Instruction accélérée dès réception des pièces au guichet ou via l'application mobile.</p>
+                </div>
               </div>
       
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Extraction OCR & Cohérence</span>
-                  <span class="badge badge-approved" style="font-size: 0.68rem;">Précision Haute</span>
+              <!-- Card 2 : Extraction OCR & Cohérence -->
+              <div class="impact-metric-card theme-emerald">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon emerald">
+                      <i class="fas fa-brain-circuit"></i>
+                    </div>
+                    <span class="impact-metric-title">Extraction OCR & Cohérence</span>
+                  </div>
+                  <span class="impact-metric-badge green">Précision Haute</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-500);">96.4% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">de taux de lecture</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Rapprochement NINA UEMOA, factures proforma & devis</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value emerald">96.4%</span>
+                    <span class="impact-metric-subvalue">de taux de lecture conforme</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 96.4%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                  </div>
+                  <p class="impact-metric-desc">Rapprochement instantané cartes NINA, quittances EDM-SA, factures proforma & devis.</p>
+                </div>
               </div>
       
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Incohérences & Discordances</span>
-                  <span class="badge badge-warning" style="font-size: 0.68rem;">Alertes Actives</span>
+              <!-- Card 3 : Incohérences & Discordances -->
+              <div class="impact-metric-card theme-amber">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon amber">
+                      <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <span class="impact-metric-title">Incohérences & Discordances</span>
+                  </div>
+                  <span class="impact-metric-badge amber">Alertes Actives</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">repérées avant comité</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Détection automatique des écarts de montants et dates expirées</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value amber">100%</span>
+                    <span class="impact-metric-subvalue">repérées avant comité</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                  </div>
+                  <p class="impact-metric-desc">Détection automatique des écarts de montants, doublons et pièces d'identité expirées.</p>
+                </div>
               </div>
       
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Scoring 100% Explicable</span>
-                  <span class="badge badge-approved" style="font-size: 0.68rem;">Audit Ready</span>
+              <!-- Card 4 : Scoring 100% Explicable -->
+              <div class="impact-metric-card theme-purple">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon purple">
+                      <i class="fas fa-magnifying-glass-chart"></i>
+                    </div>
+                    <span class="impact-metric-title">Scoring 100% Explicable</span>
+                  </div>
+                  <span class="impact-metric-badge purple">Audit Ready</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">justifié facteur par facteur</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Zéro boîte noire : facteurs favorables, risques & éléments à vérifier</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value purple">100%</span>
+                    <span class="impact-metric-subvalue">justifié facteur par facteur</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+                  </div>
+                  <p class="impact-metric-desc">Zéro boîte noire : piliers de solvabilité, ratios d'effort et alertes certifiés pour le comité.</p>
+                </div>
               </div>
       
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Temps Économisé / Dossier</span>
-                  <span class="badge badge-approved" style="font-size: 0.68rem;">Gain Productivité</span>
+              <!-- Card 5 : Temps Économisé / Dossier -->
+              <div class="impact-metric-card theme-teal">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon teal">
+                      <i class="fas fa-clock-rotate-left"></i>
+                    </div>
+                    <span class="impact-metric-title">Temps Économisé / Dossier</span>
+                  </div>
+                  <span class="impact-metric-badge green">Gain Productivité</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-500);">~3h 30 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">par agent</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Recentrage du chargé de crédit sur la relation client et le terrain</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value teal">~3h 30</span>
+                    <span class="impact-metric-subvalue">par agent et par dossier</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 88%; background: linear-gradient(90deg, #14b8a6, #2dd4bf);"></div>
+                  </div>
+                  <p class="impact-metric-desc">Recentrage du chargé de crédit sur l'accompagnement client, le conseil et les visites terrain.</p>
+                </div>
               </div>
       
-              <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                  <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Supervision Humaine Finale</span>
-                  <span class="badge badge-approved" style="font-size: 0.68rem;">Éthique & RSE</span>
+              <!-- Card 6 : Supervision Humaine Finale -->
+              <div class="impact-metric-card theme-blue">
+                <div class="impact-metric-header">
+                  <div class="impact-metric-title-group">
+                    <div class="impact-metric-icon blue">
+                      <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span class="impact-metric-title">Supervision Humaine Finale</span>
+                  </div>
+                  <span class="impact-metric-badge blue">Éthique & RSE</span>
                 </div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Humain dans la boucle</span></div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">L'IA assiste et alerte, la décision finale d'octroi reste humaine</div>
+                <div class="impact-metric-body">
+                  <div class="impact-metric-value-row">
+                    <span class="impact-metric-value blue">100%</span>
+                    <span class="impact-metric-subvalue">humain dans la boucle</span>
+                  </div>
+                  <div class="impact-metric-progress-track">
+                    <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+                  </div>
+                  <p class="impact-metric-desc">L'IA prépare, contrôle et alerte ; la décision souveraine d'octroi reste 100% humaine.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -3555,6 +3645,11 @@
               <span>Instruction & Risque</span>
             </div>
           </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ALL')">
+              <i class="fas fa-rotate mr-1"></i> Actualiser
+            </button>
+          </div>
         </div>
       
         <div class="card" style="margin-bottom: 1.25rem;">
@@ -3570,33 +3665,197 @@
               <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED', '', this)">Approuvés</button>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-subtle);">
-              <i class="fas fa-info-circle"></i> Cliquez sur <strong>Analyser 360°</strong> pour voir le Reste à Vivre, l'OCR et simuler le Cold Start.
+              <i class="fas fa-info-circle text-primary mr-1"></i> Cliquez sur une ligne ou sur <strong>Détails 360°</strong> pour ouvrir le volet d'instruction latérale.
             </div>
           </div>
         </div>
       
+        <!-- 5 Colonnes Optimisées Tableau Analyste Risque -->
         <div class="card">
           <div class="table-responsive">
             <table class="table-custom">
               <thead>
                 <tr>
-                  <th>N° Dossier / Date</th>
-                  <th>Client Emprunteur</th>
-                  <th>Montant & Durée</th>
-                  <th>Objet & Mode</th>
-                  <th>Capacité Nette</th>
-                  <th>Score & Confiance</th>
+                  <th>Dossier & Emprunteur</th>
+                  <th>Montant Demandé</th>
+                  <th>Score Risque</th>
                   <th>Statut</th>
-                  <th>Actions</th>
+                  <th style="text-align: right;">Action</th>
                 </tr>
               </thead>
               <tbody id="requests-table-body">
-                <!-- Dynamically Rendered -->
+                <!-- Dynamically Rendered with 5 columns -->
               </tbody>
             </table>
           </div>
         </div>
+      
+        <!-- Sidedrawer Volet Latéral : Instruction & Analyse Risque 360° -->
+        <div id="analyst-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnalystDossierDrawer()">
+          <div id="analyst-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet instruction approfondie analyste risque">
+            <div class="schedule-drawer-header">
+              <div class="schedule-drawer-header-content">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                  <span class="badge badge-submitted" id="analyst-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0891</span>
+                  <span id="analyst-drawer-model-badge" class="badge badge-warning" style="font-size: 0.68rem;"><i class="fas fa-seedling"></i> Cold Start</span>
+                  <span id="analyst-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> En Analyse</span>
+                </div>
+                <h3 id="analyst-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fatou Ndiaye</h3>
+                <p id="analyst-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Fiche d'Instruction Analytique 360° • Solvabilité, OCR & Risque</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" id="analyst-drawer-toggle-coldstart" onclick="App.toggleColdStartInDrawer()" title="Basculer la simulation entre Modèle Standard et Cold Start" style="font-size: 0.72rem; padding: 0.3rem 0.6rem;">
+                  <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+                </button>
+                <button class="modal-close-btn" onclick="App.closeAnalystDossierDrawer()" title="Fermer le volet">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+      
+            <div class="schedule-drawer-body">
+              <!-- Hero Score & Solvabilité Banner -->
+              <div class="drawer-hero-banner" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(16, 185, 129, 0.04)); border-color: rgba(79, 70, 229, 0.2); padding: 1rem 1.15rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                  <div style="text-align: left;">
+                    <div class="drawer-hero-label">Score d'Éligibilité & Risque XAI</div>
+                    <div style="display: flex; align-items: baseline; gap: 0.5rem;">
+                      <span id="analyst-drawer-score-val" style="font-size: 2rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">93</span>
+                      <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 600;">/100</span>
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div id="analyst-drawer-risk-tag" class="badge badge-approved" style="font-size: 0.8rem; padding: 0.3rem 0.7rem; margin-bottom: 4px;">
+                      <i class="fas fa-shield-halved mr-1"></i> Risque Faible
+                    </div>
+                    <div id="analyst-drawer-confidence" style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">
+                      Indice de Confiance : <strong class="text-emerald">95%</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Section 1 : Emprunteur & Capacité Financière Nette -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Reste à Vivre</h4>
+                  <span id="analyst-drawer-client-id" class="badge badge-submitted" style="font-size: 0.68rem;">ML-BKO-008821</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem;">
+                  <img id="analyst-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+                  <div>
+                    <div id="analyst-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+                    <div id="analyst-drawer-client-activity" style="font-size: 0.76rem; color: var(--text-secondary);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
+                    <div id="analyst-drawer-client-loc" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 1px;">
+                      <i class="fas fa-location-dot text-primary mr-1"></i> Bamako (Grand Marché), Mali • Agence Marché Médine
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Équation financière Reste à Vivre -->
+                <div style="background: var(--bg-surface-secondary); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+                    <i class="fas fa-calculator text-primary mr-1"></i> Décomposition de la Capacité Nette
+                  </div>
+                  <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+                    <div class="drawer-kv">
+                      <span class="drawer-kv-label">Revenus Mensuels</span>
+                      <span id="analyst-drawer-income" class="drawer-kv-value" style="color: #059669; font-weight: 700;">800 000 FCFA</span>
+                    </div>
+                    <div class="drawer-kv">
+                      <span class="drawer-kv-label">Charges & Dettes</span>
+                      <span id="analyst-drawer-expenses" class="drawer-kv-value" style="color: #dc2626; font-weight: 700;">380 000 FCFA</span>
+                    </div>
+                  </div>
+                  <div class="drawer-grid-2" style="padding-top: 0.4rem; border-top: 1px dashed var(--border-color);">
+                    <div class="drawer-kv">
+                      <span class="drawer-kv-label">Reste à Vivre Dégagé</span>
+                      <span id="analyst-drawer-disposable" class="drawer-kv-value" style="color: var(--primary-700); font-weight: 800; font-size: 0.95rem;">420 000 FCFA</span>
+                    </div>
+                    <div class="drawer-kv">
+                      <span class="drawer-kv-label">Mensualité Prévue</span>
+                      <span id="analyst-drawer-installment" class="drawer-kv-value" style="font-weight: 800; font-size: 0.95rem;">235 000 FCFA</span>
+                    </div>
+                  </div>
+                </div>
+      
+                <div id="analyst-drawer-cap-banner" class="capacity-comparison pass" style="margin: 0; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem;">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+      
+              <!-- Section 2 : Extraction OCR & Pièces Justificatives GED -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Contrôle OCR</h4>
+                  <span id="analyst-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 documents</span>
+                </div>
+                <div id="analyst-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  <!-- Rendered Docs -->
+                </div>
+              </div>
+      
+              <!-- Section 3 : Alertes & Détection des Anomalies -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-triangle-exclamation text-warning mr-1"></i> Signaux & Contrôles Automatisés</h4>
+                  <span id="analyst-drawer-anom-count" class="badge badge-warning" style="font-size: 0.68rem;">0 alerte</span>
+                </div>
+                <div id="analyst-drawer-anomalies-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  <!-- Rendered Anomalies -->
+                </div>
+              </div>
+      
+              <!-- Section 4 : Explicabilité & 5 Piliers CreditFast -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-scale-balanced text-primary mr-1"></i> Grille d'Explicabilité Multi-Facteurs</h4>
+                  <span class="badge badge-approved" style="font-size: 0.68rem;">Norme CreditFast</span>
+                </div>
+                <div id="analyst-drawer-factors-list" class="factors-list" style="gap: 0.5rem; display: flex; flex-direction: column;">
+                  <!-- Rendered Factors -->
+                </div>
+              </div>
+      
+              <!-- Section 5 : Avis & Recommandation pour le Comité -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Recommandation de l'Analyste</h4>
+                  <span class="badge badge-submitted" style="font-size: 0.68rem;">Comité d'Octroi</span>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label" style="font-size: 0.75rem;">Avis Consultatif</label>
+                  <select id="analyst-drawer-reco-select" class="form-control" style="font-size: 0.8rem;">
+                    <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                    <option value="RESERVE">Favorable sous réserve de compléments</option>
+                    <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" style="font-size: 0.75rem;">Note d'Analyse Synthétique</label>
+                  <textarea id="analyst-drawer-notes-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Synthèse pour les membres du comité...">Capacité de remboursement vérifiée et confirmée. Activité commerciale mature et régulière sur le marché de Bamako. Pièces justificatives et factures proforma validées.</textarea>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Sidedrawer Footer Actions -->
+            <div class="schedule-drawer-footer">
+              <button class="btn btn-secondary btn-sm" onclick="App.closeAnalystDossierDrawer()">
+                <i class="fas fa-times mr-1"></i> Fermer
+              </button>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" onclick="App.requestComplementFromAnalystDrawer()" title="Demander une contre-expertise terrain ou un document complémentaire">
+                  <i class="fas fa-motorcycle text-warning mr-1"></i> Complément Terrain
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="App.submitAnalystReviewFromDrawer()">
+                  <i class="fas fa-paper-plane mr-1"></i> Transmettre au Comité
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
+      
       
 
       <!-- ====================================================================
@@ -3785,19 +4044,169 @@
               <thead>
                 <tr>
                   <th scope="col">Dossier & Emprunteur</th>
+                  <th scope="col">Anomalie & Règle</th>
                   <th scope="col">Gravité</th>
-                  <th scope="col">Règle & Type</th>
-                  <th scope="col">Description & Diagnostic</th>
-                  <th scope="col">Constat vs Attendu</th>
-                  <th scope="col">Moteur Détecteur</th>
                   <th scope="col">Statut</th>
-                  <th scope="col" style="text-align: right;">Actions Analyste</th>
+                  <th scope="col" style="text-align: right;">Action</th>
                 </tr>
               </thead>
               <tbody id="analyst-anomalies-table-body">
                 <!-- Dynamically Rendered -->
               </tbody>
             </table>
+          </div>
+        </div>
+      
+        <!-- Sidedrawer Volet Latéral : Détail Approfondi de l'Anomalie & Diagnostic Risque -->
+        <div id="anomaly-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnomalyDrawer()">
+          <div id="anomaly-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet diagnostic approfondi anomalie risque">
+            <div class="schedule-drawer-header">
+              <div class="schedule-drawer-header-content">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                  <span class="badge badge-submitted" id="anom-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0893</span>
+                  <span id="anom-drawer-sev-badge" class="badge badge-rejected"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>
+                  <span id="anom-drawer-status-badge" class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>
+                </div>
+                <h3 id="anom-drawer-title" class="schedule-drawer-title" style="font-size: 1.08rem; font-weight: 800; color: var(--text-primary); margin: 0;">Validité Temporelle Pièce Proforma</h3>
+                <p id="anom-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Contrôle de conformité OCR & Règles Prudentielles</p>
+              </div>
+              <button class="modal-close-btn" onclick="App.closeAnomalyDrawer()" title="Fermer le volet">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+      
+            <div class="schedule-drawer-body">
+              <!-- Hero Diagnostic & Engine Banner -->
+              <div class="drawer-hero-banner" id="anom-drawer-hero-banner" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.05)); border-color: rgba(239, 68, 68, 0.25); padding: 0.9rem 1.15rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                  <div>
+                    <div class="drawer-hero-label" id="anom-drawer-type-label">Type d'Anomalie Détectée</div>
+                    <div id="anom-drawer-type-name" style="font-size: 1.15rem; font-weight: 800; color: #b91c1c; font-family: var(--font-family-code);">DATE_INCOHERENTE</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <span id="anom-drawer-engine-badge" class="badge" style="background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.3); font-size: 0.74rem;">
+                      <i class="fas fa-microchip mr-1"></i> Moteur OCR Tesseract V2.2
+                    </span>
+                    <div id="anom-drawer-detected-date" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 3px;">
+                      Détecté le 14/08/2026 à 11:12
+                    </div>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Section 1 : Emprunteur & Dossier Associé -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Demande Associée</h4>
+                  <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-view-dossier" onclick="App.openDossierFromAnomalyDrawer()" style="font-size: 0.72rem; padding: 0.25rem 0.55rem;">
+                    <i class="fas fa-magnifying-glass-chart mr-1"></i> Dossier 360°
+                  </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <img id="anom-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 42px; height: 42px; border-radius: var(--radius-md); flex-shrink: 0;">
+                  <div>
+                    <div id="anom-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Kodjo Mensah</div>
+                    <div id="anom-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali</div>
+                  </div>
+                </div>
+                <div class="drawer-grid-2">
+                  <div class="drawer-kv">
+                    <span class="drawer-kv-label">Montant du Crédit</span>
+                    <span id="anom-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">1 800 000 FCFA</span>
+                  </div>
+                  <div class="drawer-kv">
+                    <span class="drawer-kv-label">Score Risque Actuel</span>
+                    <span id="anom-drawer-risk-score" class="drawer-kv-value" style="font-weight: 800; color: #dc2626;">31 / 100</span>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Section 2 : Diagnostic Détaillé & Rapprochement -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-magnifying-glass-chart text-warning mr-1"></i> Rapprochement & Constats</h4>
+                  <span id="anom-drawer-category-badge" class="badge badge-submitted">Contrôle OCR</span>
+                </div>
+                
+                <div style="margin-bottom: 0.75rem;">
+                  <label class="form-label" style="font-size: 0.75rem; color: var(--text-muted);">Description du Risque Identifié</label>
+                  <p id="anom-drawer-desc" style="background: var(--bg-surface-secondary); padding: 0.7rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.78rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                    La date extraite par OCR sur la facture d'outillage est antérieure de plus de 18 mois au dépôt du dossier.
+                  </p>
+                </div>
+      
+                <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+                  <div class="drawer-metric-box" style="border-left: 3px solid #dc2626;">
+                    <div class="drawer-kv-label" style="color: #dc2626; font-weight: 700;"><i class="fas fa-xmark mr-1"></i> Valeur Détectée (Anormale)</div>
+                    <div id="anom-drawer-val-detected" style="font-size: 0.88rem; font-weight: 700; color: #b91c1c; font-family: var(--font-family-code); margin-top: 3px;">12/01/2025</div>
+                  </div>
+                  <div class="drawer-metric-box" style="border-left: 3px solid #059669;">
+                    <div class="drawer-kv-label" style="color: #059669; font-weight: 700;"><i class="fas fa-check mr-1"></i> Valeur Attendue / Norme</div>
+                    <div id="anom-drawer-val-expected" style="font-size: 0.88rem; font-weight: 700; color: #047857; font-family: var(--font-family-code); margin-top: 3px;">Moins de 30 jours (&lt; 16/07/2026)</div>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Section 3 : Pièce Justificative GED Associée -->
+              <div class="drawer-panel" id="anom-drawer-doc-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-info mr-1"></i> Document & Extraction Numérique</h4>
+                  <span id="anom-drawer-doc-ocr-score" class="badge badge-submitted">OCR: 94%</span>
+                </div>
+                <div id="anom-drawer-doc-content" style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.75rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <i class="fas fa-file-pdf text-danger" style="font-size: 1.25rem;"></i>
+                    <div>
+                      <div id="anom-drawer-doc-name" style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Facture Proforma Outillage.pdf</div>
+                      <div id="anom-drawer-doc-type" style="font-size: 0.7rem; color: var(--text-muted);">Type : FACTURE • Rattaché le 14/08/2026</div>
+                    </div>
+                  </div>
+                  <span id="anom-drawer-doc-status" class="badge badge-warning">À rectifier</span>
+                </div>
+              </div>
+      
+              <!-- Section 4 : Traitement Contradictoire & Décision -->
+              <div class="drawer-panel">
+                <div class="drawer-panel-header">
+                  <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Résolution & Justification</h4>
+                  <span id="anom-drawer-resolution-badge" class="badge badge-verification">En Attente</span>
+                </div>
+                
+                <div id="anom-drawer-resolved-info" style="display: none; background: rgba(16, 185, 129, 0.08); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(16, 185, 129, 0.25); margin-bottom: 0.75rem;">
+                  <div style="font-size: 0.75rem; color: #047857; font-weight: 700; margin-bottom: 3px;">
+                    <i class="fas fa-check-circle mr-1"></i> Signalement Levé & Régularisé
+                  </div>
+                  <p id="anom-drawer-resolved-comment" style="font-size: 0.74rem; color: var(--text-primary); margin: 0; line-height: 1.4;">
+                    Contrôle contradictoire effectué. Pièce rectifiée intégrée.
+                  </p>
+                  <div id="anom-drawer-resolved-meta" style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+                    Levée par Analyste Risque #1 le 17/08/2026
+                  </div>
+                </div>
+      
+                <div id="anom-drawer-form-resolution">
+                  <div class="form-group" style="margin-bottom: 0.75rem;">
+                    <label class="form-label" style="font-size: 0.75rem;">Commentaire d'Instruction / Motif de Levée</label>
+                    <textarea id="anom-drawer-comment-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Indiquez le constat contradictoire ou la justification de levée..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Sidedrawer Footer Actions -->
+            <div class="schedule-drawer-footer">
+              <button class="btn btn-secondary btn-sm" onclick="App.closeAnomalyDrawer()">
+                <i class="fas fa-times mr-1"></i> Fermer
+              </button>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-field" onclick="App.requestFieldCheckFromAnomalyDrawer()" title="Demander une contre-expertise terrain">
+                  <i class="fas fa-motorcycle text-warning mr-1"></i> Contre-Expertise Terrain
+                </button>
+                <button class="btn btn-primary btn-sm" id="anom-drawer-btn-resolve" onclick="App.resolveAnomalyFromDrawer()">
+                  <i class="fas fa-check mr-1"></i> Lever l'Anomalie
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -4039,7 +4448,7 @@
               </div>
       
               <!-- Section 4 : Scellement Cryptographique & Horodatage -->
-              <div class="drawer-panel">
+              <!-- <div class="drawer-panel">
                 <div class="drawer-panel-header">
                   <h4 class="drawer-panel-title"><i class="fas fa-fingerprint text-info mr-1"></i> Intégrité & Empreinte SHA-256</h4>
                   <span class="badge badge-submitted" style="font-size: 0.68rem;">Horodatage Certifié</span>
@@ -4048,7 +4457,7 @@
                   <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">HASH SHA-256 IMMUABLE :</div>
                   <code id="pv-drawer-sha" style="font-size: 0.72rem; word-break: break-all; color: var(--primary-700); font-weight: 700;">9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01</code>
                 </div>
-              </div>
+              </div> -->
             </div>
       
             <!-- Sidedrawer Footer Actions -->

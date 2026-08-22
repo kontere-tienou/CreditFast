@@ -1295,49 +1295,45 @@ class DatabaseStore {
       }
     }
 
-    // Migration & sanitization: ensure any legacy cache has Mali / Bamako for Amadou Sanogo
+    // Migration & sanitization: ensure all users, clients and credit_requests are 100% Malian (Bamako districts)
     if (this.data) {
       let needsSave = false;
+      const malianAgencies = {
+        1: { district: "Grand Marché", address: "Quartier Grand Marché, Rue 314", occ: "Commerçante / Grossiste Textiles", client_num: "ML-BKO-008821" },
+        2: { district: "Badalabougou", address: "Secteur Badalabougou, Rue 22", occ: "Transformateur Agroalimentaire", client_num: "ML-BKO-004419" },
+        3: { district: "Dabanani", address: "Marché Dabanani, Rue 102", occ: "Import-Export Quincaillerie", client_num: "ML-BKO-003190" },
+        4: { district: "Sotuba", address: "Zone Industrielle Sotuba", occ: "Aviculteur & Éleveur", client_num: "ML-BKO-005512" },
+        5: { district: "Faladié", address: "Quartier Faladié", occ: "Jeune Artisan Menuisier", client_num: "ML-BKO-009023" },
+      };
+
       if (Array.isArray(this.data.credit_requests)) {
         this.data.credit_requests.forEach((req) => {
-          if (
-            req.client_name === "Amadou Sanogo" ||
-            req.id === 2 ||
-            req.client_id === 2 ||
-            (req.city && typeof req.city === "string" && req.city.toLowerCase().includes("ouaga")) ||
-            (req.country && typeof req.country === "string" && req.country.toLowerCase().includes("burkina"))
-          ) {
-            req.client_name = "Amadou Sanogo";
-            req.city = "Bamako";
-            req.country = "Mali";
-            needsSave = true;
-          }
+          req.country = "Mali";
+          req.city = "Bamako";
+          needsSave = true;
         });
       }
+
       if (Array.isArray(this.data.clients)) {
         this.data.clients.forEach((c) => {
-          if (
-            c.id === 2 ||
-            (c.city && typeof c.city === "string" && c.city.toLowerCase().includes("ouaga"))
-          ) {
-            c.city = "Bamako";
-            c.address = "Secteur Badalabougou, Rue 22";
-            needsSave = true;
+          c.city = "Bamako";
+          const info = malianAgencies[c.id];
+          if (info) {
+            c.address = info.address;
+            c.occupation = info.occ;
+            c.client_number = info.client_num;
           }
+          needsSave = true;
         });
       }
+
       if (Array.isArray(this.data.users)) {
         this.data.users.forEach((u) => {
-          if (
-            u.id === 6 ||
-            (u.first_name === "Amadou" && u.last_name === "Sanogo") ||
-            (u.country && typeof u.country === "string" && u.country.toLowerCase().includes("burkina"))
-          ) {
-            u.country = "Mali";
-            needsSave = true;
-          }
+          u.country = "Mali";
+          needsSave = true;
         });
       }
+
       if (needsSave) {
         this.save();
       }

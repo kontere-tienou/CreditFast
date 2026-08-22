@@ -10,6 +10,11 @@
         <span>Instruction & Risque</span>
       </div>
     </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ALL')">
+        <i class="fas fa-rotate mr-1"></i> Actualiser
+      </button>
+    </div>
   </div>
 
   <div class="card" style="margin-bottom: 1.25rem;">
@@ -25,30 +30,194 @@
         <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED', '', this)">Approuvés</button>
       </div>
       <div style="font-size: 0.8rem; color: var(--text-subtle);">
-        <i class="fas fa-info-circle"></i> Cliquez sur <strong>Analyser 360°</strong> pour voir le Reste à Vivre, l'OCR et simuler le Cold Start.
+        <i class="fas fa-info-circle text-primary mr-1"></i> Cliquez sur une ligne ou sur <strong>Détails 360°</strong> pour ouvrir le volet d'instruction latérale.
       </div>
     </div>
   </div>
 
+  <!-- 5 Colonnes Optimisées Tableau Analyste Risque -->
   <div class="card">
     <div class="table-responsive">
       <table class="table-custom">
         <thead>
           <tr>
-            <th>N° Dossier / Date</th>
-            <th>Client Emprunteur</th>
-            <th>Montant & Durée</th>
-            <th>Objet & Mode</th>
-            <th>Capacité Nette</th>
-            <th>Score & Confiance</th>
+            <th>Dossier & Emprunteur</th>
+            <th>Montant Demandé</th>
+            <th>Score Risque</th>
             <th>Statut</th>
-            <th>Actions</th>
+            <th style="text-align: right;">Action</th>
           </tr>
         </thead>
         <tbody id="requests-table-body">
-          <!-- Dynamically Rendered -->
+          <!-- Dynamically Rendered with 5 columns -->
         </tbody>
       </table>
     </div>
   </div>
+
+  <!-- Sidedrawer Volet Latéral : Instruction & Analyse Risque 360° -->
+  <div id="analyst-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnalystDossierDrawer()">
+    <div id="analyst-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet instruction approfondie analyste risque">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <span class="badge badge-submitted" id="analyst-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0891</span>
+            <span id="analyst-drawer-model-badge" class="badge badge-warning" style="font-size: 0.68rem;"><i class="fas fa-seedling"></i> Cold Start</span>
+            <span id="analyst-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> En Analyse</span>
+          </div>
+          <h3 id="analyst-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fatou Ndiaye</h3>
+          <p id="analyst-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Fiche d'Instruction Analytique 360° • Solvabilité, OCR & Risque</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" id="analyst-drawer-toggle-coldstart" onclick="App.toggleColdStartInDrawer()" title="Basculer la simulation entre Modèle Standard et Cold Start" style="font-size: 0.72rem; padding: 0.3rem 0.6rem;">
+            <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+          </button>
+          <button class="modal-close-btn" onclick="App.closeAnalystDossierDrawer()" title="Fermer le volet">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Hero Score & Solvabilité Banner -->
+        <div class="drawer-hero-banner" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(16, 185, 129, 0.04)); border-color: rgba(79, 70, 229, 0.2); padding: 1rem 1.15rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="text-align: left;">
+              <div class="drawer-hero-label">Score d'Éligibilité & Risque XAI</div>
+              <div style="display: flex; align-items: baseline; gap: 0.5rem;">
+                <span id="analyst-drawer-score-val" style="font-size: 2rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">93</span>
+                <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 600;">/100</span>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div id="analyst-drawer-risk-tag" class="badge badge-approved" style="font-size: 0.8rem; padding: 0.3rem 0.7rem; margin-bottom: 4px;">
+                <i class="fas fa-shield-halved mr-1"></i> Risque Faible
+              </div>
+              <div id="analyst-drawer-confidence" style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">
+                Indice de Confiance : <strong class="text-emerald">95%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1 : Emprunteur & Capacité Financière Nette -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Reste à Vivre</h4>
+            <span id="analyst-drawer-client-id" class="badge badge-submitted" style="font-size: 0.68rem;">ML-BKO-008821</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem;">
+            <img id="analyst-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div>
+              <div id="analyst-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="analyst-drawer-client-activity" style="font-size: 0.76rem; color: var(--text-secondary);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
+              <div id="analyst-drawer-client-loc" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 1px;">
+                <i class="fas fa-location-dot text-primary mr-1"></i> Bamako (Grand Marché), Mali • Agence Marché Médine
+              </div>
+            </div>
+          </div>
+
+          <!-- Équation financière Reste à Vivre -->
+          <div style="background: var(--bg-surface-secondary); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+              <i class="fas fa-calculator text-primary mr-1"></i> Décomposition de la Capacité Nette
+            </div>
+            <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Revenus Mensuels</span>
+                <span id="analyst-drawer-income" class="drawer-kv-value" style="color: #059669; font-weight: 700;">800 000 FCFA</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Charges & Dettes</span>
+                <span id="analyst-drawer-expenses" class="drawer-kv-value" style="color: #dc2626; font-weight: 700;">380 000 FCFA</span>
+              </div>
+            </div>
+            <div class="drawer-grid-2" style="padding-top: 0.4rem; border-top: 1px dashed var(--border-color);">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Reste à Vivre Dégagé</span>
+                <span id="analyst-drawer-disposable" class="drawer-kv-value" style="color: var(--primary-700); font-weight: 800; font-size: 0.95rem;">420 000 FCFA</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Mensualité Prévue</span>
+                <span id="analyst-drawer-installment" class="drawer-kv-value" style="font-weight: 800; font-size: 0.95rem;">235 000 FCFA</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="analyst-drawer-cap-banner" class="capacity-comparison pass" style="margin: 0; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem;">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Section 2 : Extraction OCR & Pièces Justificatives GED -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Contrôle OCR</h4>
+            <span id="analyst-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 documents</span>
+          </div>
+          <div id="analyst-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered Docs -->
+          </div>
+        </div>
+
+        <!-- Section 3 : Alertes & Détection des Anomalies -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-triangle-exclamation text-warning mr-1"></i> Signaux & Contrôles Automatisés</h4>
+            <span id="analyst-drawer-anom-count" class="badge badge-warning" style="font-size: 0.68rem;">0 alerte</span>
+          </div>
+          <div id="analyst-drawer-anomalies-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered Anomalies -->
+          </div>
+        </div>
+
+        <!-- Section 4 : Explicabilité & 5 Piliers CreditFast -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-scale-balanced text-primary mr-1"></i> Grille d'Explicabilité Multi-Facteurs</h4>
+            <span class="badge badge-approved" style="font-size: 0.68rem;">Norme CreditFast</span>
+          </div>
+          <div id="analyst-drawer-factors-list" class="factors-list" style="gap: 0.5rem; display: flex; flex-direction: column;">
+            <!-- Rendered Factors -->
+          </div>
+        </div>
+
+        <!-- Section 5 : Avis & Recommandation pour le Comité -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Recommandation de l'Analyste</h4>
+            <span class="badge badge-submitted" style="font-size: 0.68rem;">Comité d'Octroi</span>
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" style="font-size: 0.75rem;">Avis Consultatif</label>
+            <select id="analyst-drawer-reco-select" class="form-control" style="font-size: 0.8rem;">
+              <option value="FAVORABLE">Favorable pour passage en Comité</option>
+              <option value="RESERVE">Favorable sous réserve de compléments</option>
+              <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Note d'Analyse Synthétique</label>
+            <textarea id="analyst-drawer-notes-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Synthèse pour les membres du comité...">Capacité de remboursement vérifiée et confirmée. Activité commerciale mature et régulière sur le marché de Bamako. Pièces justificatives et factures proforma validées.</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAnalystDossierDrawer()">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="App.requestComplementFromAnalystDrawer()" title="Demander une contre-expertise terrain ou un document complémentaire">
+            <i class="fas fa-motorcycle text-warning mr-1"></i> Complément Terrain
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="App.submitAnalystReviewFromDrawer()">
+            <i class="fas fa-paper-plane mr-1"></i> Transmettre au Comité
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+

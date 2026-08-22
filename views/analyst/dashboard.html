@@ -141,68 +141,158 @@
   </div>
 
   <!-- CREDITFAST IMPACT & METRICS SECTION (NOTE DE PRÉSENTATION CREDITFAST-DIGICOOP-WA+) -->
-  <div class="card" style="margin-top: 1.25rem; border: 1px solid var(--border-subtle);">
-    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+  <div class="card" style="margin-top: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05); border-radius: var(--radius-lg); overflow: hidden;">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 1.15rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
       <div>
-        <h3 class="card-title"><i class="fas fa-chart-line text-emerald mr-1"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)</h3>
-        <p class="card-subtitle">Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako )</p>
+        <h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-chart-line text-emerald" style="font-size: 1.1rem;"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)
+        </h3>
+        <p class="card-subtitle" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+          Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako)
+        </p>
       </div>
-      <span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Modèle Hybride & Responsable</span>
+      <span class="impact-metric-badge green" style="font-size: 0.75rem; padding: 0.35rem 0.8rem;">
+        <i class="fas fa-circle-check"></i> Modèle Hybride & Responsable
+      </span>
     </div>
-    <div class="card-body">
-      <div class="grid-3" style="gap: 1rem;">
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Temps Moyen de Pré-Analyse</span>
-            <span class="badge badge-approved" style="font-size: 0.68rem;">-85% vs manuel</span>
+    <div class="card-body" style="padding: 1.35rem 1.5rem; background: var(--bg-app);">
+      <div class="impact-metric-grid">
+        <!-- Card 1 : Temps Moyen de Pré-Analyse -->
+        <div class="impact-metric-card theme-indigo">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon indigo">
+                <i class="fas fa-bolt-lightning"></i>
+              </div>
+              <span class="impact-metric-title">Temps Moyen de Pré-Analyse</span>
+            </div>
+            <span class="impact-metric-badge green">-85% vs manuel</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">15 min <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(au lieu de 48h)</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Instruction accélérée dès réception des pièces au guichet</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value indigo">15 min</span>
+              <span class="impact-metric-subvalue">(au lieu de 48h)</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 85%; background: linear-gradient(90deg, #4f46e5, #818cf8);"></div>
+            </div>
+            <p class="impact-metric-desc">Instruction accélérée dès réception des pièces au guichet ou via l'application mobile.</p>
+          </div>
         </div>
 
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Extraction OCR & Cohérence</span>
-            <span class="badge badge-approved" style="font-size: 0.68rem;">Précision Haute</span>
+        <!-- Card 2 : Extraction OCR & Cohérence -->
+        <div class="impact-metric-card theme-emerald">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon emerald">
+                <i class="fas fa-brain-circuit"></i>
+              </div>
+              <span class="impact-metric-title">Extraction OCR & Cohérence</span>
+            </div>
+            <span class="impact-metric-badge green">Précision Haute</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-500);">96.4% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">de taux de lecture</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Rapprochement NINA UEMOA, factures proforma & devis</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value emerald">96.4%</span>
+              <span class="impact-metric-subvalue">de taux de lecture conforme</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 96.4%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
+            </div>
+            <p class="impact-metric-desc">Rapprochement instantané cartes NINA, quittances EDM-SA, factures proforma & devis.</p>
+          </div>
         </div>
 
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Incohérences & Discordances</span>
-            <span class="badge badge-warning" style="font-size: 0.68rem;">Alertes Actives</span>
+        <!-- Card 3 : Incohérences & Discordances -->
+        <div class="impact-metric-card theme-amber">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon amber">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+              <span class="impact-metric-title">Incohérences & Discordances</span>
+            </div>
+            <span class="impact-metric-badge amber">Alertes Actives</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">repérées avant comité</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Détection automatique des écarts de montants et dates expirées</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value amber">100%</span>
+              <span class="impact-metric-subvalue">repérées avant comité</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+            </div>
+            <p class="impact-metric-desc">Détection automatique des écarts de montants, doublons et pièces d'identité expirées.</p>
+          </div>
         </div>
 
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Scoring 100% Explicable</span>
-            <span class="badge badge-approved" style="font-size: 0.68rem;">Audit Ready</span>
+        <!-- Card 4 : Scoring 100% Explicable -->
+        <div class="impact-metric-card theme-purple">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon purple">
+                <i class="fas fa-magnifying-glass-chart"></i>
+              </div>
+              <span class="impact-metric-title">Scoring 100% Explicable</span>
+            </div>
+            <span class="impact-metric-badge purple">Audit Ready</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">justifié facteur par facteur</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Zéro boîte noire : facteurs favorables, risques & éléments à vérifier</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value purple">100%</span>
+              <span class="impact-metric-subvalue">justifié facteur par facteur</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+            </div>
+            <p class="impact-metric-desc">Zéro boîte noire : piliers de solvabilité, ratios d'effort et alertes certifiés pour le comité.</p>
+          </div>
         </div>
 
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Temps Économisé / Dossier</span>
-            <span class="badge badge-approved" style="font-size: 0.68rem;">Gain Productivité</span>
+        <!-- Card 5 : Temps Économisé / Dossier -->
+        <div class="impact-metric-card theme-teal">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon teal">
+                <i class="fas fa-clock-rotate-left"></i>
+              </div>
+              <span class="impact-metric-title">Temps Économisé / Dossier</span>
+            </div>
+            <span class="impact-metric-badge green">Gain Productivité</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-500);">~3h 30 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">par agent</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Recentrage du chargé de crédit sur la relation client et le terrain</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value teal">~3h 30</span>
+              <span class="impact-metric-subvalue">par agent et par dossier</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 88%; background: linear-gradient(90deg, #14b8a6, #2dd4bf);"></div>
+            </div>
+            <p class="impact-metric-desc">Recentrage du chargé de crédit sur l'accompagnement client, le conseil et les visites terrain.</p>
+          </div>
         </div>
 
-        <div class="stat-card" style="background: var(--surface-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-            <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-subtle);">Supervision Humaine Finale</span>
-            <span class="badge badge-approved" style="font-size: 0.68rem;">Éthique & RSE</span>
+        <!-- Card 6 : Supervision Humaine Finale -->
+        <div class="impact-metric-card theme-blue">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon blue">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <span class="impact-metric-title">Supervision Humaine Finale</span>
+            </div>
+            <span class="impact-metric-badge blue">Éthique & RSE</span>
           </div>
-          <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700);">100% <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Humain dans la boucle</span></div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">L'IA assiste et alerte, la décision finale d'octroi reste humaine</div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value blue">100%</span>
+              <span class="impact-metric-subvalue">humain dans la boucle</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+            </div>
+            <p class="impact-metric-desc">L'IA prépare, contrôle et alerte ; la décision souveraine d'octroi reste 100% humaine.</p>
+          </div>
         </div>
       </div>
     </div>

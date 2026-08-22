@@ -59,7 +59,7 @@ const AppInteractions = {
     if (items.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
+          <td colspan="5" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">
             <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
             Aucun dossier trouvé pour ces critères
           </td>
@@ -70,53 +70,50 @@ const AppInteractions = {
     tableBody.innerHTML = items.map(req => {
       const evalData = CreditScoringEngine.evaluateDossier(req.id) || {};
       const statusBadge = this.getStatusBadge(req.status);
-      const capacityBadge = req.repayment_capacity_status === 'SUFFICIENT'
-        ? `<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>`
-        : `<span class="badge badge-capacity-insufficient"><i class="fas fa-exclamation-circle"></i> Insuffisante</span>`;
 
-      const modeBadge = evalData.isColdStart
-        ? `<span class="badge badge-warning" style="font-size: 0.65rem;"><i class="fas fa-seedling"></i> Cold Start</span>`
-        : `<span class="badge badge-submitted" style="font-size: 0.65rem;"><i class="fas fa-history"></i> Standard</span>`;
+      const riskBadgeClass = evalData.riskLevel === 'CRITIQUE'
+        ? 'badge-rejected'
+        : evalData.riskLevel === 'ELEVE'
+          ? 'badge-warning'
+          : 'badge-approved';
+      const riskText = evalData.riskLevel === 'FAIBLE' ? 'Faible' : evalData.riskLevel === 'MODERE' ? 'Modéré' : evalData.riskLevel === 'ELEVE' ? 'Élevé' : evalData.riskLevel === 'CRITIQUE' ? 'Critique' : (evalData.riskLevel || 'Faible');
 
       return `
-        <tr>
+        <tr class="schedule-table-row" onclick="App.openAnalystDossierDrawer(${req.id})" style="cursor: pointer;" title="Cliquer pour afficher la fiche complète dans le volet latéral">
+          <!-- Col 1 : Dossier & Emprunteur (Info essentielle sans sous-texte) -->
           <td>
-            <strong>${req.request_number}</strong>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(req.submitted_at || req.created_at).toLocaleDateString('fr-FR')}</div>
-          </td>
-          <td>
-            <div class="client-cell">
-              <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff" alt="${req.client_name}">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff" alt="${req.client_name}" class="user-avatar" style="width: 34px; height: 34px; border-radius: var(--radius-md); flex-shrink: 0;">
               <div>
-                <div class="client-name">${req.client_name}</div>
-                <div class="client-sub">${req.city}, ${req.country}</div>
+                <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">${req.client_name}</span>
+                <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; font-size: 0.68rem; margin-left: 0.35rem;">${req.request_number}</span>
               </div>
             </div>
           </td>
+
+          <!-- Col 2 : Montant Demandé (Info essentielle sans sous-texte) -->
           <td>
-            <div class="amount-cell">${CreditScoringEngine.formatFCFA(req.requested_amount)}</div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.duration_months} mois</div>
+            <span class="amount-cell" style="font-weight: 800; font-size: 0.95rem; color: var(--text-primary); font-family: var(--font-family-code);">${CreditScoringEngine.formatFCFA(req.requested_amount)}</span>
           </td>
+
+          <!-- Col 3 : Score Risque (Info essentielle sans sous-texte) -->
           <td>
-            <div style="max-width: 200px; font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${req.purpose}">
-              ${req.purpose}
-            </div>
-            <div style="margin-top: 2px;">${modeBadge}</div>
-          </td>
-          <td>${capacityBadge}</td>
-          <td>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || '#4f46e5'};">${evalData.overallScore || req.score || 70}</span>
-              <span style="font-size: 0.7rem; color: var(--text-subtle);">/100</span>
-            </div>
-            <div style="font-size: 0.68rem; color: var(--cif-emerald-500); font-weight: 600;">
-              Confiance: ${evalData.confidenceScore || 90}%
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || '#4f46e5'}; font-family: var(--font-family-code);">${evalData.overallScore || req.score || 70}</span>
+              <span style="font-size: 0.72rem; color: var(--text-subtle);">/100</span>
+              <span class="badge ${riskBadgeClass}" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">${riskText}</span>
             </div>
           </td>
-          <td>${statusBadge}</td>
+
+          <!-- Col 4 : Statut (Info essentielle sans sous-texte) -->
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="AppInteractions.openDossierModal(${req.id})">
-              <i class="fas fa-magnifying-glass-chart"></i> Analyser 360°
+            ${statusBadge}
+          </td>
+
+          <!-- Col 5 : Action -->
+          <td style="text-align: right;">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openAnalystDossierDrawer(${req.id});" title="Ouvrir le volet d'instruction latérale 360°">
+              <i class="fas fa-magnifying-glass-chart mr-1"></i> Détails 360°
             </button>
           </td>
         </tr>
@@ -210,6 +207,48 @@ const AppInteractions = {
   openClientRequestDrawer(identifier) {
     if (window.App && typeof window.App.openClientRequestDrawer === 'function') {
       window.App.openClientRequestDrawer(identifier);
+    }
+  },
+
+  /**
+   * Ouvre le volet latéral d'inspection approfondie d'une anomalie
+   */
+  openAnomalyDrawer(anomalyId) {
+    if (window.App && typeof window.App.openAnomalyDrawer === 'function') {
+      window.App.openAnomalyDrawer(anomalyId);
+    }
+  },
+
+  /**
+   * Ferme le volet latéral d'anomalie
+   */
+  closeAnomalyDrawer() {
+    if (window.App && typeof window.App.closeAnomalyDrawer === 'function') {
+      window.App.closeAnomalyDrawer();
+    } else {
+      const backdrop = document.getElementById('anomaly-drawer-backdrop');
+      if (backdrop) backdrop.classList.remove('active');
+    }
+  },
+
+  /**
+   * Ouvre le volet latéral d'instruction 360° pour l'analyste risque
+   */
+  openAnalystDrawer(dossierId, coldStartOverride = null) {
+    if (window.App && typeof window.App.openAnalystDossierDrawer === 'function') {
+      window.App.openAnalystDossierDrawer(dossierId, coldStartOverride);
+    }
+  },
+
+  /**
+   * Ferme le volet latéral d'instruction 360°
+   */
+  closeAnalystDrawer() {
+    if (window.App && typeof window.App.closeAnalystDossierDrawer === 'function') {
+      window.App.closeAnalystDossierDrawer();
+    } else {
+      const backdrop = document.getElementById('analyst-drawer-backdrop');
+      if (backdrop) backdrop.classList.remove('active');
     }
   },
 
@@ -844,10 +883,16 @@ const AppInteractions = {
 
     if (dossierNumEl) dossierNumEl.textContent = req.request_number || `#REQ-2026-${req.id}`;
     if (clientNameEl) {
-      const isAmadou = req.client_name === "Amadou Sanogo" || req.id === 2 || req.client_id === 2;
-      const locText = isAmadou
-        ? "Bamako (Badalabougou), Mali"
-        : `${req.city || client.city || "Bamako"}, ${req.country || client.country || "Mali"}`;
+      const malianAgenciesMap = {
+        1: "Grand Marché",
+        2: "Badalabougou",
+        3: "Dabanani",
+        4: "Sotuba",
+        5: "Faladié",
+      };
+      const clientKey = req.client_id || req.id;
+      const district = malianAgenciesMap[clientKey] || "Grand Marché";
+      const locText = `Bamako (${district}), Mali`;
       clientNameEl.innerHTML = `<i class="fas fa-user mr-1"></i> ${req.client_name} (${locText})`;
     }
     if (reqAmountEl) reqAmountEl.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
