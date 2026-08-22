@@ -5,14 +5,17 @@
   <!-- Page Header -->
   <div class="page-header">
     <div>
-      <h2 class="page-title"><i class="fas fa-folder-closed text-primary mr-2"></i> Mes Pièces Justificatives & Devis</h2>
-      <p class="page-subtitle">Espace sécurisé de gestion documentaire, contrôle de validité et vérification par Reconnaissance Optique de Caractères </p>
+      <h2 class="page-title"><i class="fas fa-folder-closed text-primary mr-2"></i> Mes Pièces Justificatives & Devis
+      </h2>
+      <p class="page-subtitle">Espace sécurisé de gestion documentaire, contrôle de validité et vérification par
+        Reconnaissance Optique de Caractères </p>
     </div>
     <div class="page-actions">
       <button class="btn btn-primary" onclick="document.getElementById('client-file-input').click()">
         <i class="fas fa-cloud-arrow-up"></i> Téléverser un Document
       </button>
-      <input type="file" id="client-file-input" style="display: none;" onchange="App.handleClientDocUpload(event)" accept=".pdf,.jpg,.jpeg,.png">
+      <input type="file" id="client-file-input" style="display: none;" onchange="App.handleClientDocUpload(event)"
+        accept=".pdf,.jpg,.jpeg,.png">
     </div>
   </div>
 
@@ -26,18 +29,27 @@
     <i class="fas fa-shield-check anomaly-icon" style="color: var(--cif-emerald-600);"></i>
     <div class="anomaly-content">
       <h5 style="color: var(--cif-emerald-700);">Dossier documentaire conforme aux normes</h5>
-      <p>Vos pièces justificatives pour la demande #REQ-2026-0891 ont été extraites avec succès et certifiées par le module OCR CreditFast. Les pièces dont la date d'échéance approche sont automatiquement signalées en rouge pour renouvellement anticipé.</p>
+      <p>Vos pièces justificatives pour la demande #REQ-2026-0891 ont été extraites avec succès et certifiées par le
+        module OCR CreditFast. Les pièces dont la date d'échéance approche sont automatiquement signalées en rouge pour
+        renouvellement anticipé.</p>
     </div>
   </div>
 
   <!-- Drag and Drop Upload Zone -->
-  <div class="card" style="margin-bottom: 1.5rem; border: 2px dashed var(--primary-300); background: var(--bg-surface);">
-    <div class="card-body" style="text-align: center; padding: 2rem 1.5rem;" ondragover="event.preventDefault(); this.style.borderColor='var(--primary-600)'" ondragleave="this.style.borderColor='var(--primary-300)'" ondrop="event.preventDefault(); this.style.borderColor='var(--primary-300)'; App.handleClientDocDrop(event)">
-      <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+  <div class="card"
+    style="margin-bottom: 1.5rem; border: 2px dashed var(--primary-300); background: var(--bg-surface);">
+    <div class="card-body" style="text-align: center; padding: 2rem 1.5rem;"
+      ondragover="event.preventDefault(); this.style.borderColor='var(--primary-600)'"
+      ondragleave="this.style.borderColor='var(--primary-300)'"
+      ondrop="event.preventDefault(); this.style.borderColor='var(--primary-300)'; App.handleClientDocDrop(event)">
+      <div
+        style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
         <i class="fas fa-file-arrow-up"></i>
       </div>
-      <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Glissez-déposez vos nouveaux justificatifs ici</h4>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Formats acceptés : PDF, PNG, JPG (Factures proforma, quittances électricité/eau, contrat de bail, garanties). Max 10 Mo.</p>
+      <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">Glissez-déposez vos nouveaux justificatifs
+        ici</h4>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Formats acceptés : PDF, PNG, JPG
+        (Factures proforma, quittances électricité/eau, contrat de bail, garanties). Max 10 Mo.</p>
       <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()">
         <i class="fas fa-arrow-up-from-bracket"></i> Parcourir mes fichiers locaux
       </button>
@@ -49,8 +61,10 @@
     <button class="btn btn-primary btn-sm active" onclick="App.filterClientDocs('ALL', this)">
       Tous les Documents (6)
     </button>
-    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('EXPIRING', this)" id="btn-filter-expiring" style="color: #dc2626; border-color: #fca5a5; font-weight: 600;">
-      <i class="fas fa-triangle-exclamation text-danger"></i> Validité &lt; 30j (<span id="expiring-filter-count">2</span>)
+    <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('EXPIRING', this)" id="btn-filter-expiring"
+      style="color: #dc2626; border-color: #fca5a5; font-weight: 600;">
+      <i class="fas fa-triangle-exclamation text-danger"></i> Validité &lt; 30j (<span
+        id="expiring-filter-count">2</span>)
     </button>
     <button class="btn btn-secondary btn-sm" onclick="App.filterClientDocs('ID', this)">
       <i class="fas fa-id-card"></i> Identité & Registre (2)
@@ -69,10 +83,13 @@
   <!-- Documents Grid -->
   <div class="grid-3" id="client-documents-grid">
     <!-- Doc Card 1: CNI ECOWAS (Validité 2029 - Valide) -->
-    <div class="card doc-card-item" data-category="ID" data-validity-date="2029-03-14" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('cni')">
+    <div class="card doc-card-item" data-category="ID" data-validity-date="2029-03-14"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('cni')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-id-card"></i>
           </div>
           <div>
@@ -87,8 +104,9 @@
         <div class="doc-validity-row"><strong>Validité :</strong> 14/03/2029 (En cours de validité)</div>
         <div><strong>Ajouté le :</strong> 11/08/2026 à 10:15</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
-        <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i>  Validé 100%</span>
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> Validé 100%</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('cni')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
@@ -96,10 +114,13 @@
     </div>
 
     <!-- Doc Card 2: Registre du Commerce (RCCM) (Validité 2027 - Valide) -->
-    <div class="card doc-card-item" data-category="ID" data-validity-date="2027-02-15" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('rccm')">
+    <div class="card doc-card-item" data-category="ID" data-validity-date="2027-02-15"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('rccm')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-stamp"></i>
           </div>
           <div>
@@ -114,8 +135,10 @@
         <div><strong>NINEA :</strong> 008923412 2A2</div>
         <div class="doc-validity-row"><strong>Validité :</strong> 15/02/2027 (Certifié conforme)</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
-        <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> Certifié Conforme</span>
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+        <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> Certifié
+          Conforme</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('rccm')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
         </button>
@@ -123,25 +146,29 @@
     </div>
 
     <!-- Doc Card 3: Facture Proforma Tissus Wax (Validité 07/09/2026 - EXPIRE DANS 17 JOURS -> SURBRILLANCE ROUGE) -->
-    <div class="card doc-card-item" data-category="INVOICE" data-validity-date="2026-09-07" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('proforma')">
+    <div class="card doc-card-item" data-category="INVOICE" data-validity-date="2026-09-07"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('proforma')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-receipt"></i>
           </div>
           <div>
             <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 2px;">Facture Proforma Stock Wax</h4>
-            <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Grossiste_Wax_Lome.pdf</span>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Facture_Grossiste_Wax_Bamako.pdf</span>
           </div>
         </div>
         <div class="doc-header-badge-slot"></div>
       </div>
       <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-        <div><strong>Fournisseur :</strong> Éts Textile Assigamé Lomé</div>
+        <div><strong>Fournisseur :</strong> Éts Textile Bamako</div>
         <div><strong>Montant Total :</strong> 2 500 000 FCFA</div>
         <div class="doc-validity-row"><strong>Échéance Validité :</strong> 07/09/2026 (Validité 30 jours)</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-double"></i> Conforme au prêt</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('proforma')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
@@ -150,10 +177,13 @@
     </div>
 
     <!-- Doc Card 4: Quittance Électricité EDM-SA (Validité 30/08/2026 - EXPIRE DANS 9 JOURS -> SURBRILLANCE ROUGE) -->
-    <div class="card doc-card-item" data-category="INVOICE" data-validity-date="2026-08-30" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('senelec')">
+    <div class="card doc-card-item" data-category="INVOICE" data-validity-date="2026-08-30"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('senelec')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-bolt"></i>
           </div>
           <div>
@@ -168,7 +198,8 @@
         <div><strong>Adresse :</strong> Rue 314 x Porte 12, Grand Marché Bamako</div>
         <div class="doc-validity-row"><strong>Échéance Validité :</strong> 30/08/2026</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> Vérifié</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('senelec')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
@@ -177,10 +208,13 @@
     </div>
 
     <!-- Doc Card 5: Acte de Nantissement Épargne CreditFast (Validité 2027 - Valide) -->
-    <div class="card doc-card-item" data-category="GUARANTEE" data-validity-date="2027-08-11" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('guarantee')">
+    <div class="card doc-card-item" data-category="GUARANTEE" data-validity-date="2027-08-11"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('guarantee')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-shield-halved"></i>
           </div>
           <div>
@@ -195,7 +229,8 @@
         <div><strong>Montant Bloqué :</strong> 500 000 FCFA</div>
         <div class="doc-validity-row"><strong>Validité :</strong> 11/08/2027 (Enregistré)</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved doc-footer-status"><i class="fas fa-lock"></i> Actif & Enregistré</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('guarantee')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
@@ -204,10 +239,13 @@
     </div>
 
     <!-- Doc Card 6: Contrat Cadre de Microcrédit (Validité 2027 - Valide) -->
-    <div class="card doc-card-item" data-category="CONTRACT" data-validity-date="2027-08-11" style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;" onclick="App.openDocLightbox('contract')">
+    <div class="card doc-card-item" data-category="CONTRACT" data-validity-date="2027-08-11"
+      style="padding: 1.25rem; position: relative; cursor: pointer; transition: all 0.2s ease;"
+      onclick="App.openDocLightbox('contract')">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <div class="doc-icon-box" style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          <div class="doc-icon-box"
+            style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
             <i class="fas fa-signature"></i>
           </div>
           <div>
@@ -222,7 +260,8 @@
         <div class="doc-validity-row"><strong>Validité :</strong> 11/08/2027 (Scellé)</div>
         <div><strong>Empreinte SHA-256 :</strong> 8f9a2e3...b71c</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
         <span class="badge badge-approved doc-footer-status"><i class="fas fa-certificate"></i> Signé & Scellé</span>
         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); App.openDocLightbox('contract')">
           <i class="fas fa-eye"></i> Aperçu Sécurisé
@@ -231,4 +270,3 @@
     </div>
   </div>
 </section>
-

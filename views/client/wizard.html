@@ -44,9 +44,12 @@
 
       <!-- Step 1: Identité -->
       <div id="wizard-step-1" class="wizard-step-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-          <h4 style="margin: 0;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles & KYC</h4>
-          <button type="button" class="btn btn-primary-subtle btn-sm" id="btn-wizard-scan-cni" onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <h4 style="margin: 0;"><i class="fas fa-id-card text-primary mr-2"></i> Étape 1 : Informations Personnelles &
+            KYC</h4>
+          <button type="button" class="btn btn-primary-subtle btn-sm" id="btn-wizard-scan-cni"
+            onclick="App.openQrScannerModal('identity')" title="Scanner le QR Code d'une pièce d'identité officielle">
             <i class="fas fa-camera text-primary mr-1"></i> <strong>Scanner QR / NINA (Caméra)</strong>
           </button>
         </div>
@@ -56,9 +59,11 @@
           <i class="fas fa-shield-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
             <h5 style="color: var(--emerald); font-weight: 700;">Pièce d'Identité Certifiée</h5>
-            <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec succès.</p>
+            <p id="wizard-identity-qr-text" style="font-size: 0.8rem; margin: 0;">NINA Biométrique authentifiée avec
+              succès.</p>
           </div>
-          <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')" style="margin-left: auto;">
+          <button type="button" class="btn btn-outline btn-xs" onclick="App.openQrScannerModal('identity')"
+            style="margin-left: auto;">
             <i class="fas fa-rotate"></i> Re-scanner
           </button>
         </div>
@@ -77,11 +82,7 @@
           <div class="form-group">
             <label class="form-label">Pays de Résidence </label>
             <select id="wiz-country" class="form-control">
-              <option value="Mali">Mali</option>
-              <option value="Burkina Faso">Burkina Faso</option>
-              <option value="Sénégal">Sénégal</option>
-              <option value="Togo">Togo</option>
-              <option value="Bénin">Bénin</option>
+              <option value="Mali" selected>Mali</option>
             </select>
           </div>
           <div class="form-group">
@@ -91,9 +92,11 @@
         </div>
 
         <!-- Profil d'Éligibilité & Cold Start (Inclusion Financière) -->
-        <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1rem;">
+        <div
+          style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-            <label class="form-label" style="margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">
+            <label class="form-label"
+              style="margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">
               <i class="fas fa-seedling text-emerald mr-1"></i> Profil d'Inclusion & Antécédents Financiers
             </label>
             <span class="badge badge-warning" id="wiz-cold-start-indicator" style="font-size: 0.7rem;">
@@ -102,38 +105,51 @@
           </div>
 
           <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
-            <label style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--bg-surface); transition: all 0.2s;" id="label-profile-standard">
-              <input type="radio" name="wiz-profile-mode" id="wiz-profile-standard" value="STANDARD" onchange="App.handleWizardProfileModeChange('STANDARD')" style="margin-top: 3px;">
+            <label
+              style="border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--bg-surface); transition: all 0.2s;"
+              id="label-profile-standard">
+              <input type="radio" name="wiz-profile-mode" id="wiz-profile-standard" value="STANDARD"
+                onchange="App.handleWizardProfileModeChange('STANDARD')" style="margin-top: 3px;">
               <div>
                 <strong style="font-size: 0.82rem; color: var(--text-primary); display: block;">Membre Existant</strong>
-                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Déjà client CreditFast avec historique bancaire ou compte d'épargne régulier.</span>
+                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Déjà
+                  client CreditFast avec historique bancaire ou compte d'épargne régulier.</span>
               </div>
             </label>
 
-            <label style="border: 2px solid var(--primary-600); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--cif-emerald-50, #f0fdf4); transition: all 0.2s;" id="label-profile-coldstart">
-              <input type="radio" name="wiz-profile-mode" id="wiz-profile-coldstart" value="COLD_START" checked onchange="App.handleWizardProfileModeChange('COLD_START')" style="margin-top: 3px;">
+            <label
+              style="border: 2px solid var(--primary-600); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start; background: var(--cif-emerald-50, #f0fdf4); transition: all 0.2s;"
+              id="label-profile-coldstart">
+              <input type="radio" name="wiz-profile-mode" id="wiz-profile-coldstart" value="COLD_START" checked
+                onchange="App.handleWizardProfileModeChange('COLD_START')" style="margin-top: 3px;">
               <div>
                 <strong style="font-size: 0.82rem; color: var(--emerald, #047857); display: block;">
                   <i class="fas fa-seedling"></i> Primo-Demandeur (Cold Start)
                 </strong>
-                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Nouveau bénéficiaire sans antécédent bancaire : évaluation par solvabilité réelle.</span>
+                <span style="font-size: 0.73rem; color: var(--text-subtle); line-height: 1.3; display: block;">Nouveau
+                  bénéficiaire sans antécédent bancaire : évaluation par solvabilité réelle.</span>
               </div>
             </label>
           </div>
 
-          <div id="wiz-cold-start-info" style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
-            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast :</strong> L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
+          <div id="wiz-cold-start-info"
+            style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--emerald, #10b981); padding: 0.6rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.75rem; color: var(--text-muted-dark);">
+            <i class="fas fa-balance-scale text-emerald mr-1"></i> <strong>Modèle d'Inclusion CreditFast :</strong>
+            L'absence d'historique n'est pas pénalisée. Les pondérations sont automatiquement réparties sur votre reste
+            à vivre (35%), la stabilité de votre atelier/commerce (25%) et vos cautions (20%).
           </div>
         </div>
 
         <div style="text-align: right; margin-top: 1.5rem;">
-          <button class="btn btn-primary" data-wizard-action="next">Suivant : Activité <i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-primary" data-wizard-action="next">Suivant : Activité <i
+              class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- Step 2: Activité -->
       <div id="wizard-step-2" class="wizard-step-content" style="display: none;">
-        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-store text-primary mr-2"></i> Étape 2 : Activité Économique</h4>
+        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-store text-primary mr-2"></i> Étape 2 : Activité Économique
+        </h4>
         <div class="form-group">
           <label class="form-label">Secteur d'Activité</label>
           <select id="wiz-sector" class="form-control">
@@ -155,14 +171,17 @@
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
-          <button class="btn btn-primary" data-wizard-action="next">Suivant : Finances <i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i>
+            Précédent</button>
+          <button class="btn btn-primary" data-wizard-action="next">Suivant : Finances <i
+              class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- Step 3: Finances -->
       <div id="wizard-step-3" class="wizard-step-content" style="display: none;">
-        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-calculator text-primary mr-2"></i> Étape 3 : Revenus, Charges & Capacité</h4>
+        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-calculator text-primary mr-2"></i> Étape 3 : Revenus,
+          Charges & Capacité</h4>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Revenu Mensuel Principal (FCFA)</label>
@@ -184,14 +203,17 @@
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
-          <button class="btn btn-primary" data-wizard-action="next">Suivant : Demande <i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i>
+            Précédent</button>
+          <button class="btn btn-primary" data-wizard-action="next">Suivant : Demande <i
+              class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- Step 4: Demande -->
       <div id="wizard-step-4" class="wizard-step-content" style="display: none;">
-        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-money-bill-wave text-primary mr-2"></i> Étape 4 : Détails du Crédit & Simulation</h4>
+        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-money-bill-wave text-primary mr-2"></i> Étape 4 : Détails
+          du Crédit & Simulation</h4>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Montant Demandé (FCFA)</label>
@@ -204,12 +226,14 @@
         </div>
         <div class="form-group">
           <label class="form-label">Objet précis du financement</label>
-          <textarea id="wiz-purpose" class="form-control" rows="2">Achat de bois massif et outillage menuiserie</textarea>
+          <textarea id="wiz-purpose" class="form-control"
+            rows="2">Achat de bois massif et outillage menuiserie</textarea>
         </div>
 
         <!-- Live Capacity Simulator Card -->
         <div class="capacity-card" style="margin-top: 1rem;">
-          <h5 style="font-size: 0.85rem; color: var(--text-muted-dark); margin-bottom: 0.5rem;">Aperçu en Direct de la Capacité de Remboursement</h5>
+          <h5 style="font-size: 0.85rem; color: var(--text-muted-dark); margin-bottom: 0.5rem;">Aperçu en Direct de la
+            Capacité de Remboursement</h5>
           <div class="capacity-equation">
             <div class="capacity-item">
               <div class="val" id="wiz-calc-disposable">220 000 FCFA</div>
@@ -227,14 +251,17 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
-          <button class="btn btn-primary" data-wizard-action="next">Suivant : Garanties <i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i>
+            Précédent</button>
+          <button class="btn btn-primary" data-wizard-action="next">Suivant : Garanties <i
+              class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- Step 5: Garanties -->
       <div id="wizard-step-5" class="wizard-step-content" style="display: none;">
-        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-shield-alt text-primary mr-2"></i> Étape 5 : Déclaration de Garantie</h4>
+        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-shield-alt text-primary mr-2"></i> Étape 5 : Déclaration de
+          Garantie</h4>
         <div class="form-group">
           <label class="form-label">Type de Garantie</label>
           <select id="wiz-guarantee-type" class="form-control">
@@ -251,40 +278,50 @@
           </div>
           <div class="form-group">
             <label class="form-label">Description de la caution / garantie</label>
-            <input type="text" id="wiz-guarantee-desc" class="form-control" value="Caution solidaire du Maître Menuisier Faladié">
+            <input type="text" id="wiz-guarantee-desc" class="form-control"
+              value="Caution solidaire du Maître Menuisier Faladié">
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
-          <button class="btn btn-primary" data-wizard-action="next">Suivant : Justificatifs & OCR <i class="fas fa-arrow-right"></i></button>
+          <button class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i>
+            Précédent</button>
+          <button class="btn btn-primary" data-wizard-action="next">Suivant : Justificatifs & OCR <i
+              class="fas fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- Step 6: Justificatifs & OCR -->
       <div id="wizard-step-6" class="wizard-step-content" style="display: none;">
-        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des Justificatifs & Traitement OCR</h4>
-        
+        <h4 style="margin-bottom: 1.25rem;"><i class="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des
+          Justificatifs & Traitement OCR</h4>
+
         <div class="grid-2" style="gap: 1rem; margin-bottom: 1.25rem;">
           <!-- Option A: Scanner via Appareil Photo / QR Code -->
-          <div style="border: 2px dashed var(--primary-300); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+          <div
+            style="border: 2px dashed var(--primary-300); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
             <div>
-              <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem;">
+              <div
+                style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem;">
                 <i class="fas fa-camera"></i>
               </div>
               <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Scanner en Direct (Caméra)</h5>
               <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Scannez le QR Code de sécurité d'une facture normalisée DGI, d'un registre RCCM ou d'une attestation foncière.
+                Scannez le QR Code de sécurité d'une facture normalisée DGI, d'un registre RCCM ou d'une attestation
+                foncière.
               </p>
             </div>
-            <button type="button" class="btn btn-primary btn-sm" onclick="App.openQrScannerModal('document')" style="width: 100%; justify-content: center;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="App.openQrScannerModal('document')"
+              style="width: 100%; justify-content: center;">
               <i class="fas fa-qrcode mr-2"></i> Lancer la Caméra & Scanner QR
             </button>
           </div>
 
           <!-- Option B: Fichier Classique -->
-          <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+          <div
+            style="border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem; text-align: center; background: var(--bg-surface-secondary); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
             <div>
-              <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--bg-surface); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem; border: 1px solid var(--border-color);">
+              <div
+                style="width: 48px; height: 48px; border-radius: 50%; background: var(--bg-surface); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 0.75rem; border: 1px solid var(--border-color);">
                 <i class="fas fa-file-pdf"></i>
               </div>
               <h5 style="margin-bottom: 0.35rem; font-size: 0.95rem;">Sélectionner un Fichier PDF / Image</h5>
@@ -292,7 +329,9 @@
                 Formats acceptés : PDF, JPEG, PNG .
               </p>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="App.showToast('Document factice chargé avec succès (Facture_Bois_Mali.pdf)', 'success')" style="width: 100%; justify-content: center;">
+            <button type="button" class="btn btn-secondary btn-sm"
+              onclick="App.showToast('Document factice chargé avec succès (Facture_Bois_Mali.pdf)', 'success')"
+              style="width: 100%; justify-content: center;">
               <i class="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
             </button>
           </div>
@@ -303,12 +342,14 @@
           <i class="fas fa-file-circle-check anomaly-icon text-emerald" style="font-size: 1.4rem;"></i>
           <div class="anomaly-content">
             <h5 style="color: var(--emerald); font-weight: 700;">Document Officiel Vérifié par QR Code</h5>
-            <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée  attachée avec succès au dossier.</p>
+            <p id="wizard-doc-qr-text" style="font-size: 0.8rem; margin: 0;">Facture certifiée attachée avec succès au
+              dossier.</p>
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 1.75rem;">
-          <button type="button" class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i> Précédent</button>
+          <button type="button" class="btn btn-secondary" data-wizard-action="prev"><i class="fas fa-arrow-left"></i>
+            Précédent</button>
           <button type="button" class="btn btn-success" data-wizard-action="submit">
             <i class="fas fa-paper-plane"></i> Soumettre la Demande au Réseau CreditFast
           </button>
