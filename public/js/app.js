@@ -2014,8 +2014,8 @@ const App = {
         id: 104,
         credit_request_id: 2,
         document_type: "ATTESTATION_NON_REDEVANCE",
-        expected_doc_name: "Quittance Électricité CIE / Usine",
-        full_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        expected_doc_name: "Quittance Électricité EDM-SA / Usine",
+        full_doc_name: "Quittance EDM-SA / Électricité Usine Bamako (Badalabougou)",
         short_motif: "Compteur pro non justifié",
         reason:
           "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
@@ -2130,7 +2130,7 @@ const App = {
         id: 104,
         credit_request_id: 2,
         document_type: "ATTESTATION_NON_REDEVANCE",
-        expected_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        expected_doc_name: "Quittance EDM-SA / Électricité Usine Bamako (Badalabougou)",
         reason:
           "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
         severity: "WARNING",
@@ -2965,12 +2965,29 @@ const App = {
     const titleEl = document.getElementById("com-drawer-title");
     const subtitleEl = document.getElementById("com-drawer-subtitle");
 
+    const isAmadou =
+      req.client_name === "Amadou Sanogo" ||
+      req.id === 2 ||
+      req.client_id === 2;
+    const reqCity = isAmadou
+      ? "Bamako (Badalabougou)"
+      : req.city && !req.city.toLowerCase().includes("ouaga")
+        ? req.city
+        : "Bamako";
+    const reqCountry = isAmadou
+      ? "Mali"
+      : req.country && !req.country.toLowerCase().includes("burkina")
+        ? req.country
+        : "Mali";
+    const locText = `${reqCity}, ${reqCountry}`;
+
     if (reqBadge)
       reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
     if (titleEl)
       titleEl.textContent = req.client_name || client.name || "Emprunteur";
-    if (subtitleEl)
-      subtitleEl.textContent = `Dossier de crédit • ${req.city || client.city || "UEMOA"}, ${req.country || "UEMOA"} • Décision Comité`;
+    if (subtitleEl) {
+      subtitleEl.textContent = `Dossier de crédit • ${locText} • Décision Comité`;
+    }
 
     if (riskBadge) {
       const riskClass =
@@ -2995,12 +3012,13 @@ const App = {
     const surplusEl = document.getElementById("com-drawer-surplus");
 
     if (clientIdEl)
-      clientIdEl.textContent = `ID: CLI-${req.client_id || "0891"}`;
+      clientIdEl.textContent = `ID: CLI-${req.client_id || "2"}`;
     if (avatarEl)
       avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
-    if (locEl)
-      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || "Bamako"}, ${req.country || "Mali"} • Agence Principale`;
+    if (locEl) {
+      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${locText} • Agence Principale`;
+    }
     if (amountEl)
       amountEl.textContent = CreditScoringEngine.formatFCFA(
         req.requested_amount,

@@ -91,6 +91,17 @@ const DEFAULT_DATABASE = {
       avatar: "images/profil/profil01-04.jpg",
       country: "Mali",
     },
+    {
+      id: 6,
+      role_id: 4,
+      first_name: "Amadou",
+      last_name: "Sanogo",
+      phone: "+223 70 88 99 00",
+      email: "amadou.sanogo@gmail.com",
+      status: "ACTIVE",
+      avatar: "images/profil/profil01-03.jpg",
+      country: "Mali",
+    },
   ],
 
   // 3. Clients (avec format ID CreditFast : Code Caisse + Code Agence + N° Incrémentiel, residential_zone)
@@ -1280,6 +1291,50 @@ class DatabaseStore {
         this.data = JSON.parse(saved);
       } catch (e) {
         this.data = JSON.parse(JSON.stringify(DEFAULT_DATABASE));
+        this.save();
+      }
+    }
+
+    // Migration & sanitization: ensure all users, clients and credit_requests are 100% Malian (Bamako districts)
+    if (this.data) {
+      let needsSave = false;
+      const malianAgencies = {
+        1: { district: "Grand Marché", address: "Quartier Grand Marché, Rue 314", occ: "Commerçante / Grossiste Textiles", client_num: "ML-BKO-008821" },
+        2: { district: "Badalabougou", address: "Secteur Badalabougou, Rue 22", occ: "Transformateur Agroalimentaire", client_num: "ML-BKO-004419" },
+        3: { district: "Dabanani", address: "Marché Dabanani, Rue 102", occ: "Import-Export Quincaillerie", client_num: "ML-BKO-003190" },
+        4: { district: "Sotuba", address: "Zone Industrielle Sotuba", occ: "Aviculteur & Éleveur", client_num: "ML-BKO-005512" },
+        5: { district: "Faladié", address: "Quartier Faladié", occ: "Jeune Artisan Menuisier", client_num: "ML-BKO-009023" },
+      };
+
+      if (Array.isArray(this.data.credit_requests)) {
+        this.data.credit_requests.forEach((req) => {
+          req.country = "Mali";
+          req.city = "Bamako";
+          needsSave = true;
+        });
+      }
+
+      if (Array.isArray(this.data.clients)) {
+        this.data.clients.forEach((c) => {
+          c.city = "Bamako";
+          const info = malianAgencies[c.id];
+          if (info) {
+            c.address = info.address;
+            c.occupation = info.occ;
+            c.client_number = info.client_num;
+          }
+          needsSave = true;
+        });
+      }
+
+      if (Array.isArray(this.data.users)) {
+        this.data.users.forEach((u) => {
+          u.country = "Mali";
+          needsSave = true;
+        });
+      }
+
+      if (needsSave) {
         this.save();
       }
     }

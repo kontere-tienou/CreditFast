@@ -843,7 +843,13 @@ const AppInteractions = {
     const analystNotesEl = document.getElementById('com-analyst-notes');
 
     if (dossierNumEl) dossierNumEl.textContent = req.request_number || `#REQ-2026-${req.id}`;
-    if (clientNameEl) clientNameEl.innerHTML = `<i class="fas fa-user mr-1"></i> ${req.client_name} (${req.city || client.city || 'UEMOA'}, ${req.country || 'UEMOA'})`;
+    if (clientNameEl) {
+      const isAmadou = req.client_name === "Amadou Sanogo" || req.id === 2 || req.client_id === 2;
+      const locText = isAmadou
+        ? "Bamako (Badalabougou), Mali"
+        : `${req.city || client.city || "Bamako"}, ${req.country || client.country || "Mali"}`;
+      clientNameEl.innerHTML = `<i class="fas fa-user mr-1"></i> ${req.client_name} (${locText})`;
+    }
     if (reqAmountEl) reqAmountEl.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
     if (reqDurEl) reqDurEl.textContent = `${req.duration_months} mois`;
 

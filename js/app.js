@@ -2014,8 +2014,8 @@ const App = {
         id: 104,
         credit_request_id: 2,
         document_type: "ATTESTATION_NON_REDEVANCE",
-        expected_doc_name: "Quittance Électricité CIE / Usine",
-        full_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        expected_doc_name: "Quittance Électricité EDM-SA / Usine",
+        full_doc_name: "Quittance EDM-SA / Électricité Usine Bamako (Badalabougou)",
         short_motif: "Compteur pro non justifié",
         reason:
           "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
@@ -2130,7 +2130,7 @@ const App = {
         id: 104,
         credit_request_id: 2,
         document_type: "ATTESTATION_NON_REDEVANCE",
-        expected_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        expected_doc_name: "Quittance EDM-SA / Électricité Usine Bamako (Badalabougou)",
         reason:
           "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
         severity: "WARNING",
@@ -2965,12 +2965,33 @@ const App = {
     const titleEl = document.getElementById("com-drawer-title");
     const subtitleEl = document.getElementById("com-drawer-subtitle");
 
+    // Malian Locations & Agencies Mapping for all borrowers
+    const malianAgenciesMap = {
+      1: { district: "Grand Marché", agency: "Agence Marché Médine", occupation: "Commerçante / Grossiste Textiles", client_num: "ML-BKO-008821" },
+      2: { district: "Badalabougou", agency: "Agence Badalabougou", occupation: "Transformateur Agroalimentaire", client_num: "ML-BKO-004419" },
+      3: { district: "Dabanani", agency: "Agence Dabanani", occupation: "Import-Export Quincaillerie", client_num: "ML-BKO-003190" },
+      4: { district: "Sotuba", agency: "Agence Sotuba", occupation: "Aviculteur & Éleveur", client_num: "ML-BKO-005512" },
+      5: { district: "Faladié", agency: "Agence Faladié", occupation: "Jeune Artisan Menuisier", client_num: "ML-BKO-009023" },
+    };
+
+    const clientKey = req.client_id || req.id;
+    const malianInfo = malianAgenciesMap[clientKey] || {
+      district: req.city && req.city !== "UEMOA" ? req.city : "Grand Marché",
+      agency: "Agence Principale",
+      occupation: "Activité commerciale & artisanat",
+      client_num: `ML-BKO-00${clientKey}00`,
+    };
+
+    const locDistrict = `Bamako (${malianInfo.district})`;
+    const locText = `${locDistrict}, Mali`;
+
     if (reqBadge)
       reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
     if (titleEl)
       titleEl.textContent = req.client_name || client.name || "Emprunteur";
-    if (subtitleEl)
-      subtitleEl.textContent = `Dossier de crédit • ${req.city || client.city || "UEMOA"}, ${req.country || "UEMOA"} • Décision Comité`;
+    if (subtitleEl) {
+      subtitleEl.textContent = `Dossier de crédit • ${locText} • Décision Comité`;
+    }
 
     if (riskBadge) {
       const riskClass =
@@ -2995,12 +3016,13 @@ const App = {
     const surplusEl = document.getElementById("com-drawer-surplus");
 
     if (clientIdEl)
-      clientIdEl.textContent = `ID: CLI-${req.client_id || "0891"}`;
+      clientIdEl.textContent = `ID: ${client.client_number || malianInfo.client_num || "CLI-" + clientKey}`;
     if (avatarEl)
       avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
-    if (locEl)
-      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || "Bamako"}, ${req.country || "Mali"} • Agence Principale`;
+    if (locEl) {
+      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${locText} • ${malianInfo.agency}`;
+    }
     if (amountEl)
       amountEl.textContent = CreditScoringEngine.formatFCFA(
         req.requested_amount,
@@ -3017,7 +3039,7 @@ const App = {
 
     if (activityEl)
       activityEl.textContent =
-        client.activity || req.activity || "Commerce général & négoce";
+        client.occupation || malianInfo.occupation || client.activity || req.activity || "Commerce général & négoce";
     if (surplusEl) {
       const surplus =
         req.disposable_income || client.disposable_income || 385000;
