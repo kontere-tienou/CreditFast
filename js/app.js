@@ -2785,7 +2785,12 @@ const App = {
     const sessionTotalAmount = document.getElementById("com-session-total-amount");
     const sessionVotedRatio = document.getElementById("com-session-voted-ratio");
 
-    if (kpiTotalAmount) kpiTotalAmount.textContent = CreditScoringEngine.formatFCFA(totalSessionAmount);
+    const formattedTotalCompact =
+      totalSessionAmount >= 1000000
+        ? `${(totalSessionAmount / 1000000).toFixed(1).replace(".0", "")} M`
+        : CreditScoringEngine.formatFCFA(totalSessionAmount);
+
+    if (kpiTotalAmount) kpiTotalAmount.textContent = formattedTotalCompact;
     if (kpiTotalCount) kpiTotalCount.textContent = allCommitteeReqs.length.toString();
     if (kpiPendingCount) kpiPendingCount.textContent = pendingReqs.length.toString();
     if (kpiApprovedCount) kpiApprovedCount.textContent = approvedReqs.length.toString();

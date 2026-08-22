@@ -23,38 +23,49 @@
     </div>
   </div>
 
-  <!-- KPI Metrics Strip for Committee Session -->
-  <div class="stats-grid" style="margin-bottom: 1.25rem;">
-    <div class="stat-card">
-      <div class="stat-icon primary"><i class="fas fa-folder-open"></i></div>
+  <!-- 4 KPI Committee Cards (Zoogler Dashboard Style) -->
+  <div class="grid-4" style="margin-bottom: 1.25rem;">
+    <div class="card stat-card" onclick="App.filterCommitteeDossiers('ALL', document.getElementById('tab-btn-com-all'))" title="Afficher tous les dossiers de la séance">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-vault"></i>
+      </div>
       <div class="stat-content">
+        <div class="stat-value" id="com-kpi-total-amount">18.5 M</div>
         <div class="stat-label">Enveloppe Soumise</div>
-        <div class="stat-value" id="com-kpi-total-amount">18 500 000 F</div>
-        <div class="stat-trend" style="color: var(--text-muted);"><i class="fas fa-list-check mr-1"></i> <span id="com-kpi-total-count">5</span> dossiers en séance</div>
+        <div class="stat-trend up"><i class="fas fa-list-check"></i> <span id="com-kpi-total-count">5</span> dossiers UEMOA</div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon warning"><i class="fas fa-hourglass-half"></i></div>
+
+    <div class="card stat-card" onclick="App.filterCommitteeDossiers('PENDING_VOTE', document.getElementById('tab-btn-com-pending'))" title="Filtrer les dossiers nécessitant un vote">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-gavel"></i>
+      </div>
       <div class="stat-content">
+        <div class="stat-value" id="com-kpi-pending-count">2</div>
         <div class="stat-label">En Attente de Vote</div>
-        <div class="stat-value" id="com-kpi-pending-count" style="color: #d97706;">2</div>
-        <div class="stat-trend down"><i class="fas fa-gavel mr-1"></i> Décision requise</div>
+        <div class="stat-trend down"><i class="fas fa-hourglass-half"></i> Décision requise</div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon success"><i class="fas fa-check-double"></i></div>
+
+    <div class="card stat-card" onclick="App.filterCommitteeDossiers('ALL', document.getElementById('tab-btn-com-all'))" title="Consulter les dossiers approuvés">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-file-signature"></i>
+      </div>
       <div class="stat-content">
+        <div class="stat-value" id="com-kpi-approved-count">3</div>
         <div class="stat-label">Validés en Séance</div>
-        <div class="stat-value" id="com-kpi-approved-count" style="color: #059669;">3</div>
-        <div class="stat-trend up"><i class="fas fa-file-signature mr-1"></i> PV générés</div>
+        <div class="stat-trend up"><i class="fas fa-check-double"></i> PV générés</div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon info"><i class="fas fa-users-between-lines"></i></div>
+
+    <div class="card stat-card" title="Statut du Quorum et présence des membres">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-landmark"></i>
+      </div>
       <div class="stat-content">
+        <div class="stat-value">100%</div>
         <div class="stat-label">Quorum & Consensus</div>
-        <div class="stat-value" style="color: #4f46e5;">100%</div>
-        <div class="stat-trend up"><i class="fas fa-shield-check mr-1"></i> 3/3 Membres actifs</div>
+        <div class="stat-trend up"><i class="fas fa-users-between-lines"></i> 3/3 Membres actifs</div>
       </div>
     </div>
   </div>
