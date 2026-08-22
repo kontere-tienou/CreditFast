@@ -573,30 +573,56 @@ const App = {
 
   // 3. SPA Navigation Router with Role-Based Access Control (RBAC Guard)
   switchView(viewId) {
+    if (!viewId) return;
+
     // Role-Based Access Control verification
     const userRole =
       this.currentRole ||
-      (this.currentUser ? this.currentUser.role : "ANALYST");
+      (this.currentUser ? this.currentUser.role : "COMMITTEE");
     const allowedViews =
       (APP_CONSTANTS.ROLE_PERMITTED_VIEWS &&
         APP_CONSTANTS.ROLE_PERMITTED_VIEWS[userRole]) ||
       [];
 
-    // Strict RBAC Guard: If target view is not allowed for current role, redirect to role home
+    // If target view is not directly in current role's allowed list, check if it belongs to another role and adapt smoothly
     if (
       Array.isArray(allowedViews) &&
       allowedViews.length > 0 &&
-      viewId &&
       !allowedViews.includes(viewId)
     ) {
-      const roleConfig =
-        APP_CONSTANTS.ROLES[userRole] || APP_CONSTANTS.ROLES.ANALYST;
-      const targetFallback = roleConfig.homeView || "view-role-analyst";
-      this.showToast(
-        `Accès restreint : cette page est réservée à l'espace ${roleConfig.name}`,
-        "warning",
-      );
-      viewId = targetFallback;
+      let targetRole = null;
+      if (APP_CONSTANTS.ROLE_PERMITTED_VIEWS) {
+        for (const [rCode, views] of Object.entries(
+          APP_CONSTANTS.ROLE_PERMITTED_VIEWS,
+        )) {
+          if (views.includes(viewId)) {
+            targetRole = rCode;
+            break;
+          }
+        }
+      }
+
+      if (targetRole && targetRole !== userRole) {
+        const targetRoleConfig = APP_CONSTANTS.ROLES[targetRole];
+        if (targetRoleConfig) {
+          const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(
+            (a) => a.role === targetRole,
+          ) || {
+            id: `user-${targetRole.toLowerCase()}`,
+            name: targetRoleConfig.name,
+            role: targetRole,
+            email: `${targetRole.toLowerCase()}@cif-ao.org`,
+            avatar: "images/profil/profil01-01.jpg",
+            title: targetRoleConfig.shortName,
+          };
+          this.currentRole = targetRole;
+          this.currentUser = persona;
+          localStorage.setItem("AUTH_USER", JSON.stringify(persona));
+          this.updateUserHeader(persona);
+          this.renderSidebarForRole(targetRole);
+          this.renderNotificationsForRole(targetRole);
+        }
+      }
     }
 
     this.currentView = viewId;
@@ -645,6 +671,8 @@ const App = {
       this.renderAnalystAnomalies();
     } else if (viewId === "view-role-committee") {
       this.renderCommitteeDashboard();
+    } else if (viewId === "view-committee-dossiers") {
+      this.renderCommitteeDossiersPage();
     } else if (viewId === "view-committee-signed") {
       this.renderSignedPvTable();
     } else if (
@@ -2654,6 +2682,8 @@ const App = {
 
   // [ROLE 4] COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
   activeCommitteeDossierId: null,
+  committeeDossiersFilter: "ALL",
+  committeeDossiersSearchQuery: "",
 
   renderCommitteeDashboard() {
     const tbody = document.getElementById("committee-requests-table-body");
@@ -2684,28 +2714,26 @@ const App = {
               : evalData.riskLevel || "Faible";
 
         return `
-        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher les détails dans le volet latéral">
-          <td>
-            <div style="font-family: var(--font-family-code); font-size: 0.8rem; font-weight: 700; color: var(--primary-700);">${r.request_number}</div>
-            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary); margin-top: 1px;">${r.client_name}</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${r.city || "Bamako"}, ${r.country || "Mali"}</div>
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher la fiche complète dans le volet latéral">
+          <td style="white-space: nowrap;">
+            <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; margin-right: 8px;">${r.request_number}</span>
+            <strong style="color: var(--text-primary); font-size: 0.9rem;">${r.client_name}</strong>
           </td>
-          <td>
-            <strong class="amount-cell" style="color: var(--primary-700); font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
-            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">${r.duration_months} mois • Crédit Spot</div>
+          <td style="white-space: nowrap;">
+            <strong class="amount-cell" style="color: var(--primary-700); font-family: var(--font-family-code); font-size: 0.92rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
           </td>
-          <td>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || "#059669"};">${evalData.overallScore || 85}</span>
-              <span style="font-size: 0.7rem; color: var(--text-muted);">/100</span>
-              <span class="badge ${riskBadgeClass}" style="font-size: 0.65rem;">${riskLabel}</span>
-            </div>
+          <td style="white-space: nowrap;">
+            <span class="badge ${riskBadgeClass}" style="font-weight: 700; font-size: 0.76rem;">
+              <i class="fas fa-shield-check mr-1"></i> ${evalData.overallScore || 85}/100 • ${riskLabel}
+            </span>
           </td>
-          <td>
-            <span class="badge badge-analysis" style="font-size: 0.7rem;"><i class="fas fa-thumbs-up"></i> Favorable</span>
+          <td style="white-space: nowrap;">
+            <span class="badge badge-analysis" style="font-size: 0.74rem;">
+              <i class="fas fa-thumbs-up mr-1"></i> Avis Favorable
+            </span>
           </td>
-          <td style="text-align: right;">
-            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+          <td style="text-align: right; white-space: nowrap;">
+            <div style="display: inline-flex; align-items: center; gap: 6px;">
               <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Voir tous les détails du dossier en volet latéral">
                 <i class="fas fa-eye text-primary"></i> Détails
               </button>
@@ -2718,6 +2746,199 @@ const App = {
       `;
       })
       .join("");
+  },
+
+  renderCommitteeDossiersPage(filter = this.committeeDossiersFilter, query = this.committeeDossiersSearchQuery) {
+    this.committeeDossiersFilter = filter;
+    this.committeeDossiersSearchQuery = query;
+
+    const tbody = document.getElementById("com-dossiers-page-table-body");
+    const countBadge = document.getElementById("com-dossiers-count-badge");
+    if (!tbody) return;
+
+    const allCommitteeReqs = DB.get("credit_requests").filter(
+      (r) =>
+        r.status === "COMMITTEE" ||
+        r.status === "CREDIT_REVIEW" ||
+        r.status === "ANALYSIS" ||
+        r.status === "APPROVED",
+    );
+
+    // Calculate Dynamic KPIs
+    const totalSessionAmount = allCommitteeReqs.reduce((sum, r) => sum + (r.requested_amount || 0), 0);
+    const pendingReqs = allCommitteeReqs.filter((r) => r.status === "COMMITTEE" || r.status === "CREDIT_REVIEW");
+    const approvedReqs = allCommitteeReqs.filter((r) => r.status === "APPROVED");
+    const favorableReqs = allCommitteeReqs.filter((r) => {
+      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+      return evalData.riskLevel === "FAIBLE" || (evalData.overallScore || 0) >= 80;
+    });
+    const coldStartReqs = allCommitteeReqs.filter((r) => {
+      const client = DB.findById("clients", r.client_id) || {};
+      return client.is_cold_start || r.is_cold_start || (CreditScoringEngine.evaluateDossier(r.id) || {}).overallScore <= 88;
+    });
+
+    // Update KPI elements if present
+    const kpiTotalAmount = document.getElementById("com-kpi-total-amount");
+    const kpiTotalCount = document.getElementById("com-kpi-total-count");
+    const kpiPendingCount = document.getElementById("com-kpi-pending-count");
+    const kpiApprovedCount = document.getElementById("com-kpi-approved-count");
+    const sessionTotalAmount = document.getElementById("com-session-total-amount");
+    const sessionVotedRatio = document.getElementById("com-session-voted-ratio");
+
+    if (kpiTotalAmount) kpiTotalAmount.textContent = CreditScoringEngine.formatFCFA(totalSessionAmount);
+    if (kpiTotalCount) kpiTotalCount.textContent = allCommitteeReqs.length.toString();
+    if (kpiPendingCount) kpiPendingCount.textContent = pendingReqs.length.toString();
+    if (kpiApprovedCount) kpiApprovedCount.textContent = approvedReqs.length.toString();
+    if (sessionTotalAmount) sessionTotalAmount.textContent = CreditScoringEngine.formatFCFA(totalSessionAmount);
+    if (sessionVotedRatio) sessionVotedRatio.textContent = `${approvedReqs.length} / ${allCommitteeReqs.length}`;
+
+    // Update Tab Counters
+    const countTabAll = document.getElementById("count-tab-all");
+    const countTabPending = document.getElementById("count-tab-pending");
+    const countTabFavorable = document.getElementById("count-tab-favorable");
+    const countTabColdstart = document.getElementById("count-tab-coldstart");
+
+    if (countTabAll) countTabAll.textContent = allCommitteeReqs.length.toString();
+    if (countTabPending) countTabPending.textContent = pendingReqs.length.toString();
+    if (countTabFavorable) countTabFavorable.textContent = favorableReqs.length.toString();
+    if (countTabColdstart) countTabColdstart.textContent = coldStartReqs.length.toString();
+
+    let reqs = [...allCommitteeReqs];
+
+    // Apply Filter Tab
+    if (filter === "PENDING_VOTE") {
+      reqs = pendingReqs;
+    } else if (filter === "FAVORABLE") {
+      reqs = favorableReqs;
+    } else if (filter === "COLD_START") {
+      reqs = coldStartReqs;
+    }
+
+    // Apply Search Query
+    if (query && query.trim()) {
+      const q = query.trim().toLowerCase();
+      reqs = reqs.filter((r) => {
+        const client = DB.findById("clients", r.client_id) || {};
+        return (
+          (r.client_name && r.client_name.toLowerCase().includes(q)) ||
+          (r.request_number && r.request_number.toLowerCase().includes(q)) ||
+          (r.city && r.city.toLowerCase().includes(q)) ||
+          (client.activity && client.activity.toLowerCase().includes(q))
+        );
+      });
+    }
+
+    if (countBadge) {
+      countBadge.textContent = `${reqs.length} dossier${reqs.length > 1 ? "s" : ""} affiché${reqs.length > 1 ? "s" : ""}`;
+    }
+
+    if (reqs.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; opacity: 0.5;"></i>
+            Aucun dossier ne correspond aux critères de recherche.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = reqs
+      .map((r) => {
+        const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+        const riskBadgeClass =
+          evalData.riskLevel === "CRITIQUE"
+            ? "badge-rejected"
+            : evalData.riskLevel === "ELEVE"
+              ? "badge-warning"
+              : "badge-approved";
+        const riskLabel =
+          evalData.riskLevel === "FAIBLE"
+            ? "Faible"
+            : evalData.riskLevel === "MODERE"
+              ? "Modéré"
+              : evalData.riskLevel || "Faible";
+
+        const statusBadgeClass =
+          r.status === "APPROVED"
+            ? "badge-approved"
+            : r.status === "COMMITTEE"
+              ? "badge-warning"
+              : "badge-analysis";
+        const statusIcon =
+          r.status === "APPROVED"
+            ? "fa-check-circle"
+            : r.status === "COMMITTEE"
+              ? "fa-hourglass-half"
+              : "fa-thumbs-up";
+        const statusLabel =
+          r.status === "APPROVED"
+            ? "Validé en Séance"
+            : r.status === "COMMITTEE"
+              ? "En attente de vote"
+              : "Avis Favorable";
+
+        return `
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher la fiche complète dans le volet latéral">
+          <td style="white-space: nowrap;">
+            <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; margin-right: 8px;">${r.request_number}</span>
+            <strong style="color: var(--text-primary); font-size: 0.9rem;">${r.client_name}</strong>
+          </td>
+          <td style="white-space: nowrap;">
+            <strong class="amount-cell" style="color: var(--primary-700); font-family: var(--font-family-code); font-size: 0.92rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
+          </td>
+          <td style="white-space: nowrap;">
+            <span class="badge ${riskBadgeClass}" style="font-weight: 700; font-size: 0.74rem;">
+              <i class="fas fa-shield-check mr-1"></i> ${evalData.overallScore || 85}/100 • Risque ${riskLabel}
+            </span>
+          </td>
+          <td style="white-space: nowrap;">
+            <span class="badge ${statusBadgeClass}" style="font-size: 0.74rem;">
+              <i class="fas ${statusIcon} mr-1"></i> ${statusLabel}
+            </span>
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <div style="display: inline-flex; align-items: center; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Voir tous les détails du dossier en volet latéral">
+                <i class="fas fa-eye text-primary"></i> Détails
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Délibérer, ajuster les termes et voter">
+                <i class="fas fa-gavel"></i> Voter
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+      })
+      .join("");
+  },
+
+  filterCommitteeDossiers(filterType, btn) {
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll(".btn").forEach((b) => {
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-secondary");
+      });
+      btn.classList.remove("btn-secondary");
+      btn.classList.add("btn-primary");
+    }
+    this.renderCommitteeDossiersPage(filterType, this.committeeDossiersSearchQuery);
+  },
+
+  searchCommitteeDossiers(query) {
+    this.renderCommitteeDossiersPage(this.committeeDossiersFilter, query);
+  },
+
+  openFirstPendingCommitteeVote() {
+    const pending = DB.get("credit_requests").find(
+      (r) => r.status === "COMMITTEE" || r.status === "CREDIT_REVIEW" || r.status === "ANALYSIS",
+    );
+    if (pending && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === "function") {
+      window.AppInteractions.openCommitteeModal(pending.id);
+    } else {
+      this.showToast("Tous les dossiers soumis ont déjà été traités.", "info");
+    }
   },
 
   openCommitteeDrawer(dossierId) {

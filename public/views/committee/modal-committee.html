@@ -205,3 +205,149 @@
   </div>
 </div>
 
+<!-- ==========================================================================
+     SIDEDRAWER VOLET LATÉRAL : ANALYSE APPROFONDIE DU DOSSIER COMITÉ
+     ========================================================================== -->
+<div id="committee-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeCommitteeDrawer()">
+  <div id="committee-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail dossier comité">
+    <div class="schedule-drawer-header">
+      <div class="schedule-drawer-header-content">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+          <span class="badge badge-submitted" id="com-drawer-req-badge" style="font-family: var(--font-family-code); font-weight: 700;">#REQ-2026-0891</span>
+          <span id="com-drawer-risk-badge" class="badge badge-approved"><i class="fas fa-shield-check"></i> Risque Faible</span>
+          <span class="badge badge-committee" style="font-size: 0.68rem;">Séance Active</span>
+        </div>
+        <h3 id="com-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fatou Ndiaye</h3>
+        <p id="com-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Dossier d'octroi de crédit professionnel • Évaluation XAI</p>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeCommitteeDrawer()" title="Fermer le volet">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="schedule-drawer-body">
+      <!-- Section 1 : Emprunteur & Demande de Financement -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title"><i class="fas fa-user-tie text-primary mr-1"></i> Fiche Emprunteur & Financement</h4>
+          <span id="com-drawer-client-id" class="badge badge-submitted" style="font-size: 0.68rem;">ID: CLI-0891</span>
+        </div>
+        <div style="display: flex; gap: 0.85rem; align-items: center; margin-bottom: 0.85rem;">
+          <img id="com-drawer-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
+          <div style="min-width: 0;">
+            <div id="com-drawer-client-name" style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">Fatou Ndiaye</div>
+            <div id="com-drawer-location" style="font-size: 0.76rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali • Agence Marché Médine</div>
+          </div>
+        </div>
+        <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Montant Sollicité</div>
+            <div id="com-drawer-amount" style="font-size: 1.1rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 500 000 F</div>
+            <div id="com-drawer-duration" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Durée : 12 mois</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Mensualité Estimée</div>
+            <div id="com-drawer-installment" style="font-size: 1.1rem; font-weight: 800; color: #047857; font-family: var(--font-family-code);">235 000 F</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Taux : 9.5% annuel</div>
+          </div>
+        </div>
+        <div class="drawer-grid-2">
+          <div class="drawer-kv">
+            <span class="drawer-kv-label">Activité Déclarée</span>
+            <span id="com-drawer-activity" class="drawer-kv-value" style="font-weight: 600;">Commerce de gros & tissus</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label">Reste à Vivre Mensuel</span>
+            <span id="com-drawer-surplus" class="drawer-kv-value" style="color: #059669; font-weight: 700;">+ 385 000 FCFA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 : Scoring IA Explicable & Piliers XAI -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title"><i class="fas fa-brain-circuit text-emerald mr-1"></i> Diagnostic Scoring Explicable (XAI)</h4>
+          <span id="com-drawer-conf-badge" class="badge badge-approved"><i class="fas fa-check-double"></i> Confiance 94%</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-body); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Score de Crédibilité Global</div>
+            <div style="display: flex; align-items: baseline; gap: 4px; margin-top: 2px;">
+              <span id="com-drawer-overall-score" style="font-size: 1.6rem; font-weight: 900; color: #059669;">90</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">/100</span>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge badge-approved" id="com-drawer-capacity-badge" style="font-size: 0.74rem;"><i class="fas fa-check"></i> Reste à vivre certifié</span>
+            <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 3px;">Taux d'effort post-crédit : 28%</div>
+          </div>
+        </div>
+
+        <!-- Piliers XAI -->
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span><i class="fas fa-mobile-screen-button text-primary mr-1"></i> Flux Mobile Money & Bancaires</span>
+            <strong id="com-drawer-pillar-cashflow" style="color: #059669;">92 / 100</strong>
+          </div>
+          <div class="progress-bar-container" style="height: 5px; margin-bottom: 3px;">
+            <div id="com-drawer-bar-cashflow" class="progress-bar" style="width: 92%; background: #10b981;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span><i class="fas fa-id-card text-info mr-1"></i> Cold Start & Garanties Solidaires</span>
+            <strong id="com-drawer-pillar-coldstart" style="color: #059669;">88 / 100</strong>
+          </div>
+          <div class="progress-bar-container" style="height: 5px; margin-bottom: 3px;">
+            <div id="com-drawer-bar-coldstart" class="progress-bar" style="width: 88%; background: #3b82f6;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span><i class="fas fa-shield-halved text-warning mr-1"></i> Stabilité & Historique Réciproque</span>
+            <strong id="com-drawer-pillar-stability" style="color: #059669;">85 / 100</strong>
+          </div>
+          <div class="progress-bar-container" style="height: 5px;">
+            <div id="com-drawer-bar-stability" class="progress-bar" style="width: 85%; background: #f59e0b;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 : Avis Analyste & Contrôle Conformité LBC/FT -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title"><i class="fas fa-clipboard-check text-info mr-1"></i> Avis Analyste & Filtrage LBC/FT</h4>
+          <span class="badge badge-approved"><i class="fas fa-shield-check"></i> Conforme UEMOA</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+          <div class="drawer-kv">
+            <span class="drawer-kv-label">Recommandation Analyste Risque</span>
+            <p id="com-drawer-analyst-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+              Avis favorable. Chiffre d'affaires récurrent vérifié sur les 6 derniers mois. Caution solidaire validée par l'artisan référent.
+            </p>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Filtrage Sanctions & PPE</span>
+              <span class="badge badge-approved" style="align-self: flex-start;"><i class="fas fa-check"></i> RAS (0% Match)</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Gage & Sûretés</span>
+              <span class="badge badge-submitted" style="align-self: flex-start;"><i class="fas fa-file-contract"></i> Acte RCCM Enregistré</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidedrawer Footer Actions -->
+    <div class="schedule-drawer-footer" style="padding: 1rem 1.4rem; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <button class="btn btn-secondary" onclick="App.closeCommitteeDrawer()" style="padding: 0.6rem 1rem;">
+        <i class="fas fa-times mr-1"></i> Fermer
+      </button>
+      <button class="btn btn-primary" onclick="App.openCommitteeModalFromDrawer()" style="padding: 0.6rem 1.25rem; font-weight: 700;">
+        <i class="fas fa-gavel mr-1"></i> Délibérer & Voter
+      </button>
+    </div>
+  </div>
+</div>
+
+

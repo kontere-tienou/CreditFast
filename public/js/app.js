@@ -6,8 +6,8 @@
 
 const App = {
   currentUser: null,
-  currentRole: 'ANALYST',
-  currentView: 'view-role-analyst',
+  currentRole: "ANALYST",
+  currentView: "view-role-analyst",
   currentAuthSlide: 0,
   authSliderTimer: null,
 
@@ -26,7 +26,7 @@ const App = {
     this.checkAndHighlightExpiringDocs();
 
     // Check existing auth session or auto-load default persona
-    const savedUser = localStorage.getItem('AUTH_USER');
+    const savedUser = localStorage.getItem("AUTH_USER");
     if (savedUser) {
       try {
         this.login(JSON.parse(savedUser));
@@ -39,53 +39,57 @@ const App = {
   },
 
   // 0. Theme Manager (Light / Dark Mode)
-  currentTheme: 'light',
+  currentTheme: "light",
 
   initTheme() {
-    const savedTheme = localStorage.getItem('APP_THEME') || 'light';
+    const savedTheme = localStorage.getItem("APP_THEME") || "light";
     this.setTheme(savedTheme);
   },
 
   setTheme(theme) {
     this.currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('APP_THEME', theme);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("APP_THEME", theme);
 
     // Update icons in topbar
-    const topbarThemeBtn = document.getElementById('theme-toggle-btn');
+    const topbarThemeBtn = document.getElementById("theme-toggle-btn");
     if (topbarThemeBtn) {
-      const topbarIcon = topbarThemeBtn.querySelector('i');
+      const topbarIcon = topbarThemeBtn.querySelector("i");
       if (topbarIcon) {
-        topbarIcon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-moon';
+        topbarIcon.className =
+          theme === "dark" ? "fas fa-sun text-warning" : "fas fa-moon";
       }
     }
   },
 
   toggleTheme() {
-    const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    const newTheme = this.currentTheme === "dark" ? "light" : "dark";
     this.setTheme(newTheme);
-    this.showToast(`Mode ${newTheme === 'dark' ? 'Sombre' : 'Clair'} activé`, 'info');
+    this.showToast(
+      `Mode ${newTheme === "dark" ? "Sombre" : "Clair"} activé`,
+      "info",
+    );
   },
 
   // 1. Authentication & Session Manager
   switchAuthTab(tab) {
-    const tabExpress = document.getElementById('auth-tab-express');
-    const tabManual = document.getElementById('auth-tab-manual');
-    const contentExpress = document.getElementById('auth-tab-content-express');
-    const contentManual = document.getElementById('auth-tab-content-manual');
+    const tabExpress = document.getElementById("auth-tab-express");
+    const tabManual = document.getElementById("auth-tab-manual");
+    const contentExpress = document.getElementById("auth-tab-content-express");
+    const contentManual = document.getElementById("auth-tab-content-manual");
 
-    if (tab === 'express') {
-      if (tabExpress) tabExpress.classList.add('active');
-      if (tabManual) tabManual.classList.remove('active');
-      if (contentExpress) contentExpress.classList.add('active');
-      if (contentManual) contentManual.classList.remove('active');
+    if (tab === "express") {
+      if (tabExpress) tabExpress.classList.add("active");
+      if (tabManual) tabManual.classList.remove("active");
+      if (contentExpress) contentExpress.classList.add("active");
+      if (contentManual) contentManual.classList.remove("active");
     } else {
-      if (tabManual) tabManual.classList.add('active');
-      if (tabExpress) tabExpress.classList.remove('active');
-      if (contentManual) contentManual.classList.add('active');
-      if (contentExpress) contentExpress.classList.remove('active');
-      
-      const emailInput = document.getElementById('login-email');
+      if (tabManual) tabManual.classList.add("active");
+      if (tabExpress) tabExpress.classList.remove("active");
+      if (contentManual) contentManual.classList.add("active");
+      if (contentExpress) contentExpress.classList.remove("active");
+
+      const emailInput = document.getElementById("login-email");
       if (emailInput) setTimeout(() => emailInput.focus(), 50);
     }
   },
@@ -95,53 +99,62 @@ const App = {
     const icon = document.getElementById(iconId);
     if (!input) return;
 
-    if (input.type === 'password') {
-      input.type = 'text';
+    if (input.type === "password") {
+      input.type = "text";
       if (icon) {
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
       }
     } else {
-      input.type = 'password';
+      input.type = "password";
       if (icon) {
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
       }
     }
   },
 
   showDemoCredentialsHelp() {
-    this.showToast('Cliquez sur l\'un des 4 boutons en bas pour insérer instantanément les identifiants (mot de passe universel: "demo")', 'info');
+    this.showToast(
+      'Cliquez sur l\'un des 4 boutons en bas pour insérer instantanément les identifiants (mot de passe universel: "demo")',
+      "info",
+    );
   },
 
   fillDemoCredentials(personaId) {
-    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.id === personaId);
+    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find((a) => a.id === personaId);
     if (!persona) return;
 
-    const emailInput = document.getElementById('login-email');
-    const pwdInput = document.getElementById('login-password');
-    
+    const emailInput = document.getElementById("login-email");
+    const pwdInput = document.getElementById("login-password");
+
     if (emailInput) {
       emailInput.value = persona.email;
-      emailInput.classList.add('input-highlight-pulse');
-      setTimeout(() => emailInput.classList.remove('input-highlight-pulse'), 800);
+      emailInput.classList.add("input-highlight-pulse");
+      setTimeout(
+        () => emailInput.classList.remove("input-highlight-pulse"),
+        800,
+      );
     }
     if (pwdInput) {
-      pwdInput.value = persona.password || 'demo';
-      pwdInput.classList.add('input-highlight-pulse');
-      setTimeout(() => pwdInput.classList.remove('input-highlight-pulse'), 800);
+      pwdInput.value = persona.password || "demo";
+      pwdInput.classList.add("input-highlight-pulse");
+      setTimeout(() => pwdInput.classList.remove("input-highlight-pulse"), 800);
     }
 
-    const demoBtns = document.querySelectorAll('.demo-persona-btn');
-    demoBtns.forEach(b => {
-      if (b.getAttribute('data-demo-id') === personaId) {
-        b.classList.add('active');
+    const demoBtns = document.querySelectorAll(".demo-persona-btn");
+    demoBtns.forEach((b) => {
+      if (b.getAttribute("data-demo-id") === personaId) {
+        b.classList.add("active");
       } else {
-        b.classList.remove('active');
+        b.classList.remove("active");
       }
     });
 
-    this.showToast(`Identifiants de ${persona.name} (${persona.badge}) insérés !`, 'info');
+    this.showToast(
+      `Identifiants de ${persona.name} (${persona.badge}) insérés !`,
+      "info",
+    );
   },
 
   // Interactive 3-Photo Hero Slider Controls
@@ -151,8 +164,10 @@ const App = {
   },
 
   setAuthSlide(idx) {
-    const slides = document.querySelectorAll('#auth-hero-slider .auth-slide');
-    const dots = document.querySelectorAll('#auth-slider-dots .auth-slider-dot');
+    const slides = document.querySelectorAll("#auth-hero-slider .auth-slide");
+    const dots = document.querySelectorAll(
+      "#auth-slider-dots .auth-slider-dot",
+    );
     if (!slides.length) return;
 
     const total = slides.length;
@@ -160,26 +175,26 @@ const App = {
 
     slides.forEach((slide, i) => {
       if (i === this.currentAuthSlide) {
-        slide.classList.add('active');
+        slide.classList.add("active");
       } else {
-        slide.classList.remove('active');
+        slide.classList.remove("active");
       }
     });
 
-    const textBlocks = document.querySelectorAll('.auth-slide-text-block');
+    const textBlocks = document.querySelectorAll(".auth-slide-text-block");
     textBlocks.forEach((block, i) => {
       if (i === this.currentAuthSlide) {
-        block.classList.add('active');
+        block.classList.add("active");
       } else {
-        block.classList.remove('active');
+        block.classList.remove("active");
       }
     });
 
     dots.forEach((dot, i) => {
       if (i === this.currentAuthSlide) {
-        dot.classList.add('active');
+        dot.classList.add("active");
       } else {
-        dot.classList.remove('active');
+        dot.classList.remove("active");
       }
     });
   },
@@ -201,7 +216,7 @@ const App = {
 
   resumeAuthSlider() {
     this.pauseAuthSlider();
-    const sliderElem = document.getElementById('auth-hero-slider');
+    const sliderElem = document.getElementById("auth-hero-slider");
     if (!sliderElem) return;
 
     this.authSliderTimer = setInterval(() => {
@@ -213,56 +228,67 @@ const App = {
     this.initAuthSlider();
 
     // Restore remembered identifier if present
-    const rememberedId = localStorage.getItem('REMEMBER_ME_CRED');
-    const emailInput = document.getElementById('login-email');
+    const rememberedId = localStorage.getItem("REMEMBER_ME_CRED");
+    const emailInput = document.getElementById("login-email");
     if (rememberedId && emailInput) {
       emailInput.value = rememberedId;
     }
 
     // Demo Account Buttons (Pre-fills credentials on click)
-    const demoBtns = document.querySelectorAll('.demo-persona-btn');
-    demoBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const personaId = btn.getAttribute('data-demo-id');
+    const demoBtns = document.querySelectorAll(".demo-persona-btn");
+    demoBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const personaId = btn.getAttribute("data-demo-id");
         this.fillDemoCredentials(personaId);
       });
     });
 
     // Login Form Submit
-    const loginForm = document.getElementById('login-form');
+    const loginForm = document.getElementById("login-form");
     if (loginForm) {
-      loginForm.addEventListener('submit', (e) => {
+      loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        const rawInput = document.getElementById('login-email') ? document.getElementById('login-email').value.trim() : '';
+        const rawInput = document.getElementById("login-email")
+          ? document.getElementById("login-email").value.trim()
+          : "";
         const rawInputLower = rawInput.toLowerCase();
-        const rememberCheckbox = document.getElementById('remember-me-checkbox');
+        const rememberCheckbox = document.getElementById(
+          "remember-me-checkbox",
+        );
 
         if (rememberCheckbox && rememberCheckbox.checked && rawInput) {
-          localStorage.setItem('REMEMBER_ME_CRED', rawInput);
+          localStorage.setItem("REMEMBER_ME_CRED", rawInput);
         } else {
-          localStorage.removeItem('REMEMBER_ME_CRED');
+          localStorage.removeItem("REMEMBER_ME_CRED");
         }
 
         // Multi-field smart matching: email, clientNumber, phone, partial name
-        const match = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => 
-          (a.email && String(a.email).toLowerCase() === rawInputLower) ||
-          (a.clientNumber && String(a.clientNumber).toLowerCase() === rawInputLower) ||
-          (a.phone && String(a.phone).replace(/\s+/g, '') === rawInput.replace(/\s+/g, '')) ||
-          (a.name && String(a.name).toLowerCase().includes(rawInputLower))
-        ) || APP_CONSTANTS.DEMO_ACCOUNTS[2]; // Default to Analyst
+        const match =
+          APP_CONSTANTS.DEMO_ACCOUNTS.find(
+            (a) =>
+              (a.email && String(a.email).toLowerCase() === rawInputLower) ||
+              (a.clientNumber &&
+                String(a.clientNumber).toLowerCase() === rawInputLower) ||
+              (a.phone &&
+                String(a.phone).replace(/\s+/g, "") ===
+                  rawInput.replace(/\s+/g, "")) ||
+              (a.name && String(a.name).toLowerCase().includes(rawInputLower)),
+          ) || APP_CONSTANTS.DEMO_ACCOUNTS[2]; // Default to Analyst
 
-        const submitBtn = document.getElementById('btn-submit-login');
-        const btnContent = document.getElementById('login-btn-content');
+        const submitBtn = document.getElementById("btn-submit-login");
+        const btnContent = document.getElementById("login-btn-content");
 
         if (submitBtn && btnContent) {
           submitBtn.disabled = true;
-          btnContent.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Authentification sécurisée...';
+          btnContent.innerHTML =
+            '<i class="fas fa-circle-notch fa-spin mr-2"></i> Authentification sécurisée...';
         }
 
         setTimeout(() => {
           if (submitBtn && btnContent) {
             submitBtn.disabled = false;
-            btnContent.innerHTML = '<i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace';
+            btnContent.innerHTML =
+              '<i class="fas fa-right-to-bracket mr-1"></i> Se Connecter à mon Espace';
           }
           this.login(match);
         }, 350);
@@ -270,8 +296,8 @@ const App = {
     }
 
     // Logout Buttons (Intercept and open confirmation dialog)
-    document.querySelectorAll('.btn-action-logout').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    document.querySelectorAll(".btn-action-logout").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.openLogoutConfirmModal();
@@ -281,24 +307,35 @@ const App = {
 
   openLogoutConfirmModal() {
     // 1. Close profile dropdown menu if open
-    const profileMenu = document.getElementById('profile-dropdown-menu');
-    const profileBtn = document.getElementById('topbar-profile-btn');
-    if (profileMenu) profileMenu.classList.remove('show');
-    if (profileBtn) profileBtn.classList.remove('active');
+    const profileMenu = document.getElementById("profile-dropdown-menu");
+    const profileBtn = document.getElementById("topbar-profile-btn");
+    if (profileMenu) profileMenu.classList.remove("show");
+    if (profileBtn) profileBtn.classList.remove("active");
 
     // 2. Populate active user data in the confirmation modal
     const user = this.currentUser || APP_CONSTANTS.DEMO_ACCOUNTS[2];
-    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+    const roleConfig =
+      APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
 
-    const avatarImg = document.getElementById('logout-confirm-user-avatar');
-    const avatarFlag = document.getElementById('logout-confirm-avatar-flag');
-    const userName = document.getElementById('logout-confirm-user-name');
-    const userRole = document.getElementById('logout-confirm-user-role');
-    const userEmail = document.getElementById('logout-confirm-user-email');
+    const avatarImg = document.getElementById("logout-confirm-user-avatar");
+    const avatarFlag = document.getElementById("logout-confirm-avatar-flag");
+    const userName = document.getElementById("logout-confirm-user-name");
+    const userRole = document.getElementById("logout-confirm-user-role");
+    const userEmail = document.getElementById("logout-confirm-user-email");
 
     if (avatarImg) avatarImg.src = user.avatar;
     if (avatarFlag) {
-      const flagCode = user.countryFlag || (user.id === 'demo-client' ? 'ml' : user.id === 'demo-agent' ? 'tg' : user.id === 'demo-committee' ? 'ml' : user.id === 'demo-compliance' ? 'bj' : 'bf');
+      const flagCode =
+        user.countryFlag ||
+        (user.id === "demo-client"
+          ? "ml"
+          : user.id === "demo-agent"
+            ? "tg"
+            : user.id === "demo-committee"
+              ? "ml"
+              : user.id === "demo-compliance"
+                ? "bj"
+                : "bf");
       avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis"></span>`;
     }
     if (userName) userName.textContent = user.name;
@@ -311,10 +348,10 @@ const App = {
     if (userEmail) userEmail.textContent = user.email;
 
     // 3. Display the modal
-    const modal = document.getElementById('modal-confirm-logout');
+    const modal = document.getElementById("modal-confirm-logout");
     if (modal) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('active'), 10);
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("active"), 10);
     } else {
       // Fallback: If modal container is not found, logout directly
       this.logout();
@@ -322,10 +359,10 @@ const App = {
   },
 
   closeLogoutConfirmModal() {
-    const modal = document.getElementById('modal-confirm-logout');
+    const modal = document.getElementById("modal-confirm-logout");
     if (modal) {
-      modal.classList.remove('active');
-      modal.style.display = 'none';
+      modal.classList.remove("active");
+      modal.style.display = "none";
     }
   },
 
@@ -337,13 +374,13 @@ const App = {
   login(user) {
     this.currentUser = user;
     this.currentRole = user.role;
-    localStorage.setItem('AUTH_USER', JSON.stringify(user));
+    localStorage.setItem("AUTH_USER", JSON.stringify(user));
 
     // Hide Auth View & Show App Shell
-    const authView = document.getElementById('auth-view');
-    const mainApp = document.getElementById('app-wrapper');
-    if (authView) authView.style.display = 'none';
-    if (mainApp) mainApp.style.display = 'flex';
+    const authView = document.getElementById("auth-view");
+    const mainApp = document.getElementById("app-wrapper");
+    if (authView) authView.style.display = "none";
+    if (mainApp) mainApp.style.display = "flex";
 
     // Update Topbar Info
     this.updateUserHeader(user);
@@ -354,43 +391,48 @@ const App = {
     // Render Role-Specific Notifications in Topbar
     this.renderNotificationsForRole(user.role);
 
-    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+    const roleConfig =
+      APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
     this.switchView(roleConfig.homeView);
 
-    this.showToast(`Connecté en tant que ${user.name} (${roleConfig.name})`, 'success');
+    this.showToast(
+      `Connecté en tant que ${user.name} (${roleConfig.name})`,
+      "success",
+    );
   },
 
   logout() {
     this.currentUser = null;
-    localStorage.removeItem('AUTH_USER');
+    localStorage.removeItem("AUTH_USER");
     this.showLoginScreen();
-    this.showToast('Vous avez été déconnecté avec succès', 'info');
+    this.showToast("Vous avez été déconnecté avec succès", "info");
   },
 
   showLoginScreen() {
-    const authView = document.getElementById('auth-view');
-    const mainApp = document.getElementById('app-wrapper');
-    if (authView) authView.style.display = 'flex';
-    if (mainApp) mainApp.style.display = 'none';
+    const authView = document.getElementById("auth-view");
+    const mainApp = document.getElementById("app-wrapper");
+    if (authView) authView.style.display = "flex";
+    if (mainApp) mainApp.style.display = "none";
   },
 
   updateUserHeader(user) {
-    const roleBadge = document.getElementById('user-role-display');
-    const userName = document.getElementById('user-name-display');
-    const userAvatar = document.getElementById('user-avatar-display');
-    const globalRoleSelect = document.getElementById('global-role-select');
-    const rolePill = document.getElementById('user-role-pill-badge');
+    const roleBadge = document.getElementById("user-role-display");
+    const userName = document.getElementById("user-name-display");
+    const userAvatar = document.getElementById("user-avatar-display");
+    const globalRoleSelect = document.getElementById("global-role-select");
+    const rolePill = document.getElementById("user-role-pill-badge");
 
     // Topbar Profile Header Elements
-    const topbarAvatar = document.getElementById('topbar-avatar-img');
-    const topbarName = document.getElementById('topbar-user-name');
-    const topbarRole = document.getElementById('topbar-user-role');
-    const menuAvatar = document.getElementById('menu-avatar-img');
-    const menuName = document.getElementById('menu-user-name');
-    const menuEmail = document.getElementById('menu-user-email');
-    const menuRoleBadge = document.getElementById('menu-user-role-badge');
+    const topbarAvatar = document.getElementById("topbar-avatar-img");
+    const topbarName = document.getElementById("topbar-user-name");
+    const topbarRole = document.getElementById("topbar-user-role");
+    const menuAvatar = document.getElementById("menu-avatar-img");
+    const menuName = document.getElementById("menu-user-name");
+    const menuEmail = document.getElementById("menu-user-email");
+    const menuRoleBadge = document.getElementById("menu-user-role-badge");
 
-    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+    const roleConfig =
+      APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
 
     if (roleBadge) roleBadge.textContent = user.title || roleConfig.name;
     if (userName) userName.textContent = user.name;
@@ -419,17 +461,28 @@ const App = {
     }
 
     // Dynamic Topbar Flag & Country sync based on logged-in user profile
-    const userCountryCode = user.countryCode || 'ML';
+    const userCountryCode =
+      user.countryCode ||
+      (user.id === "demo-client"
+        ? "ML"
+        : user.id === "demo-agent"
+          ? "TG"
+          : user.id === "demo-committee"
+            ? "ML"
+            : user.id === "demo-compliance"
+              ? "BJ"
+              : "BF");
     this.updateUserCountry(userCountryCode);
   },
 
   // 2. DYNAMIC ROLE-SPECIFIC SIDEBAR RENDERER
   renderSidebarForRole(roleCode) {
-    const container = document.getElementById('sidebar-menu-container');
+    const container = document.getElementById("sidebar-menu-container");
     if (!container) return;
 
-    const roleConfig = APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
-    let html = '';
+    const roleConfig =
+      APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
+    let html = "";
 
     roleConfig.navGroups.forEach((group, gIdx) => {
       html += `
@@ -437,15 +490,17 @@ const App = {
           <div class="menu-group-title">${group.title}</div>
           <ul class="nav-items-list">
       `;
-      group.items.forEach(item => {
-        const badgeHtml = item.badge 
-          ? `<span class="nav-badge ${item.badgeClass || ''}">${item.badge}</span>` 
-          : '';
-        const tooltipText = item.badge ? `${item.label} • ${item.badge}` : item.label;
+      group.items.forEach((item) => {
+        const badgeHtml = item.badge
+          ? `<span class="nav-badge ${item.badgeClass || ""}">${item.badge}</span>`
+          : "";
+        const tooltipText = item.badge
+          ? `${item.label} • ${item.badge}`
+          : item.label;
         const isCurrentActive = this.currentView === item.target;
 
         html += `
-          <li class="nav-item ${isCurrentActive ? 'active' : ''}">
+          <li class="nav-item ${isCurrentActive ? "active" : ""}">
             <a class="nav-link" href="javascript:void(0)" onclick="App.switchView('${item.target}'); return false;" data-view-target="${item.target}" data-nav-title="${tooltipText}" title="${item.label}">
               <i class="fas ${item.icon}"></i>
               <span class="nav-link-text">${item.label}</span>
@@ -460,22 +515,22 @@ const App = {
     container.innerHTML = html;
 
     // Attach click events on new links for extra safety
-    container.querySelectorAll('[data-view-target]').forEach(link => {
-      link.addEventListener('click', (e) => {
+    container.querySelectorAll("[data-view-target]").forEach((link) => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
-        const targetView = link.getAttribute('data-view-target');
+        const targetView = link.getAttribute("data-view-target");
         if (targetView) {
           this.switchView(targetView);
         }
 
         // Auto close drawer on mobile screens
         if (window.innerWidth <= 992) {
-          const sidebar = document.getElementById('sidebar');
-          const backdrop = document.getElementById('sidebar-backdrop');
-          if (sidebar) sidebar.classList.remove('mobile-open');
+          const sidebar = document.getElementById("sidebar");
+          const backdrop = document.getElementById("sidebar-backdrop");
+          if (sidebar) sidebar.classList.remove("mobile-open");
           if (backdrop) {
-            backdrop.classList.remove('active');
-            setTimeout(() => backdrop.style.display = 'none', 250);
+            backdrop.classList.remove("active");
+            setTimeout(() => (backdrop.style.display = "none"), 250);
           }
         }
       });
@@ -484,21 +539,24 @@ const App = {
 
   // Helper to switch active role dynamically and re-render sidebar + view
   switchRole(roleCode) {
-    const roleConfig = APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
+    const roleConfig =
+      APP_CONSTANTS.ROLES[roleCode] || APP_CONSTANTS.ROLES.ANALYST;
     this.currentRole = roleConfig.code;
-    
+
     // Find matching demo persona or update currentUser
-    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.role === roleConfig.code) || {
+    const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(
+      (a) => a.role === roleConfig.code,
+    ) || {
       id: `user-${roleConfig.code.toLowerCase()}`,
       name: roleConfig.name,
       role: roleConfig.code,
       email: `${roleConfig.code.toLowerCase()}@cif-ao.org`,
-      avatar: 'images/profil/profil01-04.jpg',
-      title: roleConfig.shortName
+      avatar: "images/profil/profil01-04.jpg",
+      title: roleConfig.shortName,
     };
 
     this.currentUser = persona;
-    localStorage.setItem('AUTH_USER', JSON.stringify(persona));
+    localStorage.setItem("AUTH_USER", JSON.stringify(persona));
 
     // Update Topbar and User Header
     this.updateUserHeader(persona);
@@ -515,78 +573,126 @@ const App = {
 
   // 3. SPA Navigation Router with Role-Based Access Control (RBAC Guard)
   switchView(viewId) {
+    if (!viewId) return;
+
     // Role-Based Access Control verification
-    const userRole = this.currentRole || (this.currentUser ? this.currentUser.role : 'ANALYST');
-    const allowedViews = (APP_CONSTANTS.ROLE_PERMITTED_VIEWS && APP_CONSTANTS.ROLE_PERMITTED_VIEWS[userRole]) || [];
-    
-    // Strict RBAC Guard: If target view is not allowed for current role, redirect to role home
-    if (Array.isArray(allowedViews) && allowedViews.length > 0 && viewId && !allowedViews.includes(viewId)) {
-      const roleConfig = APP_CONSTANTS.ROLES[userRole] || APP_CONSTANTS.ROLES.ANALYST;
-      const targetFallback = roleConfig.homeView || 'view-role-analyst';
-      this.showToast(`Accès restreint : cette page est réservée à l'espace ${roleConfig.name}`, 'warning');
-      viewId = targetFallback;
+    const userRole =
+      this.currentRole ||
+      (this.currentUser ? this.currentUser.role : "COMMITTEE");
+    const allowedViews =
+      (APP_CONSTANTS.ROLE_PERMITTED_VIEWS &&
+        APP_CONSTANTS.ROLE_PERMITTED_VIEWS[userRole]) ||
+      [];
+
+    // If target view is not directly in current role's allowed list, check if it belongs to another role and adapt smoothly
+    if (
+      Array.isArray(allowedViews) &&
+      allowedViews.length > 0 &&
+      !allowedViews.includes(viewId)
+    ) {
+      let targetRole = null;
+      if (APP_CONSTANTS.ROLE_PERMITTED_VIEWS) {
+        for (const [rCode, views] of Object.entries(
+          APP_CONSTANTS.ROLE_PERMITTED_VIEWS,
+        )) {
+          if (views.includes(viewId)) {
+            targetRole = rCode;
+            break;
+          }
+        }
+      }
+
+      if (targetRole && targetRole !== userRole) {
+        const targetRoleConfig = APP_CONSTANTS.ROLES[targetRole];
+        if (targetRoleConfig) {
+          const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(
+            (a) => a.role === targetRole,
+          ) || {
+            id: `user-${targetRole.toLowerCase()}`,
+            name: targetRoleConfig.name,
+            role: targetRole,
+            email: `${targetRole.toLowerCase()}@cif-ao.org`,
+            avatar: "images/profil/profil01-01.jpg",
+            title: targetRoleConfig.shortName,
+          };
+          this.currentRole = targetRole;
+          this.currentUser = persona;
+          localStorage.setItem("AUTH_USER", JSON.stringify(persona));
+          this.updateUserHeader(persona);
+          this.renderSidebarForRole(targetRole);
+          this.renderNotificationsForRole(targetRole);
+        }
+      }
     }
 
     this.currentView = viewId;
 
     // Highlight active nav item
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    document
+      .querySelectorAll(".nav-item")
+      .forEach((item) => item.classList.remove("active"));
     const activeLink = document.querySelector(`[data-view-target="${viewId}"]`);
     if (activeLink && activeLink.parentElement) {
-      activeLink.parentElement.classList.add('active');
+      activeLink.parentElement.classList.add("active");
     }
 
     // Toggle view visibility
-    document.querySelectorAll('.app-view').forEach(view => {
-      view.style.display = 'none';
+    document.querySelectorAll(".app-view").forEach((view) => {
+      view.style.display = "none";
     });
     const target = document.getElementById(viewId);
     if (target) {
-      target.style.display = 'block';
+      target.style.display = "block";
     }
 
     // Execute role-specific initializers
-    if (viewId === 'view-role-client' || viewId === 'view-client-requests') {
+    if (viewId === "view-role-client" || viewId === "view-client-requests") {
       this.renderBorrowerDashboard();
-    } else if (viewId === 'view-client-documents') {
+    } else if (viewId === "view-client-documents") {
       this.checkAndHighlightExpiringDocs();
-    } else if (viewId === 'view-client-schedule') {
+    } else if (viewId === "view-client-schedule") {
       this.renderClientSchedule();
-    } else if (viewId === 'view-client-simulator') {
+    } else if (viewId === "view-client-simulator") {
       this.updateClientSimulation();
-    } else if (viewId === 'view-role-agent') {
+    } else if (viewId === "view-role-agent") {
       this.renderAgentDashboard();
-    } else if (viewId === 'view-agent-inspections') {
+    } else if (viewId === "view-agent-inspections") {
       this.renderAgentInspections();
-    } else if (viewId === 'view-agent-clients') {
+    } else if (viewId === "view-agent-clients") {
       this.renderAgentClientsPortfolio();
-    } else if (viewId === 'view-agent-complements') {
+    } else if (viewId === "view-agent-complements") {
       this.renderAgentComplements();
-    } else if (viewId === 'view-role-analyst' || viewId === 'view-analyst-dossiers') {
+    } else if (
+      viewId === "view-role-analyst" ||
+      viewId === "view-analyst-dossiers"
+    ) {
       this.renderAnalystDashboard();
-    } else if (viewId === 'view-analyst-anomalies') {
+    } else if (viewId === "view-analyst-anomalies") {
       this.renderAnalystAnomalies();
-    } else if (viewId === 'view-role-committee') {
+    } else if (viewId === "view-role-committee") {
       this.renderCommitteeDashboard();
-    } else if (viewId === 'view-committee-dossiers') {
+    } else if (viewId === "view-committee-dossiers") {
       this.renderCommitteeDossiersPage();
-    } else if (viewId === 'view-committee-signed') {
+    } else if (viewId === "view-committee-signed") {
       this.renderSignedPvTable();
-    } else if (viewId === 'view-role-compliance' || viewId === 'view-compliance-screening') {
+    } else if (
+      viewId === "view-role-compliance" ||
+      viewId === "view-compliance-screening"
+    ) {
       this.renderComplianceDashboard();
-    } else if (viewId === 'view-scoring-admin') {
+    } else if (viewId === "view-scoring-admin") {
       this.updateColdStartComparisonSim();
-    } else if (viewId === 'view-audit-logs') {
+    } else if (viewId === "view-audit-logs") {
       this.renderAuditLogs();
     }
 
     // Close mobile drawer if open
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
-    if (sidebar) sidebar.classList.remove('mobile-open');
-    if (backdrop) backdrop.classList.remove('active');
+    const sidebar = document.getElementById("sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    if (sidebar) sidebar.classList.remove("mobile-open");
+    if (backdrop) backdrop.classList.remove("active");
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   },
 
   // =========================================================================
@@ -595,73 +701,81 @@ const App = {
 
   // [ROLE 1] DEMANDEUR / CLIENT EMPRUNTEUR
   renderBorrowerDashboard() {
-    const req = DB.findById('credit_requests', 1); // Fatou Ndiaye
-    const client = DB.findById('clients', 1);
+    const req = DB.findById("credit_requests", 1); // Fatou Ndiaye
+    const client = DB.findById("clients", 1);
     if (!req) return;
 
-    const nameEl = document.getElementById('borrower-banner-name');
-    const numEl = document.getElementById('borrower-member-num');
-    if (nameEl) nameEl.textContent = this.currentUser ? this.currentUser.name : 'Faratigi Ndiaye';
-    if (numEl) numEl.textContent = client ? client.client_number : 'ML-BKO-008821';
+    const nameEl = document.getElementById("borrower-banner-name");
+    const numEl = document.getElementById("borrower-member-num");
+    if (nameEl)
+      nameEl.textContent = this.currentUser
+        ? this.currentUser.name
+        : "Faratigi Ndiaye";
+    if (numEl)
+      numEl.textContent = client ? client.client_number : "ML-BKO-008821";
 
-    const activeAmount = document.getElementById('borrower-active-amount');
-    const activePurpose = document.getElementById('borrower-active-purpose');
-    const activeRef = document.getElementById('borrower-active-ref');
-    const activeStatus = document.getElementById('borrower-active-status');
+    const activeAmount = document.getElementById("borrower-active-amount");
+    const activePurpose = document.getElementById("borrower-active-purpose");
+    const activeRef = document.getElementById("borrower-active-ref");
+    const activeStatus = document.getElementById("borrower-active-status");
 
-    if (activeAmount) activeAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    if (activeAmount)
+      activeAmount.textContent = CreditScoringEngine.formatFCFA(
+        req.requested_amount,
+      );
     if (activePurpose) activePurpose.textContent = req.purpose;
     if (activeRef) activeRef.textContent = req.request_number;
-    if (activeStatus) activeStatus.innerHTML = AppInteractions.getStatusBadge(req.status);
+    if (activeStatus)
+      activeStatus.innerHTML = AppInteractions.getStatusBadge(req.status);
 
     this.updateCompactEstimator();
   },
 
   // [ROLE 2] AGENT DE CRÉDIT (CHARGÉ DE CLIENTÈLE)
   agentSortKey: null,
-  agentSortDir: 'asc',
+  agentSortDir: "asc",
 
   sortAgentTable(key) {
     if (this.agentSortKey === key) {
-      this.agentSortDir = this.agentSortDir === 'asc' ? 'desc' : 'asc';
+      this.agentSortDir = this.agentSortDir === "asc" ? "desc" : "asc";
     } else {
       this.agentSortKey = key;
-      this.agentSortDir = (key === 'requested_amount') ? 'desc' : 'asc';
+      this.agentSortDir = key === "requested_amount" ? "desc" : "asc";
     }
 
     const fieldLabels = {
-      request_number: 'N° Dossier / Date',
-      client_name: 'Client Emprunteur',
-      requested_amount: 'Montant Demandé',
-      purpose: 'Objet du Prêt',
-      status: 'Statut'
+      request_number: "N° Dossier / Date",
+      client_name: "Client Emprunteur",
+      requested_amount: "Montant Demandé",
+      purpose: "Objet du Prêt",
+      status: "Statut",
     };
 
-    const dirLabel = this.agentSortDir === 'asc' ? 'croissant' : 'décroissant';
-    this.showToast(`Tri par ${fieldLabels[key] || key} (${dirLabel})`, 'info');
+    const dirLabel = this.agentSortDir === "asc" ? "croissant" : "décroissant";
+    this.showToast(`Tri par ${fieldLabels[key] || key} (${dirLabel})`, "info");
 
     this.renderAgentDashboard(true);
   },
 
-  currentAgentPipelineFilter: 'ALL',
+  currentAgentPipelineFilter: "ALL",
 
-  filterAgentPipeline(filter = 'ALL', buttonEl = null) {
+  filterAgentPipeline(filter = "ALL", buttonEl = null) {
     this.currentAgentPipelineFilter = filter;
 
     const filterBtns = {
-      'ALL': 'filter-agent-all',
-      'SUBMITTED': 'filter-agent-submitted',
-      'REVIEW': 'filter-agent-review',
-      'APPROVED': 'filter-agent-approved'
+      ALL: "filter-agent-all",
+      SUBMITTED: "filter-agent-submitted",
+      REVIEW: "filter-agent-review",
+      APPROVED: "filter-agent-approved",
     };
 
     Object.entries(filterBtns).forEach(([key, id]) => {
       const btn = document.getElementById(id);
       if (btn) {
         if (key === filter) {
-          btn.classList.add('active');
+          btn.classList.add("active");
         } else {
-          btn.classList.remove('active');
+          btn.classList.remove("active");
         }
       }
     });
@@ -675,43 +789,58 @@ const App = {
 
   renderAgentDashboard(animated = false) {
     AppCharts.setupDefaults();
-    AppCharts.renderActivitySparkline('agent-activity-sparkline');
+    AppCharts.renderActivitySparkline("agent-activity-sparkline");
 
-    const tbody = document.getElementById('agent-pipeline-table-body');
+    const tbody = document.getElementById("agent-pipeline-table-body");
     if (!tbody) return;
 
     // Update Header Sort Icons & Active state
-    const sortKeys = ['request_number', 'client_name', 'requested_amount', 'status'];
-    sortKeys.forEach(k => {
+    const sortKeys = [
+      "request_number",
+      "client_name",
+      "requested_amount",
+      "status",
+    ];
+    sortKeys.forEach((k) => {
       const thEl = document.querySelector(`.sortable-th[onclick*="'${k}'"]`);
       const iconEl = document.getElementById(`sort-icon-${k}`);
       if (thEl) {
         if (this.agentSortKey === k) {
-          thEl.classList.add('active-sort');
+          thEl.classList.add("active-sort");
           if (iconEl) {
-            iconEl.className = `fas fa-sort-${this.agentSortDir === 'asc' ? 'up' : 'down'} sort-icon`;
+            iconEl.className = `fas fa-sort-${this.agentSortDir === "asc" ? "up" : "down"} sort-icon`;
           }
         } else {
-          thEl.classList.remove('active-sort');
+          thEl.classList.remove("active-sort");
           if (iconEl) {
-            iconEl.className = 'fas fa-sort sort-icon';
+            iconEl.className = "fas fa-sort sort-icon";
           }
         }
       }
     });
 
-    const allRequests = DB.get('credit_requests') || [];
+    const allRequests = DB.get("credit_requests") || [];
 
     // Calculate filter tab counters
     const countAll = allRequests.length;
-    const countSubmitted = allRequests.filter(r => r.status === 'SUBMITTED').length;
-    const countReview = allRequests.filter(r => ['ANALYSIS', 'VERIFICATION_REQUIRED', 'CREDIT_REVIEW'].includes(r.status)).length;
-    const countApproved = allRequests.filter(r => ['COMMITTEE', 'APPROVED', 'DISBURSED'].includes(r.status)).length;
+    const countSubmitted = allRequests.filter(
+      (r) => r.status === "SUBMITTED",
+    ).length;
+    const countReview = allRequests.filter((r) =>
+      ["ANALYSIS", "VERIFICATION_REQUIRED", "CREDIT_REVIEW"].includes(r.status),
+    ).length;
+    const countApproved = allRequests.filter((r) =>
+      ["COMMITTEE", "APPROVED", "DISBURSED"].includes(r.status),
+    ).length;
 
-    const elCountAll = document.getElementById('agent-filter-count-all');
-    const elCountSubmitted = document.getElementById('agent-filter-count-submitted');
-    const elCountReview = document.getElementById('agent-filter-count-review');
-    const elCountApproved = document.getElementById('agent-filter-count-approved');
+    const elCountAll = document.getElementById("agent-filter-count-all");
+    const elCountSubmitted = document.getElementById(
+      "agent-filter-count-submitted",
+    );
+    const elCountReview = document.getElementById("agent-filter-count-review");
+    const elCountApproved = document.getElementById(
+      "agent-filter-count-approved",
+    );
 
     if (elCountAll) elCountAll.textContent = countAll;
     if (elCountSubmitted) elCountSubmitted.textContent = countSubmitted;
@@ -721,38 +850,48 @@ const App = {
     let requests = [...allRequests];
 
     // Apply Filter
-    const activeFilter = this.currentAgentPipelineFilter || 'ALL';
-    if (activeFilter === 'SUBMITTED') {
-      requests = requests.filter(r => r.status === 'SUBMITTED');
-    } else if (activeFilter === 'REVIEW') {
-      requests = requests.filter(r => ['ANALYSIS', 'VERIFICATION_REQUIRED', 'CREDIT_REVIEW'].includes(r.status));
-    } else if (activeFilter === 'APPROVED') {
-      requests = requests.filter(r => ['COMMITTEE', 'APPROVED', 'DISBURSED'].includes(r.status));
+    const activeFilter = this.currentAgentPipelineFilter || "ALL";
+    if (activeFilter === "SUBMITTED") {
+      requests = requests.filter((r) => r.status === "SUBMITTED");
+    } else if (activeFilter === "REVIEW") {
+      requests = requests.filter((r) =>
+        ["ANALYSIS", "VERIFICATION_REQUIRED", "CREDIT_REVIEW"].includes(
+          r.status,
+        ),
+      );
+    } else if (activeFilter === "APPROVED") {
+      requests = requests.filter((r) =>
+        ["COMMITTEE", "APPROVED", "DISBURSED"].includes(r.status),
+      );
     }
 
     if (this.agentSortKey) {
       const key = this.agentSortKey;
-      const isAsc = this.agentSortDir === 'asc';
+      const isAsc = this.agentSortDir === "asc";
 
       requests.sort((a, b) => {
         let valA = a[key];
         let valB = b[key];
 
-        if (key === 'requested_amount') {
-          return isAsc ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
-        } else if (key === 'request_number') {
+        if (key === "requested_amount") {
+          return isAsc
+            ? Number(valA) - Number(valB)
+            : Number(valB) - Number(valA);
+        } else if (key === "request_number") {
           const timeA = new Date(a.created_at || 0).getTime();
           const timeB = new Date(b.created_at || 0).getTime();
           return isAsc ? timeA - timeB : timeB - timeA;
         } else {
-          const strA = String(valA || '').toLowerCase();
-          const strB = String(valB || '').toLowerCase();
-          return isAsc ? strA.localeCompare(strB, 'fr') : strB.localeCompare(strA, 'fr');
+          const strA = String(valA || "").toLowerCase();
+          const strB = String(valB || "").toLowerCase();
+          return isAsc
+            ? strA.localeCompare(strB, "fr")
+            : strB.localeCompare(strA, "fr");
         }
       });
     }
 
-    const rowClass = animated ? 'sort-row-animated' : '';
+    const rowClass = animated ? "sort-row-animated" : "";
 
     if (requests.length === 0) {
       tbody.innerHTML = `
@@ -767,16 +906,18 @@ const App = {
       return;
     }
 
-    tbody.innerHTML = requests.map(r => {
-      const capacityBadge = r.repayment_capacity_status === 'SUFFICIENT'
-        ? `<span class="badge badge-capacity-sufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-check-circle mr-1"></i> Capacité OK</span>`
-        : `<span class="badge badge-capacity-insufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-triangle-exclamation mr-1"></i> Taux > 33%</span>`;
+    tbody.innerHTML = requests
+      .map((r) => {
+        const capacityBadge =
+          r.repayment_capacity_status === "SUFFICIENT"
+            ? `<span class="badge badge-capacity-sufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-check-circle mr-1"></i> Capacité OK</span>`
+            : `<span class="badge badge-capacity-insufficient" style="font-size: 0.65rem; padding: 2px 6px;"><i class="fas fa-triangle-exclamation mr-1"></i> Taux > 33%</span>`;
 
-      return `
+        return `
         <tr class="schedule-table-row ${rowClass}" onclick="App.openAgentDrawer(${r.id})">
           <td>
             <strong style="color: var(--primary-600); font-family: var(--font-mono);">${r.request_number}</strong>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(r.created_at).toLocaleDateString('fr-FR')}</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${new Date(r.created_at).toLocaleDateString("fr-FR")}</div>
           </td>
           <td>
             <div class="client-cell">
@@ -790,7 +931,7 @@ const App = {
           <td>
             <div>
               <strong class="amount-cell" style="font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
-              <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.duration_months} mois • ${r.purpose ? r.purpose.substring(0, 20) + (r.purpose.length > 20 ? '...' : '') : 'Activité'}</div>
+              <div style="font-size: 0.72rem; color: var(--text-subtle);">${r.duration_months} mois • ${r.purpose ? r.purpose.substring(0, 20) + (r.purpose.length > 20 ? "..." : "") : "Activité"}</div>
             </div>
           </td>
           <td>
@@ -811,158 +952,265 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   openAgentDrawer(requestId) {
-    const allRequests = DB.get('credit_requests') || [];
-    const req = allRequests.find(r => r.id == requestId) || allRequests[0];
+    const allRequests = DB.get("credit_requests") || [];
+    const req = allRequests.find((r) => r.id == requestId) || allRequests[0];
     if (!req) return;
 
-    const client = DB.findById('clients', req.client_id) || {};
-    const user = DB.findById('users', client.user_id) || {};
-    const activity = (DB.get('activities') || []).find(a => a.client_id == req.client_id || a.id == req.activity_id) || {};
-    const financialProfile = (DB.get('financial_profiles') || []).find(fp => fp.client_id == req.client_id) || {};
-    const guarantees = (DB.get('guarantees') || []).filter(g => g.credit_request_id == req.id);
-    const documents = (DB.get('documents') || []).filter(d => d.credit_request_id == req.id);
+    const client = DB.findById("clients", req.client_id) || {};
+    const user = DB.findById("users", client.user_id) || {};
+    const activity =
+      (DB.get("activities") || []).find(
+        (a) => a.client_id == req.client_id || a.id == req.activity_id,
+      ) || {};
+    const financialProfile =
+      (DB.get("financial_profiles") || []).find(
+        (fp) => fp.client_id == req.client_id,
+      ) || {};
+    const guarantees = (DB.get("guarantees") || []).filter(
+      (g) => g.credit_request_id == req.id,
+    );
+    const documents = (DB.get("documents") || []).filter(
+      (d) => d.credit_request_id == req.id,
+    );
     const evalData = CreditScoringEngine.evaluateDossier(req.id) || {};
 
     // Header elements
-    const titleEl = document.getElementById('agent-drawer-title');
-    const dateEl = document.getElementById('agent-drawer-date');
-    if (titleEl) titleEl.textContent = `Dossier N° ${req.request_number || 'REQ-2026-0000'}`;
+    const titleEl = document.getElementById("agent-drawer-title");
+    const dateEl = document.getElementById("agent-drawer-date");
+    if (titleEl)
+      titleEl.textContent = `Dossier N° ${req.request_number || "REQ-2026-0000"}`;
     if (dateEl) {
-      const subDate = new Date(req.submitted_at || req.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-      dateEl.textContent = `Déposé le ${subDate} • Agence ${req.city || client.city || 'Assigamé'}`;
+      const subDate = new Date(
+        req.submitted_at || req.created_at || Date.now(),
+      ).toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+      dateEl.textContent = `Déposé le ${subDate} • Agence ${req.city || client.city || "Assigamé"}`;
     }
 
     // Hero amount & badges
-    const heroAmount = document.getElementById('agent-drawer-hero-amount');
-    const heroStatusContainer = document.getElementById('agent-drawer-hero-status-container');
-    const heroMode = document.getElementById('agent-drawer-hero-mode');
-    const heroScoreBadge = document.getElementById('agent-drawer-hero-score-badge');
+    const heroAmount = document.getElementById("agent-drawer-hero-amount");
+    const heroStatusContainer = document.getElementById(
+      "agent-drawer-hero-status-container",
+    );
+    const heroMode = document.getElementById("agent-drawer-hero-mode");
+    const heroScoreBadge = document.getElementById(
+      "agent-drawer-hero-score-badge",
+    );
 
-    if (heroAmount) heroAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
+    if (heroAmount)
+      heroAmount.textContent = CreditScoringEngine.formatFCFA(
+        req.requested_amount,
+      );
     if (heroStatusContainer) {
-      heroStatusContainer.innerHTML = AppInteractions.getStatusBadge(req.status);
+      heroStatusContainer.innerHTML = AppInteractions.getStatusBadge(
+        req.status,
+      );
     }
     if (heroMode) {
       const isCold = req.is_cold_start || client.is_cold_start;
-      heroMode.className = isCold ? 'badge badge-warning' : 'badge badge-submitted';
-      heroMode.innerHTML = isCold ? '<i class="fas fa-seedling"></i> Mode Cold Start' : '<i class="fas fa-history"></i> Mode Standard';
+      heroMode.className = isCold
+        ? "badge badge-warning"
+        : "badge badge-submitted";
+      heroMode.innerHTML = isCold
+        ? '<i class="fas fa-seedling"></i> Mode Cold Start'
+        : '<i class="fas fa-history"></i> Mode Standard';
     }
 
     const score = evalData.overallScore || req.score || 84;
     const confidence = evalData.confidenceScore || req.confidence_score || 94;
     if (heroScoreBadge) {
       heroScoreBadge.innerHTML = `<i class="fas fa-microchip"></i> Score IA : ${score}/100`;
-      heroScoreBadge.className = score >= 75 ? 'badge badge-approved' : (score >= 60 ? 'badge badge-warning' : 'badge badge-rejected');
+      heroScoreBadge.className =
+        score >= 75
+          ? "badge badge-approved"
+          : score >= 60
+            ? "badge badge-warning"
+            : "badge badge-rejected";
     }
 
     // Borrower card
-    const clientNumberEl = document.getElementById('agent-drawer-client-number');
-    const clientAvatarEl = document.getElementById('agent-drawer-client-avatar');
-    const clientNameEl = document.getElementById('agent-drawer-client-name');
-    const clientOccEl = document.getElementById('agent-drawer-client-occupation');
-    const clientLocEl = document.getElementById('agent-drawer-client-location');
-    const clientPhoneEl = document.getElementById('agent-drawer-client-phone');
-    const clientEmailEl = document.getElementById('agent-drawer-client-email');
-    const clientKycEl = document.getElementById('agent-drawer-client-kyc');
-    const btnSms = document.getElementById('agent-drawer-btn-sms');
-    const btnCall = document.getElementById('agent-drawer-btn-call');
+    const clientNumberEl = document.getElementById(
+      "agent-drawer-client-number",
+    );
+    const clientAvatarEl = document.getElementById(
+      "agent-drawer-client-avatar",
+    );
+    const clientNameEl = document.getElementById("agent-drawer-client-name");
+    const clientOccEl = document.getElementById(
+      "agent-drawer-client-occupation",
+    );
+    const clientLocEl = document.getElementById("agent-drawer-client-location");
+    const clientPhoneEl = document.getElementById("agent-drawer-client-phone");
+    const clientEmailEl = document.getElementById("agent-drawer-client-email");
+    const clientKycEl = document.getElementById("agent-drawer-client-kyc");
+    const btnSms = document.getElementById("agent-drawer-btn-sms");
+    const btnCall = document.getElementById("agent-drawer-btn-call");
 
-    if (clientNumberEl) clientNumberEl.textContent = client.client_number || 'ML-BKO-008821';
-    if (clientAvatarEl) clientAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
+    if (clientNumberEl)
+      clientNumberEl.textContent = client.client_number || "ML-BKO-008821";
+    if (clientAvatarEl)
+      clientAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
-    if (clientOccEl) clientOccEl.textContent = client.occupation || activity.sector || 'Commerçant / Entrepreneur';
-    if (clientLocEl) clientLocEl.textContent = `${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} (${client.residential_zone || 'Zone Urbaine'})`;
-    if (clientPhoneEl) clientPhoneEl.textContent = user.phone || '+223 77 450 88 21';
-    if (clientEmailEl) clientEmailEl.textContent = user.email || 'fatou.ndiaye@gmail.com';
+    if (clientOccEl)
+      clientOccEl.textContent =
+        client.occupation || activity.sector || "Commerçant / Entrepreneur";
+    if (clientLocEl)
+      clientLocEl.textContent = `${req.city || client.city || "Bamako"}, ${req.country || "Mali"} (${client.residential_zone || "Zone Urbaine"})`;
+    if (clientPhoneEl)
+      clientPhoneEl.textContent = user.phone || "+223 77 450 88 21";
+    if (clientEmailEl)
+      clientEmailEl.textContent = user.email || "fatou.ndiaye@gmail.com";
     if (clientKycEl) {
-      const isKycOk = client.kyc_status === 'VERIFIED';
-      clientKycEl.className = isKycOk ? 'badge badge-approved' : 'badge badge-warning';
-      clientKycEl.innerHTML = isKycOk ? '<i class="fas fa-check-circle"></i> Conforme' : '<i class="fas fa-clock"></i> En Attente Pièces';
+      const isKycOk = client.kyc_status === "VERIFIED";
+      clientKycEl.className = isKycOk
+        ? "badge badge-approved"
+        : "badge badge-warning";
+      clientKycEl.innerHTML = isKycOk
+        ? '<i class="fas fa-check-circle"></i> Conforme'
+        : '<i class="fas fa-clock"></i> En Attente Pièces';
     }
     if (btnSms) {
-      btnSms.setAttribute('onclick', `App.triggerDocReminder(${req.id}, '${req.client_name.replace(/'/g, "\\'")}', 'Relance de justificatifs')`);
+      btnSms.setAttribute(
+        "onclick",
+        `App.triggerDocReminder(${req.id}, '${req.client_name.replace(/'/g, "\\'")}', 'Relance de justificatifs')`,
+      );
     }
     if (btnCall) {
-      btnCall.setAttribute('onclick', `App.showToast('Appel direct initié vers ${user.phone || '+223 77 450 88 21'}', 'info')`);
+      btnCall.setAttribute(
+        "onclick",
+        `App.showToast('Appel direct initié vers ${user.phone || "+223 77 450 88 21"}', 'info')`,
+      );
     }
 
     // Financial capacity card
-    const durationEl = document.getElementById('agent-drawer-duration');
-    const monthlyPaymentEl = document.getElementById('agent-drawer-monthly-payment');
-    const incomeEl = document.getElementById('agent-drawer-income');
-    const expensesEl = document.getElementById('agent-drawer-expenses');
-    const disposableEl = document.getElementById('agent-drawer-disposable');
-    const capacityBadgeEl = document.getElementById('agent-drawer-capacity-badge');
+    const durationEl = document.getElementById("agent-drawer-duration");
+    const monthlyPaymentEl = document.getElementById(
+      "agent-drawer-monthly-payment",
+    );
+    const incomeEl = document.getElementById("agent-drawer-income");
+    const expensesEl = document.getElementById("agent-drawer-expenses");
+    const disposableEl = document.getElementById("agent-drawer-disposable");
+    const capacityBadgeEl = document.getElementById(
+      "agent-drawer-capacity-badge",
+    );
 
-    const estPayment = req.estimated_monthly_payment || Math.round(req.requested_amount / (req.duration_months || 12));
-    const incomeVal = req.declared_monthly_income || financialProfile.monthly_income || 1450000;
-    const expensesVal = req.declared_monthly_expenses || financialProfile.monthly_expenses || 670000;
-    const disposableVal = req.disposable_income || financialProfile.disposable_income || (incomeVal - expensesVal);
+    const estPayment =
+      req.estimated_monthly_payment ||
+      Math.round(req.requested_amount / (req.duration_months || 12));
+    const incomeVal =
+      req.declared_monthly_income || financialProfile.monthly_income || 1450000;
+    const expensesVal =
+      req.declared_monthly_expenses ||
+      financialProfile.monthly_expenses ||
+      670000;
+    const disposableVal =
+      req.disposable_income ||
+      financialProfile.disposable_income ||
+      incomeVal - expensesVal;
 
-    if (durationEl) durationEl.textContent = `${req.duration_months || 12} Mois`;
-    if (monthlyPaymentEl) monthlyPaymentEl.textContent = `${CreditScoringEngine.formatFCFA(estPayment)} / mois`;
-    if (incomeEl) incomeEl.textContent = CreditScoringEngine.formatFCFA(incomeVal);
-    if (expensesEl) expensesEl.textContent = CreditScoringEngine.formatFCFA(expensesVal);
-    if (disposableEl) disposableEl.textContent = CreditScoringEngine.formatFCFA(disposableVal);
+    if (durationEl)
+      durationEl.textContent = `${req.duration_months || 12} Mois`;
+    if (monthlyPaymentEl)
+      monthlyPaymentEl.textContent = `${CreditScoringEngine.formatFCFA(estPayment)} / mois`;
+    if (incomeEl)
+      incomeEl.textContent = CreditScoringEngine.formatFCFA(incomeVal);
+    if (expensesEl)
+      expensesEl.textContent = CreditScoringEngine.formatFCFA(expensesVal);
+    if (disposableEl)
+      disposableEl.textContent = CreditScoringEngine.formatFCFA(disposableVal);
     if (capacityBadgeEl) {
-      const isSufficient = req.repayment_capacity_status === 'SUFFICIENT';
-      capacityBadgeEl.innerHTML = isSufficient 
+      const isSufficient = req.repayment_capacity_status === "SUFFICIENT";
+      capacityBadgeEl.innerHTML = isSufficient
         ? '<span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>'
         : '<span class="badge badge-capacity-insufficient"><i class="fas fa-triangle-exclamation"></i> Insuffisante</span>';
     }
 
     // Purpose & Guarantee card
-    const purposeEl = document.getElementById('agent-drawer-purpose');
-    const guarTypeEl = document.getElementById('agent-drawer-guarantee-type');
-    const guarStatusEl = document.getElementById('agent-drawer-guarantee-status');
-    const guarDescEl = document.getElementById('agent-drawer-guarantee-desc');
-    const guarDeclaredEl = document.getElementById('agent-drawer-guarantee-declared');
-    const guarVerifiedEl = document.getElementById('agent-drawer-guarantee-verified');
+    const purposeEl = document.getElementById("agent-drawer-purpose");
+    const guarTypeEl = document.getElementById("agent-drawer-guarantee-type");
+    const guarStatusEl = document.getElementById(
+      "agent-drawer-guarantee-status",
+    );
+    const guarDescEl = document.getElementById("agent-drawer-guarantee-desc");
+    const guarDeclaredEl = document.getElementById(
+      "agent-drawer-guarantee-declared",
+    );
+    const guarVerifiedEl = document.getElementById(
+      "agent-drawer-guarantee-verified",
+    );
 
-    if (purposeEl) purposeEl.textContent = req.purpose || 'Financement de fonds de roulement et acquisition matériel';
+    if (purposeEl)
+      purposeEl.textContent =
+        req.purpose ||
+        "Financement de fonds de roulement et acquisition matériel";
 
     if (guarantees.length > 0) {
       const g = guarantees[0];
-      const isVerified = g.verification_status === 'VERIFIED';
-      if (guarTypeEl) guarTypeEl.textContent = g.guarantee_type || 'Stock Marchandises & Équipements';
+      const isVerified = g.verification_status === "VERIFIED";
+      if (guarTypeEl)
+        guarTypeEl.textContent =
+          g.guarantee_type || "Stock Marchandises & Équipements";
       if (guarStatusEl) {
-        guarStatusEl.className = isVerified ? 'badge badge-approved' : 'badge badge-warning';
-        guarStatusEl.innerHTML = isVerified ? '<i class="fas fa-check"></i> Inspecté sur terrain' : '<i class="fas fa-motorcycle"></i> À Visiter sur terrain';
+        guarStatusEl.className = isVerified
+          ? "badge badge-approved"
+          : "badge badge-warning";
+        guarStatusEl.innerHTML = isVerified
+          ? '<i class="fas fa-check"></i> Inspecté sur terrain'
+          : '<i class="fas fa-motorcycle"></i> À Visiter sur terrain';
       }
-      if (guarDescEl) guarDescEl.textContent = g.description || 'Garantie matérielle vérifiée';
-      if (guarDeclaredEl) guarDeclaredEl.textContent = CreditScoringEngine.formatFCFA(g.declared_value || 0);
-      if (guarVerifiedEl) guarVerifiedEl.textContent = isVerified ? CreditScoringEngine.formatFCFA(g.verified_value || 0) : 'Non expertisé';
+      if (guarDescEl)
+        guarDescEl.textContent =
+          g.description || "Garantie matérielle vérifiée";
+      if (guarDeclaredEl)
+        guarDeclaredEl.textContent = CreditScoringEngine.formatFCFA(
+          g.declared_value || 0,
+        );
+      if (guarVerifiedEl)
+        guarVerifiedEl.textContent = isVerified
+          ? CreditScoringEngine.formatFCFA(g.verified_value || 0)
+          : "Non expertisé";
     } else {
-      if (guarTypeEl) guarTypeEl.textContent = 'Caution Solidaire';
+      if (guarTypeEl) guarTypeEl.textContent = "Caution Solidaire";
       if (guarStatusEl) {
-        guarStatusEl.className = 'badge badge-submitted';
-        guarStatusEl.innerHTML = 'Caution validée';
+        guarStatusEl.className = "badge badge-submitted";
+        guarStatusEl.innerHTML = "Caution validée";
       }
-      if (guarDescEl) guarDescEl.textContent = 'Engagement solidaire du groupement sociétaire';
-      if (guarDeclaredEl) guarDeclaredEl.textContent = 'N/A';
-      if (guarVerifiedEl) guarVerifiedEl.textContent = 'N/A';
+      if (guarDescEl)
+        guarDescEl.textContent =
+          "Engagement solidaire du groupement sociétaire";
+      if (guarDeclaredEl) guarDeclaredEl.textContent = "N/A";
+      if (guarVerifiedEl) guarVerifiedEl.textContent = "N/A";
     }
 
     // Documents & OCR card
-    const docsCountEl = document.getElementById('agent-drawer-docs-count');
-    const docsListEl = document.getElementById('agent-drawer-docs-list');
-    if (docsCountEl) docsCountEl.textContent = `${documents.length} document(s)`;
+    const docsCountEl = document.getElementById("agent-drawer-docs-count");
+    const docsListEl = document.getElementById("agent-drawer-docs-list");
+    if (docsCountEl)
+      docsCountEl.textContent = `${documents.length} document(s)`;
     if (docsListEl) {
       if (documents.length === 0) {
-        docsListEl.innerHTML = '<div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Aucun document rattaché.</div>';
+        docsListEl.innerHTML =
+          '<div style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Aucun document rattaché.</div>';
       } else {
-        docsListEl.innerHTML = documents.map(doc => {
-          const isValidated = doc.status === 'VALIDATED';
-          const isFlagged = doc.status === 'FLAGGED';
-          const docBadge = isValidated
-            ? '<span class="badge badge-approved" style="font-size: 0.65rem;"><i class="fas fa-check"></i> OCR Conforme</span>'
-            : (isFlagged ? '<span class="badge badge-rejected" style="font-size: 0.65rem;"><i class="fas fa-triangle-exclamation"></i> Anomalie</span>' : '<span class="badge badge-submitted" style="font-size: 0.65rem;">En Attente</span>');
+        docsListEl.innerHTML = documents
+          .map((doc) => {
+            const isValidated = doc.status === "VALIDATED";
+            const isFlagged = doc.status === "FLAGGED";
+            const docBadge = isValidated
+              ? '<span class="badge badge-approved" style="font-size: 0.65rem;"><i class="fas fa-check"></i> OCR Conforme</span>'
+              : isFlagged
+                ? '<span class="badge badge-rejected" style="font-size: 0.65rem;"><i class="fas fa-triangle-exclamation"></i> Anomalie</span>'
+                : '<span class="badge badge-submitted" style="font-size: 0.65rem;">En Attente</span>';
 
-          return `
+            return `
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.65rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
               <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; min-width: 0;">
                 <i class="fas fa-file-lines text-primary" style="font-size: 0.85rem; flex-shrink: 0;"></i>
@@ -973,35 +1221,50 @@ const App = {
               <div style="flex-shrink: 0; margin-left: 0.5rem;">${docBadge}</div>
             </div>
           `;
-        }).join('');
+          })
+          .join("");
       }
     }
 
     // Risk Score & Scoring V2 card
-    const scoreValEl = document.getElementById('agent-drawer-score-val');
-    const confValEl = document.getElementById('agent-drawer-confidence-val');
-    const scoreLabelEl = document.getElementById('agent-drawer-score-label');
-    const scoreBarEl = document.getElementById('agent-drawer-score-progress');
+    const scoreValEl = document.getElementById("agent-drawer-score-val");
+    const confValEl = document.getElementById("agent-drawer-confidence-val");
+    const scoreLabelEl = document.getElementById("agent-drawer-score-label");
+    const scoreBarEl = document.getElementById("agent-drawer-score-progress");
 
     if (scoreValEl) {
       scoreValEl.textContent = score;
-      scoreValEl.style.color = evalData.riskColor || (score >= 75 ? '#059669' : (score >= 60 ? '#d97706' : '#dc2626'));
+      scoreValEl.style.color =
+        evalData.riskColor ||
+        (score >= 75 ? "#059669" : score >= 60 ? "#d97706" : "#dc2626");
     }
     if (confValEl) confValEl.textContent = `${confidence}%`;
     if (scoreLabelEl) {
-      const riskLevel = evalData.riskLevel || (score >= 75 ? 'FAIBLE' : (score >= 60 ? 'MODERE' : 'ELEVE'));
-      scoreLabelEl.className = `badge ${riskLevel === 'FAIBLE' ? 'badge-approved' : (riskLevel === 'MODERE' ? 'badge-warning' : 'badge-rejected')}`;
-      scoreLabelEl.textContent = riskLevel === 'FAIBLE' ? 'Risque Faible' : (riskLevel === 'MODERE' ? 'Risque Modéré' : 'Risque Élevé');
+      const riskLevel =
+        evalData.riskLevel ||
+        (score >= 75 ? "FAIBLE" : score >= 60 ? "MODERE" : "ELEVE");
+      scoreLabelEl.className = `badge ${riskLevel === "FAIBLE" ? "badge-approved" : riskLevel === "MODERE" ? "badge-warning" : "badge-rejected"}`;
+      scoreLabelEl.textContent =
+        riskLevel === "FAIBLE"
+          ? "Risque Faible"
+          : riskLevel === "MODERE"
+            ? "Risque Modéré"
+            : "Risque Élevé";
     }
     if (scoreBarEl) {
       scoreBarEl.style.width = `${Math.min(100, Math.max(0, score))}%`;
-      scoreBarEl.style.background = score >= 75 
-        ? 'linear-gradient(90deg, #10b981, #059669)' 
-        : (score >= 60 ? 'linear-gradient(90deg, #f59e0b, #d97706)' : 'linear-gradient(90deg, #ef4444, #dc2626)');
+      scoreBarEl.style.background =
+        score >= 75
+          ? "linear-gradient(90deg, #10b981, #059669)"
+          : score >= 60
+            ? "linear-gradient(90deg, #f59e0b, #d97706)"
+            : "linear-gradient(90deg, #ef4444, #dc2626)";
     }
 
     // Footer action buttons
-    const footerActions = document.getElementById('agent-drawer-footer-actions');
+    const footerActions = document.getElementById(
+      "agent-drawer-footer-actions",
+    );
     if (footerActions) {
       footerActions.innerHTML = `
         <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer(); App.switchView('view-agent-inspections');">
@@ -1014,28 +1277,28 @@ const App = {
     }
 
     // Open Backdrop
-    const backdrop = document.getElementById('agent-drawer-backdrop');
-    if (backdrop) backdrop.classList.add('active');
+    const backdrop = document.getElementById("agent-drawer-backdrop");
+    if (backdrop) backdrop.classList.add("active");
   },
 
   closeAgentDrawer() {
-    const backdrop = document.getElementById('agent-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("agent-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   // =========================================================================
   // [ROLE 2 - PAGE 2] INSPECTIONS & VISITES TERRAIN DES GARANTIES
   // =========================================================================
-  agentInspFilter: 'ALL',
-  agentInspSearch: '',
+  agentInspFilter: "ALL",
+  agentInspSearch: "",
 
   renderAgentInspections() {
-    const tbody = document.getElementById('agent-inspections-table-body');
+    const tbody = document.getElementById("agent-inspections-table-body");
     if (!tbody) return;
 
-    const guarantees = DB.get('guarantees');
-    const requests = DB.get('credit_requests');
-    const clients = DB.get('clients');
+    const guarantees = DB.get("guarantees");
+    const requests = DB.get("credit_requests");
+    const clients = DB.get("clients");
 
     // Calculate KPIs
     let pendingCount = 0;
@@ -1045,46 +1308,55 @@ const App = {
     let totalRequestedLoanVal = 0;
     let anomaliesCount = 0;
 
-    const items = guarantees.map(g => {
-      const req = requests.find(r => r.id == g.credit_request_id) || {};
-      const client = clients.find(c => c.id == req.client_id) || {};
-      
-      const isVerified = g.verification_status === 'VERIFIED';
+    const items = guarantees.map((g) => {
+      const req = requests.find((r) => r.id == g.credit_request_id) || {};
+      const client = clients.find((c) => c.id == req.client_id) || {};
+
+      const isVerified = g.verification_status === "VERIFIED";
       if (isVerified) {
         verifiedCount++;
-        totalVerifiedVal += (g.verified_value || 0);
+        totalVerifiedVal += g.verified_value || 0;
       } else {
         pendingCount++;
       }
-      totalDeclaredVal += (g.declared_value || 0);
+      totalDeclaredVal += g.declared_value || 0;
       if (req.requested_amount) totalRequestedLoanVal += req.requested_amount;
 
-      if (g.declared_value && g.verified_value && g.declared_value > g.verified_value * 1.3) {
+      if (
+        g.declared_value &&
+        g.verified_value &&
+        g.declared_value > g.verified_value * 1.3
+      ) {
         anomaliesCount++;
       }
 
       return {
         ...g,
-        clientName: req.client_name || 'Emprunteur CIF',
-        requestNumber: req.request_number || 'REQ-2026-0000',
-        city: req.city || client.city || 'UEMOA',
-        country: req.country || 'UEMOA',
-        zone: client.residential_zone || 'Urbaine'
+        clientName: req.client_name || "Emprunteur CIF",
+        requestNumber: req.request_number || "REQ-2026-0000",
+        city: req.city || client.city || "UEMOA",
+        country: req.country || "UEMOA",
+        zone: client.residential_zone || "Urbaine",
       };
     });
 
     // Update KPIs UI
-    const pendingEl = document.getElementById('insp-kpi-pending');
-    const verifiedEl = document.getElementById('insp-kpi-verified');
-    const ratioEl = document.getElementById('insp-kpi-ratio');
-    const anomEl = document.getElementById('insp-kpi-anomalies');
-    const countAllEl = document.getElementById('insp-count-all');
-    const countPendingEl = document.getElementById('insp-count-pending');
-    const countVerifiedEl = document.getElementById('insp-count-verified');
+    const pendingEl = document.getElementById("insp-kpi-pending");
+    const verifiedEl = document.getElementById("insp-kpi-verified");
+    const ratioEl = document.getElementById("insp-kpi-ratio");
+    const anomEl = document.getElementById("insp-kpi-anomalies");
+    const countAllEl = document.getElementById("insp-count-all");
+    const countPendingEl = document.getElementById("insp-count-pending");
+    const countVerifiedEl = document.getElementById("insp-count-verified");
 
     if (pendingEl) pendingEl.textContent = pendingCount;
-    if (verifiedEl) verifiedEl.textContent = `${(totalVerifiedVal / 1000000).toFixed(1)}M`;
-    if (ratioEl) ratioEl.textContent = totalRequestedLoanVal > 0 ? `${Math.round((totalVerifiedVal / totalRequestedLoanVal) * 100)}%` : '135%';
+    if (verifiedEl)
+      verifiedEl.textContent = `${(totalVerifiedVal / 1000000).toFixed(1)}M`;
+    if (ratioEl)
+      ratioEl.textContent =
+        totalRequestedLoanVal > 0
+          ? `${Math.round((totalVerifiedVal / totalRequestedLoanVal) * 100)}%`
+          : "135%";
     if (anomEl) anomEl.textContent = anomaliesCount;
     if (countAllEl) countAllEl.textContent = guarantees.length;
     if (countPendingEl) countPendingEl.textContent = pendingCount;
@@ -1092,23 +1364,28 @@ const App = {
 
     // Apply Filter & Search
     let filtered = items;
-    if (this.agentInspFilter === 'PENDING') {
-      filtered = filtered.filter(i => i.verification_status !== 'VERIFIED');
-    } else if (this.agentInspFilter === 'VERIFIED') {
-      filtered = filtered.filter(i => i.verification_status === 'VERIFIED');
-    } else if (this.agentInspFilter === 'STOCK') {
-      filtered = filtered.filter(i => i.guarantee_type === 'STOCK_MARCHANDISE');
-    } else if (this.agentInspFilter === 'CAUTION') {
-      filtered = filtered.filter(i => i.guarantee_type === 'CAUTION_SOLIDAIRE');
+    if (this.agentInspFilter === "PENDING") {
+      filtered = filtered.filter((i) => i.verification_status !== "VERIFIED");
+    } else if (this.agentInspFilter === "VERIFIED") {
+      filtered = filtered.filter((i) => i.verification_status === "VERIFIED");
+    } else if (this.agentInspFilter === "STOCK") {
+      filtered = filtered.filter(
+        (i) => i.guarantee_type === "STOCK_MARCHANDISE",
+      );
+    } else if (this.agentInspFilter === "CAUTION") {
+      filtered = filtered.filter(
+        (i) => i.guarantee_type === "CAUTION_SOLIDAIRE",
+      );
     }
 
     if (this.agentInspSearch) {
       const q = this.agentInspSearch.toLowerCase();
-      filtered = filtered.filter(i => 
-        (i.clientName && i.clientName.toLowerCase().includes(q)) ||
-        (i.requestNumber && i.requestNumber.toLowerCase().includes(q)) ||
-        (i.description && i.description.toLowerCase().includes(q)) ||
-        (i.city && i.city.toLowerCase().includes(q))
+      filtered = filtered.filter(
+        (i) =>
+          (i.clientName && i.clientName.toLowerCase().includes(q)) ||
+          (i.requestNumber && i.requestNumber.toLowerCase().includes(q)) ||
+          (i.description && i.description.toLowerCase().includes(q)) ||
+          (i.city && i.city.toLowerCase().includes(q)),
       );
     }
 
@@ -1124,17 +1401,38 @@ const App = {
       return;
     }
 
-    tbody.innerHTML = filtered.map(item => {
-      const isVerif = item.verification_status === 'VERIFIED';
-      const typeLabels = {
-        'STOCK_MARCHANDISE': { label: 'Stock Marchandises', icon: 'fa-boxes-stacked', color: '#0ea5e9' },
-        'EQUIPEMENT_MATERIEL': { label: 'Machines & Équipement', icon: 'fa-gears', color: '#8b5cf6' },
-        'CAUTION_SOLIDAIRE': { label: 'Caution Solidaire', icon: 'fa-user-shield', color: '#10b981' },
-        'GAGE_VEHICULE': { label: 'Gage Véhicule / Matériel', icon: 'fa-truck-front', color: '#f59e0b' }
-      };
-      const tCfg = typeLabels[item.guarantee_type] || { label: item.guarantee_type, icon: 'fa-shield', color: '#64748b' };
+    tbody.innerHTML = filtered
+      .map((item) => {
+        const isVerif = item.verification_status === "VERIFIED";
+        const typeLabels = {
+          STOCK_MARCHANDISE: {
+            label: "Stock Marchandises",
+            icon: "fa-boxes-stacked",
+            color: "#0ea5e9",
+          },
+          EQUIPEMENT_MATERIEL: {
+            label: "Machines & Équipement",
+            icon: "fa-gears",
+            color: "#8b5cf6",
+          },
+          CAUTION_SOLIDAIRE: {
+            label: "Caution Solidaire",
+            icon: "fa-user-shield",
+            color: "#10b981",
+          },
+          GAGE_VEHICULE: {
+            label: "Gage Véhicule / Matériel",
+            icon: "fa-truck-front",
+            color: "#f59e0b",
+          },
+        };
+        const tCfg = typeLabels[item.guarantee_type] || {
+          label: item.guarantee_type,
+          icon: "fa-shield",
+          color: "#64748b",
+        };
 
-      return `
+        return `
         <tr class="schedule-table-row" onclick="App.openInspectionDrawer(${item.id})">
           <td>
             <strong style="color: var(--primary-600); font-family: var(--font-mono);">${item.requestNumber}</strong>
@@ -1156,15 +1454,19 @@ const App = {
             </div>
             <div style="margin-top: 2px;">
               <span style="font-size: 0.7rem; color: var(--text-subtle);">Expertisée :</span>
-              ${isVerif 
-                ? `<strong style="color: #047857; font-weight: 700; font-family: var(--font-mono); font-size: 0.82rem;"> ${CreditScoringEngine.formatFCFA(item.verified_value)}</strong>` 
-                : '<span style="color: var(--text-subtle); font-style: italic; font-size: 0.72rem;"> En attente</span>'}
+              ${
+                isVerif
+                  ? `<strong style="color: #047857; font-weight: 700; font-family: var(--font-mono); font-size: 0.82rem;"> ${CreditScoringEngine.formatFCFA(item.verified_value)}</strong>`
+                  : '<span style="color: var(--text-subtle); font-style: italic; font-size: 0.72rem;"> En attente</span>'
+              }
             </div>
           </td>
           <td>
-            ${isVerif 
-              ? `<span class="badge badge-approved" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-check-circle"></i> Validée</span>`
-              : `<span class="badge badge-warning" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-motorcycle"></i> À Visiter</span>`}
+            ${
+              isVerif
+                ? `<span class="badge badge-approved" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-check-circle"></i> Validée</span>`
+                : `<span class="badge badge-warning" style="font-size: 0.68rem; padding: 3px 6px;"><i class="fas fa-motorcycle"></i> À Visiter</span>`
+            }
             <div style="font-size: 0.68rem; color: var(--text-subtle); margin-top: 2px;">
               <i class="fas fa-location-dot"></i> ${item.zone}
             </div>
@@ -1174,104 +1476,139 @@ const App = {
               <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openInspectionDrawer(${item.id})" title="Voir les détails complets en volet latéral">
                 <i class="fas fa-eye text-primary"></i> Détails
               </button>
-              <button class="btn ${isVerif ? 'btn-secondary' : 'btn-primary'} btn-sm" onclick="event.stopPropagation(); App.openInspectionModal(${item.id})" title="${isVerif ? 'Modifier le rapport' : 'Remplir le rapport d\'inspection'}">
-                <i class="fas ${isVerif ? 'fa-pen-to-square' : 'fa-clipboard-check'}"></i>
+              <button class="btn ${isVerif ? "btn-secondary" : "btn-primary"} btn-sm" onclick="event.stopPropagation(); App.openInspectionModal(${item.id})" title="${isVerif ? "Modifier le rapport" : "Remplir le rapport d'inspection"}">
+                <i class="fas ${isVerif ? "fa-pen-to-square" : "fa-clipboard-check"}"></i>
               </button>
             </div>
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   currentInspectionDrawerId: null,
 
   openInspectionDrawer(guaranteeId) {
-    const g = DB.findById('guarantees', guaranteeId);
+    const g = DB.findById("guarantees", guaranteeId);
     if (!g) return;
 
     this.currentInspectionDrawerId = guaranteeId;
-    const req = DB.findById('credit_requests', g.credit_request_id) || {};
-    const client = DB.findById('clients', req.client_id) || {};
+    const req = DB.findById("credit_requests", g.credit_request_id) || {};
+    const client = DB.findById("clients", req.client_id) || {};
 
-    const backdrop = document.getElementById('inspection-drawer-backdrop');
-    const drawer = document.getElementById('inspection-sidedrawer');
+    const backdrop = document.getElementById("inspection-drawer-backdrop");
+    const drawer = document.getElementById("inspection-sidedrawer");
     if (!drawer) return;
 
     // Header values
-    const isVerif = g.verification_status === 'VERIFIED';
-    const typeBadge = document.getElementById('insp-drawer-type-badge');
-    const statusBadge = document.getElementById('insp-drawer-status-badge');
-    const titleEl = document.getElementById('insp-drawer-title');
-    const subtitleEl = document.getElementById('insp-drawer-subtitle');
+    const isVerif = g.verification_status === "VERIFIED";
+    const typeBadge = document.getElementById("insp-drawer-type-badge");
+    const statusBadge = document.getElementById("insp-drawer-status-badge");
+    const titleEl = document.getElementById("insp-drawer-title");
+    const subtitleEl = document.getElementById("insp-drawer-subtitle");
 
-    if (typeBadge) typeBadge.innerHTML = `<i class="fas fa-shield"></i> ${g.guarantee_type || 'Garantie'}`;
+    if (typeBadge)
+      typeBadge.innerHTML = `<i class="fas fa-shield"></i> ${g.guarantee_type || "Garantie"}`;
     if (statusBadge) {
-      statusBadge.className = isVerif ? 'badge badge-approved' : 'badge badge-warning';
-      statusBadge.innerHTML = isVerif ? '<i class="fas fa-check-circle"></i> Conforme & Validée' : '<i class="fas fa-clock"></i> Visite Terrain Requise';
+      statusBadge.className = isVerif
+        ? "badge badge-approved"
+        : "badge badge-warning";
+      statusBadge.innerHTML = isVerif
+        ? '<i class="fas fa-check-circle"></i> Conforme & Validée'
+        : '<i class="fas fa-clock"></i> Visite Terrain Requise';
     }
-    if (titleEl) titleEl.textContent = `Inspection Garantie • ${req.request_number || 'REQ-2026-0891'}`;
-    if (subtitleEl) subtitleEl.textContent = `${client.city || 'Bamako'} • ${client.residential_zone || 'Zone Urbaine'}`;
+    if (titleEl)
+      titleEl.textContent = `Inspection Garantie • ${req.request_number || "REQ-2026-0891"}`;
+    if (subtitleEl)
+      subtitleEl.textContent = `${client.city || "Bamako"} • ${client.residential_zone || "Zone Urbaine"}`;
 
     // Section 1: Emprunteur & Prêt
-    const reqNumEl = document.getElementById('insp-drawer-req-num');
-    const clientAvatar = document.getElementById('insp-drawer-client-avatar');
-    const clientName = document.getElementById('insp-drawer-client-name');
-    const clientLoc = document.getElementById('insp-drawer-client-loc');
-    const loanAmount = document.getElementById('insp-drawer-loan-amount');
-    const covRatio = document.getElementById('insp-drawer-coverage-ratio');
+    const reqNumEl = document.getElementById("insp-drawer-req-num");
+    const clientAvatar = document.getElementById("insp-drawer-client-avatar");
+    const clientName = document.getElementById("insp-drawer-client-name");
+    const clientLoc = document.getElementById("insp-drawer-client-loc");
+    const loanAmount = document.getElementById("insp-drawer-loan-amount");
+    const covRatio = document.getElementById("insp-drawer-coverage-ratio");
 
-    if (reqNumEl) reqNumEl.textContent = req.request_number || 'REQ-2026-0891';
-    if (clientAvatar) clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || 'Client')}&background=4f46e5&color=fff`;
-    if (clientName) clientName.textContent = req.client_name || 'Fatou Ndiaye';
-    if (clientLoc) clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} (${client.residential_zone || 'Zone Urbaine'})`;
-    if (loanAmount) loanAmount.textContent = CreditScoringEngine.formatFCFA(req.requested_amount || 2500000);
+    if (reqNumEl) reqNumEl.textContent = req.request_number || "REQ-2026-0891";
+    if (clientAvatar)
+      clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || "Client")}&background=4f46e5&color=fff`;
+    if (clientName) clientName.textContent = req.client_name || "Fatou Ndiaye";
+    if (clientLoc)
+      clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || "Bamako"}, ${req.country || "Mali"} (${client.residential_zone || "Zone Urbaine"})`;
+    if (loanAmount)
+      loanAmount.textContent = CreditScoringEngine.formatFCFA(
+        req.requested_amount || 2500000,
+      );
 
     const valRetenue = g.verified_value || g.declared_value || 1000000;
     const loanAmt = req.requested_amount || 2500000;
     const covPct = Math.round((valRetenue / loanAmt) * 100);
     if (covRatio) {
       covRatio.textContent = `${covPct}%`;
-      covRatio.style.color = covPct >= 120 ? '#059669' : '#d97706';
+      covRatio.style.color = covPct >= 120 ? "#059669" : "#d97706";
     }
 
     // Section 2: Expertise Financière
-    const valDeclaredEl = document.getElementById('insp-drawer-val-declared');
-    const valVerifiedEl = document.getElementById('insp-drawer-val-verified');
-    const discountEl = document.getElementById('insp-drawer-discount-pct');
-    const evalStatusEl = document.getElementById('insp-drawer-eval-status');
+    const valDeclaredEl = document.getElementById("insp-drawer-val-declared");
+    const valVerifiedEl = document.getElementById("insp-drawer-val-verified");
+    const discountEl = document.getElementById("insp-drawer-discount-pct");
+    const evalStatusEl = document.getElementById("insp-drawer-eval-status");
 
-    if (valDeclaredEl) valDeclaredEl.textContent = CreditScoringEngine.formatFCFA(g.declared_value || 0);
-    if (valVerifiedEl) valVerifiedEl.textContent = isVerif ? CreditScoringEngine.formatFCFA(g.verified_value || 0) : 'En cours d\'expertise';
-    
+    if (valDeclaredEl)
+      valDeclaredEl.textContent = CreditScoringEngine.formatFCFA(
+        g.declared_value || 0,
+      );
+    if (valVerifiedEl)
+      valVerifiedEl.textContent = isVerif
+        ? CreditScoringEngine.formatFCFA(g.verified_value || 0)
+        : "En cours d'expertise";
+
     const decVal = g.declared_value || 1;
     const verVal = g.verified_value || decVal;
     const discPct = Math.max(0, Math.round(((decVal - verVal) / decVal) * 100));
-    if (discountEl) discountEl.textContent = isVerif ? `${discPct}%` : 'N/A';
+    if (discountEl) discountEl.textContent = isVerif ? `${discPct}%` : "N/A";
     if (evalStatusEl) {
-      evalStatusEl.className = isVerif ? 'badge badge-approved' : 'badge badge-warning';
-      evalStatusEl.textContent = isVerif ? 'Expertise Validée' : 'À Chiffrer sur Site';
+      evalStatusEl.className = isVerif
+        ? "badge badge-approved"
+        : "badge badge-warning";
+      evalStatusEl.textContent = isVerif
+        ? "Expertise Validée"
+        : "À Chiffrer sur Site";
     }
 
     // Section 3: Constats Terrain
-    const descEl = document.getElementById('insp-drawer-desc');
-    const locEl = document.getElementById('insp-drawer-location');
-    const condEl = document.getElementById('insp-drawer-condition');
-    const repEl = document.getElementById('insp-drawer-reputation');
-    const notesEl = document.getElementById('insp-drawer-notes');
+    const descEl = document.getElementById("insp-drawer-desc");
+    const locEl = document.getElementById("insp-drawer-location");
+    const condEl = document.getElementById("insp-drawer-condition");
+    const repEl = document.getElementById("insp-drawer-reputation");
+    const notesEl = document.getElementById("insp-drawer-notes");
 
-    if (descEl) descEl.textContent = g.description || 'Description du gage';
-    if (locEl) locEl.textContent = `${req.city || 'Bamako'} - ${client.residential_zone || 'Secteur Commercial'}`;
-    if (condEl) condEl.textContent = g.condition ? `État : ${g.condition}` : 'Bon état / Conforme';
-    if (repEl) repEl.textContent = g.reputation ? `Avis : ${g.reputation}` : 'Très Favorable (Voisinage)';
-    if (notesEl) notesEl.textContent = g.agent_notes || (isVerif ? 'Visite sur site effectuée. Actifs constatés et en parfait état d\'exploitation.' : 'Visite physique programmée par l\'agent de crédit pour vérification d\'inventaire et état de fonctionnement.');
+    if (descEl) descEl.textContent = g.description || "Description du gage";
+    if (locEl)
+      locEl.textContent = `${req.city || "Bamako"} - ${client.residential_zone || "Secteur Commercial"}`;
+    if (condEl)
+      condEl.textContent = g.condition
+        ? `État : ${g.condition}`
+        : "Bon état / Conforme";
+    if (repEl)
+      repEl.textContent = g.reputation
+        ? `Avis : ${g.reputation}`
+        : "Très Favorable (Voisinage)";
+    if (notesEl)
+      notesEl.textContent =
+        g.agent_notes ||
+        (isVerif
+          ? "Visite sur site effectuée. Actifs constatés et en parfait état d'exploitation."
+          : "Visite physique programmée par l'agent de crédit pour vérification d'inventaire et état de fonctionnement.");
 
-    if (backdrop) backdrop.classList.add('active');
+    if (backdrop) backdrop.classList.add("active");
   },
 
   closeInspectionDrawer() {
-    const backdrop = document.getElementById('inspection-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("inspection-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   openInspectionModalFromDrawer() {
@@ -1284,14 +1621,15 @@ const App = {
   filterInspections(filterType, btn) {
     this.agentInspFilter = filterType;
     if (btn) {
-      const container = document.getElementById('insp-filter-buttons');
+      const container = document.getElementById("insp-filter-buttons");
       if (container) {
-        container.querySelectorAll('button').forEach(b => {
-          b.classList.remove('btn-primary');
-          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        container.querySelectorAll("button").forEach((b) => {
+          b.classList.remove("btn-primary");
+          if (!b.classList.contains("btn-secondary"))
+            b.classList.add("btn-secondary");
         });
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-primary');
+        btn.classList.remove("btn-secondary");
+        btn.classList.add("btn-primary");
       }
     }
     this.renderAgentInspections();
@@ -1303,67 +1641,92 @@ const App = {
   },
 
   openInspectionModal(guaranteeId) {
-    const g = DB.findById('guarantees', guaranteeId);
+    const g = DB.findById("guarantees", guaranteeId);
     if (!g) return;
 
-    const req = DB.findById('credit_requests', g.credit_request_id) || {};
-    const client = DB.findById('clients', req.client_id) || {};
+    const req = DB.findById("credit_requests", g.credit_request_id) || {};
+    const client = DB.findById("clients", req.client_id) || {};
 
-    const modal = document.getElementById('modal-inspection');
+    const modal = document.getElementById("modal-inspection");
     if (!modal) return;
 
-    document.getElementById('insp-guarantee-id').value = g.id;
-    document.getElementById('modal-insp-title').textContent = `Inspection de Garantie • Dossier ${req.request_number || 'N/A'}`;
-    document.getElementById('insp-client-name').textContent = `${req.client_name || 'Client CreditFast'} • N° Client : ${client.client_number || 'ML-BKO-008821'}`;
-    document.getElementById('insp-guarantee-type').textContent = `${g.guarantee_type} • ${g.description}`;
-    document.getElementById('insp-declared-val').value = CreditScoringEngine.formatFCFA(g.declared_value);
-    document.getElementById('insp-verified-val').value = g.verified_value || g.declared_value || 1000000;
-    document.getElementById('insp-location').value = `${req.city || 'Bamako'} - ${client.residential_zone || 'Zone Commerciale'}`;
-    document.getElementById('insp-notes').value = g.verified_at ? `Contrôle sur site effectué avec succès. Actifs conformes au descriptif.` : `Visite d'atelier effectuée. Matériel en bon état de fonctionnement, couverture suffisante.`;
+    document.getElementById("insp-guarantee-id").value = g.id;
+    document.getElementById("modal-insp-title").textContent =
+      `Inspection de Garantie • Dossier ${req.request_number || "N/A"}`;
+    document.getElementById("insp-client-name").textContent =
+      `${req.client_name || "Client CreditFast"} • N° Client : ${client.client_number || "ML-BKO-008821"}`;
+    document.getElementById("insp-guarantee-type").textContent =
+      `${g.guarantee_type} • ${g.description}`;
+    document.getElementById("insp-declared-val").value =
+      CreditScoringEngine.formatFCFA(g.declared_value);
+    document.getElementById("insp-verified-val").value =
+      g.verified_value || g.declared_value || 1000000;
+    document.getElementById("insp-location").value =
+      `${req.city || "Bamako"} - ${client.residential_zone || "Zone Commerciale"}`;
+    document.getElementById("insp-notes").value = g.verified_at
+      ? `Contrôle sur site effectué avec succès. Actifs conformes au descriptif.`
+      : `Visite d'atelier effectuée. Matériel en bon état de fonctionnement, couverture suffisante.`;
 
-    const statusBadge = document.getElementById('insp-status-badge');
+    const statusBadge = document.getElementById("insp-status-badge");
     if (statusBadge) {
-      const isVerif = g.verification_status === 'VERIFIED';
-      statusBadge.className = isVerif ? 'badge badge-approved' : 'badge badge-warning';
-      statusBadge.textContent = isVerif ? 'Déjà Expertisé' : 'À Visiter Terrain';
+      const isVerif = g.verification_status === "VERIFIED";
+      statusBadge.className = isVerif
+        ? "badge badge-approved"
+        : "badge badge-warning";
+      statusBadge.textContent = isVerif
+        ? "Déjà Expertisé"
+        : "À Visiter Terrain";
     }
 
-    modal.style.display = 'flex';
-    modal.classList.add('active');
+    modal.style.display = "flex";
+    modal.classList.add("active");
   },
 
   openNewInspectionModal() {
-    const guarantees = DB.get('guarantees');
+    const guarantees = DB.get("guarantees");
     if (guarantees.length > 0) {
       this.openInspectionModal(guarantees[0].id);
     } else {
-      this.showToast('Aucune garantie en attente à planifier', 'info');
+      this.showToast("Aucune garantie en attente à planifier", "info");
     }
   },
 
   saveInspectionReport() {
-    const gId = Number(document.getElementById('insp-guarantee-id')?.value);
-    const verifiedVal = Number(document.getElementById('insp-verified-val')?.value || 1000000);
-    const notes = document.getElementById('insp-notes')?.value || 'Contrôle terrain validé';
-    const condition = document.getElementById('insp-condition')?.value || 'BON';
-    const reputation = document.getElementById('insp-reputation')?.value || 'TRES_FAVORABLE';
+    const gId = Number(document.getElementById("insp-guarantee-id")?.value);
+    const verifiedVal = Number(
+      document.getElementById("insp-verified-val")?.value || 1000000,
+    );
+    const notes =
+      document.getElementById("insp-notes")?.value || "Contrôle terrain validé";
+    const condition = document.getElementById("insp-condition")?.value || "BON";
+    const reputation =
+      document.getElementById("insp-reputation")?.value || "TRES_FAVORABLE";
 
     if (gId) {
-      DB.update('guarantees', gId, {
+      DB.update("guarantees", gId, {
         verified_value: verifiedVal,
-        verification_status: 'VERIFIED',
+        verification_status: "VERIFIED",
         verified_by: 2,
         verified_at: new Date().toISOString(),
         condition: condition,
         reputation: reputation,
-        agent_notes: notes
+        agent_notes: notes,
       });
 
-      DB.addAuditLog(2, 'INSPECTION_GARANTIE_VALIDEE', 'guarantees', gId, `Garantie #${gId} valorisée à ${CreditScoringEngine.formatFCFA(verifiedVal)} (${condition})`);
+      DB.addAuditLog(
+        2,
+        "INSPECTION_GARANTIE_VALIDEE",
+        "guarantees",
+        gId,
+        `Garantie #${gId} valorisée à ${CreditScoringEngine.formatFCFA(verifiedVal)} (${condition})`,
+      );
     }
 
-    this.closeModal('modal-inspection');
-    this.showToast('Rapport de visite terrain certifié & garantie validée avec succès', 'success');
+    this.closeModal("modal-inspection");
+    this.showToast(
+      "Rapport de visite terrain certifié & garantie validée avec succès",
+      "success",
+    );
     this.renderAgentInspections();
     this.renderAgentDashboard();
   },
@@ -1371,34 +1734,41 @@ const App = {
   // =========================================================================
   // [ROLE 2 - PAGE 3] PORTEFEUILLE EMPRUNTEURS CIF
   // =========================================================================
-  agentClientFilter: 'ALL',
-  agentClientSearch: '',
+  agentClientFilter: "ALL",
+  agentClientSearch: "",
 
   renderAgentClientsPortfolio() {
-    const container = document.getElementById('agent-clients-grid');
+    const container = document.getElementById("agent-clients-grid");
     if (!container) return;
 
-    const clients = DB.get('clients');
-    const loans = DB.get('loans');
-    const accounts = DB.get('financial_accounts');
-    const requests = DB.get('credit_requests');
+    const clients = DB.get("clients");
+    const loans = DB.get("loans");
+    const accounts = DB.get("financial_accounts");
+    const requests = DB.get("credit_requests");
 
     let totalSavings = 0;
     let totalLoans = 0;
     let coldStartCount = 0;
 
-    const clientCards = clients.map(c => {
-      const clientLoans = loans.filter(l => l.client_id == c.id);
-      const clientAccounts = accounts.filter(a => a.client_id == c.id);
-      const clientReqs = requests.filter(r => r.client_id == c.id);
-      const user = DB.findById('users', c.user_id) || {};
+    const clientCards = clients.map((c) => {
+      const clientLoans = loans.filter((l) => l.client_id == c.id);
+      const clientAccounts = accounts.filter((a) => a.client_id == c.id);
+      const clientReqs = requests.filter((r) => r.client_id == c.id);
+      const user = DB.findById("users", c.user_id) || {};
 
-      const fullName = user.first_name ? `${user.first_name} ${user.last_name}` : (clientReqs[0]?.client_name || 'Sociétaire CreditFast');
-      const country = user.country || clientReqs[0]?.country || 'Mali';
-      const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=0ea5e9&color=fff`;
+      const fullName = user.first_name
+        ? `${user.first_name} ${user.last_name}`
+        : clientReqs[0]?.client_name || "Sociétaire CreditFast";
+      const country = user.country || clientReqs[0]?.country || "Mali";
+      const avatar =
+        user.avatar ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=0ea5e9&color=fff`;
 
-      const savingsBalance = clientAccounts.reduce((sum, a) => sum + (a.balance || 0), 0);
-      const activeLoan = clientLoans.find(l => l.status === 'ACTIVE');
+      const savingsBalance = clientAccounts.reduce(
+        (sum, a) => sum + (a.balance || 0),
+        0,
+      );
+      const activeLoan = clientLoans.find((l) => l.status === "ACTIVE");
       const loanAmount = activeLoan ? activeLoan.outstanding_amount : 0;
 
       totalSavings += savingsBalance;
@@ -1414,40 +1784,43 @@ const App = {
         activeLoan,
         loanAmount,
         reqCount: clientReqs.length,
-        isColdStart: c.is_cold_start
+        isColdStart: c.is_cold_start,
       };
     });
 
     // Update KPI numbers
-    const kpiTotal = document.getElementById('client-kpi-total');
-    const kpiSavings = document.getElementById('client-kpi-savings');
-    const kpiLoans = document.getElementById('client-kpi-loans');
-    const kpiCold = document.getElementById('client-kpi-coldstart');
-    const countAll = document.getElementById('clients-count-all');
+    const kpiTotal = document.getElementById("client-kpi-total");
+    const kpiSavings = document.getElementById("client-kpi-savings");
+    const kpiLoans = document.getElementById("client-kpi-loans");
+    const kpiCold = document.getElementById("client-kpi-coldstart");
+    const countAll = document.getElementById("clients-count-all");
 
     if (kpiTotal) kpiTotal.textContent = clients.length;
-    if (kpiSavings) kpiSavings.textContent = `${(totalSavings / 1000000).toFixed(2)}M`;
-    if (kpiLoans) kpiLoans.textContent = `${(totalLoans / 1000000).toFixed(1)}M`;
+    if (kpiSavings)
+      kpiSavings.textContent = `${(totalSavings / 1000000).toFixed(2)}M`;
+    if (kpiLoans)
+      kpiLoans.textContent = `${(totalLoans / 1000000).toFixed(1)}M`;
     if (kpiCold) kpiCold.textContent = coldStartCount;
     if (countAll) countAll.textContent = clients.length;
 
     // Filter & Search
     let filtered = clientCards;
-    if (this.agentClientFilter === 'COLD_START') {
-      filtered = filtered.filter(c => c.isColdStart);
-    } else if (this.agentClientFilter === 'ACTIVE_LOAN') {
-      filtered = filtered.filter(c => c.loanAmount > 0);
-    } else if (this.agentClientFilter === 'VERIFIED') {
-      filtered = filtered.filter(c => c.kyc_status === 'VERIFIED');
+    if (this.agentClientFilter === "COLD_START") {
+      filtered = filtered.filter((c) => c.isColdStart);
+    } else if (this.agentClientFilter === "ACTIVE_LOAN") {
+      filtered = filtered.filter((c) => c.loanAmount > 0);
+    } else if (this.agentClientFilter === "VERIFIED") {
+      filtered = filtered.filter((c) => c.kyc_status === "VERIFIED");
     }
 
     if (this.agentClientSearch) {
       const q = this.agentClientSearch.toLowerCase();
-      filtered = filtered.filter(c => 
-        (c.fullName && c.fullName.toLowerCase().includes(q)) ||
-        (c.client_number && c.client_number.toLowerCase().includes(q)) ||
-        (c.city && c.city.toLowerCase().includes(q)) ||
-        (c.occupation && c.occupation.toLowerCase().includes(q))
+      filtered = filtered.filter(
+        (c) =>
+          (c.fullName && c.fullName.toLowerCase().includes(q)) ||
+          (c.client_number && c.client_number.toLowerCase().includes(q)) ||
+          (c.city && c.city.toLowerCase().includes(q)) ||
+          (c.occupation && c.occupation.toLowerCase().includes(q)),
       );
     }
 
@@ -1461,8 +1834,10 @@ const App = {
       return;
     }
 
-    container.innerHTML = filtered.map(c => `
-      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${c.isColdStart ? '#10b981' : 'var(--primary-600)'};">
+    container.innerHTML = filtered
+      .map(
+        (c) => `
+      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${c.isColdStart ? "#10b981" : "var(--primary-600)"};">
         <div class="card-body" style="padding: 1.25rem;">
           <!-- Top avatar & badges -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
@@ -1474,9 +1849,11 @@ const App = {
               </div>
             </div>
             <div>
-              ${c.isColdStart 
-                ? '<span class="badge badge-warning" style="font-size: 0.68rem;"><i class="fas fa-seedling"></i> Cold Start</span>' 
-                : '<span class="badge badge-submitted" style="font-size: 0.68rem;"><i class="fas fa-history"></i> Membre CIF</span>'}
+              ${
+                c.isColdStart
+                  ? '<span class="badge badge-warning" style="font-size: 0.68rem;"><i class="fas fa-seedling"></i> Cold Start</span>'
+                  : '<span class="badge badge-submitted" style="font-size: 0.68rem;"><i class="fas fa-history"></i> Membre CIF</span>'
+              }
             </div>
           </div>
 
@@ -1496,8 +1873,8 @@ const App = {
             </div>
             <div>
               <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-subtle); font-weight: 700;">Encours Prêt</div>
-              <div style="font-size: 0.9rem; font-weight: 800; color: ${c.loanAmount > 0 ? 'var(--primary-700)' : 'var(--text-subtle)'};">
-                ${c.loanAmount > 0 ? CreditScoringEngine.formatFCFA(c.loanAmount) : 'Aucun prêt'}
+              <div style="font-size: 0.9rem; font-weight: 800; color: ${c.loanAmount > 0 ? "var(--primary-700)" : "var(--text-subtle)"};">
+                ${c.loanAmount > 0 ? CreditScoringEngine.formatFCFA(c.loanAmount) : "Aucun prêt"}
               </div>
             </div>
           </div>
@@ -1505,8 +1882,8 @@ const App = {
           <!-- KYC status -->
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; margin-bottom: 1rem;">
             <span style="color: var(--text-subtle);">Statut Identité KYC :</span>
-            <span class="badge ${c.kyc_status === 'VERIFIED' ? 'badge-approved' : 'badge-verification'}">
-              <i class="fas ${c.kyc_status === 'VERIFIED' ? 'fa-check' : 'fa-clock'} mr-1"></i> ${c.kyc_status === 'VERIFIED' ? 'Vérifié Agence' : 'À Compléter'}
+            <span class="badge ${c.kyc_status === "VERIFIED" ? "badge-approved" : "badge-verification"}">
+              <i class="fas ${c.kyc_status === "VERIFIED" ? "fa-check" : "fa-clock"} mr-1"></i> ${c.kyc_status === "VERIFIED" ? "Vérifié Agence" : "À Compléter"}
             </span>
           </div>
 
@@ -1521,20 +1898,23 @@ const App = {
           </div>
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   },
 
   filterClientPortfolio(filter, btn) {
     this.agentClientFilter = filter;
     if (btn) {
-      const container = document.getElementById('clients-filter-buttons');
+      const container = document.getElementById("clients-filter-buttons");
       if (container) {
-        container.querySelectorAll('button').forEach(b => {
-          b.classList.remove('btn-primary');
-          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        container.querySelectorAll("button").forEach((b) => {
+          b.classList.remove("btn-primary");
+          if (!b.classList.contains("btn-secondary"))
+            b.classList.add("btn-secondary");
         });
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-primary');
+        btn.classList.remove("btn-secondary");
+        btn.classList.add("btn-primary");
       }
     }
     this.renderAgentClientsPortfolio();
@@ -1546,132 +1926,146 @@ const App = {
   },
 
   exportClientsCsv() {
-    const clients = DB.get('clients');
-    const requests = DB.get('credit_requests');
-    
-    let csv = 'ID_CIF,Nom_Client,Ville,Pays,Zone_Chalandise,Profession,Statut_KYC,Cold_Start\n';
-    clients.forEach(c => {
-      const req = requests.find(r => r.client_id == c.id) || {};
-      const name = req.client_name || 'Membre CIF';
-      const country = req.country || 'UEMOA';
-      csv += `"${c.client_number}","${name}","${c.city}","${country}","${c.residential_zone}","${c.occupation}","${c.kyc_status}","${c.is_cold_start ? 'OUI' : 'NON'}"\n`;
+    const clients = DB.get("clients");
+    const requests = DB.get("credit_requests");
+
+    let csv =
+      "ID_CIF,Nom_Client,Ville,Pays,Zone_Chalandise,Profession,Statut_KYC,Cold_Start\n";
+    clients.forEach((c) => {
+      const req = requests.find((r) => r.client_id == c.id) || {};
+      const name = req.client_name || "Membre CIF";
+      const country = req.country || "UEMOA";
+      csv += `"${c.client_number}","${name}","${c.city}","${country}","${c.residential_zone}","${c.occupation}","${c.kyc_status}","${c.is_cold_start ? "OUI" : "NON"}"\n`;
     });
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `Portefeuille_Clients_CIF_${new Date().toISOString().slice(0, 10)}.csv`);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `Portefeuille_Clients_CIF_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    this.showToast('Export CSV du portefeuille clients généré avec succès', 'success');
+    this.showToast(
+      "Export CSV du portefeuille clients généré avec succès",
+      "success",
+    );
   },
 
   // =========================================================================
   // [ROLE 2 - PAGE 4] PIÈCES MANQUANTES & RELANCES DOCUMENTAIRES
   // =========================================================================
   renderAgentComplements() {
-    const tbody = document.getElementById('agent-complements-table-body');
+    const tbody = document.getElementById("agent-complements-table-body");
     if (!tbody) return;
 
-    const docs = DB.get('documents');
-    const requests = DB.get('credit_requests');
-    const anomalies = DB.get('anomalies');
+    const docs = DB.get("documents");
+    const requests = DB.get("credit_requests");
+    const anomalies = DB.get("anomalies");
 
     // List of pending / missing / flagged pieces
     const items = [
       {
         id: 101,
         credit_request_id: 3,
-        document_type: 'FACTURE_PROFORMA_ACTUALISEE',
-        expected_doc_name: 'Facture Proforma (< 30j)',
-        full_doc_name: 'Nouvelle Facture Proforma Quincaillerie (< 30 jours)',
-        short_motif: 'Date OCR obsolète (> 18 mois)',
-        reason: 'Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.',
-        severity: 'CRITICAL',
+        document_type: "FACTURE_PROFORMA_ACTUALISEE",
+        expected_doc_name: "Facture Proforma (< 30j)",
+        full_doc_name: "Nouvelle Facture Proforma Quincaillerie (< 30 jours)",
+        short_motif: "Date OCR obsolète (> 18 mois)",
+        reason:
+          "Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.",
+        severity: "CRITICAL",
         reminders_sent: 2,
-        last_reminder: 'Il y a 2 jours',
-        status: 'ANOMALY_OPEN'
+        last_reminder: "Il y a 2 jours",
+        status: "ANOMALY_OPEN",
       },
       {
         id: 102,
         credit_request_id: 3,
-        document_type: 'CNI_RECTO_VERSO',
-        expected_doc_name: 'Carte Nationale d\'Identité (CNI)',
-        full_doc_name: 'Carte Nationale d\'Identité (Recto/Verso Certifié)',
-        short_motif: 'Scan flou / Illisible',
-        reason: 'Document illisible / flou sur la date de validité et numéro NINA/CNI.',
-        severity: 'WARNING',
+        document_type: "CNI_RECTO_VERSO",
+        expected_doc_name: "Carte Nationale d'Identité (CNI)",
+        full_doc_name: "Carte Nationale d'Identité (Recto/Verso Certifié)",
+        short_motif: "Scan flou / Illisible",
+        reason:
+          "Document illisible / flou sur la date de validité et numéro NINA/CNI.",
+        severity: "WARNING",
         reminders_sent: 1,
-        last_reminder: 'Hier à 15h30',
-        status: 'PENDING_UPLOAD'
+        last_reminder: "Hier à 15h30",
+        status: "PENDING_UPLOAD",
       },
       {
         id: 103,
         credit_request_id: 5,
-        document_type: 'ENGAGEMENT_CAUTION_SOLIDAIRE',
-        expected_doc_name: 'Engagement Caution Solidaire',
-        full_doc_name: 'Attestation d\'Engagement Caution Maître Artisan',
-        short_motif: 'Signature physique requise',
-        reason: 'Signature physique requise pour validation Cold Start au dossier d\'octroi.',
-        severity: 'INFO',
+        document_type: "ENGAGEMENT_CAUTION_SOLIDAIRE",
+        expected_doc_name: "Engagement Caution Solidaire",
+        full_doc_name: "Attestation d'Engagement Caution Maître Artisan",
+        short_motif: "Signature physique requise",
+        reason:
+          "Signature physique requise pour validation Cold Start au dossier d'octroi.",
+        severity: "INFO",
         reminders_sent: 1,
-        last_reminder: 'Ce matin à 09h00',
-        status: 'PENDING_UPLOAD'
+        last_reminder: "Ce matin à 09h00",
+        status: "PENDING_UPLOAD",
       },
       {
         id: 104,
         credit_request_id: 2,
-        document_type: 'ATTESTATION_NON_REDEVANCE',
-        expected_doc_name: 'Quittance Électricité CIE / Usine',
-        full_doc_name: 'Quittance CIE / Électricité Usine Ouaga',
-        short_motif: 'Compteur pro non justifié',
-        reason: 'Justificatif d\'implantation du broyeur semi-industriel et compteur professionnel.',
-        severity: 'WARNING',
+        document_type: "ATTESTATION_NON_REDEVANCE",
+        expected_doc_name: "Quittance Électricité CIE / Usine",
+        full_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        short_motif: "Compteur pro non justifié",
+        reason:
+          "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
+        severity: "WARNING",
         reminders_sent: 0,
-        last_reminder: 'Jamais relancé',
-        status: 'PENDING_UPLOAD'
-      }
+        last_reminder: "Jamais relancé",
+        status: "PENDING_UPLOAD",
+      },
     ];
 
-    const missingKpi = document.getElementById('comp-kpi-missing');
-    const remindersKpi = document.getElementById('comp-kpi-reminders');
+    const missingKpi = document.getElementById("comp-kpi-missing");
+    const remindersKpi = document.getElementById("comp-kpi-reminders");
     if (missingKpi) missingKpi.textContent = items.length;
-    if (remindersKpi) remindersKpi.textContent = items.reduce((sum, i) => sum + i.reminders_sent, 0) + 4;
+    if (remindersKpi)
+      remindersKpi.textContent =
+        items.reduce((sum, i) => sum + i.reminders_sent, 0) + 4;
 
-    tbody.innerHTML = items.map(item => {
-      const req = requests.find(r => r.id == item.credit_request_id) || {};
-      const clientName = req.client_name || 'Client Emprunteur';
-      const reqNumber = req.request_number || 'REQ-2026-0000';
+    tbody.innerHTML = items
+      .map((item) => {
+        const req = requests.find((r) => r.id == item.credit_request_id) || {};
+        const clientName = req.client_name || "Client Emprunteur";
+        const reqNumber = req.request_number || "REQ-2026-0000";
 
-      return `
+        return `
         <tr class="schedule-table-row" onclick="App.openComplementsDrawer(${item.id})">
           <td>
             <strong style="color: var(--primary-600); font-family: var(--font-mono);">${reqNumber}</strong>
             <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-top: 2px;">${clientName}</div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.city || 'Bamako'}, ${req.country || 'Mali'}</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">${req.city || "Bamako"}, ${req.country || "Mali"}</div>
           </td>
           <td>
             <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
               <i class="fas fa-file-lines text-primary mr-1"></i> ${item.expected_doc_name}
             </div>
-            <div style="font-size: 0.72rem; color: ${item.severity === 'CRITICAL' ? '#b91c1c' : (item.severity === 'WARNING' ? '#b45309' : 'var(--text-muted)')}; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 4px;">
-              <i class="fas ${item.severity === 'CRITICAL' ? 'fa-ban text-danger' : 'fa-triangle-exclamation text-warning'}"></i>
+            <div style="font-size: 0.72rem; color: ${item.severity === "CRITICAL" ? "#b91c1c" : item.severity === "WARNING" ? "#b45309" : "var(--text-muted)"}; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 4px;">
+              <i class="fas ${item.severity === "CRITICAL" ? "fa-ban text-danger" : "fa-triangle-exclamation text-warning"}"></i>
               <span style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.short_motif}</span>
             </div>
           </td>
           <td>
             <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">${item.last_reminder}</span>
-            <div style="font-size: 0.7rem; color: var(--text-subtle);">${item.reminders_sent} relance${item.reminders_sent > 1 ? 's' : ''} transmise${item.reminders_sent > 1 ? 's' : ''}</div>
+            <div style="font-size: 0.7rem; color: var(--text-subtle);">${item.reminders_sent} relance${item.reminders_sent > 1 ? "s" : ""} transmise${item.reminders_sent > 1 ? "s" : ""}</div>
           </td>
           <td>
             <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
-              <span class="badge ${item.status === 'ANOMALY_OPEN' ? 'badge-rejected' : 'badge-verification'}" style="font-size: 0.68rem; padding: 2px 6px;">
-                ${item.status === 'ANOMALY_OPEN' ? 'Anomalie Rejet' : 'En Attente'}
+              <span class="badge ${item.status === "ANOMALY_OPEN" ? "badge-rejected" : "badge-verification"}" style="font-size: 0.68rem; padding: 2px 6px;">
+                ${item.status === "ANOMALY_OPEN" ? "Anomalie Rejet" : "En Attente"}
               </span>
-              <span class="badge ${item.severity === 'CRITICAL' ? 'badge-danger' : 'badge-warning'}" style="font-size: 0.65rem; padding: 2px 5px;">
-                ${item.severity === 'CRITICAL' ? 'Bloquant' : 'Requis'}
+              <span class="badge ${item.severity === "CRITICAL" ? "badge-danger" : "badge-warning"}" style="font-size: 0.65rem; padding: 2px 5px;">
+                ${item.severity === "CRITICAL" ? "Bloquant" : "Requis"}
               </span>
             </div>
           </td>
@@ -1687,7 +2081,8 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   currentComplementDrawerId: null,
@@ -1697,117 +2092,150 @@ const App = {
       {
         id: 101,
         credit_request_id: 3,
-        document_type: 'FACTURE_PROFORMA_ACTUALISEE',
-        expected_doc_name: 'Nouvelle Facture Proforma Quincaillerie (< 30 jours)',
-        reason: 'Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.',
-        severity: 'CRITICAL',
+        document_type: "FACTURE_PROFORMA_ACTUALISEE",
+        expected_doc_name:
+          "Nouvelle Facture Proforma Quincaillerie (< 30 jours)",
+        reason:
+          "Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.",
+        severity: "CRITICAL",
         reminders_sent: 2,
-        last_reminder: 'Il y a 2 jours',
-        status: 'ANOMALY_OPEN'
+        last_reminder: "Il y a 2 jours",
+        status: "ANOMALY_OPEN",
       },
       {
         id: 102,
         credit_request_id: 3,
-        document_type: 'CNI_RECTO_VERSO',
-        expected_doc_name: 'Carte Nationale d\'Identité (Recto/Verso Certifié)',
-        reason: 'Document illisible / flou sur la date de validité et numéro NINA/CNI.',
-        severity: 'WARNING',
+        document_type: "CNI_RECTO_VERSO",
+        expected_doc_name: "Carte Nationale d'Identité (Recto/Verso Certifié)",
+        reason:
+          "Document illisible / flou sur la date de validité et numéro NINA/CNI.",
+        severity: "WARNING",
         reminders_sent: 1,
-        last_reminder: 'Hier à 15h30',
-        status: 'PENDING_UPLOAD'
+        last_reminder: "Hier à 15h30",
+        status: "PENDING_UPLOAD",
       },
       {
         id: 103,
         credit_request_id: 5,
-        document_type: 'ENGAGEMENT_CAUTION_SOLIDAIRE',
-        expected_doc_name: 'Attestation d\'Engagement Caution Maître Artisan',
-        reason: 'Signature physique requise pour validation Cold Start au dossier d\'octroi.',
-        severity: 'INFO',
+        document_type: "ENGAGEMENT_CAUTION_SOLIDAIRE",
+        expected_doc_name: "Attestation d'Engagement Caution Maître Artisan",
+        reason:
+          "Signature physique requise pour validation Cold Start au dossier d'octroi.",
+        severity: "INFO",
         reminders_sent: 1,
-        last_reminder: 'Ce matin à 09h00',
-        status: 'PENDING_UPLOAD'
+        last_reminder: "Ce matin à 09h00",
+        status: "PENDING_UPLOAD",
       },
       {
         id: 104,
         credit_request_id: 2,
-        document_type: 'ATTESTATION_NON_REDEVANCE',
-        expected_doc_name: 'Quittance CIE / Électricité Usine Ouaga',
-        reason: 'Justificatif d\'implantation du broyeur semi-industriel et compteur professionnel.',
-        severity: 'WARNING',
+        document_type: "ATTESTATION_NON_REDEVANCE",
+        expected_doc_name: "Quittance CIE / Électricité Usine Ouaga",
+        reason:
+          "Justificatif d'implantation du broyeur semi-industriel et compteur professionnel.",
+        severity: "WARNING",
         reminders_sent: 0,
-        last_reminder: 'Jamais relancé',
-        status: 'PENDING_UPLOAD'
-      }
+        last_reminder: "Jamais relancé",
+        status: "PENDING_UPLOAD",
+      },
     ];
 
-    const item = items.find(i => i.id == itemId) || items[0];
+    const item = items.find((i) => i.id == itemId) || items[0];
     this.currentComplementDrawerId = item.id;
 
-    const req = DB.findById('credit_requests', item.credit_request_id) || {};
-    const client = DB.findById('clients', req.client_id) || {};
+    const req = DB.findById("credit_requests", item.credit_request_id) || {};
+    const client = DB.findById("clients", req.client_id) || {};
 
-    const backdrop = document.getElementById('complements-drawer-backdrop');
-    const drawer = document.getElementById('complements-sidedrawer');
+    const backdrop = document.getElementById("complements-drawer-backdrop");
+    const drawer = document.getElementById("complements-sidedrawer");
     if (!drawer) return;
 
     // Badges & Headers
-    const sevBadge = document.getElementById('comp-drawer-severity-badge');
-    const statBadge = document.getElementById('comp-drawer-status-badge');
-    const titleEl = document.getElementById('comp-drawer-title');
-    const subtitleEl = document.getElementById('comp-drawer-subtitle');
+    const sevBadge = document.getElementById("comp-drawer-severity-badge");
+    const statBadge = document.getElementById("comp-drawer-status-badge");
+    const titleEl = document.getElementById("comp-drawer-title");
+    const subtitleEl = document.getElementById("comp-drawer-subtitle");
 
     if (sevBadge) {
-      sevBadge.className = item.severity === 'CRITICAL' ? 'badge badge-rejected' : 'badge badge-warning';
-      sevBadge.innerHTML = item.severity === 'CRITICAL' ? '<i class="fas fa-ban"></i> Bloquant Comité' : '<i class="fas fa-triangle-exclamation"></i> Action Requise';
+      sevBadge.className =
+        item.severity === "CRITICAL"
+          ? "badge badge-rejected"
+          : "badge badge-warning";
+      sevBadge.innerHTML =
+        item.severity === "CRITICAL"
+          ? '<i class="fas fa-ban"></i> Bloquant Comité'
+          : '<i class="fas fa-triangle-exclamation"></i> Action Requise';
     }
     if (statBadge) {
-      statBadge.className = item.status === 'ANOMALY_OPEN' ? 'badge badge-rejected' : 'badge badge-submitted';
-      statBadge.textContent = item.status === 'ANOMALY_OPEN' ? 'Anomalie Rejetée' : 'En Attente GED';
+      statBadge.className =
+        item.status === "ANOMALY_OPEN"
+          ? "badge badge-rejected"
+          : "badge badge-submitted";
+      statBadge.textContent =
+        item.status === "ANOMALY_OPEN" ? "Anomalie Rejetée" : "En Attente GED";
     }
-    if (titleEl) titleEl.textContent = `Pièce Requise • ${req.request_number || 'REQ-2026-0891'}`;
-    if (subtitleEl) subtitleEl.textContent = `${client.name || req.client_name || 'Client Emprunteur'} • ${req.city || 'Bamako'}`;
+    if (titleEl)
+      titleEl.textContent = `Pièce Requise • ${req.request_number || "REQ-2026-0891"}`;
+    if (subtitleEl)
+      subtitleEl.textContent = `${client.name || req.client_name || "Client Emprunteur"} • ${req.city || "Bamako"}`;
 
     // Section 1: Client
-    const reqNumEl = document.getElementById('comp-drawer-req-num');
-    const clientAvatar = document.getElementById('comp-drawer-client-avatar');
-    const clientName = document.getElementById('comp-drawer-client-name');
-    const clientLoc = document.getElementById('comp-drawer-client-loc');
-    const clientPhone = document.getElementById('comp-drawer-client-phone');
-    const loanAmt = document.getElementById('comp-drawer-loan-amount');
+    const reqNumEl = document.getElementById("comp-drawer-req-num");
+    const clientAvatar = document.getElementById("comp-drawer-client-avatar");
+    const clientName = document.getElementById("comp-drawer-client-name");
+    const clientLoc = document.getElementById("comp-drawer-client-loc");
+    const clientPhone = document.getElementById("comp-drawer-client-phone");
+    const loanAmt = document.getElementById("comp-drawer-loan-amount");
 
-    if (reqNumEl) reqNumEl.textContent = req.request_number || 'REQ-2026-0891';
-    if (clientAvatar) clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || client.name || 'Client')}&background=4f46e5&color=fff`;
-    if (clientName) clientName.textContent = req.client_name || client.name || 'Fatou Ndiaye';
-    if (clientLoc) clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'}`;
-    if (clientPhone) clientPhone.textContent = client.phone || '+223 77 45 67 89';
-    if (loanAmt) loanAmt.textContent = CreditScoringEngine.formatFCFA(req.requested_amount || 2500000);
+    if (reqNumEl) reqNumEl.textContent = req.request_number || "REQ-2026-0891";
+    if (clientAvatar)
+      clientAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name || client.name || "Client")}&background=4f46e5&color=fff`;
+    if (clientName)
+      clientName.textContent = req.client_name || client.name || "Fatou Ndiaye";
+    if (clientLoc)
+      clientLoc.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || "Bamako"}, ${req.country || "Mali"}`;
+    if (clientPhone)
+      clientPhone.textContent = client.phone || "+223 77 45 67 89";
+    if (loanAmt)
+      loanAmt.textContent = CreditScoringEngine.formatFCFA(
+        req.requested_amount || 2500000,
+      );
 
     // Section 2: Document & Motif
-    const docTypeEl = document.getElementById('comp-drawer-doc-type');
-    const docNameEl = document.getElementById('comp-drawer-doc-name');
-    const reasonEl = document.getElementById('comp-drawer-reason');
+    const docTypeEl = document.getElementById("comp-drawer-doc-type");
+    const docNameEl = document.getElementById("comp-drawer-doc-name");
+    const reasonEl = document.getElementById("comp-drawer-reason");
 
     if (docTypeEl) docTypeEl.textContent = item.document_type;
     if (docNameEl) docNameEl.textContent = item.expected_doc_name;
     if (reasonEl) reasonEl.textContent = item.reason;
 
     // Section 3: Reminders
-    const remCountEl = document.getElementById('comp-drawer-reminders-count');
-    if (remCountEl) remCountEl.textContent = `${item.reminders_sent} relance${item.reminders_sent > 1 ? 's' : ''} envoyée${item.reminders_sent > 1 ? 's' : ''}`;
+    const remCountEl = document.getElementById("comp-drawer-reminders-count");
+    if (remCountEl)
+      remCountEl.textContent = `${item.reminders_sent} relance${item.reminders_sent > 1 ? "s" : ""} envoyée${item.reminders_sent > 1 ? "s" : ""}`;
 
-    if (backdrop) backdrop.classList.add('active');
+    if (backdrop) backdrop.classList.add("active");
   },
 
   closeComplementsDrawer() {
-    const backdrop = document.getElementById('complements-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("complements-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   triggerReminderFromDrawer() {
     if (!this.currentComplementDrawerId) return;
-    const clientName = document.getElementById('comp-drawer-client-name')?.textContent || 'l\'emprunteur';
-    const docName = document.getElementById('comp-drawer-doc-name')?.textContent || 'le document attendu';
-    this.triggerDocReminder(this.currentComplementDrawerId, clientName, docName);
+    const clientName =
+      document.getElementById("comp-drawer-client-name")?.textContent ||
+      "l'emprunteur";
+    const docName =
+      document.getElementById("comp-drawer-doc-name")?.textContent ||
+      "le document attendu";
+    this.triggerDocReminder(
+      this.currentComplementDrawerId,
+      clientName,
+      docName,
+    );
   },
 
   markDocReceivedFromDrawer() {
@@ -1817,7 +2245,10 @@ const App = {
   },
 
   triggerDrawerFileUpload() {
-    this.showToast('Scanner de document initié : analyse OCR et vérification de conformité en cours...', 'info');
+    this.showToast(
+      "Scanner de document initié : analyse OCR et vérification de conformité en cours...",
+      "info",
+    );
     setTimeout(() => {
       if (this.currentComplementDrawerId) {
         this.markDocReceived(this.currentComplementDrawerId);
@@ -1827,88 +2258,119 @@ const App = {
   },
 
   triggerDocReminder(docId, clientName, docName) {
-    this.showToast(`Relance SMS & WhatsApp transmise avec succès à ${clientName} pour : « ${docName} »`, 'success');
+    this.showToast(
+      `Relance SMS & WhatsApp transmise avec succès à ${clientName} pour : « ${docName} »`,
+      "success",
+    );
   },
 
   triggerBulkSmsReminder() {
-    this.showToast('Campagne de relance groupée déclenchée : 4 SMS et notifications WhatsApp envoyés aux emprunteurs', 'success');
-    const remindersKpi = document.getElementById('comp-kpi-reminders');
+    this.showToast(
+      "Campagne de relance groupée déclenchée : 4 SMS et notifications WhatsApp envoyés aux emprunteurs",
+      "success",
+    );
+    const remindersKpi = document.getElementById("comp-kpi-reminders");
     if (remindersKpi) {
       remindersKpi.textContent = Number(remindersKpi.textContent || 8) + 4;
     }
   },
 
   markDocReceived(docId) {
-    DB.insert('documents', {
+    DB.insert("documents", {
       credit_request_id: 3,
-      document_type: 'PIECE_COMPLEMENTAIRE_REGULARISEE',
+      document_type: "PIECE_COMPLEMENTAIRE_REGULARISEE",
       original_filename: `Piece_Regularisee_${docId}.pdf`,
-      file_path: 'assets/docs/regularisee.pdf',
-      mime_type: 'application/pdf',
+      file_path: "assets/docs/regularisee.pdf",
+      mime_type: "application/pdf",
       uploaded_by: 2,
       uploaded_at: new Date().toISOString(),
-      status: 'VALIDATED'
+      status: "VALIDATED",
     });
 
-    DB.addAuditLog(2, 'DOCUMENT_REGULARISE_AGENT', 'documents', docId, `Pièce complémentaire #${docId} validée et rattachée au dossier.`);
+    DB.addAuditLog(
+      2,
+      "DOCUMENT_REGULARISE_AGENT",
+      "documents",
+      docId,
+      `Pièce complémentaire #${docId} validée et rattachée au dossier.`,
+    );
 
-    this.showToast('Document enregistré, certifié conforme et intégré à la GED du dossier', 'success');
+    this.showToast(
+      "Document enregistré, certifié conforme et intégré à la GED du dossier",
+      "success",
+    );
     this.renderAgentComplements();
   },
 
   // [ROLE 3] ANALYSTE RISQUE (SCORING V2 & 360°)
   renderAnalystDashboard() {
     AppCharts.setupDefaults();
-    AppCharts.renderEvolutionChart('evolution-chart-canvas', 'year');
-    AppCharts.renderRiskDoughnut('risk-doughnut-canvas');
-    AppCharts.renderRegionalChart('regional-chart-canvas');
+    AppCharts.renderEvolutionChart("evolution-chart-canvas", "year");
+    AppCharts.renderRiskDoughnut("risk-doughnut-canvas");
+    AppCharts.renderRegionalChart("regional-chart-canvas");
     AppInteractions.renderRequestsTable();
   },
 
   // [ROLE 3 - PAGE 2] DÉTECTION DES ANOMALIES & CONTRÔLES RISQUES
-  analystAnomFilter: 'ALL',
-  analystAnomSearch: '',
+  analystAnomFilter: "ALL",
+  analystAnomSearch: "",
 
   renderAnalystAnomalies() {
-    const tbody = document.getElementById('analyst-anomalies-table-body');
+    const tbody = document.getElementById("analyst-anomalies-table-body");
     if (!tbody) return;
 
-    const anomalies = DB.get('anomalies');
-    const requests = DB.get('credit_requests');
-    const clients = DB.get('clients');
+    const anomalies = DB.get("anomalies");
+    const requests = DB.get("credit_requests");
+    const clients = DB.get("clients");
 
     // Enrich anomaly items
-    const enriched = anomalies.map(a => {
-      const req = requests.find(r => r.id === a.credit_request_id) || {};
-      const client = clients.find(c => c.id === req.client_id) || {};
-      const anomType = String(a.anomaly_type || '');
-      const isOcr = anomType.includes('OCR') || Boolean(a.document_id);
-      const isNetwork = anomType.includes('MULTI') || anomType.includes('CAUTION');
+    const enriched = anomalies.map((a) => {
+      const req = requests.find((r) => r.id === a.credit_request_id) || {};
+      const client = clients.find((c) => c.id === req.client_id) || {};
+      const anomType = String(a.anomaly_type || "");
+      const isOcr = anomType.includes("OCR") || Boolean(a.document_id);
+      const isNetwork =
+        anomType.includes("MULTI") || anomType.includes("CAUTION");
       return {
         ...a,
-        request_number: req.request_number || `REQ-2026-000${a.credit_request_id || 1}`,
-        client_name: req.client_name || 'Client CreditFast',
-        country: req.country || 'Mali',
-        city: req.city || 'Bamako',
-        category: a.category || (isOcr ? 'OCR' : (isNetwork ? 'NETWORK' : 'FINANCIAL')),
-        rule_name: a.rule_name || a.anomaly_type || 'Règle de Contrôle Automatisé',
-        engine: a.engine || (a.document_id ? 'Moteur OCR Tesseract V2.2' : 'Calculateur Risque & Solvabilité V2')
+        request_number:
+          req.request_number || `REQ-2026-000${a.credit_request_id || 1}`,
+        client_name: req.client_name || "Client CreditFast",
+        country: req.country || "Mali",
+        city: req.city || "Bamako",
+        category:
+          a.category || (isOcr ? "OCR" : isNetwork ? "NETWORK" : "FINANCIAL"),
+        rule_name:
+          a.rule_name || a.anomaly_type || "Règle de Contrôle Automatisé",
+        engine:
+          a.engine ||
+          (a.document_id
+            ? "Moteur OCR Tesseract V2.2"
+            : "Calculateur Risque & Solvabilité V2"),
       };
     });
 
     // Update KPI counters
-    const totalActive = enriched.filter(a => a.status === 'OPEN').length;
-    const critCount = enriched.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
-    const ocrCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'OCR').length;
-    const finCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'FINANCIAL').length;
-    const multiCount = enriched.filter(a => a.status === 'OPEN' && a.category === 'NETWORK').length;
+    const totalActive = enriched.filter((a) => a.status === "OPEN").length;
+    const critCount = enriched.filter(
+      (a) => a.status === "OPEN" && a.severity === "CRITICAL",
+    ).length;
+    const ocrCount = enriched.filter(
+      (a) => a.status === "OPEN" && a.category === "OCR",
+    ).length;
+    const finCount = enriched.filter(
+      (a) => a.status === "OPEN" && a.category === "FINANCIAL",
+    ).length;
+    const multiCount = enriched.filter(
+      (a) => a.status === "OPEN" && a.category === "NETWORK",
+    ).length;
 
-    const kpiTotal = document.getElementById('anom-kpi-total');
-    const kpiOcr = document.getElementById('anom-kpi-ocr');
-    const kpiFin = document.getElementById('anom-kpi-fin');
-    const kpiMulti = document.getElementById('anom-kpi-multi');
-    const countAll = document.getElementById('anom-count-all');
-    const countCrit = document.getElementById('anom-count-crit');
+    const kpiTotal = document.getElementById("anom-kpi-total");
+    const kpiOcr = document.getElementById("anom-kpi-ocr");
+    const kpiFin = document.getElementById("anom-kpi-fin");
+    const kpiMulti = document.getElementById("anom-kpi-multi");
+    const countAll = document.getElementById("anom-count-all");
+    const countCrit = document.getElementById("anom-count-crit");
 
     if (kpiTotal) kpiTotal.textContent = totalActive;
     if (kpiOcr) kpiOcr.textContent = ocrCount;
@@ -1918,40 +2380,44 @@ const App = {
     if (countCrit) countCrit.textContent = critCount;
 
     // Render Centerpiece Circular Chart.js Chart
-    if (window.AppCharts && typeof window.AppCharts.renderAnomaliesDonut === 'function') {
-      window.AppCharts.renderAnomaliesDonut('anomalies-distribution-chart', {
+    if (
+      window.AppCharts &&
+      typeof window.AppCharts.renderAnomaliesDonut === "function"
+    ) {
+      window.AppCharts.renderAnomaliesDonut("anomalies-distribution-chart", {
         critical: critCount,
         ocr: ocrCount,
         financial: finCount,
         network: multiCount,
-        total: totalActive
+        total: totalActive,
       });
     }
 
     // Apply Filter
     let filtered = [...enriched];
-    if (this.analystAnomFilter === 'CRITICAL') {
-      filtered = filtered.filter(a => a.severity === 'CRITICAL');
-    } else if (this.analystAnomFilter === 'OCR') {
-      filtered = filtered.filter(a => a.category === 'OCR');
-    } else if (this.analystAnomFilter === 'FINANCIAL') {
-      filtered = filtered.filter(a => a.category === 'FINANCIAL');
-    } else if (this.analystAnomFilter === 'NETWORK') {
-      filtered = filtered.filter(a => a.category === 'NETWORK');
-    } else if (this.analystAnomFilter === 'RESOLVED') {
-      filtered = filtered.filter(a => a.status === 'RESOLVED');
+    if (this.analystAnomFilter === "CRITICAL") {
+      filtered = filtered.filter((a) => a.severity === "CRITICAL");
+    } else if (this.analystAnomFilter === "OCR") {
+      filtered = filtered.filter((a) => a.category === "OCR");
+    } else if (this.analystAnomFilter === "FINANCIAL") {
+      filtered = filtered.filter((a) => a.category === "FINANCIAL");
+    } else if (this.analystAnomFilter === "NETWORK") {
+      filtered = filtered.filter((a) => a.category === "NETWORK");
+    } else if (this.analystAnomFilter === "RESOLVED") {
+      filtered = filtered.filter((a) => a.status === "RESOLVED");
     }
 
     // Apply Search
     if (this.analystAnomSearch) {
       const q = this.analystAnomSearch.toLowerCase();
-      filtered = filtered.filter(a =>
-        (a.request_number && a.request_number.toLowerCase().includes(q)) ||
-        (a.client_name && a.client_name.toLowerCase().includes(q)) ||
-        (a.description && a.description.toLowerCase().includes(q)) ||
-        (a.rule_name && a.rule_name.toLowerCase().includes(q)) ||
-        (a.city && a.city.toLowerCase().includes(q)) ||
-        (a.country && a.country.toLowerCase().includes(q))
+      filtered = filtered.filter(
+        (a) =>
+          (a.request_number && a.request_number.toLowerCase().includes(q)) ||
+          (a.client_name && a.client_name.toLowerCase().includes(q)) ||
+          (a.description && a.description.toLowerCase().includes(q)) ||
+          (a.rule_name && a.rule_name.toLowerCase().includes(q)) ||
+          (a.city && a.city.toLowerCase().includes(q)) ||
+          (a.country && a.country.toLowerCase().includes(q)),
       );
     }
 
@@ -1968,27 +2434,31 @@ const App = {
       return;
     }
 
-    tbody.innerHTML = filtered.map(item => {
-      const isCritical = item.severity === 'CRITICAL';
-      const isWarning = item.severity === 'WARNING';
-      const isOpen = item.status === 'OPEN';
+    tbody.innerHTML = filtered
+      .map((item) => {
+        const isCritical = item.severity === "CRITICAL";
+        const isWarning = item.severity === "WARNING";
+        const isOpen = item.status === "OPEN";
 
-      const sevBadge = isCritical
-        ? `<span class="badge badge-rejected" style="font-weight: 700;"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>`
-        : (isWarning
-          ? `<span class="badge badge-warning"><i class="fas fa-triangle-exclamation mr-1"></i> Élevé</span>`
-          : `<span class="badge badge-submitted"><i class="fas fa-info-circle mr-1"></i> Informatif</span>`);
+        const sevBadge = isCritical
+          ? `<span class="badge badge-rejected" style="font-weight: 700;"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>`
+          : isWarning
+            ? `<span class="badge badge-warning"><i class="fas fa-triangle-exclamation mr-1"></i> Élevé</span>`
+            : `<span class="badge badge-submitted"><i class="fas fa-info-circle mr-1"></i> Informatif</span>`;
 
-      const statusBadge = isOpen
-        ? `<span class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>`
-        : `<span class="badge badge-approved"><i class="fas fa-check mr-1"></i> Résolu</span>`;
+        const statusBadge = isOpen
+          ? `<span class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>`
+          : `<span class="badge badge-approved"><i class="fas fa-check mr-1"></i> Résolu</span>`;
 
-      const typeIcon = item.category === 'OCR'
-        ? 'fa-file-lines text-primary'
-        : (item.category === 'NETWORK' ? 'fa-network-wired text-purple' : 'fa-calculator text-warning');
+        const typeIcon =
+          item.category === "OCR"
+            ? "fa-file-lines text-primary"
+            : item.category === "NETWORK"
+              ? "fa-network-wired text-purple"
+              : "fa-calculator text-warning";
 
-      return `
-        <tr id="anomaly-row-${item.id}" class="anomaly-table-row ${!isOpen ? 'anomaly-row-resolved' : ''}">
+        return `
+        <tr id="anomaly-row-${item.id}" class="anomaly-table-row ${!isOpen ? "anomaly-row-resolved" : ""}">
           <td>
             <a href="javascript:void(0)" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" style="font-weight: 700; color: var(--cif-primary-600); text-decoration: none;">
               ${item.request_number} <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 2px;"></i>
@@ -2012,11 +2482,11 @@ const App = {
           </td>
           <td>
             <div style="font-size: 0.78rem;">
-              <div style="color: ${isCritical ? '#b91c1c' : '#b45309'}; font-weight: 600;">
-                <i class="fas fa-xmark text-danger mr-1"></i> ${item.detected_value || 'N/A'}
+              <div style="color: ${isCritical ? "#b91c1c" : "#b45309"}; font-weight: 600;">
+                <i class="fas fa-xmark text-danger mr-1"></i> ${item.detected_value || "N/A"}
               </div>
               <div style="color: #047857; font-size: 0.72rem; margin-top: 2px;">
-                <i class="fas fa-check text-emerald mr-1"></i> ${item.expected_value || 'Conforme'}
+                <i class="fas fa-check text-emerald mr-1"></i> ${item.expected_value || "Conforme"}
               </div>
             </div>
           </td>
@@ -2031,36 +2501,42 @@ const App = {
               <button class="btn btn-primary btn-sm" onclick="AppInteractions.openDossierModal(${item.credit_request_id})" title="Inspecter le dossier à 360°">
                 <i class="fas fa-magnifying-glass mr-1"></i> 360°
               </button>
-              ${isOpen ? `
+              ${
+                isOpen
+                  ? `
                 <button class="btn btn-secondary btn-sm" onclick="App.resolveAnomaly(${item.id})" title="Lever cette anomalie après vérification manuelle">
                   <i class="fas fa-check text-emerald"></i> Lever
                 </button>
                 <button class="btn btn-secondary btn-sm" onclick="App.requestFieldCheckForAnomaly(${item.id})" title="Demander une contre-expertise terrain à l'Agent">
                   <i class="fas fa-motorcycle text-warning"></i> Terrain
                 </button>
-              ` : `
+              `
+                  : `
                 <button class="btn btn-secondary btn-sm" onclick="App.reopenAnomaly(${item.id})" title="Rouvrir le signalement">
                   <i class="fas fa-rotate text-muted"></i> Rouvrir
                 </button>
-              `}
+              `
+              }
             </div>
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   filterAnalystAnomalies(category, btn) {
     this.analystAnomFilter = category;
     if (btn) {
-      const container = document.getElementById('anom-filter-buttons');
+      const container = document.getElementById("anom-filter-buttons");
       if (container) {
-        container.querySelectorAll('button').forEach(b => {
-          b.classList.remove('btn-primary');
-          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        container.querySelectorAll("button").forEach((b) => {
+          b.classList.remove("btn-primary");
+          if (!b.classList.contains("btn-secondary"))
+            b.classList.add("btn-secondary");
         });
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-primary');
+        btn.classList.remove("btn-secondary");
+        btn.classList.add("btn-primary");
       }
     }
     this.renderAnalystAnomalies();
@@ -2072,41 +2548,45 @@ const App = {
   },
 
   resolveAnomaly(anomalyId) {
-    const a = DB.findById('anomalies', anomalyId);
+    const a = DB.findById("anomalies", anomalyId);
     if (!a) return;
 
     const row = document.getElementById(`anomaly-row-${anomalyId}`);
     if (row) {
-      row.classList.add('resolving');
+      row.classList.add("resolving");
       // Déclenche l'animation de transition en fondu sortant
       setTimeout(() => {
-        row.classList.add('resolving-fade-out');
+        row.classList.add("resolving-fade-out");
       }, 40);
     }
 
     setTimeout(() => {
-      DB.update('anomalies', anomalyId, {
-        status: 'RESOLVED',
-        resolved_by: (this.currentUser ? this.currentUser.id : 1),
+      DB.update("anomalies", anomalyId, {
+        status: "RESOLVED",
+        resolved_by: this.currentUser ? this.currentUser.id : 1,
         resolved_at: new Date().toISOString(),
-        resolution_comment: 'Anomalie contrôlée et levée par l\'analyste risque après revue contradictoire.'
+        resolution_comment:
+          "Anomalie contrôlée et levée par l'analyste risque après revue contradictoire.",
       });
 
       DB.addAuditLog(
-        (this.currentUser ? this.currentUser.id : 1),
-        'ANOMALIE_LEVEE_ANALYSTE',
-        'anomalies',
+        this.currentUser ? this.currentUser.id : 1,
+        "ANOMALIE_LEVEE_ANALYSTE",
+        "anomalies",
         anomalyId,
-        `Anomalie #${anomalyId} (${a.anomaly_type}) levée avec succès.`
+        `Anomalie #${anomalyId} (${a.anomaly_type}) levée avec succès.`,
       );
 
-      this.showToast(`Anomalie #${anomalyId} levée avec succès. Dossier réévalué.`, 'success');
+      this.showToast(
+        `Anomalie #${anomalyId} levée avec succès. Dossier réévalué.`,
+        "success",
+      );
       this.renderAnalystAnomalies();
 
       // Effet lumineux sur la ligne mise à jour si toujours présente
       const updatedRow = document.getElementById(`anomaly-row-${anomalyId}`);
       if (updatedRow) {
-        updatedRow.classList.add('resolved-flash');
+        updatedRow.classList.add("resolved-flash");
       }
     }, 450);
   },
@@ -2114,111 +2594,146 @@ const App = {
   reopenAnomaly(anomalyId) {
     const row = document.getElementById(`anomaly-row-${anomalyId}`);
     if (row) {
-      row.classList.add('resolving');
+      row.classList.add("resolving");
     }
 
     setTimeout(() => {
-      DB.update('anomalies', anomalyId, {
-        status: 'OPEN',
+      DB.update("anomalies", anomalyId, {
+        status: "OPEN",
         resolved_by: null,
         resolved_at: null,
-        resolution_comment: null
+        resolution_comment: null,
       });
 
-      this.showToast(`Anomalie #${anomalyId} rouverte pour surveillance active.`, 'info');
+      this.showToast(
+        `Anomalie #${anomalyId} rouverte pour surveillance active.`,
+        "info",
+      );
       this.renderAnalystAnomalies();
 
       const updatedRow = document.getElementById(`anomaly-row-${anomalyId}`);
       if (updatedRow) {
-        updatedRow.classList.add('resolved-flash');
+        updatedRow.classList.add("resolved-flash");
       }
     }, 200);
   },
 
   requestFieldCheckForAnomaly(anomalyId) {
-    const a = DB.findById('anomalies', anomalyId);
+    const a = DB.findById("anomalies", anomalyId);
     if (!a) return;
 
-    const req = DB.findById('credit_requests', a.credit_request_id) || {};
-    
+    const req = DB.findById("credit_requests", a.credit_request_id) || {};
+
     DB.addAuditLog(
-      (this.currentUser ? this.currentUser.id : 1),
-      'DEMANDE_VERIFICATION_TERRAIN',
-      'credit_requests',
+      this.currentUser ? this.currentUser.id : 1,
+      "DEMANDE_VERIFICATION_TERRAIN",
+      "credit_requests",
       a.credit_request_id,
-      `Mission de contre-expertise terrain transmise à l'Agent de Crédit pour l'anomalie : ${a.description}`
+      `Mission de contre-expertise terrain transmise à l'Agent de Crédit pour l'anomalie : ${a.description}`,
     );
 
-    this.showToast(`Ordre de mission terrain transmis à l'Agent pour le dossier ${req.request_number || 'en cours'}.`, 'success');
+    this.showToast(
+      `Ordre de mission terrain transmis à l'Agent pour le dossier ${req.request_number || "en cours"}.`,
+      "success",
+    );
   },
 
   runFullAnomalyScan() {
-    this.showToast('Scan algorithmique global et rapprochement OCR en cours...', 'info');
+    this.showToast(
+      "Scan algorithmique global et rapprochement OCR en cours...",
+      "info",
+    );
     setTimeout(() => {
       this.renderAnalystAnomalies();
-      this.showToast('Scan terminé : 5 signaux analysés, base d\'intégrité 100% synchronisée.', 'success');
+      this.showToast(
+        "Scan terminé : 5 signaux analysés, base d'intégrité 100% synchronisée.",
+        "success",
+      );
     }, 450);
   },
 
   exportAnomaliesCsv() {
-    const anomalies = DB.get('anomalies');
-    const requests = DB.get('credit_requests');
+    const anomalies = DB.get("anomalies");
+    const requests = DB.get("credit_requests");
 
-    let csv = 'ID;Numero_Dossier;Client;Gravite;Type_Anomalie;Description;Valeur_Detectee;Valeur_Attendue;Statut;Date_Detection\n';
-    anomalies.forEach(a => {
-      const req = requests.find(r => r.id === a.credit_request_id) || {};
-      csv += `"${a.id}";"${req.request_number || ''}";"${req.client_name || ''}";"${a.severity}";"${a.anomaly_type}";"${(a.description || '').replace(/"/g, '""')}";"${(a.detected_value || '').replace(/"/g, '""')}";"${(a.expected_value || '').replace(/"/g, '""')}";"${a.status}";"${a.created_at || ''}"\n`;
+    let csv =
+      "ID;Numero_Dossier;Client;Gravite;Type_Anomalie;Description;Valeur_Detectee;Valeur_Attendue;Statut;Date_Detection\n";
+    anomalies.forEach((a) => {
+      const req = requests.find((r) => r.id === a.credit_request_id) || {};
+      csv += `"${a.id}";"${req.request_number || ""}";"${req.client_name || ""}";"${a.severity}";"${a.anomaly_type}";"${(a.description || "").replace(/"/g, '""')}";"${(a.detected_value || "").replace(/"/g, '""')}";"${(a.expected_value || "").replace(/"/g, '""')}";"${a.status}";"${a.created_at || ""}"\n`;
     });
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `Registre_Anomalies_CIF_${new Date().toISOString().slice(0, 10)}.csv`);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `Registre_Anomalies_CIF_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    this.showToast('Export CSV du registre des anomalies téléchargé avec succès', 'success');
+    this.showToast(
+      "Export CSV du registre des anomalies téléchargé avec succès",
+      "success",
+    );
   },
 
   // [ROLE 4] COMITÉ DE CRÉDIT (DÉCISIONNAIRE)
   activeCommitteeDossierId: null,
+  committeeDossiersFilter: "ALL",
+  committeeDossiersSearchQuery: "",
 
   renderCommitteeDashboard() {
-    const tbody = document.getElementById('committee-requests-table-body');
+    const tbody = document.getElementById("committee-requests-table-body");
     if (!tbody) return;
 
     // Dossiers en attente de passage au comité
-    const pendingReqs = DB.get('credit_requests').filter(r => r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS');
+    const pendingReqs = DB.get("credit_requests").filter(
+      (r) =>
+        r.status === "COMMITTEE" ||
+        r.status === "CREDIT_REVIEW" ||
+        r.status === "ANALYSIS",
+    );
 
-    tbody.innerHTML = pendingReqs.map(r => {
-      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
-      const riskBadgeClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
-      const riskLabel = evalData.riskLevel === 'FAIBLE' ? 'Risque Faible' : (evalData.riskLevel === 'MODERE' ? 'Risque Modéré' : evalData.riskLevel || 'Faible');
+    tbody.innerHTML = pendingReqs
+      .map((r) => {
+        const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+        const riskBadgeClass =
+          evalData.riskLevel === "CRITIQUE"
+            ? "badge-rejected"
+            : evalData.riskLevel === "ELEVE"
+              ? "badge-warning"
+              : "badge-approved";
+        const riskLabel =
+          evalData.riskLevel === "FAIBLE"
+            ? "Risque Faible"
+            : evalData.riskLevel === "MODERE"
+              ? "Risque Modéré"
+              : evalData.riskLevel || "Faible";
 
-      return `
-        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher les détails dans le volet latéral">
-          <td>
-            <div style="font-family: var(--font-family-code); font-size: 0.8rem; font-weight: 700; color: var(--primary-700);">${r.request_number}</div>
-            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary); margin-top: 1px;">${r.client_name}</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${r.city || 'Bamako'}, ${r.country || 'Mali'}</div>
+        return `
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher la fiche complète dans le volet latéral">
+          <td style="white-space: nowrap;">
+            <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; margin-right: 8px;">${r.request_number}</span>
+            <strong style="color: var(--text-primary); font-size: 0.9rem;">${r.client_name}</strong>
           </td>
-          <td>
-            <strong class="amount-cell" style="color: var(--primary-700); font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
-            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">${r.duration_months} mois • Crédit Spot</div>
+          <td style="white-space: nowrap;">
+            <strong class="amount-cell" style="color: var(--primary-700); font-family: var(--font-family-code); font-size: 0.92rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
           </td>
-          <td>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-weight: 800; font-size: 0.95rem; color: ${evalData.riskColor || '#059669'};">${evalData.overallScore || 85}</span>
-              <span style="font-size: 0.7rem; color: var(--text-muted);">/100</span>
-              <span class="badge ${riskBadgeClass}" style="font-size: 0.65rem;">${riskLabel}</span>
-            </div>
+          <td style="white-space: nowrap;">
+            <span class="badge ${riskBadgeClass}" style="font-weight: 700; font-size: 0.76rem;">
+              <i class="fas fa-shield-check mr-1"></i> ${evalData.overallScore || 85}/100 • ${riskLabel}
+            </span>
           </td>
-          <td>
-            <span class="badge badge-analysis" style="font-size: 0.7rem;"><i class="fas fa-thumbs-up"></i> Favorable</span>
+          <td style="white-space: nowrap;">
+            <span class="badge badge-analysis" style="font-size: 0.74rem;">
+              <i class="fas fa-thumbs-up mr-1"></i> Avis Favorable
+            </span>
           </td>
-          <td style="text-align: right;">
-            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+          <td style="text-align: right; white-space: nowrap;">
+            <div style="display: inline-flex; align-items: center; gap: 6px;">
               <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Voir tous les détails du dossier en volet latéral">
                 <i class="fas fa-eye text-primary"></i> Détails
               </button>
@@ -2229,225 +2744,296 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
-  committeeDossiersFilter: 'ALL',
-  committeeDossiersSearch: '',
+  renderCommitteeDossiersPage(filter = this.committeeDossiersFilter, query = this.committeeDossiersSearchQuery) {
+    this.committeeDossiersFilter = filter;
+    this.committeeDossiersSearchQuery = query;
 
-  filterCommitteeDossiers(filterType, btn) {
-    this.committeeDossiersFilter = filterType;
-    if (btn) {
-      const container = document.getElementById('com-dossiers-filter-tabs');
-      if (container) {
-        container.querySelectorAll('button').forEach(b => {
-          b.classList.remove('btn-primary');
-          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
-        });
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-primary');
-      }
-    }
-    this.renderCommitteeDossiersPage();
-  },
-
-  searchCommitteeDossiers(query) {
-    this.committeeDossiersSearch = query;
-    this.renderCommitteeDossiersPage();
-  },
-
-  openFirstPendingCommitteeVote() {
-    const pendingReqs = DB.get('credit_requests').filter(r => r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS');
-    if (pendingReqs.length > 0 && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === 'function') {
-      window.AppInteractions.openCommitteeModal(pendingReqs[0].id);
-    } else {
-      this.showToast('Tous les dossiers de la séance ont déjà été votés.', 'info');
-    }
-  },
-
-  renderCommitteeDossiersPage() {
-    const tbody = document.getElementById('com-dossiers-page-table-body');
-    const countBadge = document.getElementById('com-dossiers-count-badge');
+    const tbody = document.getElementById("com-dossiers-page-table-body");
+    const countBadge = document.getElementById("com-dossiers-count-badge");
     if (!tbody) return;
 
-    const allRequests = DB.get('credit_requests');
-    const clients = DB.get('clients');
+    const allCommitteeReqs = DB.get("credit_requests").filter(
+      (r) =>
+        r.status === "COMMITTEE" ||
+        r.status === "CREDIT_REVIEW" ||
+        r.status === "ANALYSIS" ||
+        r.status === "APPROVED",
+    );
 
-    let filtered = allRequests.filter(r => {
-      const client = clients.find(c => c.id === r.client_id) || {};
+    // Calculate Dynamic KPIs
+    const totalSessionAmount = allCommitteeReqs.reduce((sum, r) => sum + (r.requested_amount || 0), 0);
+    const pendingReqs = allCommitteeReqs.filter((r) => r.status === "COMMITTEE" || r.status === "CREDIT_REVIEW");
+    const approvedReqs = allCommitteeReqs.filter((r) => r.status === "APPROVED");
+    const favorableReqs = allCommitteeReqs.filter((r) => {
       const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
-
-      if (this.committeeDossiersFilter === 'PENDING_VOTE') {
-        return r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS';
-      }
-      if (this.committeeDossiersFilter === 'FAVORABLE') {
-        return (evalData.overallScore || r.score || 0) >= 75;
-      }
-      if (this.committeeDossiersFilter === 'COLD_START') {
-        return client.is_cold_start === true;
-      }
-      return true; // 'ALL'
+      return evalData.riskLevel === "FAIBLE" || (evalData.overallScore || 0) >= 80;
+    });
+    const coldStartReqs = allCommitteeReqs.filter((r) => {
+      const client = DB.findById("clients", r.client_id) || {};
+      return client.is_cold_start || r.is_cold_start || (CreditScoringEngine.evaluateDossier(r.id) || {}).overallScore <= 88;
     });
 
-    if (this.committeeDossiersSearch) {
-      const q = this.committeeDossiersSearch.toLowerCase();
-      filtered = filtered.filter(r => {
-        const client = clients.find(c => c.id === r.client_id) || {};
+    // Update KPI elements if present
+    const kpiTotalAmount = document.getElementById("com-kpi-total-amount");
+    const kpiTotalCount = document.getElementById("com-kpi-total-count");
+    const kpiPendingCount = document.getElementById("com-kpi-pending-count");
+    const kpiApprovedCount = document.getElementById("com-kpi-approved-count");
+    const sessionTotalAmount = document.getElementById("com-session-total-amount");
+    const sessionVotedRatio = document.getElementById("com-session-voted-ratio");
+
+    if (kpiTotalAmount) kpiTotalAmount.textContent = CreditScoringEngine.formatFCFA(totalSessionAmount);
+    if (kpiTotalCount) kpiTotalCount.textContent = allCommitteeReqs.length.toString();
+    if (kpiPendingCount) kpiPendingCount.textContent = pendingReqs.length.toString();
+    if (kpiApprovedCount) kpiApprovedCount.textContent = approvedReqs.length.toString();
+    if (sessionTotalAmount) sessionTotalAmount.textContent = CreditScoringEngine.formatFCFA(totalSessionAmount);
+    if (sessionVotedRatio) sessionVotedRatio.textContent = `${approvedReqs.length} / ${allCommitteeReqs.length}`;
+
+    // Update Tab Counters
+    const countTabAll = document.getElementById("count-tab-all");
+    const countTabPending = document.getElementById("count-tab-pending");
+    const countTabFavorable = document.getElementById("count-tab-favorable");
+    const countTabColdstart = document.getElementById("count-tab-coldstart");
+
+    if (countTabAll) countTabAll.textContent = allCommitteeReqs.length.toString();
+    if (countTabPending) countTabPending.textContent = pendingReqs.length.toString();
+    if (countTabFavorable) countTabFavorable.textContent = favorableReqs.length.toString();
+    if (countTabColdstart) countTabColdstart.textContent = coldStartReqs.length.toString();
+
+    let reqs = [...allCommitteeReqs];
+
+    // Apply Filter Tab
+    if (filter === "PENDING_VOTE") {
+      reqs = pendingReqs;
+    } else if (filter === "FAVORABLE") {
+      reqs = favorableReqs;
+    } else if (filter === "COLD_START") {
+      reqs = coldStartReqs;
+    }
+
+    // Apply Search Query
+    if (query && query.trim()) {
+      const q = query.trim().toLowerCase();
+      reqs = reqs.filter((r) => {
+        const client = DB.findById("clients", r.client_id) || {};
         return (
-          (r.request_number && r.request_number.toLowerCase().includes(q)) ||
           (r.client_name && r.client_name.toLowerCase().includes(q)) ||
+          (r.request_number && r.request_number.toLowerCase().includes(q)) ||
           (r.city && r.city.toLowerCase().includes(q)) ||
-          (r.purpose && r.purpose.toLowerCase().includes(q)) ||
           (client.activity && client.activity.toLowerCase().includes(q))
         );
       });
     }
 
     if (countBadge) {
-      countBadge.textContent = `${filtered.length} dossier${filtered.length > 1 ? 's' : ''} affiché${filtered.length > 1 ? 's' : ''}`;
+      countBadge.textContent = `${reqs.length} dossier${reqs.length > 1 ? "s" : ""} affiché${reqs.length > 1 ? "s" : ""}`;
     }
 
-    if (filtered.length === 0) {
+    if (reqs.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--text-subtle);"><i class="fas fa-folder-open"></i></div>
-            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-secondary);">Aucun dossier ne correspond à vos critères</div>
-            <div style="font-size: 0.78rem; margin-top: 4px;">Modifiez les filtres ou réinitialisez la recherche.</div>
+          <td colspan="5" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; opacity: 0.5;"></i>
+            Aucun dossier ne correspond aux critères de recherche.
           </td>
         </tr>
       `;
       return;
     }
 
-    tbody.innerHTML = filtered.map(r => {
-      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
-      
-      const isPendingVote = r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS';
-      const isApproved = r.status === 'APPROVED' || r.status === 'DISBURSED';
-      
-      const riskBadgeClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
-      const riskLabel = evalData.riskLevel === 'FAIBLE' ? 'Faible' : (evalData.riskLevel === 'MODERE' ? 'Modéré' : evalData.riskLevel || 'Faible');
+    tbody.innerHTML = reqs
+      .map((r) => {
+        const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+        const riskBadgeClass =
+          evalData.riskLevel === "CRITIQUE"
+            ? "badge-rejected"
+            : evalData.riskLevel === "ELEVE"
+              ? "badge-warning"
+              : "badge-approved";
+        const riskLabel =
+          evalData.riskLevel === "FAIBLE"
+            ? "Faible"
+            : evalData.riskLevel === "MODERE"
+              ? "Modéré"
+              : evalData.riskLevel || "Faible";
 
-      return `
-        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour ouvrir le volet latéral d'analyse complète">
-          <!-- Colonne 1: Dossier & Emprunteur (Ligne unique) -->
+        const statusBadgeClass =
+          r.status === "APPROVED"
+            ? "badge-approved"
+            : r.status === "COMMITTEE"
+              ? "badge-warning"
+              : "badge-analysis";
+        const statusIcon =
+          r.status === "APPROVED"
+            ? "fa-check-circle"
+            : r.status === "COMMITTEE"
+              ? "fa-hourglass-half"
+              : "fa-thumbs-up";
+        const statusLabel =
+          r.status === "APPROVED"
+            ? "Validé en Séance"
+            : r.status === "COMMITTEE"
+              ? "En attente de vote"
+              : "Avis Favorable";
+
+        return `
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour afficher la fiche complète dans le volet latéral">
           <td style="white-space: nowrap;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-family: var(--font-family-code); font-size: 0.76rem; font-weight: 700; color: var(--primary-700);">${r.request_number}</span>
-              <span style="color: var(--text-muted);">•</span>
-              <strong style="font-size: 0.85rem; color: var(--text-primary);">${r.client_name}</strong>
-            </div>
+            <span class="badge badge-submitted" style="font-family: var(--font-family-code); font-weight: 700; margin-right: 8px;">${r.request_number}</span>
+            <strong style="color: var(--text-primary); font-size: 0.9rem;">${r.client_name}</strong>
           </td>
-          <!-- Colonne 2: Montant Demandé (Ligne unique) -->
           <td style="white-space: nowrap;">
-            <strong class="amount-cell" style="color: var(--primary-700); font-size: 0.88rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
-            <span style="font-size: 0.74rem; color: var(--text-muted); margin-left: 4px;">(${r.duration_months} mois)</span>
+            <strong class="amount-cell" style="color: var(--primary-700); font-family: var(--font-family-code); font-size: 0.92rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
           </td>
-          <!-- Colonne 3: Score & Risque IA (Ligne unique) -->
           <td style="white-space: nowrap;">
-            <span style="font-weight: 800; font-size: 0.88rem; color: ${evalData.riskColor || '#059669'};">${evalData.overallScore || r.score || 85}</span>
-            <span style="font-size: 0.72rem; color: var(--text-muted);">/100</span>
-            <span class="badge ${riskBadgeClass}" style="font-size: 0.65rem; margin-left: 5px; padding: 2px 6px;">${riskLabel}</span>
+            <span class="badge ${riskBadgeClass}" style="font-weight: 700; font-size: 0.74rem;">
+              <i class="fas fa-shield-check mr-1"></i> ${evalData.overallScore || 85}/100 • Risque ${riskLabel}
+            </span>
           </td>
-          <!-- Colonne 4: Statut du Vote (Ligne unique) -->
           <td style="white-space: nowrap;">
-            ${isPendingVote ? `
-              <span class="badge badge-warning" style="font-size: 0.7rem;"><i class="fas fa-clock mr-1"></i> À voter (2/3)</span>
-            ` : isApproved ? `
-              <span class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-check-double mr-1"></i> Accord Validé</span>
-            ` : `
-              <span class="badge badge-submitted" style="font-size: 0.7rem;">En Examen</span>
-            `}
+            <span class="badge ${statusBadgeClass}" style="font-size: 0.74rem;">
+              <i class="fas ${statusIcon} mr-1"></i> ${statusLabel}
+            </span>
           </td>
-          <!-- Colonne 5: Action (Ligne unique) -->
           <td style="text-align: right; white-space: nowrap;">
-            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
-              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Ouvrir le volet d'analyse approfondie" style="padding: 3px 8px; font-size: 0.75rem;">
+            <div style="display: inline-flex; align-items: center; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Voir tous les détails du dossier en volet latéral">
                 <i class="fas fa-eye text-primary"></i> Détails
               </button>
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Ouvrir la délibération et voter" style="font-weight: 700; padding: 3px 8px; font-size: 0.75rem;">
-                <i class="fas fa-gavel"></i> ${isPendingVote ? 'Voter' : 'Modifier'}
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Délibérer, ajuster les termes et voter">
+                <i class="fas fa-gavel"></i> Voter
               </button>
             </div>
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
+  },
+
+  filterCommitteeDossiers(filterType, btn) {
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll(".btn").forEach((b) => {
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-secondary");
+      });
+      btn.classList.remove("btn-secondary");
+      btn.classList.add("btn-primary");
+    }
+    this.renderCommitteeDossiersPage(filterType, this.committeeDossiersSearchQuery);
+  },
+
+  searchCommitteeDossiers(query) {
+    this.renderCommitteeDossiersPage(this.committeeDossiersFilter, query);
+  },
+
+  openFirstPendingCommitteeVote() {
+    const pending = DB.get("credit_requests").find(
+      (r) => r.status === "COMMITTEE" || r.status === "CREDIT_REVIEW" || r.status === "ANALYSIS",
+    );
+    if (pending && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === "function") {
+      window.AppInteractions.openCommitteeModal(pending.id);
+    } else {
+      this.showToast("Tous les dossiers soumis ont déjà été traités.", "info");
+    }
   },
 
   openCommitteeDrawer(dossierId) {
     this.activeCommitteeDossierId = dossierId;
-    const req = DB.findById('credit_requests', dossierId);
+    const req = DB.findById("credit_requests", dossierId);
     if (!req) return;
 
     const evalData = CreditScoringEngine.evaluateDossier(dossierId) || {};
-    const client = DB.findById('clients', req.client_id) || {};
-    const review = DB.get('credit_reviews').find(r => r.credit_request_id == req.id) || {};
+    const client = DB.findById("clients", req.client_id) || {};
+    const review =
+      DB.get("credit_reviews").find((r) => r.credit_request_id == req.id) || {};
 
-    const backdrop = document.getElementById('committee-drawer-backdrop');
+    const backdrop = document.getElementById("committee-drawer-backdrop");
     if (!backdrop) return;
 
     // Badges & Header
-    const reqBadge = document.getElementById('com-drawer-req-badge');
-    const riskBadge = document.getElementById('com-drawer-risk-badge');
-    const titleEl = document.getElementById('com-drawer-title');
-    const subtitleEl = document.getElementById('com-drawer-subtitle');
+    const reqBadge = document.getElementById("com-drawer-req-badge");
+    const riskBadge = document.getElementById("com-drawer-risk-badge");
+    const titleEl = document.getElementById("com-drawer-title");
+    const subtitleEl = document.getElementById("com-drawer-subtitle");
 
-    if (reqBadge) reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
-    if (titleEl) titleEl.textContent = req.client_name || client.name || 'Emprunteur';
-    if (subtitleEl) subtitleEl.textContent = `Dossier de crédit • ${req.city || client.city || 'UEMOA'}, ${req.country || 'UEMOA'} • Décision Comité`;
+    if (reqBadge)
+      reqBadge.textContent = req.request_number || `#REQ-2026-${req.id}`;
+    if (titleEl)
+      titleEl.textContent = req.client_name || client.name || "Emprunteur";
+    if (subtitleEl)
+      subtitleEl.textContent = `Dossier de crédit • ${req.city || client.city || "UEMOA"}, ${req.country || "UEMOA"} • Décision Comité`;
 
     if (riskBadge) {
-      const riskClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
+      const riskClass =
+        evalData.riskLevel === "CRITIQUE"
+          ? "badge-rejected"
+          : evalData.riskLevel === "ELEVE"
+            ? "badge-warning"
+            : "badge-approved";
       riskBadge.className = `badge ${riskClass}`;
-      riskBadge.innerHTML = `<i class="fas fa-shield-check"></i> ${evalData.riskLevel === 'FAIBLE' ? 'Risque Faible' : (evalData.riskLevel === 'MODERE' ? 'Risque Modéré' : evalData.riskLevel || 'Faible')}`;
+      riskBadge.innerHTML = `<i class="fas fa-shield-check"></i> ${evalData.riskLevel === "FAIBLE" ? "Risque Faible" : evalData.riskLevel === "MODERE" ? "Risque Modéré" : evalData.riskLevel || "Faible"}`;
     }
 
     // Section 1 : Emprunteur & Demande
-    const clientIdEl = document.getElementById('com-drawer-client-id');
-    const avatarEl = document.getElementById('com-drawer-avatar');
-    const clientNameEl = document.getElementById('com-drawer-client-name');
-    const locEl = document.getElementById('com-drawer-location');
-    const amountEl = document.getElementById('com-drawer-amount');
-    const durationEl = document.getElementById('com-drawer-duration');
-    const installmentEl = document.getElementById('com-drawer-installment');
-    const activityEl = document.getElementById('com-drawer-activity');
-    const surplusEl = document.getElementById('com-drawer-surplus');
+    const clientIdEl = document.getElementById("com-drawer-client-id");
+    const avatarEl = document.getElementById("com-drawer-avatar");
+    const clientNameEl = document.getElementById("com-drawer-client-name");
+    const locEl = document.getElementById("com-drawer-location");
+    const amountEl = document.getElementById("com-drawer-amount");
+    const durationEl = document.getElementById("com-drawer-duration");
+    const installmentEl = document.getElementById("com-drawer-installment");
+    const activityEl = document.getElementById("com-drawer-activity");
+    const surplusEl = document.getElementById("com-drawer-surplus");
 
-    if (clientIdEl) clientIdEl.textContent = `ID: CLI-${req.client_id || '0891'}`;
-    if (avatarEl) avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
+    if (clientIdEl)
+      clientIdEl.textContent = `ID: CLI-${req.client_id || "0891"}`;
+    if (avatarEl)
+      avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(req.client_name)}&background=4f46e5&color=fff`;
     if (clientNameEl) clientNameEl.textContent = req.client_name;
-    if (locEl) locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || 'Bamako'}, ${req.country || 'Mali'} • Agence Principale`;
-    if (amountEl) amountEl.textContent = CreditScoringEngine.formatFCFA(req.requested_amount);
-    if (durationEl) durationEl.textContent = `Durée : ${req.duration_months} mois • Crédit Spot`;
+    if (locEl)
+      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${req.city || client.city || "Bamako"}, ${req.country || "Mali"} • Agence Principale`;
+    if (amountEl)
+      amountEl.textContent = CreditScoringEngine.formatFCFA(
+        req.requested_amount,
+      );
+    if (durationEl)
+      durationEl.textContent = `Durée : ${req.duration_months} mois • Crédit Spot`;
 
     // Monthly installment calculation
     const rAmount = req.requested_amount || 2500000;
     const rDur = req.duration_months || 12;
     const estMonthly = Math.round((rAmount * (1 + 0.095 * (rDur / 12))) / rDur);
-    if (installmentEl) installmentEl.textContent = CreditScoringEngine.formatFCFA(estMonthly);
+    if (installmentEl)
+      installmentEl.textContent = CreditScoringEngine.formatFCFA(estMonthly);
 
-    if (activityEl) activityEl.textContent = client.activity || req.activity || 'Commerce général & négoce';
+    if (activityEl)
+      activityEl.textContent =
+        client.activity || req.activity || "Commerce général & négoce";
     if (surplusEl) {
-      const surplus = req.disposable_income || client.disposable_income || 385000;
+      const surplus =
+        req.disposable_income || client.disposable_income || 385000;
       surplusEl.textContent = `+ ${CreditScoringEngine.formatFCFA(surplus)}`;
     }
 
     // Section 2 : Scoring XAI
-    const confBadge = document.getElementById('com-drawer-conf-badge');
-    const overallScoreEl = document.getElementById('com-drawer-overall-score');
-    const capBadge = document.getElementById('com-drawer-capacity-badge');
+    const confBadge = document.getElementById("com-drawer-conf-badge");
+    const overallScoreEl = document.getElementById("com-drawer-overall-score");
+    const capBadge = document.getElementById("com-drawer-capacity-badge");
 
-    if (confBadge) confBadge.innerHTML = `<i class="fas fa-check-double"></i> Confiance ${evalData.confidenceScore || 94}%`;
+    if (confBadge)
+      confBadge.innerHTML = `<i class="fas fa-check-double"></i> Confiance ${evalData.confidenceScore || 94}%`;
     if (overallScoreEl) {
       overallScoreEl.textContent = evalData.overallScore || req.score || 88;
-      overallScoreEl.style.color = evalData.riskColor || '#059669';
+      overallScoreEl.style.color = evalData.riskColor || "#059669";
     }
     if (capBadge) {
-      const isSufficient = req.repayment_capacity_status === 'SUFFICIENT';
-      capBadge.className = `badge ${isSufficient ? 'badge-approved' : 'badge-rejected'}`;
-      capBadge.innerHTML = `<i class="fas ${isSufficient ? 'fa-check' : 'fa-triangle-exclamation'}"></i> ${isSufficient ? 'Reste à vivre certifié' : 'Capacité insuffisante'}`;
+      const isSufficient = req.repayment_capacity_status === "SUFFICIENT";
+      capBadge.className = `badge ${isSufficient ? "badge-approved" : "badge-rejected"}`;
+      capBadge.innerHTML = `<i class="fas ${isSufficient ? "fa-check" : "fa-triangle-exclamation"}"></i> ${isSufficient ? "Reste à vivre certifié" : "Capacité insuffisante"}`;
     }
 
     // Pillar progress bars
@@ -2456,12 +3042,12 @@ const App = {
     const pCold = Math.min(95, Math.max(55, scoreVal - 2));
     const pStab = Math.min(95, Math.max(50, scoreVal - 5));
 
-    const pCashEl = document.getElementById('com-drawer-pillar-cashflow');
-    const pColdEl = document.getElementById('com-drawer-pillar-coldstart');
-    const pStabEl = document.getElementById('com-drawer-pillar-stability');
-    const bCashEl = document.getElementById('com-drawer-bar-cashflow');
-    const bColdEl = document.getElementById('com-drawer-bar-coldstart');
-    const bStabEl = document.getElementById('com-drawer-bar-stability');
+    const pCashEl = document.getElementById("com-drawer-pillar-cashflow");
+    const pColdEl = document.getElementById("com-drawer-pillar-coldstart");
+    const pStabEl = document.getElementById("com-drawer-pillar-stability");
+    const bCashEl = document.getElementById("com-drawer-bar-cashflow");
+    const bColdEl = document.getElementById("com-drawer-bar-coldstart");
+    const bStabEl = document.getElementById("com-drawer-bar-stability");
 
     if (pCashEl) pCashEl.textContent = `${pCash} / 100`;
     if (pColdEl) pColdEl.textContent = `${pCold} / 100`;
@@ -2471,23 +3057,29 @@ const App = {
     if (bStabEl) bStabEl.style.width = `${pStab}%`;
 
     // Section 3 : Analyst Notes
-    const notesEl = document.getElementById('com-drawer-analyst-notes');
+    const notesEl = document.getElementById("com-drawer-analyst-notes");
     if (notesEl) {
-      notesEl.textContent = review.analyst_comment || `Avis d'octroi favorable émis par l'analyste risque. Activité vérifiée avec chiffre d'affaires récurrent sur les 6 derniers mois. Ratio d'endettement sain (${Math.round((estMonthly / (estMonthly + 385000)) * 100)}%).`;
+      notesEl.textContent =
+        review.analyst_comment ||
+        `Avis d'octroi favorable émis par l'analyste risque. Activité vérifiée avec chiffre d'affaires récurrent sur les 6 derniers mois. Ratio d'endettement sain (${Math.round((estMonthly / (estMonthly + 385000)) * 100)}%).`;
     }
 
     // Show backdrop & trigger CSS transition
-    backdrop.classList.add('active');
+    backdrop.classList.add("active");
   },
 
   closeCommitteeDrawer() {
-    const backdrop = document.getElementById('committee-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("committee-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   openCommitteeModalFromDrawer() {
     this.closeCommitteeDrawer();
-    if (this.activeCommitteeDossierId && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === 'function') {
+    if (
+      this.activeCommitteeDossierId &&
+      window.AppInteractions &&
+      typeof window.AppInteractions.openCommitteeModal === "function"
+    ) {
       window.AppInteractions.openCommitteeModal(this.activeCommitteeDossierId);
     }
   },
@@ -2495,141 +3087,226 @@ const App = {
   // Signed PV Registry Data & Sidedrawer
   signedPvsRegistry: [
     {
-      ref: 'PV-2026-0889',
-      req_number: '#REQ-2026-0889',
-      client_name: 'Seydou Keita',
-      country: 'Mali',
-      country_code: 'ml',
-      city: 'Bamako',
-      activity: 'Menuiserie métallique & BTP léger',
-      agency: 'Caisse Bamako Principale (Mali)',
-      decision: 'ACCORD',
-      decision_label: 'Accord Collégial Unanime',
+      ref: "PV-2026-0889",
+      req_number: "#REQ-2026-0889",
+      client_name: "Seydou Keita",
+      country: "Mali",
+      country_code: "ml",
+      city: "Bamako",
+      activity: "Menuiserie métallique & BTP léger",
+      agency: "Caisse Bamako Principale (Mali)",
+      decision: "ACCORD",
+      decision_label: "Accord Collégial Unanime",
       amount_granted: 3000000,
       amount_requested: 3000000,
-      rate: '9.5% annuel',
+      rate: "9.5% annuel",
       duration_months: 18,
-      terms: '9.5% • 18 mois',
+      terms: "9.5% • 18 mois",
       monthly_payment: 190417,
-      date_signed: '18/08/2026',
-      time_signed: '16:45 GMT',
-      quorum: '3/3 Signatures',
-      sha: '9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01',
-      sha_short: '9a8f...4e12',
+      date_signed: "18/08/2026",
+      time_signed: "16:45 GMT",
+      quorum: "3/3 Signatures",
+      sha: "9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01",
+      sha_short: "9a8f...4e12",
       signers: [
-        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '18/08/2026 16:30', cert: 'Token UEMOA #991' },
-        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '18/08/2026 16:38', cert: 'Token UEMOA #812' },
-        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '18/08/2026 16:45', cert: 'Token UEMOA #405' }
+        {
+          name: "Dr. Amadou Diallo",
+          role: "Président du Comité de Crédit",
+          status: "Signé électroniquement",
+          date: "18/08/2026 16:30",
+          cert: "Token UEMOA #991",
+        },
+        {
+          name: "Fatou Camara",
+          role: "Directrice des Risques",
+          status: "Signé électroniquement",
+          date: "18/08/2026 16:38",
+          cert: "Token UEMOA #812",
+        },
+        {
+          name: "Mamadou Traoré",
+          role: "Responsable Conformité & LBC",
+          status: "Signé électroniquement",
+          date: "18/08/2026 16:45",
+          cert: "Token UEMOA #405",
+        },
       ],
-      guarantees: 'Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10% (300 000 FCFA).',
-      disbursement_conditions: 'Décaissement échelonné : 70% sur facture proforma fournisseur et 30% après PV de réception des matériaux.',
-      committee_notes: 'Dossier jugé très solide. Rentabilité démontrée avec marge opérationnelle supérieure à 35%. Reste à vivre vérifié.'
+      guarantees:
+        "Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10% (300 000 FCFA).",
+      disbursement_conditions:
+        "Décaissement échelonné : 70% sur facture proforma fournisseur et 30% après PV de réception des matériaux.",
+      committee_notes:
+        "Dossier jugé très solide. Rentabilité démontrée avec marge opérationnelle supérieure à 35%. Reste à vivre vérifié.",
     },
     {
-      ref: 'PV-2026-0884',
-      req_number: '#REQ-2026-0884',
-      client_name: 'Aïssatou Ba',
-      country: 'Mali',
-      country_code: 'ml',
-      city: 'Bamako',
-      activity: 'Transformation agroalimentaire & fruits séchés',
-      agency: 'Caisse Bamako Badalabougou (Mali)',
-      decision: 'ACCORD',
-      decision_label: 'Accord sous Quotité Ajustée',
+      ref: "PV-2026-0884",
+      req_number: "#REQ-2026-0884",
+      client_name: "Aïssatou Ba",
+      country: "Mali",
+      country_code: "ml",
+      city: "Bamako",
+      activity: "Transformation agroalimentaire & fruits séchés",
+      agency: "Caisse Bamako Badalabougou (Mali)",
+      decision: "ACCORD",
+      decision_label: "Accord sous Quotité Ajustée",
       amount_granted: 1800000,
       amount_requested: 2200000,
-      rate: '10.0% annuel',
+      rate: "10.0% annuel",
       duration_months: 12,
-      terms: '10.0% • 12 mois',
+      terms: "10.0% • 12 mois",
       monthly_payment: 165000,
-      date_signed: '17/08/2026',
-      time_signed: '14:20 GMT',
-      quorum: '3/3 Signatures',
-      sha: 'bc723819a1234ef987654321fedcba0987654321fedcba0987654321fedcba09',
-      sha_short: 'bc72...8901',
+      date_signed: "17/08/2026",
+      time_signed: "14:20 GMT",
+      quorum: "3/3 Signatures",
+      sha: "bc723819a1234ef987654321fedcba0987654321fedcba0987654321fedcba09",
+      sha_short: "bc72...8901",
       signers: [
-        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '17/08/2026 14:05', cert: 'Token UEMOA #991' },
-        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '17/08/2026 14:12', cert: 'Token UEMOA #812' },
-        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '17/08/2026 14:20', cert: 'Token UEMOA #405' }
+        {
+          name: "Dr. Amadou Diallo",
+          role: "Président du Comité de Crédit",
+          status: "Signé électroniquement",
+          date: "17/08/2026 14:05",
+          cert: "Token UEMOA #991",
+        },
+        {
+          name: "Fatou Camara",
+          role: "Directrice des Risques",
+          status: "Signé électroniquement",
+          date: "17/08/2026 14:12",
+          cert: "Token UEMOA #812",
+        },
+        {
+          name: "Mamadou Traoré",
+          role: "Responsable Conformité & LBC",
+          status: "Signé électroniquement",
+          date: "17/08/2026 14:20",
+          cert: "Token UEMOA #405",
+        },
       ],
-      guarantees: 'Nantissement matériel séchoir solaire + Engagement solidaire GIE des productrices de Bamako.',
-      disbursement_conditions: 'Paiement direct au fabricant de séchoir solaire agréé avec facture acquittée.',
-      committee_notes: 'Quotité ramenée à 1 800 000 FCFA pour maintenir le taux d\'effort en dessous du seuil de 30%.'
+      guarantees:
+        "Nantissement matériel séchoir solaire + Engagement solidaire GIE des productrices de Bamako.",
+      disbursement_conditions:
+        "Paiement direct au fabricant de séchoir solaire agréé avec facture acquittée.",
+      committee_notes:
+        "Quotité ramenée à 1 800 000 FCFA pour maintenir le taux d'effort en dessous du seuil de 30%.",
     },
     {
-      ref: 'PV-2026-0878',
-      req_number: '#REQ-2026-0878',
-      client_name: 'Mahamadou Ouedraogo',
-      country: 'Mali',
-      country_code: 'ml',
-      city: 'Bamako',
-      activity: 'Transport interurbain & logistique',
-      agency: 'Caisse Bamako Dabanani (Mali)',
-      decision: 'REJET',
-      decision_label: 'Rejet Collégial Unanime',
+      ref: "PV-2026-0878",
+      req_number: "#REQ-2026-0878",
+      client_name: "Mahamadou Ouedraogo",
+      country: "Mali",
+      country_code: "ml",
+      city: "Bamako",
+      activity: "Transport interurbain & logistique",
+      agency: "Caisse Bamako Dabanani (Mali)",
+      decision: "REJET",
+      decision_label: "Rejet Collégial Unanime",
       amount_granted: 0,
       amount_requested: 4500000,
-      rate: 'N/A',
+      rate: "N/A",
       duration_months: 0,
-      terms: 'Refus d\'octroi',
+      terms: "Refus d'octroi",
       monthly_payment: 0,
-      date_signed: '15/08/2026',
-      time_signed: '11:15 GMT',
-      quorum: 'Rejet Acté',
-      sha: 'df14aa33e99887766554433221100ffeeddccbbaa99887766554433221100ffe',
-      sha_short: 'df14...aa33',
+      date_signed: "15/08/2026",
+      time_signed: "11:15 GMT",
+      quorum: "Rejet Acté",
+      sha: "df14aa33e99887766554433221100ffeeddccbbaa99887766554433221100ffe",
+      sha_short: "df14...aa33",
       signers: [
-        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Visa de Rejet Signé', date: '15/08/2026 11:00', cert: 'Token UEMOA #991' },
-        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Visa de Rejet Signé', date: '15/08/2026 11:08', cert: 'Token UEMOA #812' },
-        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Visa de Rejet Signé', date: '15/08/2026 11:15', cert: 'Token UEMOA #405' }
+        {
+          name: "Dr. Amadou Diallo",
+          role: "Président du Comité de Crédit",
+          status: "Visa de Rejet Signé",
+          date: "15/08/2026 11:00",
+          cert: "Token UEMOA #991",
+        },
+        {
+          name: "Fatou Camara",
+          role: "Directrice des Risques",
+          status: "Visa de Rejet Signé",
+          date: "15/08/2026 11:08",
+          cert: "Token UEMOA #812",
+        },
+        {
+          name: "Mamadou Traoré",
+          role: "Responsable Conformité & LBC",
+          status: "Visa de Rejet Signé",
+          date: "15/08/2026 11:15",
+          cert: "Token UEMOA #405",
+        },
       ],
-      guarantees: 'Garanties présentées jugées insuffisantes au regard de la charge d\'endettement externe constatée.',
-      disbursement_conditions: 'N/A - Dossier classé sans suite. Notification de refus motivé transmise à l\'agence locale.',
-      committee_notes: 'Reste à vivre négatif après intégration des encours externes déclarés à la Centrale des Risques BCEAO.'
+      guarantees:
+        "Garanties présentées jugées insuffisantes au regard de la charge d'endettement externe constatée.",
+      disbursement_conditions:
+        "N/A - Dossier classé sans suite. Notification de refus motivé transmise à l'agence locale.",
+      committee_notes:
+        "Reste à vivre négatif après intégration des encours externes déclarés à la Centrale des Risques BCEAO.",
     },
     {
-      ref: 'PV-2026-0865',
-      req_number: '#REQ-2026-0865',
-      client_name: 'Koffi Mensah',
-      country: 'Mali',
-      country_code: 'ml',
-      city: 'Bamako',
-      activity: 'Grossiste Quincaillerie & Outillage',
-      agency: 'Caisse Bamako Grand Marché (Mali)',
-      decision: 'ACCORD',
-      decision_label: 'Accord Collégial',
+      ref: "PV-2026-0865",
+      req_number: "#REQ-2026-0865",
+      client_name: "Koffi Mensah",
+      country: "Mali",
+      country_code: "ml",
+      city: "Bamako",
+      activity: "Grossiste Quincaillerie & Outillage",
+      agency: "Caisse Bamako Grand Marché (Mali)",
+      decision: "ACCORD",
+      decision_label: "Accord Collégial",
       amount_granted: 3500000,
       amount_requested: 3500000,
-      rate: '9.0% annuel',
+      rate: "9.0% annuel",
       duration_months: 24,
-      terms: '9.0% • 24 mois',
+      terms: "9.0% • 24 mois",
       monthly_payment: 172083,
-      date_signed: '12/08/2026',
-      time_signed: '17:10 GMT',
-      quorum: '3/3 Signatures',
-      sha: '44a9f812cb0033445566778899aabbccddeeff00112233445566778899aabbcc',
-      sha_short: '44a9...bbcc',
+      date_signed: "12/08/2026",
+      time_signed: "17:10 GMT",
+      quorum: "3/3 Signatures",
+      sha: "44a9f812cb0033445566778899aabbccddeeff00112233445566778899aabbcc",
+      sha_short: "44a9...bbcc",
       signers: [
-        { name: 'Dr. Amadou Diallo', role: 'Président du Comité de Crédit', status: 'Signé électroniquement', date: '12/08/2026 16:50', cert: 'Token UEMOA #991' },
-        { name: 'Fatou Camara', role: 'Directrice des Risques', status: 'Signé électroniquement', date: '12/08/2026 17:02', cert: 'Token UEMOA #812' },
-        { name: 'Mamadou Traoré', role: 'Responsable Conformité & LBC', status: 'Signé électroniquement', date: '12/08/2026 17:10', cert: 'Token UEMOA #405' }
+        {
+          name: "Dr. Amadou Diallo",
+          role: "Président du Comité de Crédit",
+          status: "Signé électroniquement",
+          date: "12/08/2026 16:50",
+          cert: "Token UEMOA #991",
+        },
+        {
+          name: "Fatou Camara",
+          role: "Directrice des Risques",
+          status: "Signé électroniquement",
+          date: "12/08/2026 17:02",
+          cert: "Token UEMOA #812",
+        },
+        {
+          name: "Mamadou Traoré",
+          role: "Responsable Conformité & LBC",
+          status: "Signé électroniquement",
+          date: "12/08/2026 17:10",
+          cert: "Token UEMOA #405",
+        },
       ],
-      guarantees: 'Nantissement de stock commercial 120% + Caution solidaire du groupement des commerçants.',
-      disbursement_conditions: 'Virement direct sur compte fournisseur quincaillerie sur présentation du bon de commande validé.',
-      committee_notes: 'Historique de remboursement irréprochable sur les précédents cycles. Stock à rotation rapide.'
-    }
+      guarantees:
+        "Nantissement de stock commercial 120% + Caution solidaire du groupement des commerçants.",
+      disbursement_conditions:
+        "Virement direct sur compte fournisseur quincaillerie sur présentation du bon de commande validé.",
+      committee_notes:
+        "Historique de remboursement irréprochable sur les précédents cycles. Stock à rotation rapide.",
+    },
   ],
 
   activeSignedPvRef: null,
 
   renderSignedPvTable() {
-    const tbody = document.getElementById('signed-pvs-table-body');
+    const tbody = document.getElementById("signed-pvs-table-body");
     if (!tbody) return;
 
-    tbody.innerHTML = this.signedPvsRegistry.map(pv => {
-      const isApproved = pv.decision === 'ACCORD';
+    tbody.innerHTML = this.signedPvsRegistry
+      .map((pv) => {
+        const isApproved = pv.decision === "ACCORD";
 
-      return `
+        return `
         <tr class="schedule-table-row" onclick="App.openSignedPvDrawer('${pv.ref}')" style="cursor: pointer;" title="Cliquer pour afficher les détails du procès-verbal scellé">
           <td>
             <strong style="font-family: var(--font-family-code); font-size: 0.85rem; color: var(--primary-700);">${pv.ref}</strong>
@@ -2640,17 +3317,18 @@ const App = {
             <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${pv.city}, ${pv.country}</div>
           </td>
           <td>
-            ${isApproved 
-              ? `<strong class="amount-cell" style="color: #059669; font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(pv.amount_granted)}</strong>
+            ${
+              isApproved
+                ? `<strong class="amount-cell" style="color: #059669; font-size: 0.95rem;">${CreditScoringEngine.formatFCFA(pv.amount_granted)}</strong>
                  <div style="font-size: 0.72rem; color: var(--text-muted);">${pv.terms}</div>`
-              : `<strong class="amount-cell" style="color: #ef4444; font-size: 0.9rem;">REJET COLLÉGIAL</strong>
+                : `<strong class="amount-cell" style="color: #ef4444; font-size: 0.9rem;">REJET COLLÉGIAL</strong>
                  <div style="font-size: 0.72rem; color: var(--text-muted);">Refus motivé</div>`
             }
           </td>
           <td>
             <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-              <span class="badge ${isApproved ? 'badge-approved' : 'badge-rejected'}" style="font-size: 0.68rem;">
-                <i class="fas ${isApproved ? 'fa-check' : 'fa-times'}"></i> ${pv.quorum}
+              <span class="badge ${isApproved ? "badge-approved" : "badge-rejected"}" style="font-size: 0.68rem;">
+                <i class="fas ${isApproved ? "fa-check" : "fa-times"}"></i> ${pv.quorum}
               </span>
               <span style="font-size: 0.72rem; color: var(--text-muted);">${pv.date_signed}</span>
             </div>
@@ -2665,123 +3343,153 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   openSignedPvDrawer(pvRef) {
     this.activeSignedPvRef = pvRef;
-    const pv = this.signedPvsRegistry.find(p => p.ref === pvRef);
+    const pv = this.signedPvsRegistry.find((p) => p.ref === pvRef);
     if (!pv) return;
 
-    const backdrop = document.getElementById('signed-pv-drawer-backdrop');
+    const backdrop = document.getElementById("signed-pv-drawer-backdrop");
     if (!backdrop) return;
 
-    const isApproved = pv.decision === 'ACCORD';
+    const isApproved = pv.decision === "ACCORD";
 
     // Header & Badges
-    const refBadge = document.getElementById('pv-drawer-ref-badge');
-    const statusBadge = document.getElementById('pv-drawer-status-badge');
-    const titleEl = document.getElementById('pv-drawer-title');
-    const subtitleEl = document.getElementById('pv-drawer-subtitle');
+    const refBadge = document.getElementById("pv-drawer-ref-badge");
+    const statusBadge = document.getElementById("pv-drawer-status-badge");
+    const titleEl = document.getElementById("pv-drawer-title");
+    const subtitleEl = document.getElementById("pv-drawer-subtitle");
 
     if (refBadge) refBadge.textContent = pv.ref;
     if (statusBadge) {
-      statusBadge.className = `badge ${isApproved ? 'badge-approved' : 'badge-rejected'}`;
-      statusBadge.innerHTML = `<i class="fas ${isApproved ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${pv.decision_label}`;
+      statusBadge.className = `badge ${isApproved ? "badge-approved" : "badge-rejected"}`;
+      statusBadge.innerHTML = `<i class="fas ${isApproved ? "fa-circle-check" : "fa-circle-xmark"}"></i> ${pv.decision_label}`;
     }
     if (titleEl) titleEl.textContent = pv.client_name;
-    if (subtitleEl) subtitleEl.textContent = `Procès-Verbal Officiel scellé • ${pv.city}, ${pv.country} • ${pv.req_number}`;
+    if (subtitleEl)
+      subtitleEl.textContent = `Procès-Verbal Officiel scellé • ${pv.city}, ${pv.country} • ${pv.req_number}`;
 
     // Section 1 : Termes financiers
-    const dateEl = document.getElementById('pv-drawer-date');
-    const amountEl = document.getElementById('pv-drawer-amount');
-    const diffEl = document.getElementById('pv-drawer-requested-diff');
-    const termsEl = document.getElementById('pv-drawer-terms');
-    const monthlyEl = document.getElementById('pv-drawer-monthly');
-    const clientInfoEl = document.getElementById('pv-drawer-client-info');
-    const agencyEl = document.getElementById('pv-drawer-agency');
+    const dateEl = document.getElementById("pv-drawer-date");
+    const amountEl = document.getElementById("pv-drawer-amount");
+    const diffEl = document.getElementById("pv-drawer-requested-diff");
+    const termsEl = document.getElementById("pv-drawer-terms");
+    const monthlyEl = document.getElementById("pv-drawer-monthly");
+    const clientInfoEl = document.getElementById("pv-drawer-client-info");
+    const agencyEl = document.getElementById("pv-drawer-agency");
 
     if (dateEl) dateEl.textContent = `${pv.date_signed} (${pv.time_signed})`;
     if (amountEl) {
-      amountEl.textContent = isApproved ? CreditScoringEngine.formatFCFA(pv.amount_granted) : '0 FCFA';
-      amountEl.style.color = isApproved ? '#059669' : '#ef4444';
+      amountEl.textContent = isApproved
+        ? CreditScoringEngine.formatFCFA(pv.amount_granted)
+        : "0 FCFA";
+      amountEl.style.color = isApproved ? "#059669" : "#ef4444";
     }
     if (diffEl) {
       diffEl.textContent = `Demande initiale : ${CreditScoringEngine.formatFCFA(pv.amount_requested)}`;
     }
     if (termsEl) termsEl.textContent = pv.terms;
     if (monthlyEl) {
-      monthlyEl.textContent = isApproved ? `Échéance : ~${CreditScoringEngine.formatFCFA(pv.monthly_payment)} / mois` : 'Sans échéance (Dossier rejeté)';
+      monthlyEl.textContent = isApproved
+        ? `Échéance : ~${CreditScoringEngine.formatFCFA(pv.monthly_payment)} / mois`
+        : "Sans échéance (Dossier rejeté)";
     }
-    if (clientInfoEl) clientInfoEl.textContent = `${pv.client_name} (${pv.activity})`;
+    if (clientInfoEl)
+      clientInfoEl.textContent = `${pv.client_name} (${pv.activity})`;
     if (agencyEl) agencyEl.textContent = pv.agency;
 
     // Section 2 : Signers
-    const quorumBadge = document.getElementById('pv-drawer-quorum-badge');
+    const quorumBadge = document.getElementById("pv-drawer-quorum-badge");
     if (quorumBadge) {
-      quorumBadge.className = `badge ${isApproved ? 'badge-approved' : 'badge-rejected'}`;
-      quorumBadge.innerHTML = `<i class="fas ${isApproved ? 'fa-users-check' : 'fa-ban'}"></i> ${pv.quorum}`;
+      quorumBadge.className = `badge ${isApproved ? "badge-approved" : "badge-rejected"}`;
+      quorumBadge.innerHTML = `<i class="fas ${isApproved ? "fa-users-check" : "fa-ban"}"></i> ${pv.quorum}`;
     }
 
-    const signersList = document.getElementById('pv-drawer-signers-list');
+    const signersList = document.getElementById("pv-drawer-signers-list");
     if (signersList && pv.signers) {
-      signersList.innerHTML = pv.signers.map(s => `
+      signersList.innerHTML = pv.signers
+        .map(
+          (s) => `
         <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
           <div>
             <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">${s.name}</div>
             <div style="font-size: 0.72rem; color: var(--text-muted);">${s.role} • <span style="font-family: var(--font-family-code); color: var(--primary-700);">${s.cert}</span></div>
           </div>
           <div style="text-align: right;">
-            <span class="badge ${isApproved ? 'badge-approved' : 'badge-rejected'}" style="font-size: 0.68rem;">
+            <span class="badge ${isApproved ? "badge-approved" : "badge-rejected"}" style="font-size: 0.68rem;">
               <i class="fas fa-check-double mr-1"></i> ${s.status}
             </span>
             <div style="font-size: 0.68rem; color: var(--text-subtle); margin-top: 2px;">${s.date}</div>
           </div>
         </div>
-      `).join('');
+      `,
+        )
+        .join("");
     }
 
     // Section 3 : Guarantees & Notes
-    const guarEl = document.getElementById('pv-drawer-guarantees');
-    const disbEl = document.getElementById('pv-drawer-disbursement');
-    const notesEl = document.getElementById('pv-drawer-notes');
+    const guarEl = document.getElementById("pv-drawer-guarantees");
+    const disbEl = document.getElementById("pv-drawer-disbursement");
+    const notesEl = document.getElementById("pv-drawer-notes");
 
     if (guarEl) guarEl.textContent = pv.guarantees;
     if (disbEl) disbEl.textContent = pv.disbursement_conditions;
     if (notesEl) notesEl.textContent = pv.committee_notes;
 
     // Section 4 : SHA
-    const shaEl = document.getElementById('pv-drawer-sha');
+    const shaEl = document.getElementById("pv-drawer-sha");
     if (shaEl) shaEl.textContent = pv.sha;
 
-    backdrop.classList.add('active');
+    backdrop.classList.add("active");
   },
 
   closeSignedPvDrawer() {
-    const backdrop = document.getElementById('signed-pv-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("signed-pv-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   downloadSignedPvPdf() {
-    const pv = this.signedPvsRegistry.find(p => p.ref === this.activeSignedPvRef);
-    const ref = pv ? pv.ref : 'PV-2026-0889';
-    this.showToast(`Génération du Procès-Verbal officiel ${ref} certifié SHA-256 en cours...`, 'info');
+    const pv = this.signedPvsRegistry.find(
+      (p) => p.ref === this.activeSignedPvRef,
+    );
+    const ref = pv ? pv.ref : "PV-2026-0889";
+    this.showToast(
+      `Génération du Procès-Verbal officiel ${ref} certifié SHA-256 en cours...`,
+      "info",
+    );
     setTimeout(() => {
-      this.showToast(`Procès-Verbal ${ref} téléchargé avec succès (Format PDF A/3 conforme UEMOA)`, 'success');
+      this.showToast(
+        `Procès-Verbal ${ref} téléchargé avec succès (Format PDF A/3 conforme UEMOA)`,
+        "success",
+      );
     }, 800);
   },
 
   downloadAllSignedPvsCsv() {
-    this.showToast('Export du registre complet des décisions scellées au format CSV/Excel...', 'info');
+    this.showToast(
+      "Export du registre complet des décisions scellées au format CSV/Excel...",
+      "info",
+    );
     setTimeout(() => {
-      this.showToast('Registre des procès-verbaux scellés exporté avec succès (4 actes validés)', 'success');
+      this.showToast(
+        "Registre des procès-verbaux scellés exporté avec succès (4 actes validés)",
+        "success",
+      );
     }, 600);
   },
 
   notifyAgencyForPv() {
-    const pv = this.signedPvsRegistry.find(p => p.ref === this.activeSignedPvRef);
+    const pv = this.signedPvsRegistry.find(
+      (p) => p.ref === this.activeSignedPvRef,
+    );
     if (!pv) return;
-    this.showToast(`Notification de décision pour ${pv.client_name} transmise à ${pv.agency} via passerelle SMS & Messagerie`, 'success');
+    this.showToast(
+      `Notification de décision pour ${pv.client_name} transmise à ${pv.agency} via passerelle SMS & Messagerie`,
+      "success",
+    );
   },
 
   showSignedPvDetails(ref, client, amount, terms, date, sha) {
@@ -2791,149 +3499,232 @@ const App = {
   // [ROLE 5] RESPONSABLE CONFORMITÉ LBC / FT / FP
   complianceScreeningRegistry: [
     {
-      id: 'SCR-2026-0942',
-      date: 'Aujourd\'hui 09:42',
-      full_date: '21/08/2026 09:42 GMT',
-      client_name: 'Ibrahim Ould Mohamed',
-      country: 'Mali',
-      city: 'Gao & Bamako',
-      agency: 'Caisse Grand Marché (Bamako, Mali)',
-      id_number: 'NINA : 01-78-05-14-9981-ML',
-      dob: 'Né le 14/05/1978 à Gao',
-      aliases: 'Ibrahim Mohamed, Abou Khalil, El-Ibrahimi',
-      profession: 'Négoce transfrontalier & Logistique',
-      list_type: 'Sanctions UEMOA / ONU',
-      legal_framework: 'Résolution Conseil de Sécurité ONU 2374 (2017) & Décret Ministériel UEMOA Gel des avoirs',
+      id: "SCR-2026-0942",
+      date: "Aujourd'hui 09:42",
+      full_date: "21/08/2026 09:42 GMT",
+      client_name: "Ibrahim Ould Mohamed",
+      country: "Mali",
+      city: "Gao & Bamako",
+      agency: "Caisse Grand Marché (Bamako, Mali)",
+      id_number: "NINA : 01-78-05-14-9981-ML",
+      dob: "Né le 14/05/1978 à Gao",
+      aliases: "Ibrahim Mohamed, Abou Khalil, El-Ibrahimi",
+      profession: "Négoce transfrontalier & Logistique",
+      list_type: "Sanctions UEMOA / ONU",
+      legal_framework:
+        "Résolution Conseil de Sécurité ONU 2374 (2017) & Décret Ministériel UEMOA Gel des avoirs",
       match_score: 98,
-      match_label: 'Match 98%',
-      status: 'BLOCKED',
-      status_label: 'Blocage Conservatoire',
-      measure_badge: 'badge-rejected',
-      officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Concordance biométrique et patronymique avec l\'entité inscrite sur la liste consolidée du Comité des Sanctions ONU. Compte et opérations immédiatement suspendus. Notification automatique émise à la CENTIF-Mali sous réf. CENTIF-ML-2026-0418.',
-      sha: '4e81fa02cb778899aa112233445566778899aabbccddeeff0011223344556677',
+      match_label: "Match 98%",
+      status: "BLOCKED",
+      status_label: "Blocage Conservatoire",
+      measure_badge: "badge-rejected",
+      officer: "Mamadou Traoré (Conformité LBC)",
+      findings:
+        "Concordance biométrique et patronymique avec l'entité inscrite sur la liste consolidée du Comité des Sanctions ONU. Compte et opérations immédiatement suspendus. Notification automatique émise à la CENTIF-Mali sous réf. CENTIF-ML-2026-0418.",
+      sha: "4e81fa02cb778899aa112233445566778899aabbccddeeff0011223344556677",
       is_doubt_cleared: false,
       steps: [
-        { title: 'Contrôle Automatisé API Screening Multi-Registres', time: '09:42:01', status: 'Alerte Rouge (Match 98%)', badge: 'badge-rejected' },
-        { title: 'Examen de Non-Homonymie & Validation Pièce', time: '09:44:15', status: 'Homonymie confirmée (NINA & Date naissance concordants)', badge: 'badge-rejected' },
-        { title: 'Blocage Conservatoire des Comptes & Flux', time: '09:45:00', status: 'Acté & Verrouillé', badge: 'badge-rejected' },
-        { title: 'Télétransmission Bordereau Réglementaire CENTIF', time: '09:46:30', status: 'Bordereau #DOS-CENTIF-0418 transmis', badge: 'badge-approved' }
-      ]
+        {
+          title: "Contrôle Automatisé API Screening Multi-Registres",
+          time: "09:42:01",
+          status: "Alerte Rouge (Match 98%)",
+          badge: "badge-rejected",
+        },
+        {
+          title: "Examen de Non-Homonymie & Validation Pièce",
+          time: "09:44:15",
+          status: "Homonymie confirmée (NINA & Date naissance concordants)",
+          badge: "badge-rejected",
+        },
+        {
+          title: "Blocage Conservatoire des Comptes & Flux",
+          time: "09:45:00",
+          status: "Acté & Verrouillé",
+          badge: "badge-rejected",
+        },
+        {
+          title: "Télétransmission Bordereau Réglementaire CENTIF",
+          time: "09:46:30",
+          status: "Bordereau #DOS-CENTIF-0418 transmis",
+          badge: "badge-approved",
+        },
+      ],
     },
     {
-      id: 'SCR-2026-0915',
-      date: 'Aujourd\'hui 08:15',
-      full_date: '21/08/2026 08:15 GMT',
-      client_name: 'Ousmane Coulibaly',
-      country: 'Mali',
-      city: 'Bamako',
-      agency: 'Caisse Bamako Badalabougou (Mali)',
-      id_number: 'NINA : 1829 1982 04182',
-      dob: 'Né le 22/09/1982 à Sikasso',
-      aliases: 'Ousmane C., El Hadj Coulibaly',
-      profession: 'Élu Municipal & Promoteur Immobilier',
-      list_type: 'Base PPE Nationale & UEMOA',
-      legal_framework: 'Directive UEMOA relative à la Lutte contre le Blanchiment & Personnes Politiquement Exposées',
+      id: "SCR-2026-0915",
+      date: "Aujourd'hui 08:15",
+      full_date: "21/08/2026 08:15 GMT",
+      client_name: "Ousmane Coulibaly",
+      country: "Mali",
+      city: "Bamako",
+      agency: "Caisse Bamako Badalabougou (Mali)",
+      id_number: "NINA : 1829 1982 04182",
+      dob: "Né le 22/09/1982 à Sikasso",
+      aliases: "Ousmane C., El Hadj Coulibaly",
+      profession: "Élu Municipal & Promoteur Immobilier",
+      list_type: "Base PPE Nationale & UEMOA",
+      legal_framework:
+        "Directive UEMOA relative à la Lutte contre le Blanchiment & Personnes Politiquement Exposées",
       match_score: 74,
-      match_label: 'Exposé (PPE)',
-      status: 'PPE_ENHANCED',
-      status_label: 'Diligence Renforcée',
-      measure_badge: 'badge-warning',
-      officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Personne Politiquement Exposée (Adjoint au Maire). Justificatifs de patrimoine et d\'origine licite des fonds requis. Validation obligatoire par la Direction des Risques avant tout décaissement de concours financier.',
-      sha: '7f92a105dd889900bb2233445566778899aabbccddeeff001122334455667788',
+      match_label: "Exposé (PPE)",
+      status: "PPE_ENHANCED",
+      status_label: "Diligence Renforcée",
+      measure_badge: "badge-warning",
+      officer: "Mamadou Traoré (Conformité LBC)",
+      findings:
+        "Personne Politiquement Exposée (Adjoint au Maire). Justificatifs de patrimoine et d'origine licite des fonds requis. Validation obligatoire par la Direction des Risques avant tout décaissement de concours financier.",
+      sha: "7f92a105dd889900bb2233445566778899aabbccddeeff001122334455667788",
       is_doubt_cleared: false,
       steps: [
-        { title: 'Filtrage Registre PEP / Déclaration d\'Intérêt', time: '08:15:10', status: 'Signalement PPE Identifié (Niveau 2)', badge: 'badge-warning' },
-        { title: 'Questionnaire Renforcé Origine des Fonds', time: '08:22:00', status: 'Déclaration transmise & en cours d\'analyse', badge: 'badge-submitted' },
-        { title: 'Contrôle Absence Sanctions / Gel des Avoirs', time: '08:25:30', status: 'Aucune sanction internationale (0%)', badge: 'badge-approved' }
-      ]
+        {
+          title: "Filtrage Registre PEP / Déclaration d'Intérêt",
+          time: "08:15:10",
+          status: "Signalement PPE Identifié (Niveau 2)",
+          badge: "badge-warning",
+        },
+        {
+          title: "Questionnaire Renforcé Origine des Fonds",
+          time: "08:22:00",
+          status: "Déclaration transmise & en cours d'analyse",
+          badge: "badge-submitted",
+        },
+        {
+          title: "Contrôle Absence Sanctions / Gel des Avoirs",
+          time: "08:25:30",
+          status: "Aucune sanction internationale (0%)",
+          badge: "badge-approved",
+        },
+      ],
     },
     {
-      id: 'SCR-2026-0888',
-      date: 'Hier 16:30',
-      full_date: '20/08/2026 16:30 GMT',
-      client_name: 'Fatou Ndiaye',
-      country: 'Mali',
-      city: 'Bamako',
-      agency: 'Caisse Bamako Grand Marché (Mali)',
-      id_number: 'NINA : 1756 1990 04182',
-      dob: 'Née le 03/11/1990 à Bamako',
-      aliases: 'Aucun alias répertorié',
-      profession: 'Commerçante & Importatrice Textile',
-      list_type: 'Base Globale GAFI',
-      legal_framework: 'Contrôle de Routine Conforme LBC / FT (Recommandations GAFI 10 & 11)',
+      id: "SCR-2026-0888",
+      date: "Hier 16:30",
+      full_date: "20/08/2026 16:30 GMT",
+      client_name: "Fatou Ndiaye",
+      country: "Mali",
+      city: "Bamako",
+      agency: "Caisse Bamako Grand Marché (Mali)",
+      id_number: "NINA : 1756 1990 04182",
+      dob: "Née le 03/11/1990 à Bamako",
+      aliases: "Aucun alias répertorié",
+      profession: "Commerçante & Importatrice Textile",
+      list_type: "Base Globale GAFI",
+      legal_framework:
+        "Contrôle de Routine Conforme LBC / FT (Recommandations GAFI 10 & 11)",
       match_score: 0,
-      match_label: 'RAS (0%)',
-      status: 'CLEARED',
-      status_label: 'Autorisé sans Réserve',
-      measure_badge: 'badge-approved',
-      officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Filtrage complet négatif sur l\'ensemble des registres (ONU, UEMOA, OFAC, CENTIF-Mali). Dossier validé pour ouverture de compte et octroi de crédit.',
-      sha: '1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809',
+      match_label: "RAS (0%)",
+      status: "CLEARED",
+      status_label: "Autorisé sans Réserve",
+      measure_badge: "badge-approved",
+      officer: "Mamadou Traoré (Conformité LBC)",
+      findings:
+        "Filtrage complet négatif sur l'ensemble des registres (ONU, UEMOA, OFAC, CENTIF-Mali). Dossier validé pour ouverture de compte et octroi de crédit.",
+      sha: "1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809",
       is_doubt_cleared: true,
       steps: [
-        { title: 'Contrôle Sanctions ONU / UEMOA / GAFI', time: '16:30:05', status: 'Conformité Totale (0% match)', badge: 'badge-approved' },
-        { title: 'Vérification Carte NINA', time: '16:30:45', status: 'Document authentique & valide', badge: 'badge-approved' },
-        { title: 'Feu Vert Conformité Délivré', time: '16:31:00', status: 'Autorisation automatique enregistrée', badge: 'badge-approved' }
-      ]
+        {
+          title: "Contrôle Sanctions ONU / UEMOA / GAFI",
+          time: "16:30:05",
+          status: "Conformité Totale (0% match)",
+          badge: "badge-approved",
+        },
+        {
+          title: "Vérification Carte NINA",
+          time: "16:30:45",
+          status: "Document authentique & valide",
+          badge: "badge-approved",
+        },
+        {
+          title: "Feu Vert Conformité Délivré",
+          time: "16:31:00",
+          status: "Autorisation automatique enregistrée",
+          badge: "badge-approved",
+        },
+      ],
     },
     {
-      id: 'SCR-2026-0870',
-      date: 'Hier 14:10',
-      full_date: '20/08/2026 14:10 GMT',
-      client_name: 'Koffi Mensah',
-      country: 'Mali',
-      city: 'Bamako',
-      agency: 'Caisse Bamako Dabanani (Mali)',
-      id_number: 'NINA : ML-0982-2021',
-      dob: 'Né le 19/07/1985 à Bamako',
-      aliases: 'Aucun alias',
-      profession: 'Grossiste Quincaillerie',
-      list_type: 'Base Globale GAFI',
-      legal_framework: 'Contrôle Périodique de Routine KYC / LBC-FT',
+      id: "SCR-2026-0870",
+      date: "Hier 14:10",
+      full_date: "20/08/2026 14:10 GMT",
+      client_name: "Koffi Mensah",
+      country: "Mali",
+      city: "Bamako",
+      agency: "Caisse Bamako Dabanani (Mali)",
+      id_number: "NINA : ML-0982-2021",
+      dob: "Né le 19/07/1985 à Bamako",
+      aliases: "Aucun alias",
+      profession: "Grossiste Quincaillerie",
+      list_type: "Base Globale GAFI",
+      legal_framework: "Contrôle Périodique de Routine KYC / LBC-FT",
       match_score: 0,
-      match_label: 'RAS (0%)',
-      status: 'CLEARED',
-      status_label: 'Autorisé sans Réserve',
-      measure_badge: 'badge-approved',
-      officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Aucune correspondance négative. Profil client sain, activité commerciale conforme aux opérations déclarées.',
-      sha: '89ab01cd23ef456789ab01cd23ef456789ab01cd23ef456789ab01cd23ef4567',
+      match_label: "RAS (0%)",
+      status: "CLEARED",
+      status_label: "Autorisé sans Réserve",
+      measure_badge: "badge-approved",
+      officer: "Mamadou Traoré (Conformité LBC)",
+      findings:
+        "Aucune correspondance négative. Profil client sain, activité commerciale conforme aux opérations déclarées.",
+      sha: "89ab01cd23ef456789ab01cd23ef456789ab01cd23ef456789ab01cd23ef4567",
       is_doubt_cleared: true,
       steps: [
-        { title: 'Screening Sanctions Internationales', time: '14:10:02', status: 'Conformité Validée (0%)', badge: 'badge-approved' },
-        { title: 'Attestation de Non-Inscription Registre CENTIF', time: '14:10:30', status: 'Bordereau archivé', badge: 'badge-approved' }
-      ]
+        {
+          title: "Screening Sanctions Internationales",
+          time: "14:10:02",
+          status: "Conformité Validée (0%)",
+          badge: "badge-approved",
+        },
+        {
+          title: "Attestation de Non-Inscription Registre CENTIF",
+          time: "14:10:30",
+          status: "Bordereau archivé",
+          badge: "badge-approved",
+        },
+      ],
     },
     {
-      id: 'SCR-2026-0855',
-      date: '19/08/2026 11:20',
-      full_date: '19/08/2026 11:20 GMT',
-      client_name: 'Cheikh Tidiane Diop',
-      country: 'Mali',
-      city: 'Bamako',
-      agency: 'Caisse Bamako Faladié (Mali)',
-      id_number: 'NINA : 1882 1988 09912',
-      dob: 'Né le 12/01/1988 à Kayes',
-      aliases: 'Tidiane Diop',
-      profession: 'Artisan Menuisier & Ébéniste',
-      list_type: 'Base Sanctions UEMOA',
+      id: "SCR-2026-0855",
+      date: "19/08/2026 11:20",
+      full_date: "19/08/2026 11:20 GMT",
+      client_name: "Cheikh Tidiane Diop",
+      country: "Mali",
+      city: "Bamako",
+      agency: "Caisse Bamako Faladié (Mali)",
+      id_number: "NINA : 1882 1988 09912",
+      dob: "Né le 12/01/1988 à Kayes",
+      aliases: "Tidiane Diop",
+      profession: "Artisan Menuisier & Ébéniste",
+      list_type: "Base Sanctions UEMOA",
       match_score: 18,
-      match_label: 'Homonymie Écartée',
-      status: 'DOUBT_CLEARED',
-      status_label: 'Levée de Doute Validée',
-      measure_badge: 'badge-approved',
-      officer: 'Mamadou Traoré (Conformité LBC)',
-      findings: 'Simple homonymie patronymique avec un tiers sanctionné. Après vérification de l\'acte de naissance et du numéro national d\'identification, le doute est levé. Dossier régularisé.',
-      sha: '33445566778899aabbccddeeff00112233445566778899aabbccddeeff001122',
+      match_label: "Homonymie Écartée",
+      status: "DOUBT_CLEARED",
+      status_label: "Levée de Doute Validée",
+      measure_badge: "badge-approved",
+      officer: "Mamadou Traoré (Conformité LBC)",
+      findings:
+        "Simple homonymie patronymique avec un tiers sanctionné. Après vérification de l'acte de naissance et du numéro national d'identification, le doute est levé. Dossier régularisé.",
+      sha: "33445566778899aabbccddeeff00112233445566778899aabbccddeeff001122",
       is_doubt_cleared: true,
       steps: [
-        { title: 'Détection Initiale Homonymie (18%)', time: '11:20:00', status: 'Alerte Faible Intensité', badge: 'badge-warning' },
-        { title: 'Comparaison Biométrique & Date de Naissance', time: '11:23:40', status: 'Non-Concordance Certifiée', badge: 'badge-approved' },
-        { title: 'Levée de Doute Formelle par l\'Officier', time: '11:25:00', status: 'Dossier Débloqué', badge: 'badge-approved' }
-      ]
-    }
+        {
+          title: "Détection Initiale Homonymie (18%)",
+          time: "11:20:00",
+          status: "Alerte Faible Intensité",
+          badge: "badge-warning",
+        },
+        {
+          title: "Comparaison Biométrique & Date de Naissance",
+          time: "11:23:40",
+          status: "Non-Concordance Certifiée",
+          badge: "badge-approved",
+        },
+        {
+          title: "Levée de Doute Formelle par l'Officier",
+          time: "11:25:00",
+          status: "Dossier Débloqué",
+          badge: "badge-approved",
+        },
+      ],
+    },
   ],
 
   activeComplianceScreeningId: null,
@@ -2943,20 +3734,21 @@ const App = {
   },
 
   renderComplianceScreeningTable() {
-    const tbody = document.getElementById('compliance-screening-table-body');
+    const tbody = document.getElementById("compliance-screening-table-body");
     if (!tbody) return;
 
-    const countBadge = document.getElementById('screening-count-badge');
+    const countBadge = document.getElementById("screening-count-badge");
     if (countBadge) {
       countBadge.textContent = `${this.complianceScreeningRegistry.length} Contrôles Récents`;
     }
 
-    tbody.innerHTML = this.complianceScreeningRegistry.map(item => {
-      let scoreColor = '#10b981';
-      if (item.match_score >= 80) scoreColor = '#ef4444';
-      else if (item.match_score > 0) scoreColor = '#f59e0b';
+    tbody.innerHTML = this.complianceScreeningRegistry
+      .map((item) => {
+        let scoreColor = "#10b981";
+        if (item.match_score >= 80) scoreColor = "#ef4444";
+        else if (item.match_score > 0) scoreColor = "#f59e0b";
 
-      return `
+        return `
         <tr class="schedule-table-row" onclick="App.openComplianceScreeningDrawer('${item.id}')" style="cursor: pointer;" title="Cliquer pour afficher les détails du contrôle et les diligences">
           <td>
             <strong>${item.date}</strong>
@@ -2967,13 +3759,13 @@ const App = {
             <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i>${item.city}, ${item.country}</div>
           </td>
           <td>
-            <span class="badge ${item.list_type.includes('Sanctions') ? 'badge-rejected' : (item.list_type.includes('PPE') ? 'badge-warning' : 'badge-submitted')}" style="font-size: 0.68rem;">
+            <span class="badge ${item.list_type.includes("Sanctions") ? "badge-rejected" : item.list_type.includes("PPE") ? "badge-warning" : "badge-submitted"}" style="font-size: 0.68rem;">
               ${item.list_type}
             </span>
           </td>
           <td>
             <span class="badge ${item.measure_badge}" style="font-size: 0.74rem;">
-              <i class="fas ${item.match_score >= 80 ? 'fa-ban' : (item.match_score > 0 ? 'fa-triangle-exclamation' : 'fa-circle-check')} mr-1"></i>${item.status_label}
+              <i class="fas ${item.match_score >= 80 ? "fa-ban" : item.match_score > 0 ? "fa-triangle-exclamation" : "fa-circle-check"} mr-1"></i>${item.status_label}
             </span>
           </td>
           <td style="text-align: right;">
@@ -2983,81 +3775,103 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   openComplianceScreeningDrawer(scrId) {
     this.activeComplianceScreeningId = scrId;
-    const item = this.complianceScreeningRegistry.find(s => s.id === scrId);
+    const item = this.complianceScreeningRegistry.find((s) => s.id === scrId);
     if (!item) return;
 
-    const backdrop = document.getElementById('compliance-screening-drawer-backdrop');
+    const backdrop = document.getElementById(
+      "compliance-screening-drawer-backdrop",
+    );
     if (!backdrop) return;
 
     // Header & Badges
-    const refBadge = document.getElementById('scr-drawer-ref-badge');
-    const statusBadge = document.getElementById('scr-drawer-status-badge');
-    const titleEl = document.getElementById('scr-drawer-title');
-    const subtitleEl = document.getElementById('scr-drawer-subtitle');
+    const refBadge = document.getElementById("scr-drawer-ref-badge");
+    const statusBadge = document.getElementById("scr-drawer-status-badge");
+    const titleEl = document.getElementById("scr-drawer-title");
+    const subtitleEl = document.getElementById("scr-drawer-subtitle");
 
     if (refBadge) refBadge.textContent = `#${item.id}`;
     if (statusBadge) {
       statusBadge.className = `badge ${item.measure_badge}`;
-      statusBadge.innerHTML = `<i class="fas ${item.match_score >= 80 ? 'fa-ban' : (item.match_score > 0 ? 'fa-shield-halved' : 'fa-circle-check')}"></i> ${item.status_label}`;
+      statusBadge.innerHTML = `<i class="fas ${item.match_score >= 80 ? "fa-ban" : item.match_score > 0 ? "fa-shield-halved" : "fa-circle-check"}"></i> ${item.status_label}`;
     }
     if (titleEl) titleEl.textContent = item.client_name;
-    if (subtitleEl) subtitleEl.textContent = `Dossier d'investigation réglementaire • ${item.city} (${item.country}) • ${item.id}`;
+    if (subtitleEl)
+      subtitleEl.textContent = `Dossier d'investigation réglementaire • ${item.city} (${item.country}) • ${item.id}`;
 
     // Section 1 : Fiche d'identification
-    const dateEl = document.getElementById('scr-drawer-date');
-    const avatarEl = document.getElementById('scr-drawer-avatar');
-    const fullnameEl = document.getElementById('scr-drawer-fullname');
-    const locEl = document.getElementById('scr-drawer-location');
-    const idnumEl = document.getElementById('scr-drawer-idnum');
-    const dobEl = document.getElementById('scr-drawer-dob');
-    const matchScoreEl = document.getElementById('scr-drawer-match-score');
-    const confEl = document.getElementById('scr-drawer-confidence');
-    const aliasesEl = document.getElementById('scr-drawer-aliases');
-    const profEl = document.getElementById('scr-drawer-profession');
+    const dateEl = document.getElementById("scr-drawer-date");
+    const avatarEl = document.getElementById("scr-drawer-avatar");
+    const fullnameEl = document.getElementById("scr-drawer-fullname");
+    const locEl = document.getElementById("scr-drawer-location");
+    const idnumEl = document.getElementById("scr-drawer-idnum");
+    const dobEl = document.getElementById("scr-drawer-dob");
+    const matchScoreEl = document.getElementById("scr-drawer-match-score");
+    const confEl = document.getElementById("scr-drawer-confidence");
+    const aliasesEl = document.getElementById("scr-drawer-aliases");
+    const profEl = document.getElementById("scr-drawer-profession");
 
     if (dateEl) dateEl.textContent = item.full_date;
     if (avatarEl) {
-      const bgColor = item.match_score >= 80 ? 'ef4444' : (item.match_score > 0 ? 'f59e0b' : '10b981');
+      const bgColor =
+        item.match_score >= 80
+          ? "ef4444"
+          : item.match_score > 0
+            ? "f59e0b"
+            : "10b981";
       avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.client_name)}&background=${bgColor}&color=fff`;
     }
     if (fullnameEl) fullnameEl.textContent = item.client_name;
-    if (locEl) locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${item.city} (${item.country}) • ${item.agency}`;
+    if (locEl)
+      locEl.innerHTML = `<i class="fas fa-location-dot text-primary mr-1"></i> ${item.city} (${item.country}) • ${item.agency}`;
     if (idnumEl) idnumEl.textContent = item.id_number;
     if (dobEl) dobEl.textContent = item.dob;
     if (matchScoreEl) {
       matchScoreEl.textContent = item.match_label;
-      matchScoreEl.style.color = item.match_score >= 80 ? '#ef4444' : (item.match_score > 0 ? '#f59e0b' : '#10b981');
+      matchScoreEl.style.color =
+        item.match_score >= 80
+          ? "#ef4444"
+          : item.match_score > 0
+            ? "#f59e0b"
+            : "#10b981";
     }
     if (confEl) {
-      confEl.textContent = item.match_score >= 80 ? 'Index de similarité : Très Élevé' : (item.match_score > 0 ? 'Index de similarité : Modéré' : 'Index de similarité : Nul (Conforme)');
+      confEl.textContent =
+        item.match_score >= 80
+          ? "Index de similarité : Très Élevé"
+          : item.match_score > 0
+            ? "Index de similarité : Modéré"
+            : "Index de similarité : Nul (Conforme)";
     }
     if (aliasesEl) aliasesEl.textContent = item.aliases;
     if (profEl) profEl.textContent = item.profession;
 
     // Section 2 : Registres & Textes
-    const listTypeBadge = document.getElementById('scr-drawer-list-type');
-    const legalEl = document.getElementById('scr-drawer-legal-framework');
-    const findingsEl = document.getElementById('scr-drawer-findings');
+    const listTypeBadge = document.getElementById("scr-drawer-list-type");
+    const legalEl = document.getElementById("scr-drawer-legal-framework");
+    const findingsEl = document.getElementById("scr-drawer-findings");
 
     if (listTypeBadge) {
-      listTypeBadge.className = `badge ${item.list_type.includes('Sanctions') ? 'badge-rejected' : (item.list_type.includes('PPE') ? 'badge-warning' : 'badge-submitted')}`;
+      listTypeBadge.className = `badge ${item.list_type.includes("Sanctions") ? "badge-rejected" : item.list_type.includes("PPE") ? "badge-warning" : "badge-submitted"}`;
       listTypeBadge.textContent = item.list_type;
     }
     if (legalEl) legalEl.textContent = item.legal_framework;
     if (findingsEl) findingsEl.textContent = item.findings;
 
     // Section 3 : Diligences & Étapes
-    const officerBadge = document.getElementById('scr-drawer-officer');
+    const officerBadge = document.getElementById("scr-drawer-officer");
     if (officerBadge) officerBadge.textContent = item.officer;
 
-    const stepsList = document.getElementById('scr-drawer-steps-list');
+    const stepsList = document.getElementById("scr-drawer-steps-list");
     if (stepsList && item.steps) {
-      stepsList.innerHTML = item.steps.map(s => `
+      stepsList.innerHTML = item.steps
+        .map(
+          (s) => `
         <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
           <div>
             <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">${s.title}</div>
@@ -3069,54 +3883,69 @@ const App = {
             </span>
           </div>
         </div>
-      `).join('');
+      `,
+        )
+        .join("");
     }
 
     // Section 4 : SHA-256
-    const shaEl = document.getElementById('scr-drawer-sha');
+    const shaEl = document.getElementById("scr-drawer-sha");
     if (shaEl) shaEl.textContent = item.sha;
 
     // Toggle doubt button appearance
-    const doubtBtn = document.getElementById('scr-drawer-doubt-btn');
+    const doubtBtn = document.getElementById("scr-drawer-doubt-btn");
     if (doubtBtn) {
       if (item.is_doubt_cleared) {
-        doubtBtn.innerHTML = '<i class="fas fa-undo mr-1 text-warning"></i> Réactiver Alerte';
+        doubtBtn.innerHTML =
+          '<i class="fas fa-undo mr-1 text-warning"></i> Réactiver Alerte';
       } else {
-        doubtBtn.innerHTML = '<i class="fas fa-user-check mr-1 text-primary"></i> Lever le Doute';
+        doubtBtn.innerHTML =
+          '<i class="fas fa-user-check mr-1 text-primary"></i> Lever le Doute';
       }
     }
 
-    backdrop.classList.add('active');
+    backdrop.classList.add("active");
   },
 
   closeComplianceScreeningDrawer() {
-    const backdrop = document.getElementById('compliance-screening-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById(
+      "compliance-screening-drawer-backdrop",
+    );
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   toggleDoubtClearance() {
-    const item = this.complianceScreeningRegistry.find(s => s.id === this.activeComplianceScreeningId);
+    const item = this.complianceScreeningRegistry.find(
+      (s) => s.id === this.activeComplianceScreeningId,
+    );
     if (!item) return;
 
     if (!item.is_doubt_cleared) {
       item.is_doubt_cleared = true;
-      item.status = 'DOUBT_CLEARED';
-      item.status_label = 'Levée de Doute Validée';
-      item.measure_badge = 'badge-approved';
-      item.findings += ' [ACTE DU CONTRÔLEUR : Non-homonymie formellement constatée et certifiée par pièce justificative].';
+      item.status = "DOUBT_CLEARED";
+      item.status_label = "Levée de Doute Validée";
+      item.measure_badge = "badge-approved";
+      item.findings +=
+        " [ACTE DU CONTRÔLEUR : Non-homonymie formellement constatée et certifiée par pièce justificative].";
       item.steps.push({
-        title: 'Levée de Doute Validée par l\'Analyste Conformité',
-        time: 'À l\'instant',
-        status: 'Conforme & Débloqué',
-        badge: 'badge-approved'
+        title: "Levée de Doute Validée par l'Analyste Conformité",
+        time: "À l'instant",
+        status: "Conforme & Débloqué",
+        badge: "badge-approved",
       });
-      this.showToast(`Levée de doute enregistrée avec succès pour ${item.client_name}. Dossier débloqué.`, 'success');
+      this.showToast(
+        `Levée de doute enregistrée avec succès pour ${item.client_name}. Dossier débloqué.`,
+        "success",
+      );
     } else {
       item.is_doubt_cleared = false;
-      item.status = 'BLOCKED';
-      item.status_label = 'Blocage Conservatoire';
-      item.measure_badge = 'badge-rejected';
-      this.showToast(`Alerte de conformité réactivée pour ${item.client_name}. Mesure conservatoire rétablie.`, 'warning');
+      item.status = "BLOCKED";
+      item.status_label = "Blocage Conservatoire";
+      item.measure_badge = "badge-rejected";
+      this.showToast(
+        `Alerte de conformité réactivée pour ${item.client_name}. Mesure conservatoire rétablie.`,
+        "warning",
+      );
     }
 
     this.renderComplianceScreeningTable();
@@ -3124,136 +3953,179 @@ const App = {
   },
 
   downloadScreeningReportPdf() {
-    const item = this.complianceScreeningRegistry.find(s => s.id === this.activeComplianceScreeningId);
-    const ref = item ? item.id : 'SCR-2026-0942';
-    const name = item ? item.client_name : 'Cible';
-    this.showToast(`Génération du Rapport d'Investigation Conformité LBC/FT pour ${name} (${ref})...`, 'info');
+    const item = this.complianceScreeningRegistry.find(
+      (s) => s.id === this.activeComplianceScreeningId,
+    );
+    const ref = item ? item.id : "SCR-2026-0942";
+    const name = item ? item.client_name : "Cible";
+    this.showToast(
+      `Génération du Rapport d'Investigation Conformité LBC/FT pour ${name} (${ref})...`,
+      "info",
+    );
     setTimeout(() => {
-      this.showToast(`Rapport d'Investigation ${ref} certifié SHA-256 téléchargé avec succès (Format PDF A/3)`, 'success');
+      this.showToast(
+        `Rapport d'Investigation ${ref} certifié SHA-256 téléchargé avec succès (Format PDF A/3)`,
+        "success",
+      );
     }, 800);
   },
 
   runLiveComplianceScreening() {
-    const nameInput = document.getElementById('screening-full-name-input');
-    const countrySelect = document.getElementById('screening-country-select');
-    const query = nameInput ? nameInput.value.trim() : '';
-    const countryCode = countrySelect ? countrySelect.value : 'ALL';
+    const nameInput = document.getElementById("screening-full-name-input");
+    const countrySelect = document.getElementById("screening-country-select");
+    const query = nameInput ? nameInput.value.trim() : "";
+    const countryCode = countrySelect ? countrySelect.value : "ALL";
 
     if (!query) {
-      this.showToast('Veuillez saisir un nom ou une raison sociale à contrôler', 'warning');
+      this.showToast(
+        "Veuillez saisir un nom ou une raison sociale à contrôler",
+        "warning",
+      );
       return;
     }
 
-    this.showToast(`Interrogation des registres ONU, UEMOA & base PPE pour « ${query} »...`, 'info');
+    this.showToast(
+      `Interrogation des registres ONU, UEMOA & base PPE pour « ${query} »...`,
+      "info",
+    );
 
     setTimeout(() => {
       // Check if already in registry
-      let match = this.complianceScreeningRegistry.find(s => s.client_name.toLowerCase().includes(query.toLowerCase()));
+      let match = this.complianceScreeningRegistry.find((s) =>
+        s.client_name.toLowerCase().includes(query.toLowerCase()),
+      );
 
       if (!match) {
         // Create a new screening entry
-        const countryNames = { ML: 'Mali', ALL: 'Mali' };
-        const country = 'Mali';
+        const countryNames = { ML: "Mali", ALL: "Mali" };
+        const country = "Mali";
         const newId = `SCR-2026-0${Math.floor(100 + Math.random() * 899)}`;
         match = {
           id: newId,
-          date: 'À l\'instant',
-          full_date: `21/08/2026 ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} GMT`,
+          date: "À l'instant",
+          full_date: `21/08/2026 ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })} GMT`,
           client_name: query,
-          country: 'Mali',
-          city: 'Bamako',
-          agency: 'Caisse Bamako Grand Marché (Mali)',
+          country: "Mali",
+          city: "Bamako",
+          agency: "Caisse Bamako Grand Marché (Mali)",
           id_number: `NINA-${Math.floor(100000 + Math.random() * 900000)}`,
-          dob: 'Date de naissance vérifiée sur document officiel',
-          aliases: 'Aucun alias suspect',
-          profession: 'Activité commerciale déclarée',
-          list_type: 'Base Globale GAFI & CENTIF Mali',
-          legal_framework: 'Filtrage Réglementaire Standard LBC/FT',
+          dob: "Date de naissance vérifiée sur document officiel",
+          aliases: "Aucun alias suspect",
+          profession: "Activité commerciale déclarée",
+          list_type: "Base Globale GAFI & CENTIF Mali",
+          legal_framework: "Filtrage Réglementaire Standard LBC/FT",
           match_score: 0,
-          match_label: 'RAS (0%)',
-          status: 'CLEARED',
-          status_label: 'Autorisé sans Réserve',
-          measure_badge: 'badge-approved',
-          officer: 'Mamadou Traoré (Conformité LBC)',
+          match_label: "RAS (0%)",
+          status: "CLEARED",
+          status_label: "Autorisé sans Réserve",
+          measure_badge: "badge-approved",
+          officer: "Mamadou Traoré (Conformité LBC)",
           findings: `Contrôle instantané en temps réel effectué pour ${query}. Aucune correspondance sur les listes de sanctions régionales UEMOA, ONU ou PPE.`,
-          sha: 'a1b2c3d4e5f67890123456789012345678901234567890123456789012345678',
+          sha: "a1b2c3d4e5f67890123456789012345678901234567890123456789012345678",
           is_doubt_cleared: true,
           steps: [
-            { title: 'Interrogation API Directe Sanctions ONU / UEMOA', time: 'À l\'instant', status: '0% Concordance', badge: 'badge-approved' },
-            { title: 'Recherche Base Personnes Politiquement Exposées', time: 'À l\'instant', status: 'Non Répertorié', badge: 'badge-approved' },
-            { title: 'Certification Conformité', time: 'À l\'instant', status: 'Autorisé', badge: 'badge-approved' }
-          ]
+            {
+              title: "Interrogation API Directe Sanctions ONU / UEMOA",
+              time: "À l'instant",
+              status: "0% Concordance",
+              badge: "badge-approved",
+            },
+            {
+              title: "Recherche Base Personnes Politiquement Exposées",
+              time: "À l'instant",
+              status: "Non Répertorié",
+              badge: "badge-approved",
+            },
+            {
+              title: "Certification Conformité",
+              time: "À l'instant",
+              status: "Autorisé",
+              badge: "badge-approved",
+            },
+          ],
         };
         this.complianceScreeningRegistry.unshift(match);
         this.renderComplianceScreeningTable();
       }
 
-      this.showToast(`Contrôle terminé pour ${match.client_name} : ${match.status_label}`, match.match_score >= 80 ? 'error' : (match.match_score > 0 ? 'warning' : 'success'));
+      this.showToast(
+        `Contrôle terminé pour ${match.client_name} : ${match.status_label}`,
+        match.match_score >= 80
+          ? "error"
+          : match.match_score > 0
+            ? "warning"
+            : "success",
+      );
       this.openComplianceScreeningDrawer(match.id);
     }, 600);
   },
 
   // 5. General Controls
   initTheme() {
-    const savedTheme = localStorage.getItem('THEME_PREF') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedTheme = localStorage.getItem("THEME_PREF") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
     this.updateThemeButtonIcon(savedTheme);
 
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleBtn = document.getElementById("theme-toggle-btn");
     if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'light';
-        const next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('THEME_PREF', next);
+      themeToggleBtn.addEventListener("click", () => {
+        const current =
+          document.documentElement.getAttribute("data-theme") || "light";
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("THEME_PREF", next);
         this.updateThemeButtonIcon(next);
-        this.showToast(`Mode ${next === 'dark' ? 'Sombre' : 'Clair'} activé`, 'info');
+        this.showToast(
+          `Mode ${next === "dark" ? "Sombre" : "Clair"} activé`,
+          "info",
+        );
       });
     }
   },
 
   updateThemeButtonIcon(theme) {
-    const btn = document.getElementById('theme-toggle-btn');
+    const btn = document.getElementById("theme-toggle-btn");
     if (btn) {
-      btn.innerHTML = theme === 'dark' 
-        ? '<i class="fas fa-sun" style="color: #f59e0b;"></i>' 
-        : '<i class="fas fa-moon"></i>';
+      btn.innerHTML =
+        theme === "dark"
+          ? '<i class="fas fa-sun" style="color: #f59e0b;"></i>'
+          : '<i class="fas fa-moon"></i>';
     }
   },
 
   initSidebarToggle() {
-    const toggleBtn = document.getElementById('sidebar-toggle-btn');
-    const closeBtn = document.getElementById('sidebar-close-btn');
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
+    const toggleBtn = document.getElementById("sidebar-toggle-btn");
+    const closeBtn = document.getElementById("sidebar-close-btn");
+    const sidebar = document.getElementById("sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
 
     const toggleDrawer = () => {
       if (window.innerWidth <= 992) {
-        const isOpen = sidebar.classList.toggle('mobile-open');
+        const isOpen = sidebar.classList.toggle("mobile-open");
         if (backdrop) {
           if (isOpen) {
-            backdrop.style.display = 'block';
-            setTimeout(() => backdrop.classList.add('active'), 10);
+            backdrop.style.display = "block";
+            setTimeout(() => backdrop.classList.add("active"), 10);
           } else {
-            backdrop.classList.remove('active');
-            setTimeout(() => backdrop.style.display = 'none', 250);
+            backdrop.classList.remove("active");
+            setTimeout(() => (backdrop.style.display = "none"), 250);
           }
         }
       } else {
-        document.body.classList.toggle('sidebar-collapsed');
+        document.body.classList.toggle("sidebar-collapsed");
       }
     };
 
     const closeMobileDrawer = () => {
-      if (sidebar) sidebar.classList.remove('mobile-open');
+      if (sidebar) sidebar.classList.remove("mobile-open");
       if (backdrop) {
-        backdrop.classList.remove('active');
-        setTimeout(() => backdrop.style.display = 'none', 250);
+        backdrop.classList.remove("active");
+        setTimeout(() => (backdrop.style.display = "none"), 250);
       }
     };
 
     if (toggleBtn && sidebar) {
-      toggleBtn.addEventListener('click', (e) => {
+      toggleBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleDrawer();
@@ -3261,14 +4133,14 @@ const App = {
     }
 
     if (closeBtn) {
-      closeBtn.addEventListener('click', (e) => {
+      closeBtn.addEventListener("click", (e) => {
         e.preventDefault();
         closeMobileDrawer();
       });
     }
 
     if (backdrop) {
-      backdrop.addEventListener('click', () => {
+      backdrop.addEventListener("click", () => {
         closeMobileDrawer();
       });
     }
@@ -3276,23 +4148,36 @@ const App = {
 
   // Live Date & Clock Display in Topbar (Updating Every Second)
   initLiveDateTime() {
-    const clockEl = document.getElementById('topbar-clock-display');
+    const clockEl = document.getElementById("topbar-clock-display");
     if (!clockEl) return;
 
     const updateClock = () => {
       const now = new Date();
-      
-      const days = ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'];
-      const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+
+      const days = ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."];
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
 
       const dayName = days[now.getDay()];
       const dayNum = now.getDate();
       const monthName = months[now.getMonth()];
       const year = now.getFullYear();
 
-      const hours = String(now.getHours()).padStart(2, '0');
-      const mins = String(now.getMinutes()).padStart(2, '0');
-      const secs = String(now.getSeconds()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, "0");
+      const mins = String(now.getMinutes()).padStart(2, "0");
+      const secs = String(now.getSeconds()).padStart(2, "0");
 
       clockEl.textContent = `${dayName} ${dayNum} ${monthName} ${year} • ${hours}:${mins}:${secs}`;
     };
@@ -3303,42 +4188,42 @@ const App = {
 
   // Profile Dropbox (Dropdown: Paramètres & Déconnexion)
   initProfileDropdown() {
-    const profileBtn = document.getElementById('topbar-profile-btn');
-    const profileMenu = document.getElementById('profile-dropdown-menu');
+    const profileBtn = document.getElementById("topbar-profile-btn");
+    const profileMenu = document.getElementById("profile-dropdown-menu");
 
     if (profileBtn && profileMenu) {
-      profileBtn.addEventListener('click', (e) => {
+      profileBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const isOpen = profileMenu.classList.toggle('show');
-        profileBtn.classList.toggle('active', isOpen);
+        const isOpen = profileMenu.classList.toggle("show");
+        profileBtn.classList.toggle("active", isOpen);
 
         // Close notifications if open
-        const notifDropdown = document.getElementById('notif-dropdown');
-        if (notifDropdown) notifDropdown.style.display = 'none';
+        const notifDropdown = document.getElementById("notif-dropdown");
+        if (notifDropdown) notifDropdown.style.display = "none";
       });
 
       // Close dropdown when clicking anywhere outside
-      document.addEventListener('click', (e) => {
+      document.addEventListener("click", (e) => {
         if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
-          profileMenu.classList.remove('show');
-          profileBtn.classList.remove('active');
+          profileMenu.classList.remove("show");
+          profileBtn.classList.remove("active");
         }
       });
 
       // Close on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          profileMenu.classList.remove('show');
-          profileBtn.classList.remove('active');
-          const logoutModal = document.getElementById('modal-confirm-logout');
-          if (logoutModal && logoutModal.style.display !== 'none') {
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          profileMenu.classList.remove("show");
+          profileBtn.classList.remove("active");
+          const logoutModal = document.getElementById("modal-confirm-logout");
+          if (logoutModal && logoutModal.style.display !== "none") {
             this.closeLogoutConfirmModal();
           }
-          if (typeof this.closeClientRequestDrawer === 'function') {
+          if (typeof this.closeClientRequestDrawer === "function") {
             this.closeClientRequestDrawer();
           }
-          if (typeof this.closeScheduleDrawer === 'function') {
+          if (typeof this.closeScheduleDrawer === "function") {
             this.closeScheduleDrawer();
           }
         }
@@ -3348,175 +4233,181 @@ const App = {
 
   // Edit Profile Modal Handlers (Email & Phone / Mobile Money updates)
   openEditProfileModal() {
-    const modal = document.getElementById('modal-edit-profile');
-    const profileMenu = document.getElementById('profile-dropdown-menu');
-    const profileBtn = document.getElementById('topbar-profile-btn');
-    if (profileMenu) profileMenu.classList.remove('show');
-    if (profileBtn) profileBtn.classList.remove('active');
+    const modal = document.getElementById("modal-edit-profile");
+    const profileMenu = document.getElementById("profile-dropdown-menu");
+    const profileBtn = document.getElementById("topbar-profile-btn");
+    if (profileMenu) profileMenu.classList.remove("show");
+    if (profileBtn) profileBtn.classList.remove("active");
 
     const user = this.currentUser || APP_CONSTANTS.DEMO_ACCOUNTS[2];
 
-    const emailInput = document.getElementById('edit-profile-email');
-    const phoneInput = document.getElementById('edit-profile-phone');
-    const titleInput = document.getElementById('edit-profile-title');
-    const avatarImg = document.getElementById('edit-profile-avatar-img');
-    const avatarFlag = document.getElementById('edit-profile-avatar-flag');
-    const cardName = document.getElementById('edit-profile-card-name');
-    const cardRole = document.getElementById('edit-profile-card-role');
-    const cardLocation = document.getElementById('edit-profile-card-location');
+    const emailInput = document.getElementById("edit-profile-email");
+    const phoneInput = document.getElementById("edit-profile-phone");
+    const titleInput = document.getElementById("edit-profile-title");
+    const avatarImg = document.getElementById("edit-profile-avatar-img");
+    const avatarFlag = document.getElementById("edit-profile-avatar-flag");
+    const cardName = document.getElementById("edit-profile-card-name");
+    const cardRole = document.getElementById("edit-profile-card-role");
+    const cardLocation = document.getElementById("edit-profile-card-location");
 
-    if (emailInput) emailInput.value = user.email || '';
-    if (phoneInput) phoneInput.value = user.phone || '+226 70 88 99 00';
-    if (titleInput) titleInput.value = `${user.title || ''} • ${user.location || ''}`;
-    if (avatarImg) avatarImg.src = user.avatar || '';
-    if (cardName) cardName.textContent = user.name || '';
-    
-    const roleConfig = APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
+    if (emailInput) emailInput.value = user.email || "";
+    if (phoneInput) phoneInput.value = user.phone || "+226 70 88 99 00";
+    if (titleInput)
+      titleInput.value = `${user.title || ""} • ${user.location || ""}`;
+    if (avatarImg) avatarImg.src = user.avatar || "";
+    if (cardName) cardName.textContent = user.name || "";
+
+    const roleConfig =
+      APP_CONSTANTS.ROLES[user.role] || APP_CONSTANTS.ROLES.ANALYST;
     if (cardRole) {
       cardRole.textContent = roleConfig.shortName || roleConfig.name;
       cardRole.style.color = roleConfig.badgeColor;
       cardRole.style.backgroundColor = roleConfig.badgeBg;
       cardRole.style.borderColor = roleConfig.badgeColor;
     }
-    
+
     if (cardLocation) {
-      const locSpan = cardLocation.querySelector('span');
-      if (locSpan) locSpan.textContent = user.location || 'UEMOA';
+      const locSpan = cardLocation.querySelector("span");
+      if (locSpan) locSpan.textContent = user.location || "UEMOA";
     }
 
     if (avatarFlag) {
-      const flagCode = (user.countryFlag || user.countryCode || 'bf').toLowerCase();
-      avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis" title="${user.countryName || 'UEMOA'}"></span>`;
+      const flagCode = (
+        user.countryFlag ||
+        user.countryCode ||
+        "bf"
+      ).toLowerCase();
+      avatarFlag.innerHTML = `<span class="fi fi-${flagCode} fis" title="${user.countryName || "UEMOA"}"></span>`;
     }
 
     if (modal) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('active'), 10);
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("active"), 10);
     }
   },
 
   closeEditProfileModal() {
-    const modal = document.getElementById('modal-edit-profile');
+    const modal = document.getElementById("modal-edit-profile");
     if (modal) {
-      modal.classList.remove('active');
-      setTimeout(() => modal.style.display = 'none', 250);
+      modal.classList.remove("active");
+      setTimeout(() => (modal.style.display = "none"), 250);
     }
   },
 
   saveUserProfile() {
-    const emailInput = document.getElementById('edit-profile-email');
-    const phoneInput = document.getElementById('edit-profile-phone');
+    const emailInput = document.getElementById("edit-profile-email");
+    const phoneInput = document.getElementById("edit-profile-phone");
 
     if (!emailInput || !phoneInput) return;
 
     const newEmail = emailInput.value.trim();
     const newPhone = phoneInput.value.trim();
 
-    if (!newEmail || !newEmail.includes('@')) {
-      this.showToast('Veuillez saisir une adresse e-mail valide', 'danger');
+    if (!newEmail || !newEmail.includes("@")) {
+      this.showToast("Veuillez saisir une adresse e-mail valide", "danger");
       return;
     }
 
     if (!newPhone || newPhone.length < 6) {
-      this.showToast('Veuillez saisir un numéro de téléphone valide', 'danger');
+      this.showToast("Veuillez saisir un numéro de téléphone valide", "danger");
       return;
     }
 
     if (this.currentUser) {
       this.currentUser.email = newEmail;
       this.currentUser.phone = newPhone;
-      localStorage.setItem('AUTH_USER', JSON.stringify(this.currentUser));
+      localStorage.setItem("AUTH_USER", JSON.stringify(this.currentUser));
     }
 
     // Update in UI
-    const menuEmail = document.getElementById('menu-user-email');
+    const menuEmail = document.getElementById("menu-user-email");
     if (menuEmail) menuEmail.textContent = newEmail;
 
     this.closeEditProfileModal();
-    this.showToast(`Profil mis à jour : E-mail (${newEmail}) et Téléphone (${newPhone}) enregistrés`, 'success');
+    this.showToast(
+      `Profil mis à jour : E-mail (${newEmail}) et Téléphone (${newPhone}) enregistrés`,
+      "success",
+    );
   },
 
   // Settings Modal Handlers
   openSettingsModal() {
-    const modal = document.getElementById('settings-modal');
-    const profileMenu = document.getElementById('profile-dropdown-menu');
-    const profileBtn = document.getElementById('topbar-profile-btn');
-    if (profileMenu) profileMenu.classList.remove('show');
-    if (profileBtn) profileBtn.classList.remove('active');
+    const modal = document.getElementById("settings-modal");
+    const profileMenu = document.getElementById("profile-dropdown-menu");
+    const profileBtn = document.getElementById("topbar-profile-btn");
+    if (profileMenu) profileMenu.classList.remove("show");
+    if (profileBtn) profileBtn.classList.remove("active");
 
     if (modal) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('active'), 10);
-      
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("active"), 10);
+
+      const currentTheme =
+        document.documentElement.getAttribute("data-theme") || "light";
       this.updateSettingsThemeUI(currentTheme);
     }
   },
 
   closeSettingsModal() {
-    const modal = document.getElementById('settings-modal');
+    const modal = document.getElementById("settings-modal");
     if (modal) {
-      modal.classList.remove('active');
-      setTimeout(() => modal.style.display = 'none', 250);
+      modal.classList.remove("active");
+      setTimeout(() => (modal.style.display = "none"), 250);
     }
   },
 
   setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('THEME_PREF', theme);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("THEME_PREF", theme);
     this.updateThemeButtonIcon(theme);
     this.updateSettingsThemeUI(theme);
-    this.showToast(`Thème basculé en mode ${theme === 'dark' ? 'Sombre' : 'Clair'}`, 'info');
+    this.showToast(
+      `Thème basculé en mode ${theme === "dark" ? "Sombre" : "Clair"}`,
+      "info",
+    );
   },
 
   updateSettingsThemeUI(theme) {
-    const optLight = document.getElementById('opt-theme-light');
-    const optDark = document.getElementById('opt-theme-dark');
+    const optLight = document.getElementById("opt-theme-light");
+    const optDark = document.getElementById("opt-theme-dark");
     if (optLight && optDark) {
-      optLight.classList.toggle('active', theme === 'light');
-      optDark.classList.toggle('active', theme === 'dark');
+      optLight.classList.toggle("active", theme === "light");
+      optDark.classList.toggle("active", theme === "dark");
     }
   },
 
   updateUserCountry(code) {
     const map = {
-      'BF': { name: 'Burkina Faso (Ouagadougou)', code: 'bf' },
-      'SN': { name: 'Sénégal (Dakar)', code: 'sn' },
-      'TG': { name: 'Togo (Lomé)', code: 'tg' },
-      'BJ': { name: 'Bénin (Cotonou)', code: 'bj' },
-      'ML': { name: 'Mali (Bamako)', code: 'ml' },
-      'CI': { name: 'Côte d\'Ivoire (Abidjan)', code: 'ci' },
-      'NE': { name: 'Niger (Niamey)', code: 'ne' },
-      'GW': { name: 'Guinée-Bissau (Bissau)', code: 'gw' }
+      ML: { name: "Mali (Bamako)", code: "ml" },
     };
-    const c = map[code] || map['BF'];
-    
+    const c = map[code] || map["ML"];
+
     // 1. Update circular overlay flag badge on topbar user avatar
-    const topbarAvatarFlag = document.getElementById('topbar-avatar-flag');
+    const topbarAvatarFlag = document.getElementById("topbar-avatar-flag");
     if (topbarAvatarFlag) {
       topbarAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
     }
 
     // 2. Update circular overlay flag badge in profile dropdown header
-    const menuAvatarFlag = document.getElementById('menu-avatar-flag');
+    const menuAvatarFlag = document.getElementById("menu-avatar-flag");
     if (menuAvatarFlag) {
       menuAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
     }
 
     // 3. Update circular overlay flag badge on sidebar user avatar
-    const sidebarAvatarFlag = document.getElementById('sidebar-avatar-flag');
+    const sidebarAvatarFlag = document.getElementById("sidebar-avatar-flag");
     if (sidebarAvatarFlag) {
       sidebarAvatarFlag.innerHTML = `<span class="fi fi-${c.code} fis" title="${c.name}"></span>`;
     }
 
     // 4. Update sidebar region text
-    const sidebarCountryText = document.getElementById('sidebar-country-text');
+    const sidebarCountryText = document.getElementById("sidebar-country-text");
     if (sidebarCountryText) {
       sidebarCountryText.textContent = c.name;
     }
 
     // 5. Update settings modal country select if open
-    const settingCountrySelect = document.getElementById('setting-country');
+    const settingCountrySelect = document.getElementById("setting-country");
     if (settingCountrySelect && settingCountrySelect.value !== code) {
       settingCountrySelect.value = code;
     }
@@ -3533,27 +4424,40 @@ const App = {
   // ==========================================================================
   initServiceWorkerAndOffline() {
     // 1. Register Service Worker for offline asset caching
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sw.js")
           .then((registration) => {
-            console.log('[ServiceWorker] Registre actif avec portée :', registration.scope);
+            console.log(
+              "[ServiceWorker] Registre actif avec portée :",
+              registration.scope,
+            );
           })
           .catch((err) => {
-            console.warn('[ServiceWorker] Note : Enregistrement SW en environnement de prévisualisation :', err);
+            console.warn(
+              "[ServiceWorker] Note : Enregistrement SW en environnement de prévisualisation :",
+              err,
+            );
           });
       });
     }
 
     // 2. Listen to network connectivity changes
-    window.addEventListener('online', () => {
+    window.addEventListener("online", () => {
       this.updateOfflineStatus(true);
-      this.showToast('Connexion rétablie : Synchronisation temps réel active', 'success');
+      this.showToast(
+        "Connexion rétablie : Synchronisation temps réel active",
+        "success",
+      );
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener("offline", () => {
       this.updateOfflineStatus(false);
-      this.showToast('Mode Hors-Ligne Actif : Vos données du tableau de bord restent consultables via le cache local', 'info');
+      this.showToast(
+        "Mode Hors-Ligne Actif : Vos données du tableau de bord restent consultables via le cache local",
+        "info",
+      );
     });
 
     // Check initial connectivity status
@@ -3561,67 +4465,82 @@ const App = {
   },
 
   updateOfflineStatus(isOnline) {
-    const topbarBadge = document.getElementById('topbar-offline-badge');
-    const borrowerAlert = document.getElementById('borrower-offline-alert');
+    const topbarBadge = document.getElementById("topbar-offline-badge");
+    const borrowerAlert = document.getElementById("borrower-offline-alert");
 
     if (topbarBadge) {
-      topbarBadge.style.display = isOnline ? 'none' : 'inline-flex';
+      topbarBadge.style.display = isOnline ? "none" : "inline-flex";
     }
     if (borrowerAlert) {
-      borrowerAlert.style.display = isOnline ? 'none' : 'block';
+      borrowerAlert.style.display = isOnline ? "none" : "block";
     }
   },
 
   saveSettings() {
     this.closeSettingsModal();
-    this.showToast('Vos préférences ont été enregistrées avec succès', 'success');
+    this.showToast(
+      "Vos préférences ont été enregistrées avec succès",
+      "success",
+    );
   },
 
   initRoleSelector() {
-    const roleSelect = document.getElementById('global-role-select');
+    const roleSelect = document.getElementById("global-role-select");
     if (roleSelect) {
-      roleSelect.addEventListener('change', (e) => {
+      roleSelect.addEventListener("change", (e) => {
         const role = e.target.value;
-        const persona = APP_CONSTANTS.DEMO_ACCOUNTS.find(a => a.role === role) || APP_CONSTANTS.DEMO_ACCOUNTS[0];
+        const persona =
+          APP_CONSTANTS.DEMO_ACCOUNTS.find((a) => a.role === role) ||
+          APP_CONSTANTS.DEMO_ACCOUNTS[0];
         this.login(persona);
       });
     }
   },
 
   initSearch() {
-    const searchInput = document.getElementById('global-search-input');
-    const searchContainer = document.getElementById('topbar-search-container');
-    const mobileSearchBtn = document.getElementById('mobile-search-trigger-btn');
-    const closeMobileSearchBtn = document.getElementById('search-close-mobile-btn');
+    const searchInput = document.getElementById("global-search-input");
+    const searchContainer = document.getElementById("topbar-search-container");
+    const mobileSearchBtn = document.getElementById(
+      "mobile-search-trigger-btn",
+    );
+    const closeMobileSearchBtn = document.getElementById(
+      "search-close-mobile-btn",
+    );
 
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener("input", (e) => {
         const q = e.target.value;
-        if (this.currentRole === 'ANALYST') {
-          AppInteractions.renderRequestsTable('ALL', q);
+        if (this.currentRole === "ANALYST") {
+          AppInteractions.renderRequestsTable("ALL", q);
         }
       });
     }
 
     if (mobileSearchBtn && searchContainer) {
-      mobileSearchBtn.addEventListener('click', (e) => {
+      mobileSearchBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        searchContainer.classList.add('mobile-active');
+        searchContainer.classList.add("mobile-active");
         if (searchInput) searchInput.focus();
       });
     }
 
     if (closeMobileSearchBtn && searchContainer) {
-      closeMobileSearchBtn.addEventListener('click', (e) => {
+      closeMobileSearchBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        searchContainer.classList.remove('mobile-active');
+        searchContainer.classList.remove("mobile-active");
       });
     }
 
-    document.addEventListener('click', (e) => {
-      if (searchContainer && searchContainer.classList.contains('mobile-active')) {
-        if (!searchContainer.contains(e.target) && (!mobileSearchBtn || !mobileSearchBtn.contains(e.target))) {
-          searchContainer.classList.remove('mobile-active');
+    document.addEventListener("click", (e) => {
+      if (
+        searchContainer &&
+        searchContainer.classList.contains("mobile-active")
+      ) {
+        if (
+          !searchContainer.contains(e.target) &&
+          (!mobileSearchBtn || !mobileSearchBtn.contains(e.target))
+        ) {
+          searchContainer.classList.remove("mobile-active");
         }
       }
     });
@@ -3631,112 +4550,128 @@ const App = {
   // ROLE-BASED NOTIFICATIONS MANAGER
   // =========================================================================
   currentRoleNotifications: [],
-  currentNotifFilter: 'ALL',
+  currentNotifFilter: "ALL",
 
   initNotifications() {
-    const notifBtn = document.getElementById('notif-bell-btn');
-    const notifDropdown = document.getElementById('notif-dropdown');
+    const notifBtn = document.getElementById("notif-bell-btn");
+    const notifDropdown = document.getElementById("notif-dropdown");
 
     if (notifBtn && notifDropdown) {
-      notifBtn.addEventListener('click', (e) => {
+      notifBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const isOpen = notifDropdown.style.display === 'block';
-        notifDropdown.style.display = isOpen ? 'none' : 'block';
+        const isOpen = notifDropdown.style.display === "block";
+        notifDropdown.style.display = isOpen ? "none" : "block";
 
         // Close profile dropdown if open
-        const profileMenu = document.getElementById('profile-dropdown-menu');
-        const profileBtn = document.getElementById('topbar-profile-btn');
-        if (profileMenu) profileMenu.classList.remove('show');
-        if (profileBtn) profileBtn.classList.remove('active');
+        const profileMenu = document.getElementById("profile-dropdown-menu");
+        const profileBtn = document.getElementById("topbar-profile-btn");
+        if (profileMenu) profileMenu.classList.remove("show");
+        if (profileBtn) profileBtn.classList.remove("active");
       });
 
       // Close dropdown when clicking outside
-      document.addEventListener('click', (e) => {
+      document.addEventListener("click", (e) => {
         if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
-          notifDropdown.style.display = 'none';
+          notifDropdown.style.display = "none";
         }
       });
 
       // Close on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          notifDropdown.style.display = 'none';
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          notifDropdown.style.display = "none";
         }
       });
     }
   },
 
   renderNotificationsForRole(roleCode) {
-    const role = roleCode || (this.currentUser ? this.currentUser.role : 'ANALYST');
+    const role =
+      roleCode || (this.currentUser ? this.currentUser.role : "ANALYST");
     const roleConfig = APP_CONSTANTS.ROLES[role] || APP_CONSTANTS.ROLES.ANALYST;
 
     // Load list from constants clone
-    const notifs = (APP_CONSTANTS.ROLE_NOTIFICATIONS && APP_CONSTANTS.ROLE_NOTIFICATIONS[role]) || [];
+    const notifs =
+      (APP_CONSTANTS.ROLE_NOTIFICATIONS &&
+        APP_CONSTANTS.ROLE_NOTIFICATIONS[role]) ||
+      [];
     this.currentRoleNotifications = JSON.parse(JSON.stringify(notifs));
-    this.currentNotifFilter = 'ALL';
+    this.currentNotifFilter = "ALL";
 
     // Subtitle update
-    const subtitleEl = document.getElementById('notif-header-subtitle');
+    const subtitleEl = document.getElementById("notif-header-subtitle");
     if (subtitleEl) {
       subtitleEl.textContent = `Alertes & Flux : Espace ${roleConfig.name}`;
     }
 
     // Render Filter Chips
-    const filterContainer = document.getElementById('notif-filter-bar');
+    const filterContainer = document.getElementById("notif-filter-bar");
     if (filterContainer) {
-      const filters = (APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS && APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS[role]) || [{ key: 'ALL', label: 'Toutes' }];
-      filterContainer.innerHTML = filters.map((f, idx) => `
-        <button class="notif-chip ${idx === 0 ? 'active' : ''}" data-filter-key="${f.key}" onclick="App.filterNotifications('${f.key}', this)">
-          ${f.icon ? `<i class="fas ${f.icon} mr-1"></i>` : ''} ${f.label}
+      const filters = (APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS &&
+        APP_CONSTANTS.ROLE_NOTIFICATION_FILTERS[role]) || [
+        { key: "ALL", label: "Toutes" },
+      ];
+      filterContainer.innerHTML = filters
+        .map(
+          (f, idx) => `
+        <button class="notif-chip ${idx === 0 ? "active" : ""}" data-filter-key="${f.key}" onclick="App.filterNotifications('${f.key}', this)">
+          ${f.icon ? `<i class="fas ${f.icon} mr-1"></i>` : ""} ${f.label}
         </button>
-      `).join('');
+      `,
+        )
+        .join("");
     }
 
     // Update Footer Action Button text
-    const footerText = document.getElementById('notif-footer-action-text');
+    const footerText = document.getElementById("notif-footer-action-text");
     if (footerText) {
-      if (role === 'CLIENT') footerText.textContent = 'Accéder à mes demandes & dossiers';
-      else if (role === 'CREDIT_OFFICER') footerText.textContent = 'Consulter le portefeuille guichet';
-      else if (role === 'COMMITTEE') footerText.textContent = 'Voir les décisions & procès-verbaux';
-      else if (role === 'COMPLIANCE') footerText.textContent = 'Ouvrir le registre d\'audit LBC/FT';
-      else footerText.textContent = 'Consulter l\'historique d\'audit CIF';
+      if (role === "CLIENT")
+        footerText.textContent = "Accéder à mes demandes & dossiers";
+      else if (role === "CREDIT_OFFICER")
+        footerText.textContent = "Consulter le portefeuille guichet";
+      else if (role === "COMMITTEE")
+        footerText.textContent = "Voir les décisions & procès-verbaux";
+      else if (role === "COMPLIANCE")
+        footerText.textContent = "Ouvrir le registre d'audit LBC/FT";
+      else footerText.textContent = "Consulter l'historique d'audit CIF";
     }
 
     this.updateNotificationListUI();
   },
 
   updateNotificationListUI() {
-    const container = document.getElementById('notif-list-container');
-    const badgeTop = document.getElementById('topbar-notif-badge');
-    const badgeUnread = document.getElementById('notif-unread-count-badge');
+    const container = document.getElementById("notif-list-container");
+    const badgeTop = document.getElementById("topbar-notif-badge");
+    const badgeUnread = document.getElementById("notif-unread-count-badge");
     if (!container) return;
 
     const notifs = this.currentRoleNotifications || [];
-    const unreadCount = notifs.filter(n => n.unread).length;
+    const unreadCount = notifs.filter((n) => n.unread).length;
 
     // Update Topbar badge & bell pulse animation
-    const notifBtn = document.getElementById('notif-bell-btn');
+    const notifBtn = document.getElementById("notif-bell-btn");
     if (badgeTop) {
       badgeTop.textContent = unreadCount;
-      badgeTop.style.display = unreadCount > 0 ? 'flex' : 'none';
-      badgeTop.classList.toggle('pulse', unreadCount > 0);
+      badgeTop.style.display = unreadCount > 0 ? "flex" : "none";
+      badgeTop.classList.toggle("pulse", unreadCount > 0);
     }
     if (notifBtn) {
-      notifBtn.classList.toggle('has-unread', unreadCount > 0);
-      notifBtn.classList.toggle('bell-pulse', unreadCount > 0);
+      notifBtn.classList.toggle("has-unread", unreadCount > 0);
+      notifBtn.classList.toggle("bell-pulse", unreadCount > 0);
     }
 
     // Update Dropdown header badge
     if (badgeUnread) {
-      badgeUnread.textContent = `${unreadCount} Non Lue${unreadCount > 1 ? 's' : ''}`;
-      badgeUnread.className = `badge ${unreadCount > 0 ? 'badge-submitted' : 'badge-approved'}`;
+      badgeUnread.textContent = `${unreadCount} Non Lue${unreadCount > 1 ? "s" : ""}`;
+      badgeUnread.className = `badge ${unreadCount > 0 ? "badge-submitted" : "badge-approved"}`;
     }
 
     // Filter items
-    const filtered = this.currentNotifFilter === 'ALL' 
-      ? notifs 
-      : notifs.filter(n => n.category === this.currentNotifFilter);
+    const filtered =
+      this.currentNotifFilter === "ALL"
+        ? notifs
+        : notifs.filter((n) => n.category === this.currentNotifFilter);
 
     if (filtered.length === 0) {
       container.innerHTML = `
@@ -3748,15 +4683,17 @@ const App = {
       return;
     }
 
-    container.innerHTML = filtered.map(item => `
-      <div class="notif-item ${item.unread ? 'unread' : ''} notif-cat-${item.category}" onclick="App.handleNotificationClick(${item.id}, '${item.targetView}')">
-        <div class="notif-item-icon ${item.iconType || 'primary'}">
+    container.innerHTML = filtered
+      .map(
+        (item) => `
+      <div class="notif-item ${item.unread ? "unread" : ""} notif-cat-${item.category}" onclick="App.handleNotificationClick(${item.id}, '${item.targetView}')">
+        <div class="notif-item-icon ${item.iconType || "primary"}">
           <i class="fas ${item.icon}"></i>
         </div>
         <div class="notif-item-content">
           <div class="notif-item-header">
             <span class="notif-item-title">${item.title}</span>
-            ${item.unread ? '<span class="notif-unread-dot"></span>' : ''}
+            ${item.unread ? '<span class="notif-unread-dot"></span>' : ""}
           </div>
           <p class="notif-item-desc">${item.desc}</p>
           <div class="notif-item-meta">
@@ -3765,19 +4702,23 @@ const App = {
           </div>
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   },
 
   filterNotifications(category, chipEl) {
     this.currentNotifFilter = category;
-    const chips = document.querySelectorAll('#notif-filter-bar .notif-chip');
-    chips.forEach(c => c.classList.remove('active'));
-    if (chipEl) chipEl.classList.add('active');
+    const chips = document.querySelectorAll("#notif-filter-bar .notif-chip");
+    chips.forEach((c) => c.classList.remove("active"));
+    if (chipEl) chipEl.classList.add("active");
     this.updateNotificationListUI();
   },
 
   handleNotificationClick(notifId, targetView) {
-    const notif = (this.currentRoleNotifications || []).find(n => n.id === notifId);
+    const notif = (this.currentRoleNotifications || []).find(
+      (n) => n.id === notifId,
+    );
     if (notif) {
       notif.unread = false;
     }
@@ -3785,8 +4726,8 @@ const App = {
     this.updateNotificationListUI();
 
     // Close notification dropdown
-    const notifDropdown = document.getElementById('notif-dropdown');
-    if (notifDropdown) notifDropdown.style.display = 'none';
+    const notifDropdown = document.getElementById("notif-dropdown");
+    if (notifDropdown) notifDropdown.style.display = "none";
 
     // Navigate to target view if provided and valid
     if (targetView) {
@@ -3795,28 +4736,33 @@ const App = {
   },
 
   markAllNotificationsRead() {
-    (this.currentRoleNotifications || []).forEach(n => {
+    (this.currentRoleNotifications || []).forEach((n) => {
       n.unread = false;
     });
     this.updateNotificationListUI();
-    this.showToast('Toutes les notifications ont été marquées comme lues', 'success');
+    this.showToast(
+      "Toutes les notifications ont été marquées comme lues",
+      "success",
+    );
   },
 
   handleNotifFooterAction() {
-    const notifDropdown = document.getElementById('notif-dropdown');
-    if (notifDropdown) notifDropdown.style.display = 'none';
+    const notifDropdown = document.getElementById("notif-dropdown");
+    if (notifDropdown) notifDropdown.style.display = "none";
 
-    const role = this.currentRole || (this.currentUser ? this.currentUser.role : 'ANALYST');
-    if (role === 'CLIENT') {
-      this.switchView('view-client-requests');
-    } else if (role === 'CREDIT_OFFICER') {
-      this.switchView('view-agent-clients');
-    } else if (role === 'COMMITTEE') {
-      this.switchView('view-role-committee');
-    } else if (role === 'COMPLIANCE') {
-      this.switchView('view-audit-logs');
+    const role =
+      this.currentRole ||
+      (this.currentUser ? this.currentUser.role : "ANALYST");
+    if (role === "CLIENT") {
+      this.switchView("view-client-requests");
+    } else if (role === "CREDIT_OFFICER") {
+      this.switchView("view-agent-clients");
+    } else if (role === "COMMITTEE") {
+      this.switchView("view-role-committee");
+    } else if (role === "COMPLIANCE") {
+      this.switchView("view-audit-logs");
     } else {
-      this.switchView('view-audit-logs');
+      this.switchView("view-audit-logs");
     }
   },
 
@@ -3826,40 +4772,49 @@ const App = {
 
     const setStep = (step) => {
       currentStep = step;
-      document.querySelectorAll('.wizard-step-content').forEach(el => el.style.display = 'none');
+      document
+        .querySelectorAll(".wizard-step-content")
+        .forEach((el) => (el.style.display = "none"));
       const activeContent = document.getElementById(`wizard-step-${step}`);
-      if (activeContent) activeContent.style.display = 'block';
+      if (activeContent) activeContent.style.display = "block";
 
-      document.querySelectorAll('.wizard-step').forEach((el, idx) => {
+      document.querySelectorAll(".wizard-step").forEach((el, idx) => {
         const stepNum = idx + 1;
-        el.classList.remove('active', 'completed');
-        if (stepNum === step) el.classList.add('active');
-        else if (stepNum < step) el.classList.add('completed');
+        el.classList.remove("active", "completed");
+        if (stepNum === step) el.classList.add("active");
+        else if (stepNum < step) el.classList.add("completed");
       });
     };
 
-    document.querySelectorAll('[data-wizard-action]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const action = btn.getAttribute('data-wizard-action');
-        if (action === 'next' && currentStep < totalSteps) {
+    document.querySelectorAll("[data-wizard-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const action = btn.getAttribute("data-wizard-action");
+        if (action === "next" && currentStep < totalSteps) {
           setStep(currentStep + 1);
-        } else if (action === 'prev' && currentStep > 1) {
+        } else if (action === "prev" && currentStep > 1) {
           setStep(currentStep - 1);
-        } else if (action === 'submit') {
+        } else if (action === "submit") {
           this.submitNewCreditRequest();
         }
       });
     });
 
-    ['wiz-income', 'wiz-expenses', 'wiz-debt', 'wiz-amount', 'wiz-duration'].forEach(id => {
+    [
+      "wiz-income",
+      "wiz-expenses",
+      "wiz-debt",
+      "wiz-amount",
+      "wiz-duration",
+    ].forEach((id) => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('input', () => this.updateWizardCalculation());
+      if (el)
+        el.addEventListener("input", () => this.updateWizardCalculation());
     });
 
     // Close on backdrop click for modal-loan-application
-    const loanModal = document.getElementById('modal-loan-application');
+    const loanModal = document.getElementById("modal-loan-application");
     if (loanModal) {
-      loanModal.addEventListener('click', (e) => {
+      loanModal.addEventListener("click", (e) => {
         if (e.target === loanModal) {
           this.closeNewLoanModal();
         }
@@ -3870,86 +4825,110 @@ const App = {
   },
 
   updateWizardCalculation() {
-    const inc = Number(document.getElementById('wiz-income')?.value || 850000);
-    const exp = Number(document.getElementById('wiz-expenses')?.value || 320000);
-    const debt = Number(document.getElementById('wiz-debt')?.value || 0);
-    const amount = Number(document.getElementById('wiz-amount')?.value || 2500000);
-    const months = Number(document.getElementById('wiz-duration')?.value || 12);
+    const inc = Number(document.getElementById("wiz-income")?.value || 850000);
+    const exp = Number(
+      document.getElementById("wiz-expenses")?.value || 320000,
+    );
+    const debt = Number(document.getElementById("wiz-debt")?.value || 0);
+    const amount = Number(
+      document.getElementById("wiz-amount")?.value || 2500000,
+    );
+    const months = Number(document.getElementById("wiz-duration")?.value || 12);
 
-    const cap = CreditScoringEngine.calculateCapacity(inc, 0, exp, debt, amount, months);
-    
-    const dispEl = document.getElementById('wiz-calc-disposable');
-    const instEl = document.getElementById('wiz-calc-installment');
-    const badgeEl = document.getElementById('wiz-calc-status');
+    const cap = CreditScoringEngine.calculateCapacity(
+      inc,
+      0,
+      exp,
+      debt,
+      amount,
+      months,
+    );
 
-    if (dispEl) dispEl.textContent = CreditScoringEngine.formatFCFA(cap.disposableIncome);
-    if (instEl) instEl.textContent = CreditScoringEngine.formatFCFA(cap.estimatedPayment);
+    const dispEl = document.getElementById("wiz-calc-disposable");
+    const instEl = document.getElementById("wiz-calc-installment");
+    const badgeEl = document.getElementById("wiz-calc-status");
+
+    if (dispEl)
+      dispEl.textContent = CreditScoringEngine.formatFCFA(cap.disposableIncome);
+    if (instEl)
+      instEl.textContent = CreditScoringEngine.formatFCFA(cap.estimatedPayment);
     if (badgeEl) {
-      badgeEl.className = `badge ${cap.isSufficient ? 'badge-capacity-sufficient' : 'badge-capacity-insufficient'}`;
+      badgeEl.className = `badge ${cap.isSufficient ? "badge-capacity-sufficient" : "badge-capacity-insufficient"}`;
       badgeEl.textContent = cap.statusText;
     }
   },
 
   openNewLoanModal(prefillOptions = {}) {
-    const modal = document.getElementById('modal-loan-application');
+    const modal = document.getElementById("modal-loan-application");
     if (!modal) return;
 
     this.setModalWizardStep(1);
 
     // Adapt modal branding and texts according to user role
-    const titleEl = document.getElementById('modal-loan-app-title');
-    const badgeEl = document.getElementById('modal-loan-app-badge');
-    const subtitleEl = document.getElementById('modal-loan-app-subtitle');
-    const submitBtnEl = document.getElementById('modal-loan-app-submit-btn');
-    const headerEl = document.getElementById('modal-loan-app-header');
+    const titleEl = document.getElementById("modal-loan-app-title");
+    const badgeEl = document.getElementById("modal-loan-app-badge");
+    const subtitleEl = document.getElementById("modal-loan-app-subtitle");
+    const submitBtnEl = document.getElementById("modal-loan-app-submit-btn");
+    const headerEl = document.getElementById("modal-loan-app-header");
 
-    if (this.currentRole === 'CREDIT_OFFICER') {
-      if (titleEl) titleEl.textContent = 'Enregistrer une Demande de Prêt (Guichet)';
-      if (badgeEl) badgeEl.textContent = 'Agent de Crédit';
-      if (subtitleEl) subtitleEl.textContent = 'Saisie de dossier pour un sociétaire, vérification KYC & transmission au pôle Risque';
-      if (submitBtnEl) submitBtnEl.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Enregistrer & Transmettre au Pôle Risque';
-      if (headerEl) headerEl.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
+    if (this.currentRole === "CREDIT_OFFICER") {
+      if (titleEl)
+        titleEl.textContent = "Enregistrer une Demande de Prêt (Guichet)";
+      if (badgeEl) badgeEl.textContent = "Agent de Crédit";
+      if (subtitleEl)
+        subtitleEl.textContent =
+          "Saisie de dossier pour un sociétaire, vérification KYC & transmission au pôle Risque";
+      if (submitBtnEl)
+        submitBtnEl.innerHTML =
+          '<i class="fas fa-paper-plane mr-2"></i> Enregistrer & Transmettre au Pôle Risque';
+      if (headerEl)
+        headerEl.style.background = "linear-gradient(135deg, #0284c7, #0369a1)";
     } else {
-      if (titleEl) titleEl.textContent = 'Faire une Demande de Prêt CIF';
-      if (badgeEl) badgeEl.textContent = 'Parcours 6 Étapes';
-      if (subtitleEl) subtitleEl.textContent = 'Instruction rapide, calcul transparent de votre mensualité & transmission sécurisée à votre conseiller';
-      if (submitBtnEl) submitBtnEl.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Confirmer & Soumettre ma Demande';
-      if (headerEl) headerEl.style.background = 'linear-gradient(135deg, #059669, #047857)';
+      if (titleEl) titleEl.textContent = "Faire une Demande de Prêt CIF";
+      if (badgeEl) badgeEl.textContent = "Parcours 6 Étapes";
+      if (subtitleEl)
+        subtitleEl.textContent =
+          "Instruction rapide, calcul transparent de votre mensualité & transmission sécurisée à votre conseiller";
+      if (submitBtnEl)
+        submitBtnEl.innerHTML =
+          '<i class="fas fa-paper-plane mr-2"></i> Confirmer & Soumettre ma Demande';
+      if (headerEl)
+        headerEl.style.background = "linear-gradient(135deg, #059669, #047857)";
     }
 
     if (prefillOptions.amount) {
-      const amountEl = document.getElementById('wiz-amount');
+      const amountEl = document.getElementById("wiz-amount");
       if (amountEl) {
         amountEl.value = prefillOptions.amount;
-        amountEl.dispatchEvent(new Event('input'));
+        amountEl.dispatchEvent(new Event("input"));
       }
     }
     if (prefillOptions.duration) {
-      const durationEl = document.getElementById('wiz-duration');
+      const durationEl = document.getElementById("wiz-duration");
       if (durationEl) {
         durationEl.value = prefillOptions.duration;
-        durationEl.dispatchEvent(new Event('input'));
+        durationEl.dispatchEvent(new Event("input"));
       }
     }
     if (prefillOptions.purpose) {
-      const purposeEl = document.getElementById('wiz-purpose');
+      const purposeEl = document.getElementById("wiz-purpose");
       if (purposeEl) purposeEl.value = prefillOptions.purpose;
     }
 
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     requestAnimationFrame(() => {
-      modal.classList.add('active');
+      modal.classList.add("active");
     });
 
     this.updateWizardCalculation();
   },
 
   closeNewLoanModal() {
-    const modal = document.getElementById('modal-loan-application');
+    const modal = document.getElementById("modal-loan-application");
     if (!modal) return;
-    modal.classList.remove('active');
+    modal.classList.remove("active");
     setTimeout(() => {
-      modal.style.display = 'none';
+      modal.style.display = "none";
     }, 200);
   },
 
@@ -3957,79 +4936,111 @@ const App = {
     const totalSteps = 6;
     if (step < 1 || step > totalSteps) return;
 
-    document.querySelectorAll('.modal-wizard-step-content').forEach(el => el.style.display = 'none');
+    document
+      .querySelectorAll(".modal-wizard-step-content")
+      .forEach((el) => (el.style.display = "none"));
     const activeContent = document.getElementById(`modal-wizard-step-${step}`);
-    if (activeContent) activeContent.style.display = 'block';
+    if (activeContent) activeContent.style.display = "block";
 
     document.querySelectorAll('[id^="modal-wstep-"]').forEach((el, idx) => {
       const stepNum = idx + 1;
-      el.classList.remove('active', 'completed');
-      if (stepNum === step) el.classList.add('active');
-      else if (stepNum < step) el.classList.add('completed');
+      el.classList.remove("active", "completed");
+      if (stepNum === step) el.classList.add("active");
+      else if (stepNum < step) el.classList.add("completed");
     });
 
     this.updateWizardCalculation();
   },
 
   handleWizardProfileModeChange(mode) {
-    const isCold = mode === 'COLD_START';
-    const labelStd = document.getElementById('label-profile-standard') || document.getElementById('modal-label-profile-standard');
-    const labelCold = document.getElementById('label-profile-coldstart') || document.getElementById('modal-label-profile-coldstart');
-    const indicator = document.getElementById('wiz-cold-start-indicator') || document.getElementById('modal-wiz-cold-start-indicator');
-    const info = document.getElementById('wiz-cold-start-info') || document.getElementById('modal-wiz-cold-start-info');
+    const isCold = mode === "COLD_START";
+    const labelStd =
+      document.getElementById("label-profile-standard") ||
+      document.getElementById("modal-label-profile-standard");
+    const labelCold =
+      document.getElementById("label-profile-coldstart") ||
+      document.getElementById("modal-label-profile-coldstart");
+    const indicator =
+      document.getElementById("wiz-cold-start-indicator") ||
+      document.getElementById("modal-wiz-cold-start-indicator");
+    const info =
+      document.getElementById("wiz-cold-start-info") ||
+      document.getElementById("modal-wiz-cold-start-info");
 
     if (labelStd && labelCold) {
       if (isCold) {
-        labelCold.style.borderColor = 'var(--primary-600)';
-        labelCold.style.background = 'var(--cif-emerald-50, #f0fdf4)';
-        labelStd.style.borderColor = 'var(--border-color)';
-        labelStd.style.background = 'var(--bg-surface)';
+        labelCold.style.borderColor = "var(--primary-600)";
+        labelCold.style.background = "var(--cif-emerald-50, #f0fdf4)";
+        labelStd.style.borderColor = "var(--border-color)";
+        labelStd.style.background = "var(--bg-surface)";
       } else {
-        labelStd.style.borderColor = 'var(--primary-600)';
-        labelStd.style.background = 'var(--cif-primary-50, #eff6ff)';
-        labelCold.style.borderColor = 'var(--border-color)';
-        labelCold.style.background = 'var(--bg-surface)';
+        labelStd.style.borderColor = "var(--primary-600)";
+        labelStd.style.background = "var(--cif-primary-50, #eff6ff)";
+        labelCold.style.borderColor = "var(--border-color)";
+        labelCold.style.background = "var(--bg-surface)";
       }
     }
 
     if (indicator) {
-      indicator.className = isCold ? 'badge badge-warning' : 'badge badge-submitted';
-      indicator.innerHTML = isCold ? '<i class="fas fa-check"></i> Mode Cold Start Activé' : '<i class="fas fa-history"></i> Mode Standard (Historique)';
+      indicator.className = isCold
+        ? "badge badge-warning"
+        : "badge badge-submitted";
+      indicator.innerHTML = isCold
+        ? '<i class="fas fa-check"></i> Mode Cold Start Activé'
+        : '<i class="fas fa-history"></i> Mode Standard (Historique)';
     }
 
     if (info) {
-      info.style.display = isCold ? 'block' : 'none';
+      info.style.display = isCold ? "block" : "none";
     }
   },
 
   submitNewCreditRequest() {
-    const clientName = document.getElementById('wiz-fullname')?.value || 'Fatou Ndiaye';
-    const city = document.getElementById('wiz-city')?.value || 'Bamako';
-    const country = document.getElementById('wiz-country')?.value || 'Mali';
-    const amount = Number(document.getElementById('wiz-amount')?.value || 2500000);
-    const months = Number(document.getElementById('wiz-duration')?.value || 12);
-    const purpose = document.getElementById('wiz-purpose')?.value || 'Achat de stock conteneur tissus wax et bazin riche';
-    const inc = Number(document.getElementById('wiz-income')?.value || 850000);
-    const exp = Number(document.getElementById('wiz-expenses')?.value || 320000);
+    const clientName =
+      document.getElementById("wiz-fullname")?.value || "Fatou Ndiaye";
+    const city = document.getElementById("wiz-city")?.value || "Bamako";
+    const country = document.getElementById("wiz-country")?.value || "Mali";
+    const amount = Number(
+      document.getElementById("wiz-amount")?.value || 2500000,
+    );
+    const months = Number(document.getElementById("wiz-duration")?.value || 12);
+    const purpose =
+      document.getElementById("wiz-purpose")?.value ||
+      "Achat de stock conteneur tissus wax et bazin riche";
+    const inc = Number(document.getElementById("wiz-income")?.value || 850000);
+    const exp = Number(
+      document.getElementById("wiz-expenses")?.value || 320000,
+    );
 
-    const isColdStart = (document.querySelector('input[name="wiz-profile-mode"]:checked')?.value || 'COLD_START') === 'COLD_START';
+    const isColdStart =
+      (document.querySelector('input[name="wiz-profile-mode"]:checked')
+        ?.value || "COLD_START") === "COLD_START";
 
-    const cap = CreditScoringEngine.calculateCapacity(inc, 0, exp, 0, amount, months);
+    const cap = CreditScoringEngine.calculateCapacity(
+      inc,
+      0,
+      exp,
+      0,
+      amount,
+      months,
+    );
 
     // Create or find client
-    const newClient = DB.insert('clients', {
+    const newClient = DB.insert("clients", {
       user_id: 4,
       client_number: `${country.substring(0, 2).toUpperCase()}-${city.substring(0, 3).toUpperCase()}-00${Math.floor(1000 + Math.random() * 9000)}`,
       address: city,
       city: city,
-      residential_zone: 'Zone Urbaine Commerciale',
-      occupation: document.getElementById('wiz-sector')?.value || 'Commerce de Tissus & Habillement (Wax/Bazin)',
-      kyc_status: 'VERIFIED',
+      residential_zone: "Zone Urbaine Commerciale",
+      occupation:
+        document.getElementById("wiz-sector")?.value ||
+        "Commerce de Tissus & Habillement (Wax/Bazin)",
+      kyc_status: "VERIFIED",
       institution_verified_at: new Date().toISOString(),
-      is_cold_start: isColdStart
+      is_cold_start: isColdStart,
     });
 
-    const newReq = DB.insert('credit_requests', {
+    const newReq = DB.insert("credit_requests", {
       client_id: newClient.id,
       request_number: `REQ-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       requested_amount: amount,
@@ -4040,77 +5051,92 @@ const App = {
       estimated_monthly_payment: cap.estimatedPayment,
       disposable_income: cap.disposableIncome,
       repayment_capacity_status: cap.status,
-      status: 'SUBMITTED',
+      status: "SUBMITTED",
       created_at: new Date().toISOString(),
       client_name: clientName,
       country: country,
       city: city,
       is_cold_start: isColdStart,
-      score: isColdStart ? 84 : 78
+      score: isColdStart ? 84 : 78,
     });
 
-    const newDoc = DB.insert('documents', {
+    const newDoc = DB.insert("documents", {
       credit_request_id: newReq.id,
-      document_type: 'FACTURE_PROFORMA',
-      original_filename: 'Facture_Proforma_Tissus_Lome.pdf',
-      file_path: 'assets/docs/devis.pdf',
-      uploaded_at: new Date().toISOString()
+      document_type: "FACTURE_PROFORMA",
+      original_filename: "Facture_Proforma_Tissus_Lome.pdf",
+      file_path: "assets/docs/devis.pdf",
+      uploaded_at: new Date().toISOString(),
     });
 
     OCREngine.scanDocument(newDoc.id);
 
-    DB.addAuditLog(4, 'NEW_CREDIT_SUBMISSION', 'credit_requests', newReq.id, `Nouvelle demande de ${CreditScoringEngine.formatFCFA(amount)} déposée par ${clientName}`);
+    DB.addAuditLog(
+      4,
+      "NEW_CREDIT_SUBMISSION",
+      "credit_requests",
+      newReq.id,
+      `Nouvelle demande de ${CreditScoringEngine.formatFCFA(amount)} déposée par ${clientName}`,
+    );
 
     // Close the application modal
     this.closeNewLoanModal();
 
-    if (this.currentRole === 'CREDIT_OFFICER') {
+    if (this.currentRole === "CREDIT_OFFICER") {
       this.renderAgentPipeline();
-      this.showToast(`Demande #${newReq.request_number} enregistrée au guichet`, 'success');
+      this.showToast(
+        `Demande #${newReq.request_number} enregistrée au guichet`,
+        "success",
+      );
     }
 
     this.showSuccessModal({
-      title: this.currentRole === 'CREDIT_OFFICER' 
-        ? 'Dossier de Crédit Enregistré au Guichet !' 
-        : 'Demande de Financement Déposée avec Succès !',
+      title:
+        this.currentRole === "CREDIT_OFFICER"
+          ? "Dossier de Crédit Enregistré au Guichet !"
+          : "Demande de Financement Déposée avec Succès !",
       subtitle: `Le dossier #${newReq.request_number} pour ${clientName} a été scellé et transmis au pôle d'analyse des risques.`,
       reference: newReq.request_number,
       amount: CreditScoringEngine.formatFCFA(amount),
       payment: `${CreditScoringEngine.formatFCFA(cap.estimatedPayment)} / mois (${months} mois)`,
-      statusHtml: '<i class="fas fa-circle-check"></i> Enregistré & En Attente d\'Analyse',
-      statusClass: 'badge-approved',
-      primaryBtnText: this.currentRole === 'CREDIT_OFFICER' ? 'Consulter les Dossiers en Cours' : 'Consulter mon Tableau de Bord Emprunteur',
+      statusHtml:
+        '<i class="fas fa-circle-check"></i> Enregistré & En Attente d\'Analyse',
+      statusClass: "badge-approved",
+      primaryBtnText:
+        this.currentRole === "CREDIT_OFFICER"
+          ? "Consulter les Dossiers en Cours"
+          : "Consulter mon Tableau de Bord Emprunteur",
       onPrimaryClick: () => {
-        if (this.currentRole === 'CREDIT_OFFICER') {
-          this.switchView('view-role-agent');
+        if (this.currentRole === "CREDIT_OFFICER") {
+          this.switchView("view-role-agent");
           this.renderAgentPipeline();
-        } else if (this.currentRole === 'CLIENT') {
-          this.switchView('view-role-client');
+        } else if (this.currentRole === "CLIENT") {
+          this.switchView("view-role-client");
         } else {
-          this.switchView('view-analyst-dossiers');
+          this.switchView("view-analyst-dossiers");
           AppInteractions.renderRequestsTable();
         }
       },
-      receiptTitle: `Recipisse_Demande_${newReq.request_number}.pdf`
+      receiptTitle: `Recipisse_Demande_${newReq.request_number}.pdf`,
     });
   },
 
   initComplianceScreening() {
-    const screenBtn = document.getElementById('btn-screen-client');
-    const nameInput = document.getElementById('screen-client-name');
-    const resultBox = document.getElementById('screening-result-box');
+    const screenBtn = document.getElementById("btn-screen-client");
+    const nameInput = document.getElementById("screen-client-name");
+    const resultBox = document.getElementById("screening-result-box");
 
     const performScreen = (inputEl, targetBox) => {
-      const query = inputEl ? inputEl.value.trim().toLowerCase() : '';
+      const query = inputEl ? inputEl.value.trim().toLowerCase() : "";
       if (!query) {
-        this.showToast('Veuillez saisir un nom ou matricule client', 'warning');
+        this.showToast("Veuillez saisir un nom ou matricule client", "warning");
         return;
       }
 
-      const watchlist = DB.get('sanctions_watchlist') || [];
-      const match = watchlist.find(item => 
-        (item.full_name && item.full_name.toLowerCase().includes(query)) || 
-        (item.aliases && item.aliases.toLowerCase().includes(query))
+      const watchlist = DB.get("sanctions_watchlist") || [];
+      const match = watchlist.find(
+        (item) =>
+          (item.full_name && item.full_name.toLowerCase().includes(query)) ||
+          (item.aliases && item.aliases.toLowerCase().includes(query)),
       );
 
       if (match) {
@@ -4135,7 +5161,10 @@ const App = {
             </div>
           `;
         }
-        this.showToast('Alerte LBC/FT détectée sur la liste de surveillance !', 'danger');
+        this.showToast(
+          "Alerte LBC/FT détectée sur la liste de surveillance !",
+          "danger",
+        );
       } else {
         if (targetBox) {
           targetBox.innerHTML = `
@@ -4143,45 +5172,52 @@ const App = {
               <i class="fas fa-circle-check anomaly-icon" style="color: #10b981;"></i>
               <div class="anomaly-content">
                 <h5>Contrôle Négatif - Aucun Signalement</h5>
-                <p>Le client '<strong>${inputEl ? inputEl.value : ''}</strong>' ne figure sur aucune liste de sanctions UEMOA/ONU/GAFI et ne présente pas d'alerte PPE bloquante.</p>
+                <p>Le client '<strong>${inputEl ? inputEl.value : ""}</strong>' ne figure sur aucune liste de sanctions UEMOA/ONU/GAFI et ne présente pas d'alerte PPE bloquante.</p>
               </div>
             </div>
           `;
         }
-        this.showToast('Filtrage conforme : Aucun risque détecté', 'success');
+        this.showToast("Filtrage conforme : Aucun risque détecté", "success");
       }
     };
 
     if (screenBtn && nameInput) {
-      screenBtn.addEventListener('click', () => performScreen(nameInput, resultBox));
-      nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+      screenBtn.addEventListener("click", () =>
+        performScreen(nameInput, resultBox),
+      );
+      nameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
           e.preventDefault();
           performScreen(nameInput, resultBox);
         }
       });
     }
 
-    const altInput = document.getElementById('screening-full-name-input');
+    const altInput = document.getElementById("screening-full-name-input");
     if (altInput) {
-      altInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+      altInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
           e.preventDefault();
-          this.showToast('Contrôle approfondi exécuté : Diligence conforme', 'success');
+          this.showToast(
+            "Contrôle approfondi exécuté : Diligence conforme",
+            "success",
+          );
         }
       });
     }
   },
 
   renderAuditLogs() {
-    const container = document.getElementById('audit-logs-table-body');
+    const container = document.getElementById("audit-logs-table-body");
     if (!container) return;
 
-    const logs = DB.get('audit_logs');
-    container.innerHTML = logs.map(log => `
+    const logs = DB.get("audit_logs");
+    container.innerHTML = logs
+      .map(
+        (log) => `
       <tr>
         <td>
-          <span style="font-family: var(--font-family-code); font-size: 0.76rem;">${new Date(log.created_at || log.timestamp).toLocaleString('fr-FR')}</span>
+          <span style="font-family: var(--font-family-code); font-size: 0.76rem;">${new Date(log.created_at || log.timestamp).toLocaleString("fr-FR")}</span>
         </td>
         <td>
           <span class="badge badge-submitted">${log.action}</span>
@@ -4196,7 +5232,9 @@ const App = {
           <span style="font-family: var(--font-family-code); font-size: 0.72rem; color: var(--text-subtle);">${log.ip_address}</span>
         </td>
       </tr>
-    `).join('');
+    `,
+      )
+      .join("");
   },
 
   // =========================================================================
@@ -4209,26 +5247,29 @@ const App = {
    * @param {Object} options Options de calcul (referenceDate, maxDaysAlert, etc.)
    */
   checkAndHighlightExpiringDocs(options = {}) {
-    const grid = document.getElementById('client-documents-grid');
+    const grid = document.getElementById("client-documents-grid");
     if (!grid) return;
 
-    const cards = grid.querySelectorAll('.doc-card-item');
-    const now = options.referenceDate ? new Date(options.referenceDate) : new Date();
-    const thresholdDays = typeof options.thresholdDays === 'number' ? options.thresholdDays : 30;
+    const cards = grid.querySelectorAll(".doc-card-item");
+    const now = options.referenceDate
+      ? new Date(options.referenceDate)
+      : new Date();
+    const thresholdDays =
+      typeof options.thresholdDays === "number" ? options.thresholdDays : 30;
 
     let expiringCount = 0;
     const expiringDocs = [];
 
-    cards.forEach(card => {
+    cards.forEach((card) => {
       const validityStr = card.dataset.validityDate;
       if (!validityStr) {
-        card.setAttribute('data-is-expiring', 'false');
+        card.setAttribute("data-is-expiring", "false");
         return;
       }
 
-      const validityDate = new Date(validityStr + 'T23:59:59');
+      const validityDate = new Date(validityStr + "T23:59:59");
       if (isNaN(validityDate.getTime())) {
-        card.setAttribute('data-is-expiring', 'false');
+        card.setAttribute("data-is-expiring", "false");
         return;
       }
 
@@ -4236,16 +5277,16 @@ const App = {
       const diffTime = validityDate.getTime() - now.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      const titleEl = card.querySelector('h4');
-      const docTitle = titleEl ? titleEl.textContent.trim() : 'Document';
-      const validityContainer = card.querySelector('.doc-validity-row');
-      const headerBadgeSlot = card.querySelector('.doc-header-badge-slot');
-      const footerStatusBadge = card.querySelector('.doc-footer-status');
+      const titleEl = card.querySelector("h4");
+      const docTitle = titleEl ? titleEl.textContent.trim() : "Document";
+      const validityContainer = card.querySelector(".doc-validity-row");
+      const headerBadgeSlot = card.querySelector(".doc-header-badge-slot");
+      const footerStatusBadge = card.querySelector(".doc-footer-status");
 
-      const formattedValidityDate = validityDate.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+      const formattedValidityDate = validityDate.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
 
       if (diffDays <= thresholdDays) {
@@ -4255,12 +5296,12 @@ const App = {
           title: docTitle,
           days: diffDays,
           dateStr: formattedValidityDate,
-          isExpired: diffDays < 0
+          isExpired: diffDays < 0,
         });
 
-        card.classList.add('doc-card-expiring-soon');
-        card.setAttribute('data-is-expiring', 'true');
-        card.setAttribute('data-days-remaining', String(diffDays));
+        card.classList.add("doc-card-expiring-soon");
+        card.setAttribute("data-is-expiring", "true");
+        card.setAttribute("data-days-remaining", String(diffDays));
 
         // Red urgent header badge
         if (headerBadgeSlot) {
@@ -4281,28 +5322,29 @@ const App = {
 
         // Highlight validity text line in bold red with icon
         if (validityContainer) {
-          const statusLabel = diffDays < 0 
-            ? `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expiré depuis ${Math.abs(diffDays)} j)</span>`
-            : `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expire dans ${diffDays} jour${diffDays > 1 ? 's' : ''})</span>`;
+          const statusLabel =
+            diffDays < 0
+              ? `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expiré depuis ${Math.abs(diffDays)} j)</span>`
+              : `<span style="color: #b91c1c; font-weight: 800;"><i class="fas fa-triangle-exclamation text-danger mr-1"></i> ${formattedValidityDate} (Expire dans ${diffDays} jour${diffDays > 1 ? "s" : ""})</span>`;
           validityContainer.innerHTML = `<strong>Échéance Validité :</strong> ${statusLabel}`;
         }
 
         // Update footer badge to red action required
         if (footerStatusBadge) {
-          footerStatusBadge.className = 'badge badge-rejected';
-          footerStatusBadge.style.background = '#fee2e2';
-          footerStatusBadge.style.color = '#b91c1c';
-          footerStatusBadge.style.borderColor = '#f87171';
+          footerStatusBadge.className = "badge badge-rejected";
+          footerStatusBadge.style.background = "#fee2e2";
+          footerStatusBadge.style.color = "#b91c1c";
+          footerStatusBadge.style.borderColor = "#f87171";
           footerStatusBadge.innerHTML = `<i class="fas fa-triangle-exclamation mr-1"></i> Validité &lt; 30j • Renouveler`;
         }
       } else {
         // Valid for more than 30 days -> standard approved appearance
-        card.classList.remove('doc-card-expiring-soon');
-        card.setAttribute('data-is-expiring', 'false');
-        card.setAttribute('data-days-remaining', String(diffDays));
+        card.classList.remove("doc-card-expiring-soon");
+        card.setAttribute("data-is-expiring", "false");
+        card.setAttribute("data-days-remaining", String(diffDays));
 
         if (headerBadgeSlot) {
-          headerBadgeSlot.innerHTML = '';
+          headerBadgeSlot.innerHTML = "";
         }
 
         if (validityContainer) {
@@ -4310,23 +5352,25 @@ const App = {
         }
 
         if (footerStatusBadge) {
-          footerStatusBadge.className = 'badge badge-approved';
-          footerStatusBadge.style.background = '';
-          footerStatusBadge.style.color = '';
-          footerStatusBadge.style.borderColor = '';
+          footerStatusBadge.className = "badge badge-approved";
+          footerStatusBadge.style.background = "";
+          footerStatusBadge.style.color = "";
+          footerStatusBadge.style.borderColor = "";
           footerStatusBadge.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Validé & Conforme`;
         }
       }
     });
 
     // Update filter badge counter
-    const countBadge = document.getElementById('expiring-filter-count');
+    const countBadge = document.getElementById("expiring-filter-count");
     if (countBadge) {
       countBadge.textContent = expiringCount;
     }
 
     // Dynamic top alert banner in documents view
-    const alertContainer = document.getElementById('client-docs-expiring-alert');
+    const alertContainer = document.getElementById(
+      "client-docs-expiring-alert",
+    );
     if (alertContainer) {
       if (expiringCount > 0) {
         alertContainer.innerHTML = `
@@ -4345,7 +5389,7 @@ const App = {
                   </span>
                 </div>
                 <p style="color: #7f1d1d; font-size: 0.82rem; margin: 0 0 0.75rem 0; line-height: 1.5;">
-                  Les pièces surlignées en rouge (${expiringDocs.map(d => `<strong>${d.title}</strong> [échéance : ${d.dateStr}, ${d.days}j]`).join(', ')}) doivent être renouvelées pour garantir la conformité réglementaire UEMOA et éviter tout blocage du décaissement.
+                  Les pièces surlignées en rouge (${expiringDocs.map((d) => `<strong>${d.title}</strong> [échéance : ${d.dateStr}, ${d.days}j]`).join(", ")}) doivent être renouvelées pour garantir la conformité réglementaire UEMOA et éviter tout blocage du décaissement.
                 </p>
                 <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
                   <button class="btn btn-sm btn-primary" style="background: #dc2626; border-color: #dc2626;" onclick="document.getElementById('client-file-input').click()">
@@ -4360,32 +5404,35 @@ const App = {
           </div>
         `;
       } else {
-        alertContainer.innerHTML = '';
+        alertContainer.innerHTML = "";
       }
     }
   },
 
   filterClientDocs(category, buttonEl) {
-    const buttons = document.querySelectorAll('#doc-filter-buttons button');
-    buttons.forEach(b => {
-      b.classList.remove('btn-primary', 'active');
-      b.classList.add('btn-secondary');
+    const buttons = document.querySelectorAll("#doc-filter-buttons button");
+    buttons.forEach((b) => {
+      b.classList.remove("btn-primary", "active");
+      b.classList.add("btn-secondary");
     });
     if (buttonEl) {
-      buttonEl.classList.remove('btn-secondary');
-      buttonEl.classList.add('btn-primary', 'active');
+      buttonEl.classList.remove("btn-secondary");
+      buttonEl.classList.add("btn-primary", "active");
     }
 
-    const cards = document.querySelectorAll('#client-documents-grid .doc-card-item');
-    cards.forEach(card => {
-      if (category === 'ALL') {
-        card.style.display = 'block';
-      } else if (category === 'EXPIRING') {
-        card.style.display = card.getAttribute('data-is-expiring') === 'true' ? 'block' : 'none';
+    const cards = document.querySelectorAll(
+      "#client-documents-grid .doc-card-item",
+    );
+    cards.forEach((card) => {
+      if (category === "ALL") {
+        card.style.display = "block";
+      } else if (category === "EXPIRING") {
+        card.style.display =
+          card.getAttribute("data-is-expiring") === "true" ? "block" : "none";
       } else if (card.dataset.category === category) {
-        card.style.display = 'block';
+        card.style.display = "block";
       } else {
-        card.style.display = 'none';
+        card.style.display = "none";
       }
     });
   },
@@ -4394,27 +5441,28 @@ const App = {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
 
-    this.showToast(`Numérisation OCR en cours pour : ${file.name}...`, 'info');
+    this.showToast(`Numérisation OCR en cours pour : ${file.name}...`, "info");
 
     setTimeout(() => {
-      const grid = document.getElementById('client-documents-grid');
+      const grid = document.getElementById("client-documents-grid");
       if (grid) {
         // Calculate new document validity (e.g. 30 days from now for proforma/quote)
         const now = new Date();
         const futureDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         const yyyy = futureDate.getFullYear();
-        const mm = String(futureDate.getMonth() + 1).padStart(2, '0');
-        const dd = String(futureDate.getDate()).padStart(2, '0');
+        const mm = String(futureDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(futureDate.getDate()).padStart(2, "0");
         const validityIso = `${yyyy}-${mm}-${dd}`;
 
-        const newCard = document.createElement('div');
-        newCard.className = 'card doc-card-item';
-        newCard.dataset.category = 'INVOICE';
+        const newCard = document.createElement("div");
+        newCard.className = "card doc-card-item";
+        newCard.dataset.category = "INVOICE";
         newCard.dataset.validityDate = validityIso;
-        newCard.style.padding = '1.25rem';
-        newCard.style.position = 'relative';
-        newCard.style.cursor = 'pointer';
-        newCard.onclick = () => this.showToast(`Aperçu sécurisé du document ${file.name}`, 'info');
+        newCard.style.padding = "1.25rem";
+        newCard.style.position = "relative";
+        newCard.style.cursor = "pointer";
+        newCard.onclick = () =>
+          this.showToast(`Aperçu sécurisé du document ${file.name}`, "info");
         newCard.innerHTML = `
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
             <div style="display: flex; gap: 0.75rem; align-items: center;">
@@ -4430,7 +5478,7 @@ const App = {
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
             <div><strong>Analyse IA OCR :</strong> Données extraites avec succès (100%)</div>
-            <div class="doc-validity-row"><strong>Échéance Validité :</strong> ${futureDate.toLocaleDateString('fr-FR')} (30 jours)</div>
+            <div class="doc-validity-row"><strong>Échéance Validité :</strong> ${futureDate.toLocaleDateString("fr-FR")} (30 jours)</div>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
             <span class="badge badge-approved doc-footer-status"><i class="fas fa-check-circle"></i> OCR Validé 100%</span>
@@ -4444,155 +5492,194 @@ const App = {
         // Re-evaluate highlighting on all cards
         this.checkAndHighlightExpiringDocs();
       }
-      this.showToast(`Document "${file.name}" extrait, validé et transmis à votre conseiller !`, 'success');
-      event.target.value = '';
+      this.showToast(
+        `Document "${file.name}" extrait, validé et transmis à votre conseiller !`,
+        "success",
+      );
+      event.target.value = "";
     }, 1200);
   },
 
   handleClientDocDrop(event) {
     const files = event.dataTransfer.files;
     if (files && files.length > 0) {
-      this.handleClientDocUpload({ target: { files: files, value: '' } });
+      this.handleClientDocUpload({ target: { files: files, value: "" } });
     }
   },
 
   updateClientSimulation() {
-    const amountRange = document.getElementById('sim-amount-range');
-    const durationRange = document.getElementById('sim-duration-range');
-    const incomeInput = document.getElementById('sim-income-input');
-    const chargesInput = document.getElementById('sim-charges-input');
-    const productSelect = document.getElementById('sim-product-select');
+    const amountRange = document.getElementById("sim-amount-range");
+    const durationRange = document.getElementById("sim-duration-range");
+    const incomeInput = document.getElementById("sim-income-input");
+    const chargesInput = document.getElementById("sim-charges-input");
+    const productSelect = document.getElementById("sim-product-select");
 
     if (!amountRange || !durationRange) return;
 
     const amount = parseInt(amountRange.value, 10) || 2500000;
     const duration = parseInt(durationRange.value, 10) || 12;
-    const income = parseInt(incomeInput ? incomeInput.value : 850000, 10) || 850000;
-    const charges = parseInt(chargesInput ? chargesInput.value : 180000, 10) || 180000;
+    const income =
+      parseInt(incomeInput ? incomeInput.value : 850000, 10) || 850000;
+    const charges =
+      parseInt(chargesInput ? chargesInput.value : 180000, 10) || 180000;
 
     let rateAnnual = 0.12;
     if (productSelect) {
-      if (productSelect.value === 'AGRICULTURAL') rateAnnual = 0.095;
-      else if (productSelect.value === 'EQUIPMENT') rateAnnual = 0.11;
-      else if (productSelect.value === 'GROUP') rateAnnual = 0.135;
+      if (productSelect.value === "AGRICULTURAL") rateAnnual = 0.095;
+      else if (productSelect.value === "EQUIPMENT") rateAnnual = 0.11;
+      else if (productSelect.value === "GROUP") rateAnnual = 0.135;
     }
 
-    const amountLabel = document.getElementById('sim-amount-label');
-    const durationLabel = document.getElementById('sim-duration-label');
-    if (amountLabel) amountLabel.textContent = CreditScoringEngine.formatFCFA(amount);
+    const amountLabel = document.getElementById("sim-amount-label");
+    const durationLabel = document.getElementById("sim-duration-label");
+    if (amountLabel)
+      amountLabel.textContent = CreditScoringEngine.formatFCFA(amount);
     if (durationLabel) durationLabel.textContent = `${duration} Mois`;
 
     // Standard degressive amortization calculation
     const rateMonthly = rateAnnual / 12;
-    const monthlyPayment = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    const monthlyPayment =
+      (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
     const totalPayments = monthlyPayment * duration;
     const totalInterest = totalPayments - amount;
     const feesAndInsurance = Math.round(amount * 0.015);
-    const monthlyTotal = Math.round(monthlyPayment + (feesAndInsurance / duration));
+    const monthlyTotal = Math.round(
+      monthlyPayment + feesAndInsurance / duration,
+    );
 
-    const monthlyOutput = document.getElementById('sim-monthly-output');
-    const capitalOutput = document.getElementById('sim-capital-output');
-    const interestOutput = document.getElementById('sim-interest-output');
-    const feesOutput = document.getElementById('sim-fees-output');
-    const totalCostOutput = document.getElementById('sim-total-cost-output');
+    const monthlyOutput = document.getElementById("sim-monthly-output");
+    const capitalOutput = document.getElementById("sim-capital-output");
+    const interestOutput = document.getElementById("sim-interest-output");
+    const feesOutput = document.getElementById("sim-fees-output");
+    const totalCostOutput = document.getElementById("sim-total-cost-output");
 
-    if (monthlyOutput) monthlyOutput.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
-    if (capitalOutput) capitalOutput.textContent = CreditScoringEngine.formatFCFA(amount);
-    if (interestOutput) interestOutput.textContent = CreditScoringEngine.formatFCFA(Math.round(totalInterest));
-    if (feesOutput) feesOutput.textContent = CreditScoringEngine.formatFCFA(feesAndInsurance);
-    if (totalCostOutput) totalCostOutput.textContent = CreditScoringEngine.formatFCFA(Math.round(amount + totalInterest + feesAndInsurance));
+    if (monthlyOutput)
+      monthlyOutput.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
+    if (capitalOutput)
+      capitalOutput.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (interestOutput)
+      interestOutput.textContent = CreditScoringEngine.formatFCFA(
+        Math.round(totalInterest),
+      );
+    if (feesOutput)
+      feesOutput.textContent = CreditScoringEngine.formatFCFA(feesAndInsurance);
+    if (totalCostOutput)
+      totalCostOutput.textContent = CreditScoringEngine.formatFCFA(
+        Math.round(amount + totalInterest + feesAndInsurance),
+      );
 
     // Debt ratio and rest-to-live
     const totalMonthlyDebt = charges + monthlyTotal;
     const debtRatio = income > 0 ? (totalMonthlyDebt / income) * 100 : 0;
     const restToLive = income - totalMonthlyDebt;
 
-    const ratioOutput = document.getElementById('sim-ratio-output');
-    const ratioBar = document.getElementById('sim-ratio-bar');
-    const restToLiveOutput = document.getElementById('sim-rest-to-live-output');
-    const eligibilityBadge = document.getElementById('sim-eligibility-badge');
+    const ratioOutput = document.getElementById("sim-ratio-output");
+    const ratioBar = document.getElementById("sim-ratio-bar");
+    const restToLiveOutput = document.getElementById("sim-rest-to-live-output");
+    const eligibilityBadge = document.getElementById("sim-eligibility-badge");
 
     if (ratioOutput) {
       if (debtRatio <= 33) {
-        ratioOutput.style.color = '#047857';
+        ratioOutput.style.color = "#047857";
         ratioOutput.textContent = `${debtRatio.toFixed(1)}% (Conforme norme UEMOA ≤ 33%)`;
       } else if (debtRatio <= 45) {
-        ratioOutput.style.color = '#b45309';
+        ratioOutput.style.color = "#b45309";
         ratioOutput.textContent = `${debtRatio.toFixed(1)}% (Attention : Proche du seuil d'alerte)`;
       } else {
-        ratioOutput.style.color = '#b91c1c';
+        ratioOutput.style.color = "#b91c1c";
         ratioOutput.textContent = `${debtRatio.toFixed(1)}% (Dépassement du seuil maximal de 45%)`;
       }
     }
 
     if (ratioBar) {
       ratioBar.style.width = `${Math.min(debtRatio, 100)}%`;
-      ratioBar.style.background = debtRatio <= 33 ? '#10b981' : (debtRatio <= 45 ? '#f59e0b' : '#ef4444');
+      ratioBar.style.background =
+        debtRatio <= 33 ? "#10b981" : debtRatio <= 45 ? "#f59e0b" : "#ef4444";
     }
 
     if (restToLiveOutput) {
       restToLiveOutput.textContent = `${CreditScoringEngine.formatFCFA(Math.max(0, restToLive))} / mois`;
-      restToLiveOutput.style.color = restToLive >= 200000 ? '#047857' : (restToLive >= 100000 ? '#b45309' : '#b91c1c');
+      restToLiveOutput.style.color =
+        restToLive >= 200000
+          ? "#047857"
+          : restToLive >= 100000
+            ? "#b45309"
+            : "#b91c1c";
     }
 
     if (eligibilityBadge) {
-      const isColdStartSim = document.getElementById('sim-cold-start-toggle')?.checked ?? true;
-      const simModeLabel = document.getElementById('sim-scoring-mode-label');
+      const isColdStartSim =
+        document.getElementById("sim-cold-start-toggle")?.checked ?? true;
+      const simModeLabel = document.getElementById("sim-scoring-mode-label");
 
       if (simModeLabel) {
         if (isColdStartSim) {
-          simModeLabel.innerHTML = '<i class="fas fa-seedling text-emerald"></i> Modèle Cold Start UEMOA Appliqué (Score Est. 82/100 • Risque Faible)';
+          simModeLabel.innerHTML =
+            '<i class="fas fa-seedling text-emerald"></i> Modèle Cold Start UEMOA Appliqué (Score Est. 82/100 • Risque Faible)';
         } else {
-          simModeLabel.innerHTML = '<i class="fas fa-history text-primary"></i> Modèle Standard CIF Appliqué (Score Est. 78/100)';
+          simModeLabel.innerHTML =
+            '<i class="fas fa-history text-primary"></i> Modèle Standard CIF Appliqué (Score Est. 78/100)';
         }
       }
 
       if (debtRatio <= 40 && restToLive >= 150000) {
-        eligibilityBadge.className = 'badge badge-approved';
-        eligibilityBadge.innerHTML = isColdStartSim 
-          ? '<i class="fas fa-seedling"></i> Éligible Cold Start CIF' 
+        eligibilityBadge.className = "badge badge-approved";
+        eligibilityBadge.innerHTML = isColdStartSim
+          ? '<i class="fas fa-seedling"></i> Éligible Cold Start CIF'
           : '<i class="fas fa-circle-check"></i> Éligible CIF Standard';
       } else {
-        eligibilityBadge.className = 'badge badge-verification';
-        eligibilityBadge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Étude Approfondie Requise';
+        eligibilityBadge.className = "badge badge-verification";
+        eligibilityBadge.innerHTML =
+          '<i class="fas fa-triangle-exclamation"></i> Étude Approfondie Requise';
       }
     }
 
     // Update Full Simulator Pie Chart & Percentages
-    const totalRepaidSim = Math.round(amount + totalInterest + feesAndInsurance);
+    const totalRepaidSim = Math.round(
+      amount + totalInterest + feesAndInsurance,
+    );
     const simPctCapital = Math.round((amount / totalRepaidSim) * 100);
     const simPctInterest = Math.round((totalInterest / totalRepaidSim) * 100);
     const simPctFees = Math.max(1, 100 - simPctCapital - simPctInterest);
 
-    const simPieCapVal = document.getElementById('sim-pie-capital-val');
-    const simPieIntVal = document.getElementById('sim-pie-interest-val');
-    const simPieFeesVal = document.getElementById('sim-pie-fees-val');
-    const simPieCapPct = document.getElementById('sim-pie-capital-pct');
-    const simPieIntPct = document.getElementById('sim-pie-interest-pct');
-    const simPieFeesPct = document.getElementById('sim-pie-fees-pct');
+    const simPieCapVal = document.getElementById("sim-pie-capital-val");
+    const simPieIntVal = document.getElementById("sim-pie-interest-val");
+    const simPieFeesVal = document.getElementById("sim-pie-fees-val");
+    const simPieCapPct = document.getElementById("sim-pie-capital-pct");
+    const simPieIntPct = document.getElementById("sim-pie-interest-pct");
+    const simPieFeesPct = document.getElementById("sim-pie-fees-pct");
 
-    if (simPieCapVal) simPieCapVal.textContent = CreditScoringEngine.formatFCFA(amount);
-    if (simPieIntVal) simPieIntVal.textContent = CreditScoringEngine.formatFCFA(Math.round(totalInterest));
-    if (simPieFeesVal) simPieFeesVal.textContent = CreditScoringEngine.formatFCFA(feesAndInsurance);
+    if (simPieCapVal)
+      simPieCapVal.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (simPieIntVal)
+      simPieIntVal.textContent = CreditScoringEngine.formatFCFA(
+        Math.round(totalInterest),
+      );
+    if (simPieFeesVal)
+      simPieFeesVal.textContent =
+        CreditScoringEngine.formatFCFA(feesAndInsurance);
     if (simPieCapPct) simPieCapPct.textContent = `${simPctCapital}%`;
     if (simPieIntPct) simPieIntPct.textContent = `${simPctInterest}%`;
     if (simPieFeesPct) simPieFeesPct.textContent = `${simPctFees}%`;
 
-    if (window.AppCharts && typeof window.AppCharts.renderSimulatorBreakdownPie === 'function') {
+    if (
+      window.AppCharts &&
+      typeof window.AppCharts.renderSimulatorBreakdownPie === "function"
+    ) {
       window.AppCharts.renderSimulatorBreakdownPie(
-        'sim-breakdown-pie-chart',
+        "sim-breakdown-pie-chart",
         amount,
         Math.round(totalInterest),
-        feesAndInsurance
+        feesAndInsurance,
       );
     }
   },
 
   updateColdStartComparisonSim() {
-    const capSlider = document.getElementById('cs-sim-cap');
-    const actSlider = document.getElementById('cs-sim-act');
-    const garSlider = document.getElementById('cs-sim-gar');
-    const ocrSlider = document.getElementById('cs-sim-ocr');
+    const capSlider = document.getElementById("cs-sim-cap");
+    const actSlider = document.getElementById("cs-sim-act");
+    const garSlider = document.getElementById("cs-sim-gar");
+    const ocrSlider = document.getElementById("cs-sim-ocr");
 
     if (!capSlider) return;
 
@@ -4602,13 +5689,15 @@ const App = {
     const ocrPct = parseFloat(ocrSlider.value) || 95;
 
     // Update labels
-    const capValEl = document.getElementById('cs-sim-cap-val');
-    const actValEl = document.getElementById('cs-sim-act-val');
-    const garValEl = document.getElementById('cs-sim-gar-val');
-    const ocrValEl = document.getElementById('cs-sim-ocr-val');
+    const capValEl = document.getElementById("cs-sim-cap-val");
+    const actValEl = document.getElementById("cs-sim-act-val");
+    const garValEl = document.getElementById("cs-sim-gar-val");
+    const ocrValEl = document.getElementById("cs-sim-ocr-val");
 
-    if (capValEl) capValEl.textContent = `${capRatio.toFixed(1)}x (${capRatio >= 2 ? 'Très Bon' : (capRatio >= 1.3 ? 'Conforme' : 'Faible')})`;
-    if (actValEl) actValEl.textContent = `${actYears} an${actYears > 1 ? 's' : ''} d'activité`;
+    if (capValEl)
+      capValEl.textContent = `${capRatio.toFixed(1)}x (${capRatio >= 2 ? "Très Bon" : capRatio >= 1.3 ? "Conforme" : "Faible"})`;
+    if (actValEl)
+      actValEl.textContent = `${actYears} an${actYears > 1 ? "s" : ""} d'activité`;
     if (garValEl) garValEl.textContent = `${garPct}% de couverture`;
     if (ocrValEl) ocrValEl.textContent = `${ocrPct}% (KYC Certifié)`;
 
@@ -4623,52 +5712,58 @@ const App = {
     // Standard Model: penalizes zero prior credit (0) and zero savings (0) (35% total weight = 0 points)
     // Formula: 25% cap + 15% act + 10% gar + 10% ocr + 5% context + 0 (credit 20% + savings 15%)
     const stdScore = Math.round(
-      (scoreCap * 0.25) +
-      (scoreAct * 0.15) +
-      (scoreGar * 0.10) +
-      (scoreOcr * 0.10) +
-      (scoreContext * 0.05) +
-      0 // No history penalty in traditional standard scoring
+      scoreCap * 0.25 +
+        scoreAct * 0.15 +
+        scoreGar * 0.1 +
+        scoreOcr * 0.1 +
+        scoreContext * 0.05 +
+        0, // No history penalty in traditional standard scoring
     );
 
     // Cold Start Model: 35% cap + 25% act + 20% gar + 10% context + 10% ocr
-    const csScore = Math.min(100, Math.round(
-      (scoreCap * 0.35) +
-      (scoreAct * 0.25) +
-      (scoreGar * 0.20) +
-      (scoreContext * 0.10) +
-      (scoreOcr * 0.10)
-    ));
+    const csScore = Math.min(
+      100,
+      Math.round(
+        scoreCap * 0.35 +
+          scoreAct * 0.25 +
+          scoreGar * 0.2 +
+          scoreContext * 0.1 +
+          scoreOcr * 0.1,
+      ),
+    );
 
-    const stdScoreEl = document.getElementById('cs-sim-std-score');
-    const csScoreEl = document.getElementById('cs-sim-cs-score');
-    const stdBadgeEl = document.getElementById('cs-sim-std-badge');
-    const csBadgeEl = document.getElementById('cs-sim-cs-badge');
-    const gainBadgeEl = document.getElementById('cs-sim-gain-badge');
+    const stdScoreEl = document.getElementById("cs-sim-std-score");
+    const csScoreEl = document.getElementById("cs-sim-cs-score");
+    const stdBadgeEl = document.getElementById("cs-sim-std-badge");
+    const csBadgeEl = document.getElementById("cs-sim-cs-badge");
+    const gainBadgeEl = document.getElementById("cs-sim-gain-badge");
 
-    if (stdScoreEl) stdScoreEl.innerHTML = `${stdScore}<span style="font-size: 1rem; color: var(--text-subtle);">/100</span>`;
-    if (csScoreEl) csScoreEl.innerHTML = `${csScore}<span style="font-size: 1rem; color: var(--text-subtle);">/100</span>`;
+    if (stdScoreEl)
+      stdScoreEl.innerHTML = `${stdScore}<span style="font-size: 1rem; color: var(--text-subtle);">/100</span>`;
+    if (csScoreEl)
+      csScoreEl.innerHTML = `${csScore}<span style="font-size: 1rem; color: var(--text-subtle);">/100</span>`;
 
     if (stdBadgeEl) {
       if (stdScore >= 70) {
-        stdBadgeEl.className = 'badge badge-approved';
-        stdBadgeEl.textContent = 'Éligible';
+        stdBadgeEl.className = "badge badge-approved";
+        stdBadgeEl.textContent = "Éligible";
       } else if (stdScore >= 55) {
-        stdBadgeEl.className = 'badge badge-warning';
-        stdBadgeEl.textContent = 'Douteux';
+        stdBadgeEl.className = "badge badge-warning";
+        stdBadgeEl.textContent = "Douteux";
       } else {
-        stdBadgeEl.className = 'badge badge-rejected';
-        stdBadgeEl.textContent = 'Pénalisé (Zéro antécédent)';
+        stdBadgeEl.className = "badge badge-rejected";
+        stdBadgeEl.textContent = "Pénalisé (Zéro antécédent)";
       }
     }
 
     if (csBadgeEl) {
       if (csScore >= 70) {
-        csBadgeEl.className = 'badge badge-approved';
+        csBadgeEl.className = "badge badge-approved";
         csBadgeEl.innerHTML = '<i class="fas fa-check"></i> Éligible Comité';
       } else {
-        csBadgeEl.className = 'badge badge-warning';
-        csBadgeEl.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Étude Approfondie';
+        csBadgeEl.className = "badge badge-warning";
+        csBadgeEl.innerHTML =
+          '<i class="fas fa-triangle-exclamation"></i> Étude Approfondie';
       }
     }
 
@@ -4679,68 +5774,249 @@ const App = {
   },
 
   applyFromSimulation() {
-    const amountRange = document.getElementById('sim-amount-range');
-    const durationRange = document.getElementById('sim-duration-range');
+    const amountRange = document.getElementById("sim-amount-range");
+    const durationRange = document.getElementById("sim-duration-range");
     const amount = amountRange ? parseInt(amountRange.value, 10) : 2500000;
     const duration = durationRange ? parseInt(durationRange.value, 10) : 12;
 
-    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CreditFast' });
-    this.showToast(`Simulation transférée dans votre demande : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
+    this.openNewLoanModal({
+      amount,
+      duration,
+      purpose: "Financement de projet CreditFast",
+    });
+    this.showToast(
+      `Simulation transférée dans votre demande : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`,
+      "success",
+    );
   },
 
   scheduleInstallments: [
-    { number: 1, dueDate: '05/07/2026', principal: 196250, interest: 25000, insurance: 13750, total: 235000, remaining: 2303750, status: 'PAID', paidDate: '04/07/2026 à 14:22', provider: 'Orange Money Mali (+223 77 540 88 12)', receiptRef: 'REC-2026-0704', txnId: 'OM-ML-8821-0704' },
-    { number: 2, dueDate: '05/08/2026', principal: 198212, interest: 23038, insurance: 13750, total: 235000, remaining: 2105538, status: 'PAID', paidDate: '05/08/2026 à 09:45', provider: 'Wave Mali (+223 77 540 88 12)', receiptRef: 'REC-2026-0805', txnId: 'WV-ML-8821-0805' },
-    { number: 3, dueDate: '05/09/2026', principal: 200195, interest: 21055, insurance: 13750, total: 235000, remaining: 1905343, status: 'DUE', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 4, dueDate: '05/10/2026', principal: 202196, interest: 19054, insurance: 13750, total: 235000, remaining: 1703147, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 5, dueDate: '05/11/2026', principal: 204218, interest: 17032, insurance: 13750, total: 235000, remaining: 1498929, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 6, dueDate: '05/12/2026', principal: 206261, interest: 14989, insurance: 13750, total: 235000, remaining: 1292668, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 7, dueDate: '05/01/2027', principal: 208323, interest: 12927, insurance: 13750, total: 235000, remaining: 1084345, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 8, dueDate: '05/02/2027', principal: 210407, interest: 10843, insurance: 13750, total: 235000, remaining: 873938, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 9, dueDate: '05/03/2027', principal: 212511, interest: 8739, insurance: 13750, total: 235000, remaining: 661427, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 10, dueDate: '05/04/2027', principal: 214636, interest: 6614, insurance: 13750, total: 235000, remaining: 446791, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 11, dueDate: '05/05/2027', principal: 216782, interest: 4468, insurance: 13750, total: 235000, remaining: 230009, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null },
-    { number: 12, dueDate: '05/06/2027', principal: 230009, interest: 2300, insurance: 13750, total: 246059, remaining: 0, status: 'UPCOMING', paidDate: null, provider: null, receiptRef: null, txnId: null }
+    {
+      number: 1,
+      dueDate: "05/07/2026",
+      principal: 196250,
+      interest: 25000,
+      insurance: 13750,
+      total: 235000,
+      remaining: 2303750,
+      status: "PAID",
+      paidDate: "04/07/2026 à 14:22",
+      provider: "Orange Money Mali (+223 77 540 88 12)",
+      receiptRef: "REC-2026-0704",
+      txnId: "OM-ML-8821-0704",
+    },
+    {
+      number: 2,
+      dueDate: "05/08/2026",
+      principal: 198212,
+      interest: 23038,
+      insurance: 13750,
+      total: 235000,
+      remaining: 2105538,
+      status: "PAID",
+      paidDate: "05/08/2026 à 09:45",
+      provider: "Wave Mali (+223 77 540 88 12)",
+      receiptRef: "REC-2026-0805",
+      txnId: "WV-ML-8821-0805",
+    },
+    {
+      number: 3,
+      dueDate: "05/09/2026",
+      principal: 200195,
+      interest: 21055,
+      insurance: 13750,
+      total: 235000,
+      remaining: 1905343,
+      status: "DUE",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 4,
+      dueDate: "05/10/2026",
+      principal: 202196,
+      interest: 19054,
+      insurance: 13750,
+      total: 235000,
+      remaining: 1703147,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 5,
+      dueDate: "05/11/2026",
+      principal: 204218,
+      interest: 17032,
+      insurance: 13750,
+      total: 235000,
+      remaining: 1498929,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 6,
+      dueDate: "05/12/2026",
+      principal: 206261,
+      interest: 14989,
+      insurance: 13750,
+      total: 235000,
+      remaining: 1292668,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 7,
+      dueDate: "05/01/2027",
+      principal: 208323,
+      interest: 12927,
+      insurance: 13750,
+      total: 235000,
+      remaining: 1084345,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 8,
+      dueDate: "05/02/2027",
+      principal: 210407,
+      interest: 10843,
+      insurance: 13750,
+      total: 235000,
+      remaining: 873938,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 9,
+      dueDate: "05/03/2027",
+      principal: 212511,
+      interest: 8739,
+      insurance: 13750,
+      total: 235000,
+      remaining: 661427,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 10,
+      dueDate: "05/04/2027",
+      principal: 214636,
+      interest: 6614,
+      insurance: 13750,
+      total: 235000,
+      remaining: 446791,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 11,
+      dueDate: "05/05/2027",
+      principal: 216782,
+      interest: 4468,
+      insurance: 13750,
+      total: 235000,
+      remaining: 230009,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
+    {
+      number: 12,
+      dueDate: "05/06/2027",
+      principal: 230009,
+      interest: 2300,
+      insurance: 13750,
+      total: 246059,
+      remaining: 0,
+      status: "UPCOMING",
+      paidDate: null,
+      provider: null,
+      receiptRef: null,
+      txnId: null,
+    },
   ],
-  currentScheduleFilter: 'ALL',
+  currentScheduleFilter: "ALL",
 
   renderClientSchedule(filter = null) {
     if (filter) {
       this.currentScheduleFilter = filter;
     }
-    const currentFilter = this.currentScheduleFilter || 'ALL';
-    const tbody = document.getElementById('client-schedule-table-body');
+    const currentFilter = this.currentScheduleFilter || "ALL";
+    const tbody = document.getElementById("client-schedule-table-body");
     if (!tbody) return;
 
     // Update Progress Metrics
-    const paidList = this.scheduleInstallments.filter(i => i.status === 'PAID');
-    const dueList = this.scheduleInstallments.filter(i => i.status === 'DUE');
-    const upcomingList = this.scheduleInstallments.filter(i => i.status === 'UPCOMING');
+    const paidList = this.scheduleInstallments.filter(
+      (i) => i.status === "PAID",
+    );
+    const dueList = this.scheduleInstallments.filter((i) => i.status === "DUE");
+    const upcomingList = this.scheduleInstallments.filter(
+      (i) => i.status === "UPCOMING",
+    );
 
     const totalPaid = paidList.reduce((sum, i) => sum + i.total, 0);
-    const totalRemaining = 2500000 - paidList.reduce((sum, i) => sum + i.principal, 0);
-    const progressPct = ((paidList.length / this.scheduleInstallments.length) * 100).toFixed(1);
+    const totalRemaining =
+      2500000 - paidList.reduce((sum, i) => sum + i.principal, 0);
+    const progressPct = (
+      (paidList.length / this.scheduleInstallments.length) *
+      100
+    ).toFixed(1);
 
-    const txtProgress = document.getElementById('schedule-metric-progress-text');
-    const badgeProgress = document.getElementById('schedule-metric-progress-badge');
-    const barProgress = document.getElementById('schedule-metric-progress-bar');
-    const txtPaid = document.getElementById('schedule-metric-paid');
-    const txtRemaining = document.getElementById('schedule-metric-remaining');
+    const txtProgress = document.getElementById(
+      "schedule-metric-progress-text",
+    );
+    const badgeProgress = document.getElementById(
+      "schedule-metric-progress-badge",
+    );
+    const barProgress = document.getElementById("schedule-metric-progress-bar");
+    const txtPaid = document.getElementById("schedule-metric-paid");
+    const txtRemaining = document.getElementById("schedule-metric-remaining");
 
-    if (txtProgress) txtProgress.textContent = `${paidList.length} / ${this.scheduleInstallments.length} Mensualités`;
-    if (badgeProgress) badgeProgress.innerHTML = `<i class="fas fa-check"></i> ${progressPct}% Payé`;
+    if (txtProgress)
+      txtProgress.textContent = `${paidList.length} / ${this.scheduleInstallments.length} Mensualités`;
+    if (badgeProgress)
+      badgeProgress.innerHTML = `<i class="fas fa-check"></i> ${progressPct}% Payé`;
     if (barProgress) barProgress.style.width = `${progressPct}%`;
-    if (txtPaid) txtPaid.textContent = CreditScoringEngine.formatFCFA(totalPaid);
-    if (txtRemaining) txtRemaining.textContent = CreditScoringEngine.formatFCFA(totalRemaining > 0 ? totalRemaining : 0);
+    if (txtPaid)
+      txtPaid.textContent = CreditScoringEngine.formatFCFA(totalPaid);
+    if (txtRemaining)
+      txtRemaining.textContent = CreditScoringEngine.formatFCFA(
+        totalRemaining > 0 ? totalRemaining : 0,
+      );
 
     // Filter Items
     let itemsToDisplay = [...this.scheduleInstallments];
-    if (currentFilter === 'PAID') {
-      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'PAID');
-    } else if (currentFilter === 'DUE') {
-      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'DUE');
-    } else if (currentFilter === 'UPCOMING') {
-      itemsToDisplay = itemsToDisplay.filter(i => i.status === 'UPCOMING');
+    if (currentFilter === "PAID") {
+      itemsToDisplay = itemsToDisplay.filter((i) => i.status === "PAID");
+    } else if (currentFilter === "DUE") {
+      itemsToDisplay = itemsToDisplay.filter((i) => i.status === "DUE");
+    } else if (currentFilter === "UPCOMING") {
+      itemsToDisplay = itemsToDisplay.filter((i) => i.status === "UPCOMING");
     }
 
     if (itemsToDisplay.length === 0) {
@@ -4755,28 +6031,31 @@ const App = {
       return;
     }
 
-    tbody.innerHTML = itemsToDisplay.map(item => {
-      let statusBadge = '';
-      let actionBtn = '';
-      let rowClass = 'schedule-table-row';
+    tbody.innerHTML = itemsToDisplay
+      .map((item) => {
+        let statusBadge = "";
+        let actionBtn = "";
+        let rowClass = "schedule-table-row";
 
-      if (item.status === 'PAID') {
-        const shortDate = item.paidDate ? item.paidDate.split(' à ')[0] : 'Réglé';
-        statusBadge = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé (${shortDate})</span>`;
-        actionBtn = `
+        if (item.status === "PAID") {
+          const shortDate = item.paidDate
+            ? item.paidDate.split(" à ")[0]
+            : "Réglé";
+          statusBadge = `<span class="badge badge-approved"><i class="fas fa-check"></i> Payé (${shortDate})</span>`;
+          actionBtn = `
           <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
             <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
               <i class="fas fa-sidebar"></i> <span class="hide-xs">Détails</span>
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.showToast('Téléchargement Quittance ${item.receiptRef || 'PDF'}', 'success')" title="Télécharger Reçu">
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.showToast('Téléchargement Quittance ${item.receiptRef || "PDF"}', 'success')" title="Télécharger Reçu">
               <i class="fas fa-file-invoice text-primary"></i> <span class="hide-xs">Reçu</span>
             </button>
           </div>
         `;
-      } else if (item.status === 'DUE') {
-        rowClass += ' due-active';
-        statusBadge = `<span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler</span>`;
-        actionBtn = `
+        } else if (item.status === "DUE") {
+          rowClass += " due-active";
+          statusBadge = `<span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler</span>`;
+          actionBtn = `
           <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
             <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
               <i class="fas fa-sidebar"></i> <span class="hide-xs">Détails</span>
@@ -4786,32 +6065,32 @@ const App = {
             </button>
           </div>
         `;
-      } else {
-        statusBadge = `<span class="badge badge-submitted">À venir</span>`;
-        actionBtn = `
+        } else {
+          statusBadge = `<span class="badge badge-submitted">À venir</span>`;
+          actionBtn = `
           <div style="display: flex; justify-content: flex-end; gap: 0.35rem; align-items: center;">
             <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openScheduleDrawer(${item.number})" title="Voir le volet détail">
               <i class="fas fa-sidebar"></i> Détails
             </button>
           </div>
         `;
-      }
+        }
 
-      return `
+        return `
         <tr class="${rowClass}" onclick="App.openScheduleDrawer(${item.number})">
           <td>
-            <div style="font-weight: 700; color: ${item.status === 'DUE' ? 'var(--cif-gold-700)' : 'var(--text-primary)'};">
+            <div style="font-weight: 700; color: ${item.status === "DUE" ? "var(--cif-gold-700)" : "var(--text-primary)"};">
               Échéance N° ${item.number}
             </div>
             <div style="font-size: 0.72rem; color: var(--text-subtle);">
-              ${item.number === 12 ? 'Dernière / Clôture' : 'Mensualité standard'}
+              ${item.number === 12 ? "Dernière / Clôture" : "Mensualité standard"}
             </div>
           </td>
           <td>
             <div style="font-weight: 600; font-size: 0.85rem;">${item.dueDate}</div>
           </td>
           <td>
-            <div class="amount-cell" style="font-weight: 800; font-size: 0.95rem; color: ${item.status === 'DUE' ? 'var(--cif-gold-700)' : 'var(--primary-700)'};">
+            <div class="amount-cell" style="font-weight: 800; font-size: 0.95rem; color: ${item.status === "DUE" ? "var(--cif-gold-700)" : "var(--primary-700)"};">
               ${CreditScoringEngine.formatFCFA(item.total)}
             </div>
           </td>
@@ -4829,25 +6108,29 @@ const App = {
           </td>
         </tr>
       `;
-    }).join('');
+      })
+      .join("");
   },
 
   filterScheduleTable(filter, buttonEl = null) {
-    if (window.AppInteractions && typeof window.AppInteractions.filterScheduleTable === 'function') {
+    if (
+      window.AppInteractions &&
+      typeof window.AppInteractions.filterScheduleTable === "function"
+    ) {
       window.AppInteractions.filterScheduleTable(filter, buttonEl);
       return;
     }
 
     this.currentScheduleFilter = filter;
-    
+
     // Update Tab UI
-    ['all', 'paid', 'due', 'upcoming'].forEach(f => {
+    ["all", "paid", "due", "upcoming"].forEach((f) => {
       const btn = document.getElementById(`filter-sched-${f}`);
       if (btn) {
         if (f.toUpperCase() === filter) {
-          btn.classList.add('active');
+          btn.classList.add("active");
         } else {
-          btn.classList.remove('active');
+          btn.classList.remove("active");
         }
       }
     });
@@ -4856,23 +6139,27 @@ const App = {
   },
 
   openScheduleDrawer(installmentNumber) {
-    const item = this.scheduleInstallments.find(i => i.number === installmentNumber) || this.scheduleInstallments[0];
+    const item =
+      this.scheduleInstallments.find((i) => i.number === installmentNumber) ||
+      this.scheduleInstallments[0];
     if (!item) return;
 
     // Header Info
-    const titleElem = document.getElementById('drawer-installment-title');
-    const dateElem = document.getElementById('drawer-installment-date');
-    if (titleElem) titleElem.textContent = `Échéance N° ${item.number} sur ${this.scheduleInstallments.length}`;
+    const titleElem = document.getElementById("drawer-installment-title");
+    const dateElem = document.getElementById("drawer-installment-date");
+    if (titleElem)
+      titleElem.textContent = `Échéance N° ${item.number} sur ${this.scheduleInstallments.length}`;
     if (dateElem) dateElem.textContent = `Date d'Exigibilité : ${item.dueDate}`;
 
     // Hero Card
-    const heroAmount = document.getElementById('drawer-hero-amount');
-    const heroStatus = document.getElementById('drawer-hero-status');
-    if (heroAmount) heroAmount.textContent = CreditScoringEngine.formatFCFA(item.total);
+    const heroAmount = document.getElementById("drawer-hero-amount");
+    const heroStatus = document.getElementById("drawer-hero-status");
+    if (heroAmount)
+      heroAmount.textContent = CreditScoringEngine.formatFCFA(item.total);
     if (heroStatus) {
-      if (item.status === 'PAID') {
+      if (item.status === "PAID") {
         heroStatus.innerHTML = `<span class="badge badge-approved"><i class="fas fa-circle-check"></i> Échéance Soldée & Validée</span>`;
-      } else if (item.status === 'DUE') {
+      } else if (item.status === "DUE") {
         heroStatus.innerHTML = `<span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>`;
       } else {
         heroStatus.innerHTML = `<span class="badge badge-submitted"><i class="fas fa-clock"></i> Échéance Future non échue</span>`;
@@ -4880,15 +6167,19 @@ const App = {
     }
 
     // Financial Values
-    const valPrincipal = document.getElementById('drawer-val-principal');
-    const valInterest = document.getElementById('drawer-val-interest');
-    const valInsurance = document.getElementById('drawer-val-insurance');
-    const valRemaining = document.getElementById('drawer-val-remaining');
+    const valPrincipal = document.getElementById("drawer-val-principal");
+    const valInterest = document.getElementById("drawer-val-interest");
+    const valInsurance = document.getElementById("drawer-val-insurance");
+    const valRemaining = document.getElementById("drawer-val-remaining");
 
-    if (valPrincipal) valPrincipal.textContent = CreditScoringEngine.formatFCFA(item.principal);
-    if (valInterest) valInterest.textContent = CreditScoringEngine.formatFCFA(item.interest);
-    if (valInsurance) valInsurance.textContent = CreditScoringEngine.formatFCFA(item.insurance);
-    if (valRemaining) valRemaining.textContent = CreditScoringEngine.formatFCFA(item.remaining);
+    if (valPrincipal)
+      valPrincipal.textContent = CreditScoringEngine.formatFCFA(item.principal);
+    if (valInterest)
+      valInterest.textContent = CreditScoringEngine.formatFCFA(item.interest);
+    if (valInsurance)
+      valInsurance.textContent = CreditScoringEngine.formatFCFA(item.insurance);
+    if (valRemaining)
+      valRemaining.textContent = CreditScoringEngine.formatFCFA(item.remaining);
 
     // Segmented Bars
     const total = item.total || 235000;
@@ -4896,34 +6187,41 @@ const App = {
     const iPct = ((item.interest / total) * 100).toFixed(1);
     const insPct = (100 - pPct - iPct).toFixed(1);
 
-    const barP = document.getElementById('drawer-bar-principal');
-    const barI = document.getElementById('drawer-bar-interest');
-    const barIns = document.getElementById('drawer-bar-insurance');
+    const barP = document.getElementById("drawer-bar-principal");
+    const barI = document.getElementById("drawer-bar-interest");
+    const barIns = document.getElementById("drawer-bar-insurance");
     if (barP) barP.style.width = `${pPct}%`;
     if (barI) barI.style.width = `${iPct}%`;
     if (barIns) barIns.style.width = `${insPct}%`;
 
     // Tracing & Receipt Info
-    const valProvider = document.getElementById('drawer-val-provider');
-    const valPayDate = document.getElementById('drawer-val-paydate');
-    const valReceipt = document.getElementById('drawer-val-receipt');
+    const valProvider = document.getElementById("drawer-val-provider");
+    const valPayDate = document.getElementById("drawer-val-paydate");
+    const valReceipt = document.getElementById("drawer-val-receipt");
 
-    if (valProvider) valProvider.textContent = item.provider || 'En attente de paiement Mobile Money';
-    if (valPayDate) valPayDate.textContent = item.paidDate ? `Réglé le ${item.paidDate}` : `Non réglé (Exigible le ${item.dueDate})`;
-    if (valReceipt) valReceipt.textContent = item.receiptRef || 'Générée automatiquement dès validation';
+    if (valProvider)
+      valProvider.textContent =
+        item.provider || "En attente de paiement Mobile Money";
+    if (valPayDate)
+      valPayDate.textContent = item.paidDate
+        ? `Réglé le ${item.paidDate}`
+        : `Non réglé (Exigible le ${item.dueDate})`;
+    if (valReceipt)
+      valReceipt.textContent =
+        item.receiptRef || "Générée automatiquement dès validation";
 
     // Footer Actions
-    const footerActions = document.getElementById('drawer-footer-actions');
+    const footerActions = document.getElementById("drawer-footer-actions");
     if (footerActions) {
-      if (item.status === 'DUE') {
+      if (item.status === "DUE") {
         footerActions.innerHTML = `
           <button class="btn btn-warning" onclick="App.closeScheduleDrawer(); App.openClientPaymentModal(${item.number}, ${item.total})">
             <i class="fas fa-wallet mr-1"></i> Payer ${CreditScoringEngine.formatFCFA(item.total)}
           </button>
         `;
-      } else if (item.status === 'PAID') {
+      } else if (item.status === "PAID") {
         footerActions.innerHTML = `
-          <button class="btn btn-success" onclick="App.showToast('Téléchargement de la Quittance officielle ${item.receiptRef || 'REC'} au format PDF...', 'success')">
+          <button class="btn btn-success" onclick="App.showToast('Téléchargement de la Quittance officielle ${item.receiptRef || "REC"} au format PDF...', 'success')">
             <i class="fas fa-file-pdf mr-1"></i> Télécharger Quittance PDF
           </button>
         `;
@@ -4937,219 +6235,406 @@ const App = {
     }
 
     // Open Backdrop
-    const backdrop = document.getElementById('schedule-drawer-backdrop');
-    if (backdrop) backdrop.classList.add('active');
+    const backdrop = document.getElementById("schedule-drawer-backdrop");
+    if (backdrop) backdrop.classList.add("active");
   },
 
   closeScheduleDrawer() {
-    const backdrop = document.getElementById('schedule-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("schedule-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   // =========================================================================
   // [FEATURE] VOLET LATÉRAL DE DÉTAIL D'UNE DEMANDE DE CRÉDIT (DEMANDEUR)
   // =========================================================================
-  openClientRequestDrawer(identifier = 'REQ-2026-0891') {
+  openClientRequestDrawer(identifier = "REQ-2026-0891") {
     let req = null;
-    if (typeof identifier === 'number') {
-      req = DB.findById('credit_requests', identifier);
+    if (typeof identifier === "number") {
+      req = DB.findById("credit_requests", identifier);
     } else {
-      req = DB.data.credit_requests.find(r => r.request_number === identifier || r.id === identifier);
+      req = DB.data.credit_requests.find(
+        (r) => r.request_number === identifier || r.id === identifier,
+      );
     }
 
     const historicalMap = {
-      'REQ-2026-0891': {
-        request_number: 'REQ-2026-0891',
-        submitted_at: '11/08/2026',
-        agency: 'Agence Grand Marché (Bamako, Mali)',
-        purpose: 'Achat de stock tissus wax pour la fête de Tabaski',
+      "REQ-2026-0891": {
+        request_number: "REQ-2026-0891",
+        submitted_at: "11/08/2026",
+        agency: "Agence Grand Marché (Bamako, Mali)",
+        purpose: "Achat de stock tissus wax pour la fête de Tabaski",
         amount: 2500000,
         duration: 12,
         monthly: 235000,
-        rate: '1.20% / mois dégressif (14.4% l\'an UEMOA)',
-        insurance: '13 750 FCFA / mois (Incluse)',
+        rate: "1.20% / mois dégressif (14.4% l'an UEMOA)",
+        insurance: "13 750 FCFA / mois (Incluse)",
         totalCost: 320000,
-        disbursement: 'Mobile Money (Wave/Orange) ou Guichet Caisse',
-        status: 'ANALYSIS',
-        statusBadge: '<span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque (Score: 78/100)</span>',
-        stepBadge: 'Étape 4 sur 6',
+        disbursement: "Mobile Money (Wave/Orange) ou Guichet Caisse",
+        status: "ANALYSIS",
+        statusBadge:
+          '<span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque (Score: 78/100)</span>',
+        stepBadge: "Étape 4 sur 6",
         steps: [
-          { name: '1. Dépôt & Enregistrement', date: '11/08/2026 à 10:14', state: 'done', desc: 'Dossier constitué et enregistré au guichet digital CreditFast' },
-          { name: '2. Extraction OCR & Contrôle Pièces', date: '11/08/2026 à 14:30', state: 'done', desc: '4/4 pièces certifiées conformes par l\'IA OCR' },
-          { name: '3. Calcul Capacité & Reste à Vivre', date: '12/08/2026 à 09:05', state: 'done', desc: 'Reste à vivre mensuel net : 325 000 FCFA (Conforme UEMOA)' },
-          { name: '4. Revue Approfondie Analyste Risque', date: 'En cours d\'instruction', state: 'active', desc: 'Score calculé : 78/100 • Avis favorable sous réserve de validation' },
-          { name: '5. Vote & Décision Comité de Crédit', date: 'Prévu le 20/08/2026', state: 'pending', desc: 'Examen collégial et signature électronique du PV' },
-          { name: '6. Déblocage & Mise à Disposition', date: 'Sous 24h après accord', state: 'pending', desc: 'Versement direct par virement ou portefeuille Mobile Money' }
+          {
+            name: "1. Dépôt & Enregistrement",
+            date: "11/08/2026 à 10:14",
+            state: "done",
+            desc: "Dossier constitué et enregistré au guichet digital CreditFast",
+          },
+          {
+            name: "2. Extraction OCR & Contrôle Pièces",
+            date: "11/08/2026 à 14:30",
+            state: "done",
+            desc: "4/4 pièces certifiées conformes par l'IA OCR",
+          },
+          {
+            name: "3. Calcul Capacité & Reste à Vivre",
+            date: "12/08/2026 à 09:05",
+            state: "done",
+            desc: "Reste à vivre mensuel net : 325 000 FCFA (Conforme UEMOA)",
+          },
+          {
+            name: "4. Revue Approfondie Analyste Risque",
+            date: "En cours d'instruction",
+            state: "active",
+            desc: "Score calculé : 78/100 • Avis favorable sous réserve de validation",
+          },
+          {
+            name: "5. Vote & Décision Comité de Crédit",
+            date: "Prévu le 20/08/2026",
+            state: "pending",
+            desc: "Examen collégial et signature électronique du PV",
+          },
+          {
+            name: "6. Déblocage & Mise à Disposition",
+            date: "Sous 24h après accord",
+            state: "pending",
+            desc: "Versement direct par virement ou portefeuille Mobile Money",
+          },
         ],
         docs: [
-          { name: 'Facture_Proforma_Wax_BATEXI.pdf', type: 'Devis & Proforma', size: '1.4 Mo' },
-          { name: 'Releve_Compte_6_Mois_CreditFast.pdf', type: 'Relevé Bancaire', size: '2.8 Mo' },
-          { name: 'RCCM_Bamako_ML-BKO-2020-B-142.pdf', type: 'Registre Commerce', size: '890 Ko' },
-          { name: 'CNI_Biometrique_Ndiaye.pdf', type: 'Identité Client', size: '1.1 Mo' }
+          {
+            name: "Facture_Proforma_Wax_BATEXI.pdf",
+            type: "Devis & Proforma",
+            size: "1.4 Mo",
+          },
+          {
+            name: "Releve_Compte_6_Mois_CreditFast.pdf",
+            type: "Relevé Bancaire",
+            size: "2.8 Mo",
+          },
+          {
+            name: "RCCM_Bamako_ML-BKO-2020-B-142.pdf",
+            type: "Registre Commerce",
+            size: "890 Ko",
+          },
+          {
+            name: "CNI_Biometrique_Ndiaye.pdf",
+            type: "Identité Client",
+            size: "1.1 Mo",
+          },
         ],
         guarantee: {
-          type: 'Stock de Marchandise & Rouleaux Bazin',
-          declared: '3 800 000 FCFA',
-          verified: '3 400 000 FCFA',
-          statusBadge: '<span class="badge badge-approved"><i class="fas fa-circle-check"></i> Contrôlée & Conforme</span>',
-          desc: 'Stock de rouleaux de tissus wax hollandais et bazin riche entreposé en boutique Grand Marché (constat physique par l\'Agent Adama Traore).'
+          type: "Stock de Marchandise & Rouleaux Bazin",
+          declared: "3 800 000 FCFA",
+          verified: "3 400 000 FCFA",
+          statusBadge:
+            '<span class="badge badge-approved"><i class="fas fa-circle-check"></i> Contrôlée & Conforme</span>',
+          desc: "Stock de rouleaux de tissus wax hollandais et bazin riche entreposé en boutique Grand Marché (constat physique par l'Agent Adama Traore).",
         },
-        actions: 'ACTIVE'
+        actions: "ACTIVE",
       },
-      'REQ-2025-0412': {
-        request_number: 'REQ-2025-0412',
-        submitted_at: '14/04/2025',
-        agency: 'Agence Grand Marché (Bamako, Mali)',
-        purpose: 'Équipement machine à coudre industrielle double entraînement',
+      "REQ-2025-0412": {
+        request_number: "REQ-2025-0412",
+        submitted_at: "14/04/2025",
+        agency: "Agence Grand Marché (Bamako, Mali)",
+        purpose: "Équipement machine à coudre industrielle double entraînement",
         amount: 1200000,
         duration: 10,
         monthly: 132000,
-        rate: '1.20% / mois dégressif',
-        insurance: '6 600 FCFA / mois (Soldée)',
+        rate: "1.20% / mois dégressif",
+        insurance: "6 600 FCFA / mois (Soldée)",
         totalCost: 120000,
-        disbursement: 'Virement Agence',
-        status: 'APPROVED',
-        statusBadge: '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
-        stepBadge: 'Dossier Clôturé (100%)',
+        disbursement: "Virement Agence",
+        status: "APPROVED",
+        statusBadge:
+          '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
+        stepBadge: "Dossier Clôturé (100%)",
         steps: [
-          { name: '1. Demande Déposée', date: '14/04/2025', state: 'done', desc: 'Financement d\'équipement professionnel' },
-          { name: '2. Documents & Devis Validés', date: '14/04/2025', state: 'done', desc: 'Devis machine Brother validé' },
-          { name: '3. Capacité Financière Conforme', date: '15/04/2025', state: 'done', desc: 'Ratio d\'endettement : 22%' },
-          { name: '4. Validation Analyste Risque', date: '16/04/2025', state: 'done', desc: 'Score de crédit : 84/100' },
-          { name: '5. Décision Comité Favorable', date: '17/04/2025', state: 'done', desc: 'Accord unanime du Comité' },
-          { name: '6. Déblocage & 10 Remboursements Réglés', date: 'Février 2026', state: 'done', desc: '10/10 échéances honorées sans aucun retard. Quittance finale délivrée.' }
+          {
+            name: "1. Demande Déposée",
+            date: "14/04/2025",
+            state: "done",
+            desc: "Financement d'équipement professionnel",
+          },
+          {
+            name: "2. Documents & Devis Validés",
+            date: "14/04/2025",
+            state: "done",
+            desc: "Devis machine Brother validé",
+          },
+          {
+            name: "3. Capacité Financière Conforme",
+            date: "15/04/2025",
+            state: "done",
+            desc: "Ratio d'endettement : 22%",
+          },
+          {
+            name: "4. Validation Analyste Risque",
+            date: "16/04/2025",
+            state: "done",
+            desc: "Score de crédit : 84/100",
+          },
+          {
+            name: "5. Décision Comité Favorable",
+            date: "17/04/2025",
+            state: "done",
+            desc: "Accord unanime du Comité",
+          },
+          {
+            name: "6. Déblocage & 10 Remboursements Réglés",
+            date: "Février 2026",
+            state: "done",
+            desc: "10/10 échéances honorées sans aucun retard. Quittance finale délivrée.",
+          },
         ],
         docs: [
-          { name: 'Facture_Machine_Industrielle_Brother.pdf', type: 'Facture Achat', size: '1.1 Mo' },
-          { name: 'Contrat_Pret_Signe_CF-2025-0412.pdf', type: 'Contrat Prêt', size: '2.2 Mo' },
-          { name: 'Attestation_Fin_Engagement_Soldé.pdf', type: 'Quittance Clôture', size: '650 Ko' }
+          {
+            name: "Facture_Machine_Industrielle_Brother.pdf",
+            type: "Facture Achat",
+            size: "1.1 Mo",
+          },
+          {
+            name: "Contrat_Pret_Signe_CF-2025-0412.pdf",
+            type: "Contrat Prêt",
+            size: "2.2 Mo",
+          },
+          {
+            name: "Attestation_Fin_Engagement_Soldé.pdf",
+            type: "Quittance Clôture",
+            size: "650 Ko",
+          },
         ],
         guarantee: {
-          type: 'Gage sur Matériel Professionnel',
-          declared: '1 500 000 FCFA',
-          verified: '1 500 000 FCFA',
-          statusBadge: '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Mainlevée Délivrée</span>',
-          desc: 'Gage mobilier sur machine à coudre industrielle. Mainlevée totale actée suite au remboursement intégral.'
+          type: "Gage sur Matériel Professionnel",
+          declared: "1 500 000 FCFA",
+          verified: "1 500 000 FCFA",
+          statusBadge:
+            '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Mainlevée Délivrée</span>',
+          desc: "Gage mobilier sur machine à coudre industrielle. Mainlevée totale actée suite au remboursement intégral.",
         },
-        actions: 'CLOSED'
+        actions: "CLOSED",
       },
-      'REQ-2024-0199': {
-        request_number: 'REQ-2024-0199',
-        submitted_at: '03/02/2024',
-        agency: 'Agence Grand Marché (Bamako, Mali)',
-        purpose: 'Fonds de roulement boutique Médina & mercerie',
+      "REQ-2024-0199": {
+        request_number: "REQ-2024-0199",
+        submitted_at: "03/02/2024",
+        agency: "Agence Grand Marché (Bamako, Mali)",
+        purpose: "Fonds de roulement boutique Médina & mercerie",
         amount: 800000,
         duration: 6,
         monthly: 140000,
-        rate: '1.20% / mois dégressif',
-        insurance: '4 400 FCFA / mois (Soldée)',
+        rate: "1.20% / mois dégressif",
+        insurance: "4 400 FCFA / mois (Soldée)",
         totalCost: 40000,
-        disbursement: 'Orange Money',
-        status: 'APPROVED',
-        statusBadge: '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
-        stepBadge: 'Dossier Clôturé (100%)',
+        disbursement: "Orange Money",
+        status: "APPROVED",
+        statusBadge:
+          '<span class="badge badge-approved"><i class="fas fa-check-double mr-1"></i> Remboursé & Clôturé avec Succès</span>',
+        stepBadge: "Dossier Clôturé (100%)",
         steps: [
-          { name: '1. Demande Déposée', date: '03/02/2024', state: 'done', desc: 'Microcrédit fonds de roulement' },
-          { name: '2. Pièces Déposées', date: '03/02/2024', state: 'done', desc: 'Pièce d\'identité et quittance EDM' },
-          { name: '3. Instruction Rapide', date: '04/02/2024', state: 'done', desc: 'Confort de trésorerie avéré' },
-          { name: '4. Scoring Automatisé Conforme', date: '04/02/2024', state: 'done', desc: 'Score de crédit : 80/100' },
-          { name: '5. Approbation Caisse', date: '05/02/2024', state: 'done', desc: 'Accord délégué agence' },
-          { name: '6. Prêt Soldé en Août 2024', date: 'Août 2024', state: 'done', desc: '6/6 mensualités payées à bonne date.' }
+          {
+            name: "1. Demande Déposée",
+            date: "03/02/2024",
+            state: "done",
+            desc: "Microcrédit fonds de roulement",
+          },
+          {
+            name: "2. Pièces Déposées",
+            date: "03/02/2024",
+            state: "done",
+            desc: "Pièce d'identité et quittance EDM",
+          },
+          {
+            name: "3. Instruction Rapide",
+            date: "04/02/2024",
+            state: "done",
+            desc: "Confort de trésorerie avéré",
+          },
+          {
+            name: "4. Scoring Automatisé Conforme",
+            date: "04/02/2024",
+            state: "done",
+            desc: "Score de crédit : 80/100",
+          },
+          {
+            name: "5. Approbation Caisse",
+            date: "05/02/2024",
+            state: "done",
+            desc: "Accord délégué agence",
+          },
+          {
+            name: "6. Prêt Soldé en Août 2024",
+            date: "Août 2024",
+            state: "done",
+            desc: "6/6 mensualités payées à bonne date.",
+          },
         ],
         docs: [
-          { name: 'Contrat_CreditFast_2024_0199.pdf', type: 'Contrat Prêt', size: '1.8 Mo' },
-          { name: 'Attestation_Solde_Pret_2024.pdf', type: 'Quittance Finale', size: '540 Ko' }
+          {
+            name: "Contrat_CreditFast_2024_0199.pdf",
+            type: "Contrat Prêt",
+            size: "1.8 Mo",
+          },
+          {
+            name: "Attestation_Solde_Pret_2024.pdf",
+            type: "Quittance Finale",
+            size: "540 Ko",
+          },
         ],
         guarantee: {
-          type: 'Nantissement d\'Épargne Bloquée',
-          declared: '400 000 FCFA',
-          verified: '400 000 FCFA',
-          statusBadge: '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Caution Libérée</span>',
-          desc: 'Nantissement partiel sur compte sur livret CreditFast. Fonds débloqués et restitués.'
+          type: "Nantissement d'Épargne Bloquée",
+          declared: "400 000 FCFA",
+          verified: "400 000 FCFA",
+          statusBadge:
+            '<span class="badge badge-approved"><i class="fas fa-lock-open"></i> Caution Libérée</span>',
+          desc: "Nantissement partiel sur compte sur livret CreditFast. Fonds débloqués et restitués.",
         },
-        actions: 'CLOSED'
-      }
+        actions: "CLOSED",
+      },
     };
 
-    const data = historicalMap[identifier] || (req ? {
-      request_number: req.request_number,
-      submitted_at: req.submitted_at ? new Date(req.submitted_at).toLocaleDateString('fr-FR') : '11/08/2026',
-      agency: 'Agence Grand Marché (Bamako, Mali)',
-      purpose: req.purpose || 'Financement d\'activité professionnelle',
-      amount: req.requested_amount || 2500000,
-      duration: req.duration_months || 12,
-      monthly: req.estimated_monthly_payment || 235000,
-      rate: '1.20% / mois dégressif',
-      insurance: 'Assurance incluse',
-      totalCost: Math.round((req.requested_amount || 2500000) * 0.12),
-      disbursement: 'Mobile Money / Caisse',
-      status: req.status || 'ANALYSIS',
-      statusBadge: AppInteractions.getStatusBadge(req.status || 'ANALYSIS'),
-      stepBadge: req.status === 'APPROVED' ? 'Accordé' : 'En cours',
-      steps: [
-        { name: '1. Demande Déposée', date: 'Enregistrée', state: 'done', desc: 'Dossier créé' },
-        { name: '2. Contrôle Pièces', date: 'Validé', state: 'done', desc: 'Documents analysés' },
-        { name: '3. Analyse Financière', date: 'Validé', state: 'done', desc: 'Reste à vivre calculé' },
-        { name: '4. Décision & Déblocage', date: 'En cours', state: req.status === 'APPROVED' ? 'done' : 'active', desc: 'Traitement final' }
-      ],
-      docs: [
-        { name: 'Dossier_Financement_' + req.request_number + '.pdf', type: 'Dossier Numérique', size: '1.5 Mo' }
-      ],
-      guarantee: {
-        type: 'Garantie déclarée',
-        declared: CreditScoringEngine.formatFCFA(req.requested_amount || 2000000),
-        verified: CreditScoringEngine.formatFCFA(req.requested_amount || 2000000),
-        statusBadge: '<span class="badge badge-approved">Conforme</span>',
-        desc: 'Garanties enregistrées pour ce dossier.'
-      },
-      actions: req.status === 'APPROVED' ? 'CLOSED' : 'ACTIVE'
-    } : historicalMap['REQ-2026-0891']);
+    const data =
+      historicalMap[identifier] ||
+      (req
+        ? {
+            request_number: req.request_number,
+            submitted_at: req.submitted_at
+              ? new Date(req.submitted_at).toLocaleDateString("fr-FR")
+              : "11/08/2026",
+            agency: "Agence Grand Marché (Bamako, Mali)",
+            purpose: req.purpose || "Financement d'activité professionnelle",
+            amount: req.requested_amount || 2500000,
+            duration: req.duration_months || 12,
+            monthly: req.estimated_monthly_payment || 235000,
+            rate: "1.20% / mois dégressif",
+            insurance: "Assurance incluse",
+            totalCost: Math.round((req.requested_amount || 2500000) * 0.12),
+            disbursement: "Mobile Money / Caisse",
+            status: req.status || "ANALYSIS",
+            statusBadge: AppInteractions.getStatusBadge(
+              req.status || "ANALYSIS",
+            ),
+            stepBadge: req.status === "APPROVED" ? "Accordé" : "En cours",
+            steps: [
+              {
+                name: "1. Demande Déposée",
+                date: "Enregistrée",
+                state: "done",
+                desc: "Dossier créé",
+              },
+              {
+                name: "2. Contrôle Pièces",
+                date: "Validé",
+                state: "done",
+                desc: "Documents analysés",
+              },
+              {
+                name: "3. Analyse Financière",
+                date: "Validé",
+                state: "done",
+                desc: "Reste à vivre calculé",
+              },
+              {
+                name: "4. Décision & Déblocage",
+                date: "En cours",
+                state: req.status === "APPROVED" ? "done" : "active",
+                desc: "Traitement final",
+              },
+            ],
+            docs: [
+              {
+                name: "Dossier_Financement_" + req.request_number + ".pdf",
+                type: "Dossier Numérique",
+                size: "1.5 Mo",
+              },
+            ],
+            guarantee: {
+              type: "Garantie déclarée",
+              declared: CreditScoringEngine.formatFCFA(
+                req.requested_amount || 2000000,
+              ),
+              verified: CreditScoringEngine.formatFCFA(
+                req.requested_amount || 2000000,
+              ),
+              statusBadge: '<span class="badge badge-approved">Conforme</span>',
+              desc: "Garanties enregistrées pour ce dossier.",
+            },
+            actions: req.status === "APPROVED" ? "CLOSED" : "ACTIVE",
+          }
+        : historicalMap["REQ-2026-0891"]);
 
     // Fill Drawer Elements
-    const titleEl = document.getElementById('crd-drawer-title');
-    const subtitleEl = document.getElementById('crd-drawer-subtitle');
-    const amountEl = document.getElementById('crd-drawer-amount');
-    const statusEl = document.getElementById('crd-drawer-status');
-    const purposeEl = document.getElementById('crd-drawer-purpose');
+    const titleEl = document.getElementById("crd-drawer-title");
+    const subtitleEl = document.getElementById("crd-drawer-subtitle");
+    const amountEl = document.getElementById("crd-drawer-amount");
+    const statusEl = document.getElementById("crd-drawer-status");
+    const purposeEl = document.getElementById("crd-drawer-purpose");
 
     if (titleEl) titleEl.textContent = `Dossier #${data.request_number}`;
-    if (subtitleEl) subtitleEl.textContent = `Déposé le ${data.submitted_at} • ${data.agency}`;
-    if (amountEl) amountEl.textContent = CreditScoringEngine.formatFCFA(data.amount);
+    if (subtitleEl)
+      subtitleEl.textContent = `Déposé le ${data.submitted_at} • ${data.agency}`;
+    if (amountEl)
+      amountEl.textContent = CreditScoringEngine.formatFCFA(data.amount);
     if (statusEl) statusEl.innerHTML = data.statusBadge;
     if (purposeEl) purposeEl.textContent = data.purpose;
 
     // Financial Values
-    const durVal = document.getElementById('crd-drawer-duration-val');
-    const durBadge = document.getElementById('crd-drawer-duration-badge');
-    const monVal = document.getElementById('crd-drawer-monthly-val');
-    const rateVal = document.getElementById('crd-drawer-rate-val');
-    const insVal = document.getElementById('crd-drawer-insurance-val');
-    const costVal = document.getElementById('crd-drawer-cost-val');
-    const disbVal = document.getElementById('crd-drawer-disbursement-val');
+    const durVal = document.getElementById("crd-drawer-duration-val");
+    const durBadge = document.getElementById("crd-drawer-duration-badge");
+    const monVal = document.getElementById("crd-drawer-monthly-val");
+    const rateVal = document.getElementById("crd-drawer-rate-val");
+    const insVal = document.getElementById("crd-drawer-insurance-val");
+    const costVal = document.getElementById("crd-drawer-cost-val");
+    const disbVal = document.getElementById("crd-drawer-disbursement-val");
 
     if (durVal) durVal.textContent = `${data.duration} Mois`;
     if (durBadge) durBadge.textContent = `${data.duration} Mois`;
-    if (monVal) monVal.textContent = CreditScoringEngine.formatFCFA(data.monthly);
+    if (monVal)
+      monVal.textContent = CreditScoringEngine.formatFCFA(data.monthly);
     if (rateVal) rateVal.textContent = data.rate;
     if (insVal) insVal.textContent = data.insurance;
-    if (costVal) costVal.textContent = CreditScoringEngine.formatFCFA(data.totalCost);
+    if (costVal)
+      costVal.textContent = CreditScoringEngine.formatFCFA(data.totalCost);
     if (disbVal) disbVal.textContent = data.disbursement;
 
     // Stepper
-    const stepBadge = document.getElementById('crd-drawer-step-badge');
+    const stepBadge = document.getElementById("crd-drawer-step-badge");
     if (stepBadge) stepBadge.textContent = data.stepBadge;
 
-    const stepperContainer = document.getElementById('crd-drawer-stepper-container');
+    const stepperContainer = document.getElementById(
+      "crd-drawer-stepper-container",
+    );
     if (stepperContainer && data.steps) {
-      stepperContainer.innerHTML = data.steps.map((st, idx) => {
-        const isDone = st.state === 'done';
-        const isActive = st.state === 'active';
-        const icon = isDone ? '<i class="fas fa-check"></i>' : (isActive ? '<i class="fas fa-spinner fa-spin"></i>' : String(idx + 1));
-        const dotBg = isDone ? 'var(--primary-600)' : (isActive ? 'var(--cif-gold-500)' : 'var(--border-color)');
-        const dotColor = (isDone || isActive) ? '#fff' : 'var(--text-muted)';
-        const titleColor = isActive ? 'var(--primary-700)' : 'var(--text-primary)';
+      stepperContainer.innerHTML = data.steps
+        .map((st, idx) => {
+          const isDone = st.state === "done";
+          const isActive = st.state === "active";
+          const icon = isDone
+            ? '<i class="fas fa-check"></i>'
+            : isActive
+              ? '<i class="fas fa-spinner fa-spin"></i>'
+              : String(idx + 1);
+          const dotBg = isDone
+            ? "var(--primary-600)"
+            : isActive
+              ? "var(--cif-gold-500)"
+              : "var(--border-color)";
+          const dotColor = isDone || isActive ? "#fff" : "var(--text-muted)";
+          const titleColor = isActive
+            ? "var(--primary-700)"
+            : "var(--text-primary)";
 
-        return `
+          return `
           <div style="display: flex; align-items: flex-start; gap: 0.75rem; position: relative;">
             <div style="width: 26px; height: 26px; border-radius: 50%; background: ${dotBg}; color: ${dotColor}; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;">
               ${icon}
@@ -5163,15 +6648,19 @@ const App = {
             </div>
           </div>
         `;
-      }).join('');
+        })
+        .join("");
     }
 
     // Documents GED
-    const docsCount = document.getElementById('crd-drawer-docs-count');
-    const docsList = document.getElementById('crd-drawer-docs-list');
-    if (docsCount) docsCount.textContent = `${data.docs ? data.docs.length : 0} pièces`;
+    const docsCount = document.getElementById("crd-drawer-docs-count");
+    const docsList = document.getElementById("crd-drawer-docs-list");
+    if (docsCount)
+      docsCount.textContent = `${data.docs ? data.docs.length : 0} pièces`;
     if (docsList && data.docs) {
-      docsList.innerHTML = data.docs.map(doc => `
+      docsList.innerHTML = data.docs
+        .map(
+          (doc) => `
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0.75rem; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
           <div style="display: flex; align-items: center; gap: 0.65rem;">
             <div style="color: var(--primary-600); font-size: 1rem;"><i class="fas fa-file-pdf"></i></div>
@@ -5184,13 +6673,16 @@ const App = {
             <i class="fas fa-check-circle mr-1"></i> Certifié
           </span>
         </div>
-      `).join('');
+      `,
+        )
+        .join("");
     }
 
     // Guarantee
-    const guarStatus = document.getElementById('crd-drawer-guar-status');
-    const guarContent = document.getElementById('crd-drawer-guar-content');
-    if (guarStatus && data.guarantee) guarStatus.innerHTML = data.guarantee.statusBadge;
+    const guarStatus = document.getElementById("crd-drawer-guar-status");
+    const guarContent = document.getElementById("crd-drawer-guar-content");
+    if (guarStatus && data.guarantee)
+      guarStatus.innerHTML = data.guarantee.statusBadge;
     if (guarContent && data.guarantee) {
       guarContent.innerHTML = `
         <div style="font-weight: 700; margin-bottom: 3px; color: var(--text-primary);">${data.guarantee.type}</div>
@@ -5203,9 +6695,9 @@ const App = {
     }
 
     // Footer Actions
-    const footerActions = document.getElementById('crd-drawer-footer-actions');
+    const footerActions = document.getElementById("crd-drawer-footer-actions");
     if (footerActions) {
-      if (data.actions === 'ACTIVE') {
+      if (data.actions === "ACTIVE") {
         footerActions.innerHTML = `
           <button class="btn btn-secondary btn-sm" onclick="App.closeClientRequestDrawer(); App.openDossier360('${data.request_number}')">
             <i class="fas fa-file-invoice mr-1"></i> Récapitulatif 360°
@@ -5230,41 +6722,49 @@ const App = {
     }
 
     // Open Backdrop
-    const backdrop = document.getElementById('client-request-drawer-backdrop');
-    if (backdrop) backdrop.classList.add('active');
+    const backdrop = document.getElementById("client-request-drawer-backdrop");
+    if (backdrop) backdrop.classList.add("active");
   },
 
   closeClientRequestDrawer() {
-    const backdrop = document.getElementById('client-request-drawer-backdrop');
-    if (backdrop) backdrop.classList.remove('active');
+    const backdrop = document.getElementById("client-request-drawer-backdrop");
+    if (backdrop) backdrop.classList.remove("active");
   },
 
   openClientPaymentModal(dueIndex = 3, amount = 235000) {
-    const modal = document.getElementById('client-payment-modal');
-    const dueLabel = document.getElementById('payment-modal-due-label');
-    const amountLabel = document.getElementById('payment-modal-amount-label');
-    const btnConfirm = document.getElementById('btn-confirm-momo-pay');
+    const modal = document.getElementById("client-payment-modal");
+    const dueLabel = document.getElementById("payment-modal-due-label");
+    const amountLabel = document.getElementById("payment-modal-amount-label");
+    const btnConfirm = document.getElementById("btn-confirm-momo-pay");
 
     if (dueLabel) dueLabel.textContent = `Échéance N° ${dueIndex} (05/09/2026)`;
-    if (amountLabel) amountLabel.textContent = CreditScoringEngine.formatFCFA(amount);
-    if (btnConfirm) btnConfirm.innerHTML = `<i class="fas fa-lock mr-2"></i> Confirmer le Paiement de ${CreditScoringEngine.formatFCFA(amount)}`;
+    if (amountLabel)
+      amountLabel.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (btnConfirm)
+      btnConfirm.innerHTML = `<i class="fas fa-lock mr-2"></i> Confirmer le Paiement de ${CreditScoringEngine.formatFCFA(amount)}`;
 
     if (modal) {
-      modal.style.display = 'flex';
+      modal.style.display = "flex";
     }
   },
 
   closeClientPaymentModal() {
-    const modal = document.getElementById('client-payment-modal');
-    if (modal) modal.style.display = 'none';
+    const modal = document.getElementById("client-payment-modal");
+    if (modal) modal.style.display = "none";
   },
 
   triggerMobileMoneyPayment(provider) {
     this.openClientPaymentModal(3, 235000);
-    const providerStr = String(provider || '').toLowerCase().split(' ')[0];
+    const providerStr = String(provider || "")
+      .toLowerCase()
+      .split(" ")[0];
     const radios = document.querySelectorAll('input[name="momo_provider"]');
-    radios.forEach(r => {
-      if (r.value && providerStr && String(r.value).toLowerCase().includes(providerStr)) {
+    radios.forEach((r) => {
+      if (
+        r.value &&
+        providerStr &&
+        String(r.value).toLowerCase().includes(providerStr)
+      ) {
         r.checked = true;
       }
     });
@@ -5272,20 +6772,28 @@ const App = {
 
   submitClientPayment(event) {
     event.preventDefault();
-    const phone = document.getElementById('payment-phone-number')?.value || '77 540 88 12';
-    const selectedProvider = document.querySelector('input[name="momo_provider"]:checked')?.value || 'Orange Money';
+    const phone =
+      document.getElementById("payment-phone-number")?.value || "77 540 88 12";
+    const selectedProvider =
+      document.querySelector('input[name="momo_provider"]:checked')?.value ||
+      "Orange Money";
 
     this.closeClientPaymentModal();
-    this.showToast(`Requête USSD envoyée vers le +223 ${phone} (${selectedProvider})...`, 'info');
+    this.showToast(
+      `Requête USSD envoyée vers le +223 ${phone} (${selectedProvider})...`,
+      "info",
+    );
 
     setTimeout(() => {
       // Mark installment #3 as paid in schedule state
-      const targetInstallment = this.scheduleInstallments.find(i => i.number === 3);
+      const targetInstallment = this.scheduleInstallments.find(
+        (i) => i.number === 3,
+      );
       if (targetInstallment) {
-        targetInstallment.status = 'PAID';
-        targetInstallment.paidDate = `20/08/2026 à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+        targetInstallment.status = "PAID";
+        targetInstallment.paidDate = `20/08/2026 à ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`;
         targetInstallment.provider = `${selectedProvider} (+223 ${phone})`;
-        targetInstallment.receiptRef = 'REC-2026-0905-8821';
+        targetInstallment.receiptRef = "REC-2026-0905-8821";
         targetInstallment.txnId = `MOMO-ML-${Date.now().toString().slice(-6)}`;
       }
 
@@ -5293,41 +6801,42 @@ const App = {
       this.renderClientSchedule();
 
       this.showSuccessModal({
-        title: 'Paiement Mobile Money Validé !',
+        title: "Paiement Mobile Money Validé !",
         subtitle: `Le règlement de votre échéance N° 3 a été débité et certifié via ${selectedProvider}.`,
-        reference: 'TXN-MOMO-2026-0905-8821',
-        amount: '235 000 FCFA',
-        payment: 'Échéance N° 3 Soldée (Principal: 200 195 F + Intérêts: 21 055 F + Assurance: 13 750 F)',
+        reference: "TXN-MOMO-2026-0905-8821",
+        amount: "235 000 FCFA",
+        payment:
+          "Échéance N° 3 Soldée (Principal: 200 195 F + Intérêts: 21 055 F + Assurance: 13 750 F)",
         statusHtml: `<i class="fas fa-circle-check"></i> Règlement Confirmé (${selectedProvider})`,
-        statusClass: 'badge-approved',
-        primaryBtnText: 'Voir mon Échéancier de Remboursement',
+        statusClass: "badge-approved",
+        primaryBtnText: "Voir mon Échéancier de Remboursement",
         onPrimaryClick: () => {
-          this.switchView('view-client-schedule');
+          this.switchView("view-client-schedule");
         },
-        receiptTitle: 'Recu_Paiement_MOMO_2026_0905.pdf'
+        receiptTitle: "Recu_Paiement_MOMO_2026_0905.pdf",
       });
     }, 1200);
   },
 
   sendAdvisorMessage() {
-    const input = document.getElementById('advisor-msg-input');
+    const input = document.getElementById("advisor-msg-input");
     if (!input || !input.value.trim()) return;
 
     const messageText = input.value.trim();
-    const chatContainer = document.getElementById('advisor-chat-messages');
+    const chatContainer = document.getElementById("advisor-chat-messages");
 
     if (chatContainer) {
       const now = new Date();
-      const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 
       // Append user message
-      const userMsgDiv = document.createElement('div');
-      userMsgDiv.style.display = 'flex';
-      userMsgDiv.style.gap = '0.75rem';
-      userMsgDiv.style.alignItems = 'flex-start';
-      userMsgDiv.style.maxWidth = '80%';
-      userMsgDiv.style.alignSelf = 'flex-end';
-      userMsgDiv.style.flexDirection = 'row-reverse';
+      const userMsgDiv = document.createElement("div");
+      userMsgDiv.style.display = "flex";
+      userMsgDiv.style.gap = "0.75rem";
+      userMsgDiv.style.alignItems = "flex-start";
+      userMsgDiv.style.maxWidth = "80%";
+      userMsgDiv.style.alignSelf = "flex-end";
+      userMsgDiv.style.flexDirection = "row-reverse";
       userMsgDiv.innerHTML = `
         <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">
           FN
@@ -5335,22 +6844,22 @@ const App = {
         <div>
           <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px; text-align: right;">Vous • Aujourd'hui à ${timeStr}</div>
           <div style="background: var(--primary-600); color: white; padding: 0.75rem 1rem; border-radius: var(--radius-lg); font-size: 0.82rem; line-height: 1.5;">
-            ${messageText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+            ${messageText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           </div>
         </div>
       `;
       chatContainer.appendChild(userMsgDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
 
-      input.value = '';
+      input.value = "";
 
       // Simulated Advisor reply
       setTimeout(() => {
-        const advisorMsgDiv = document.createElement('div');
-        advisorMsgDiv.style.display = 'flex';
-        advisorMsgDiv.style.gap = '0.75rem';
-        advisorMsgDiv.style.alignItems = 'flex-start';
-        advisorMsgDiv.style.maxWidth = '80%';
+        const advisorMsgDiv = document.createElement("div");
+        advisorMsgDiv.style.display = "flex";
+        advisorMsgDiv.style.gap = "0.75rem";
+        advisorMsgDiv.style.alignItems = "flex-start";
+        advisorMsgDiv.style.maxWidth = "80%";
         advisorMsgDiv.innerHTML = `
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Kofi" class="user-avatar" style="width: 32px; height: 32px; flex-shrink: 0;">
           <div>
@@ -5362,27 +6871,32 @@ const App = {
         `;
         chatContainer.appendChild(advisorMsgDiv);
         chatContainer.scrollTop = chatContainer.scrollHeight;
-        this.showToast('Nouveau message de votre conseiller Kofi Mensah', 'info');
+        this.showToast(
+          "Nouveau message de votre conseiller Kofi Mensah",
+          "info",
+        );
       }, 1500);
     }
   },
 
   openAppointmentModal() {
-    const modal = document.getElementById('client-appointment-modal');
+    const modal = document.getElementById("client-appointment-modal");
     if (modal) {
-      modal.style.display = 'flex';
+      modal.style.display = "flex";
       // Setup channel radio interactions if any
-      const channelRadios = modal.querySelectorAll('input[name="appt_channel"]');
-      channelRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-          modal.querySelectorAll('.appt-type-option').forEach(opt => {
-            opt.style.border = '1px solid var(--border-color)';
-            opt.style.background = 'var(--bg-surface)';
+      const channelRadios = modal.querySelectorAll(
+        'input[name="appt_channel"]',
+      );
+      channelRadios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          modal.querySelectorAll(".appt-type-option").forEach((opt) => {
+            opt.style.border = "1px solid var(--border-color)";
+            opt.style.background = "var(--bg-surface)";
           });
-          const parentLabel = radio.closest('.appt-type-option');
+          const parentLabel = radio.closest(".appt-type-option");
           if (parentLabel) {
-            parentLabel.style.border = '2px solid var(--primary-600)';
-            parentLabel.style.background = 'var(--primary-50)';
+            parentLabel.style.border = "2px solid var(--primary-600)";
+            parentLabel.style.background = "var(--primary-50)";
           }
         });
       });
@@ -5390,36 +6904,48 @@ const App = {
   },
 
   closeAppointmentModal() {
-    const modal = document.getElementById('client-appointment-modal');
-    if (modal) modal.style.display = 'none';
+    const modal = document.getElementById("client-appointment-modal");
+    if (modal) modal.style.display = "none";
   },
 
   handleBookAppointmentModal(event) {
     event.preventDefault();
-    const dateInput = document.getElementById('appt-modal-date');
-    const timeSelect = document.getElementById('appt-modal-time');
-    const reasonSelect = document.getElementById('appt-modal-reason');
-    const notesInput = document.getElementById('appt-modal-notes');
-    const channelRadio = document.querySelector('input[name="appt_channel"]:checked');
+    const dateInput = document.getElementById("appt-modal-date");
+    const timeSelect = document.getElementById("appt-modal-time");
+    const reasonSelect = document.getElementById("appt-modal-reason");
+    const notesInput = document.getElementById("appt-modal-notes");
+    const channelRadio = document.querySelector(
+      'input[name="appt_channel"]:checked',
+    );
 
-    const dateVal = dateInput ? dateInput.value : '2026-08-21';
-    const timeVal = timeSelect ? timeSelect.value : '14:00';
-    const reasonText = reasonSelect ? reasonSelect.options[reasonSelect.selectedIndex].text : 'Accompagnement Financement';
-    const channelVal = channelRadio ? channelRadio.value : 'AGENCY';
-    const channelText = channelVal === 'AGENCY' ? 'en agence Médina' : (channelVal === 'PHONE' ? 'par téléphone' : 'en visioconférence');
+    const dateVal = dateInput ? dateInput.value : "2026-08-21";
+    const timeVal = timeSelect ? timeSelect.value : "14:00";
+    const reasonText = reasonSelect
+      ? reasonSelect.options[reasonSelect.selectedIndex].text
+      : "Accompagnement Financement";
+    const channelVal = channelRadio ? channelRadio.value : "AGENCY";
+    const channelText =
+      channelVal === "AGENCY"
+        ? "en agence Médina"
+        : channelVal === "PHONE"
+          ? "par téléphone"
+          : "en visioconférence";
 
     this.closeAppointmentModal();
 
     // Show Confirmation toast
-    this.showToast(`Rendez-vous confirmé le ${dateVal} à ${timeVal} (${channelText}) avec Adama Traore !`, 'success');
+    this.showToast(
+      `Rendez-vous confirmé le ${dateVal} à ${timeVal} (${channelText}) avec Adama Traore !`,
+      "success",
+    );
 
     // Add confirmation message to chat thread
-    const chatContainer = document.getElementById('advisor-chat-messages');
+    const chatContainer = document.getElementById("advisor-chat-messages");
     if (chatContainer) {
-      const confirmationMsg = document.createElement('div');
-      confirmationMsg.style.display = 'flex';
-      confirmationMsg.style.justifyContent = 'center';
-      confirmationMsg.style.margin = '0.5rem 0';
+      const confirmationMsg = document.createElement("div");
+      confirmationMsg.style.display = "flex";
+      confirmationMsg.style.justifyContent = "center";
+      confirmationMsg.style.margin = "0.5rem 0";
       confirmationMsg.innerHTML = `
         <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--cif-emerald-700); padding: 0.6rem 1rem; border-radius: var(--radius-lg); font-size: 0.78rem; text-align: center; max-width: 85%;">
           <i class="fas fa-calendar-check mr-1"></i> <strong>Rendez-vous programmé :</strong> ${dateVal} à ${timeVal} (${channelText}) - <em>${reasonText}</em>. SMS de rappel envoyé.
@@ -5436,70 +6962,79 @@ const App = {
   },
 
   initNotifications() {
-    const notifBtn = document.getElementById('notif-bell-btn');
-    const notifDropdown = document.getElementById('notif-dropdown');
+    const notifBtn = document.getElementById("notif-bell-btn");
+    const notifDropdown = document.getElementById("notif-dropdown");
 
     if (notifBtn && notifDropdown) {
-      notifBtn.addEventListener('click', (e) => {
+      notifBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        const isHidden = notifDropdown.style.display === 'none' || !notifDropdown.style.display;
-        notifDropdown.style.display = isHidden ? 'block' : 'none';
+        const isHidden =
+          notifDropdown.style.display === "none" ||
+          !notifDropdown.style.display;
+        notifDropdown.style.display = isHidden ? "block" : "none";
 
         // Close profile dropdown if open
-        const profileMenu = document.getElementById('profile-dropdown-menu');
-        const profileBtn = document.getElementById('topbar-profile-btn');
-        if (profileMenu) profileMenu.classList.remove('show');
-        if (profileBtn) profileBtn.classList.remove('active');
+        const profileMenu = document.getElementById("profile-dropdown-menu");
+        const profileBtn = document.getElementById("topbar-profile-btn");
+        if (profileMenu) profileMenu.classList.remove("show");
+        if (profileBtn) profileBtn.classList.remove("active");
       });
 
-      document.addEventListener('click', (e) => {
+      document.addEventListener("click", (e) => {
         if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
-          notifDropdown.style.display = 'none';
+          notifDropdown.style.display = "none";
         }
       });
     }
   },
 
   markAllNotificationsRead() {
-    const items = document.querySelectorAll('.notif-item.unread');
-    items.forEach(item => item.classList.remove('unread'));
+    const items = document.querySelectorAll(".notif-item.unread");
+    items.forEach((item) => item.classList.remove("unread"));
 
-    const badge = document.getElementById('topbar-notif-badge');
-    if (badge) badge.style.display = 'none';
+    const badge = document.getElementById("topbar-notif-badge");
+    if (badge) badge.style.display = "none";
 
-    const unreadCountBadge = document.getElementById('notif-unread-count-badge');
+    const unreadCountBadge = document.getElementById(
+      "notif-unread-count-badge",
+    );
     if (unreadCountBadge) {
-      unreadCountBadge.className = 'badge badge-approved';
-      unreadCountBadge.textContent = '0 Non Lue';
+      unreadCountBadge.className = "badge badge-approved";
+      unreadCountBadge.textContent = "0 Non Lue";
     }
 
-    this.showToast('Toutes les notifications ont été marquées comme lues', 'success');
+    this.showToast(
+      "Toutes les notifications ont été marquées comme lues",
+      "success",
+    );
   },
 
   filterNotifications(category, btn) {
     if (btn) {
-      const container = document.getElementById('notif-filter-bar');
+      const container = document.getElementById("notif-filter-bar");
       if (container) {
-        container.querySelectorAll('.notif-chip').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
+        container
+          .querySelectorAll(".notif-chip")
+          .forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
       }
     }
 
-    const items = document.querySelectorAll('.notif-item');
-    items.forEach(item => {
-      if (category === 'ALL') {
-        item.style.display = 'flex';
+    const items = document.querySelectorAll(".notif-item");
+    items.forEach((item) => {
+      if (category === "ALL") {
+        item.style.display = "flex";
       } else if (item.classList.contains(`notif-cat-${category}`)) {
-        item.style.display = 'flex';
+        item.style.display = "flex";
       } else {
-        item.style.display = 'none';
+        item.style.display = "none";
       }
     });
   },
 
   handleNotificationClick(dossierId, targetView) {
-    const notifDropdown = document.getElementById('notif-dropdown');
-    if (notifDropdown) notifDropdown.style.display = 'none';
+    const notifDropdown = document.getElementById("notif-dropdown");
+    if (notifDropdown) notifDropdown.style.display = "none";
 
     if (targetView) {
       this.switchView(targetView);
@@ -5513,25 +7048,25 @@ const App = {
   },
 
   initLanguageSelector() {
-    const sel = document.getElementById('country-lang-select');
+    const sel = document.getElementById("country-lang-select");
     if (sel) {
-      sel.addEventListener('change', (e) => {
-        this.showToast(`Zone UEMOA sélectionnée : ${e.target.value}`, 'info');
+      sel.addEventListener("change", (e) => {
+        this.showToast(`Zone UEMOA sélectionnée : ${e.target.value}`, "info");
       });
     }
   },
 
-  showToast(message, type = 'info') {
-    const container = document.getElementById('toast-container');
+  showToast(message, type = "info") {
+    const container = document.getElementById("toast-container");
     if (!container) return;
 
-    const toast = document.createElement('div');
+    const toast = document.createElement("div");
     toast.className = `toast ${type}`;
 
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle text-success';
-    if (type === 'danger') icon = 'fa-exclamation-circle text-danger';
-    if (type === 'warning') icon = 'fa-triangle-exclamation text-warning';
+    let icon = "fa-info-circle";
+    if (type === "success") icon = "fa-check-circle text-success";
+    if (type === "danger") icon = "fa-exclamation-circle text-danger";
+    if (type === "warning") icon = "fa-triangle-exclamation text-warning";
 
     toast.innerHTML = `
       <i class="fas ${icon} toast-icon"></i>
@@ -5541,9 +7076,9 @@ const App = {
     container.appendChild(toast);
 
     setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(100%)';
-      toast.style.transition = 'all 0.3s ease';
+      toast.style.opacity = "0";
+      toast.style.transform = "translateX(100%)";
+      toast.style.transition = "all 0.3s ease";
       setTimeout(() => toast.remove(), 300);
     }, 3500);
   },
@@ -5551,34 +7086,44 @@ const App = {
   // ==========================================================================
   // BROWSER CAMERA & OFFICIAL DOCUMENT QR CODE SCANNER ENGINE
   // ==========================================================================
-  qrTargetContext: 'identity', // 'identity' | 'document' | 'general'
+  qrTargetContext: "identity", // 'identity' | 'document' | 'general'
   qrMediaStream: null,
-  qrFacingMode: 'environment', // 'environment' (back) or 'user' (front)
+  qrFacingMode: "environment", // 'environment' (back) or 'user' (front)
   qrScanningActive: false,
   qrTorchActive: false,
   lastDecodedQrData: null,
   qrAnimationId: null,
 
-  openQrScannerModal(context = 'identity') {
+  openQrScannerModal(context = "identity") {
     this.qrTargetContext = context;
-    const modal = document.getElementById('modal-qr-scanner');
+    const modal = document.getElementById("modal-qr-scanner");
     if (!modal) return;
 
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     this.resetQrScannerState();
 
     // Contextual title / subtitle adjustment
-    const titleEl = modal.querySelector('.modal-header-title h4');
-    const descEl = modal.querySelector('.modal-header-title span');
-    if (context === 'identity') {
-      if (titleEl) titleEl.textContent = "Scanner QR Pièce d'Identité UEMOA (CNI / NINA)";
-      if (descEl) descEl.textContent = "Authentification automatique du demandeur par scan caméra";
-    } else if (context === 'document') {
-      if (titleEl) titleEl.textContent = "Scanner QR Document Officiel (Facture / RCCM / Titre)";
-      if (descEl) descEl.textContent = "Validation d'authenticité et certification cryptographique";
+    const titleEl = modal.querySelector(".modal-header-title h4");
+    const descEl = modal.querySelector(".modal-header-title span");
+    if (context === "identity") {
+      if (titleEl)
+        titleEl.textContent = "Scanner QR Pièce d'Identité UEMOA (CNI / NINA)";
+      if (descEl)
+        descEl.textContent =
+          "Authentification automatique du demandeur par scan caméra";
+    } else if (context === "document") {
+      if (titleEl)
+        titleEl.textContent =
+          "Scanner QR Document Officiel (Facture / RCCM / Titre)";
+      if (descEl)
+        descEl.textContent =
+          "Validation d'authenticité et certification cryptographique";
     } else {
-      if (titleEl) titleEl.textContent = "Scanner de Documents & QR Codes UEMOA";
-      if (descEl) descEl.textContent = "Extraction automatique et rattachement aux dossiers de crédit";
+      if (titleEl)
+        titleEl.textContent = "Scanner de Documents & QR Codes UEMOA";
+      if (descEl)
+        descEl.textContent =
+          "Extraction automatique et rattachement aux dossiers de crédit";
     }
 
     // Launch camera automatically
@@ -5587,24 +7132,28 @@ const App = {
 
   closeQrScannerModal() {
     this.stopCameraFeed();
-    const modal = document.getElementById('modal-qr-scanner');
-    if (modal) modal.style.display = 'none';
+    const modal = document.getElementById("modal-qr-scanner");
+    if (modal) modal.style.display = "none";
   },
 
   async startCameraFeed() {
-    const video = document.getElementById('qr-video-feed');
-    const errorBanner = document.getElementById('qr-camera-error-banner');
-    const statusText = document.getElementById('qr-scanner-status-text');
-    const errorDesc = document.getElementById('qr-camera-error-desc');
+    const video = document.getElementById("qr-video-feed");
+    const errorBanner = document.getElementById("qr-camera-error-banner");
+    const statusText = document.getElementById("qr-scanner-status-text");
+    const errorDesc = document.getElementById("qr-camera-error-desc");
 
-    if (errorBanner) errorBanner.style.display = 'none';
-    if (statusText) statusText.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-1"></i> Recherche de QR Code officiel...';
+    if (errorBanner) errorBanner.style.display = "none";
+    if (statusText)
+      statusText.innerHTML =
+        '<i class="fas fa-circle-notch fa-spin mr-1"></i> Recherche de QR Code officiel...';
 
     this.stopCameraFeed();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      if (errorBanner) errorBanner.style.display = 'flex';
-      if (errorDesc) errorDesc.textContent = "Votre navigateur ne prend pas en charge l'accès direct à la caméra. Vous pouvez utiliser le chargement d'image ou le simulateur de scan express ci-dessous.";
+      if (errorBanner) errorBanner.style.display = "flex";
+      if (errorDesc)
+        errorDesc.textContent =
+          "Votre navigateur ne prend pas en charge l'accès direct à la caméra. Vous pouvez utiliser le chargement d'image ou le simulateur de scan express ci-dessous.";
       return;
     }
 
@@ -5613,9 +7162,9 @@ const App = {
         video: {
           facingMode: this.qrFacingMode,
           width: { ideal: 1280 },
-          height: { ideal: 720 }
+          height: { ideal: 720 },
         },
-        audio: false
+        audio: false,
       };
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -5623,23 +7172,31 @@ const App = {
 
       if (video) {
         video.srcObject = stream;
-        video.setAttribute('playsinline', 'true');
+        video.setAttribute("playsinline", "true");
         await video.play();
       }
 
       this.qrScanningActive = true;
       this.processQrVideoFrame();
-      this.showToast('Caméra activée avec succès', 'info');
+      this.showToast("Caméra activée avec succès", "info");
     } catch (err) {
-      console.warn('Camera stream error:', err);
-      if (errorBanner) errorBanner.style.display = 'flex';
+      console.warn("Camera stream error:", err);
+      if (errorBanner) errorBanner.style.display = "flex";
       if (errorDesc) {
-        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-          errorDesc.textContent = "L'autorisation d'accès à la caméra a été refusée par le navigateur. Vous pouvez autoriser la caméra dans la barre d'adresse ou utiliser le simulateur express.";
-        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-          errorDesc.textContent = "Aucun capteur caméra détecté. Utilisez le simulateur d'échantillons ou chargez un fichier image.";
+        if (
+          err.name === "NotAllowedError" ||
+          err.name === "PermissionDeniedError"
+        ) {
+          errorDesc.textContent =
+            "L'autorisation d'accès à la caméra a été refusée par le navigateur. Vous pouvez autoriser la caméra dans la barre d'adresse ou utiliser le simulateur express.";
+        } else if (
+          err.name === "NotFoundError" ||
+          err.name === "DevicesNotFoundError"
+        ) {
+          errorDesc.textContent =
+            "Aucun capteur caméra détecté. Utilisez le simulateur d'échantillons ou chargez un fichier image.";
         } else {
-          errorDesc.textContent = `Erreur caméra : ${err.message || 'Périphérique indisponible'}. Utilisez le mode simulation express ci-dessous.`;
+          errorDesc.textContent = `Erreur caméra : ${err.message || "Périphérique indisponible"}. Utilisez le mode simulation express ci-dessous.`;
         }
       }
     }
@@ -5652,24 +7209,25 @@ const App = {
       this.qrAnimationId = null;
     }
     if (this.qrMediaStream) {
-      this.qrMediaStream.getTracks().forEach(track => {
+      this.qrMediaStream.getTracks().forEach((track) => {
         try {
           track.stop();
         } catch (e) {}
       });
       this.qrMediaStream = null;
     }
-    const video = document.getElementById('qr-video-feed');
+    const video = document.getElementById("qr-video-feed");
     if (video) {
       video.srcObject = null;
     }
   },
 
   async switchCameraFacingMode() {
-    this.qrFacingMode = (this.qrFacingMode === 'environment') ? 'user' : 'environment';
-    const switchBtn = document.getElementById('btn-qr-switch-camera');
+    this.qrFacingMode =
+      this.qrFacingMode === "environment" ? "user" : "environment";
+    const switchBtn = document.getElementById("btn-qr-switch-camera");
     if (switchBtn) {
-      switchBtn.innerHTML = `<i class="fas fa-camera-rotate"></i> <span>${this.qrFacingMode === 'environment' ? 'Arrière' : 'Avant'}</span>`;
+      switchBtn.innerHTML = `<i class="fas fa-camera-rotate"></i> <span>${this.qrFacingMode === "environment" ? "Arrière" : "Avant"}</span>`;
     }
     await this.startCameraFeed();
   },
@@ -5684,41 +7242,55 @@ const App = {
       if (capabilities.torch) {
         this.qrTorchActive = !this.qrTorchActive;
         await track.applyConstraints({
-          advanced: [{ torch: this.qrTorchActive }]
+          advanced: [{ torch: this.qrTorchActive }],
         });
-        const torchBtn = document.getElementById('btn-qr-toggle-torch');
+        const torchBtn = document.getElementById("btn-qr-toggle-torch");
         if (torchBtn) {
-          torchBtn.classList.toggle('btn-primary', this.qrTorchActive);
-          torchBtn.classList.toggle('btn-secondary', !this.qrTorchActive);
+          torchBtn.classList.toggle("btn-primary", this.qrTorchActive);
+          torchBtn.classList.toggle("btn-secondary", !this.qrTorchActive);
         }
-        this.showToast(this.qrTorchActive ? 'Flash allumé' : 'Flash éteint', 'info');
+        this.showToast(
+          this.qrTorchActive ? "Flash allumé" : "Flash éteint",
+          "info",
+        );
       } else {
-        this.showToast('Flash/Torche non pris en charge par ce capteur', 'warning');
+        this.showToast(
+          "Flash/Torche non pris en charge par ce capteur",
+          "warning",
+        );
       }
     } catch (e) {
-      this.showToast('Contrôle du flash indisponible sur cet appareil', 'warning');
+      this.showToast(
+        "Contrôle du flash indisponible sur cet appareil",
+        "warning",
+      );
     }
   },
 
   processQrVideoFrame() {
     if (!this.qrScanningActive) return;
 
-    const video = document.getElementById('qr-video-feed');
-    const canvas = document.getElementById('qr-canvas-buffer');
+    const video = document.getElementById("qr-video-feed");
+    const canvas = document.getElementById("qr-canvas-buffer");
 
     if (video && video.readyState === video.HAVE_ENOUGH_DATA && canvas) {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         // Try decoding with jsQR if loaded
-        if (typeof window.jsQR === 'function') {
-          const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: 'dontInvert'
-          });
+        if (typeof window.jsQR === "function") {
+          const code = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            {
+              inversionAttempts: "dontInvert",
+            },
+          );
           if (code && code.data) {
             this.handleQrScanSuccess(code.data);
             return;
@@ -5727,7 +7299,9 @@ const App = {
       }
     }
 
-    this.qrAnimationId = requestAnimationFrame(() => this.processQrVideoFrame());
+    this.qrAnimationId = requestAnimationFrame(() =>
+      this.processQrVideoFrame(),
+    );
   },
 
   handleQrScanSuccess(rawData) {
@@ -5738,10 +7312,13 @@ const App = {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'sine';
+      osc.type = "sine";
       osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
       gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioCtx.currentTime + 0.18,
+      );
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
@@ -5751,38 +7328,41 @@ const App = {
     // Parse payload into structured official document data
     let docData = null;
     try {
-      if (typeof rawData === 'string' && rawData.startsWith('{')) {
+      if (typeof rawData === "string" && rawData.startsWith("{")) {
         docData = JSON.parse(rawData);
       }
     } catch (e) {}
 
     if (!docData) {
       // Create rich structured data based on context or scanned string
-      if (this.qrTargetContext === 'identity' || (typeof rawData === 'string' && rawData.includes('CNI'))) {
+      if (
+        this.qrTargetContext === "identity" ||
+        (typeof rawData === "string" && rawData.includes("CNI"))
+      ) {
         docData = {
-          type: 'CNI_BIOMETRIQUE_UEMOA',
-          typeLabel: 'Carte Nationale d\'Identité Biométrique UEMOA',
-          docNumber: 'CNI-ML-2026-B88219',
-          holderName: 'Ibrahima Koné',
-          phone: '+223 70 88 99 00',
-          country: 'Mali',
-          city: 'Bamako - Faladié',
-          issuer: 'Ministère de la Sécurité & de la Protection Civile (Mali)',
-          issueDate: '12/03/2024',
-          expiryDate: '11/03/2034',
-          hash: 'SHA256:4f8e91a2...c8901'
+          type: "CNI_BIOMETRIQUE_UEMOA",
+          typeLabel: "Carte Nationale d'Identité Biométrique UEMOA",
+          docNumber: "CNI-ML-2026-B88219",
+          holderName: "Ibrahima Koné",
+          phone: "+223 70 88 99 00",
+          country: "Mali",
+          city: "Bamako - Faladié",
+          issuer: "Ministère de la Sécurité & de la Protection Civile (Mali)",
+          issueDate: "12/03/2024",
+          expiryDate: "11/03/2034",
+          hash: "SHA256:4f8e91a2...c8901",
         };
       } else {
         docData = {
-          type: 'FACTURE_NORMALISEE_DGI',
-          typeLabel: 'Facture Normalisée Sécurisée DGI / UEMOA',
-          docNumber: 'FACT-DGI-2026-8819',
-          holderName: 'Quincaillerie & Outillage Faladié',
-          amount: '800 000 FCFA',
-          rccm: 'MA-BKO-2023-B-4410',
-          issuer: 'Direction Générale des Impôts (DGI Mali)',
-          issueDate: '15/07/2026',
-          hash: 'UEMOA-SIGN-RSA2048:e3b0c442...98ff'
+          type: "FACTURE_NORMALISEE_DGI",
+          typeLabel: "Facture Normalisée Sécurisée DGI / UEMOA",
+          docNumber: "FACT-DGI-2026-8819",
+          holderName: "Quincaillerie & Outillage Faladié",
+          amount: "800 000 FCFA",
+          rccm: "MA-BKO-2023-B-4410",
+          issuer: "Direction Générale des Impôts (DGI Mali)",
+          issueDate: "15/07/2026",
+          hash: "UEMOA-SIGN-RSA2048:e3b0c442...98ff",
         };
       }
     }
@@ -5792,9 +7372,11 @@ const App = {
   },
 
   displayQrScanResult(data) {
-    const resultCard = document.getElementById('qr-scan-result-card');
-    const badgeType = document.getElementById('qr-doc-type-badge');
-    const fieldsContainer = document.getElementById('qr-extracted-fields-container');
+    const resultCard = document.getElementById("qr-scan-result-card");
+    const badgeType = document.getElementById("qr-doc-type-badge");
+    const fieldsContainer = document.getElementById(
+      "qr-extracted-fields-container",
+    );
 
     if (!resultCard || !fieldsContainer) return;
 
@@ -5802,7 +7384,7 @@ const App = {
       badgeType.textContent = data.typeLabel || data.type;
     }
 
-    let html = '';
+    let html = "";
     if (data.docNumber) {
       html += `
         <div class="qr-extracted-item">
@@ -5823,7 +7405,7 @@ const App = {
       html += `
         <div class="qr-extracted-item">
           <div class="qr-extracted-lbl">Localisation UEMOA</div>
-          <div class="qr-extracted-val">${data.city ? data.city + ', ' : ''}${data.country || ''}</div>
+          <div class="qr-extracted-val">${data.city ? data.city + ", " : ""}${data.country || ""}</div>
         </div>
       `;
     }
@@ -5861,63 +7443,66 @@ const App = {
     }
 
     fieldsContainer.innerHTML = html;
-    resultCard.style.display = 'block';
+    resultCard.style.display = "block";
   },
 
   resetQrScannerState() {
-    const resultCard = document.getElementById('qr-scan-result-card');
-    if (resultCard) resultCard.style.display = 'none';
+    const resultCard = document.getElementById("qr-scan-result-card");
+    if (resultCard) resultCard.style.display = "none";
     this.lastDecodedQrData = null;
-    if (document.getElementById('modal-qr-scanner').style.display !== 'none') {
+    if (document.getElementById("modal-qr-scanner").style.display !== "none") {
       this.startCameraFeed();
     }
   },
 
   simulateQrScanPreset(presetKey) {
     let mockData = {};
-    if (presetKey === 'cni') {
+    if (presetKey === "cni") {
       mockData = {
-        type: 'CARTE_NATIONALE_IDENTITE',
-        typeLabel: 'Carte d\'Identité Nationale Biométrique NINA',
-        docNumber: 'NINA-ML-2026-992104',
-        holderName: 'Oumar Traoré',
-        phone: '+223 76 11 22 33',
-        country: 'Mali',
-        city: 'Bamako - Quartier Badalabougou',
-        issuer: 'Ministère de l\'Administration Territoriale (Mali)',
-        issueDate: '04/01/2025',
-        expiryDate: '03/01/2035',
-        hash: 'SHA256:7c9e012fa89b4412...09e8bf'
+        type: "CARTE_NATIONALE_IDENTITE",
+        typeLabel: "Carte d'Identité Nationale Biométrique NINA",
+        docNumber: "NINA-ML-2026-992104",
+        holderName: "Oumar Traoré",
+        phone: "+223 76 11 22 33",
+        country: "Mali",
+        city: "Bamako - Quartier Badalabougou",
+        issuer: "Ministère de l'Administration Territoriale (Mali)",
+        issueDate: "04/01/2025",
+        expiryDate: "03/01/2035",
+        hash: "SHA256:7c9e012fa89b4412...09e8bf",
       };
-    } else if (presetKey === 'invoice') {
+    } else if (presetKey === "invoice") {
       mockData = {
-        type: 'FACTURE_NORMALISEE_DGI',
-        typeLabel: 'Facture Normalisée DGI avec Timbre Électronique',
-        docNumber: 'FAC-DGI-ML-2026-4401',
-        holderName: 'Établissements Bois & Outillage Moderne',
-        amount: '1 200 000 FCFA',
-        rccm: 'ML-BKO-2022-B-9912',
-        issuer: 'Direction Générale des Impôts (Mali)',
-        issueDate: '14/08/2026',
-        hash: 'RSA2048-CERT:4a5c90fe...1142ab'
+        type: "FACTURE_NORMALISEE_DGI",
+        typeLabel: "Facture Normalisée DGI avec Timbre Électronique",
+        docNumber: "FAC-DGI-ML-2026-4401",
+        holderName: "Établissements Bois & Outillage Moderne",
+        amount: "1 200 000 FCFA",
+        rccm: "ML-BKO-2022-B-9912",
+        issuer: "Direction Générale des Impôts (Mali)",
+        issueDate: "14/08/2026",
+        hash: "RSA2048-CERT:4a5c90fe...1142ab",
       };
-    } else if (presetKey === 'rccm') {
+    } else if (presetKey === "rccm") {
       mockData = {
-        type: 'RCCM_REGISTRE_COMMERCE',
-        typeLabel: 'Extrait Registre du Commerce et du Crédit Mobilier (RCCM)',
-        docNumber: 'RCCM-ML-BKO-2023-B-7721',
-        holderName: 'Menuiserie Artisanale Koné & Frères',
-        country: 'Mali',
-        city: 'Bamako',
-        rccm: 'ML-BKO-2023-B-7721',
-        issuer: 'Greffe du Tribunal de Commerce de Bamako',
-        issueDate: '20/05/2023',
-        hash: 'OHADA-RCCM-VERIF:8819cc02...33da'
+        type: "RCCM_REGISTRE_COMMERCE",
+        typeLabel: "Extrait Registre du Commerce et du Crédit Mobilier (RCCM)",
+        docNumber: "RCCM-ML-BKO-2023-B-7721",
+        holderName: "Menuiserie Artisanale Koné & Frères",
+        country: "Mali",
+        city: "Bamako",
+        rccm: "ML-BKO-2023-B-7721",
+        issuer: "Greffe du Tribunal de Commerce de Bamako",
+        issueDate: "20/05/2023",
+        hash: "OHADA-RCCM-VERIF:8819cc02...33da",
       };
     }
 
     this.handleQrScanSuccess(JSON.stringify(mockData));
-    this.showToast(`Échantillon officiel ${mockData.typeLabel} scanné avec succès`, 'success');
+    this.showToast(
+      `Échantillon officiel ${mockData.typeLabel} scanné avec succès`,
+      "success",
+    );
   },
 
   handleQrImageUpload(event) {
@@ -5928,25 +7513,37 @@ const App = {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         let qrDecoded = null;
-        if (typeof window.jsQR === 'function') {
-          qrDecoded = window.jsQR(imageData.data, imageData.width, imageData.height);
+        if (typeof window.jsQR === "function") {
+          qrDecoded = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+          );
         }
 
         if (qrDecoded && qrDecoded.data) {
           this.handleQrScanSuccess(qrDecoded.data);
-          this.showToast('QR Code détecté et validé depuis le fichier image', 'success');
+          this.showToast(
+            "QR Code détecté et validé depuis le fichier image",
+            "success",
+          );
         } else {
           // Fallback simulation with document metadata
-          this.simulateQrScanPreset(this.qrTargetContext === 'identity' ? 'cni' : 'invoice');
-          this.showToast('Document analysé avec succès par le moteur de reconnaissance', 'success');
+          this.simulateQrScanPreset(
+            this.qrTargetContext === "identity" ? "cni" : "invoice",
+          );
+          this.showToast(
+            "Document analysé avec succès par le moteur de reconnaissance",
+            "success",
+          );
         }
       };
       img.src = e.target.result;
@@ -5958,14 +7555,17 @@ const App = {
     const data = this.lastDecodedQrData;
     if (!data) return;
 
-    if (this.qrTargetContext === 'identity' || data.type === 'CNI_BIOMETRIQUE_UEMOA') {
+    if (
+      this.qrTargetContext === "identity" ||
+      data.type === "CNI_BIOMETRIQUE_UEMOA"
+    ) {
       // Auto fill wizard step 1
-      const nameInput = document.getElementById('wiz-fullname');
-      const phoneInput = document.getElementById('wiz-phone');
-      const countryInput = document.getElementById('wiz-country');
-      const cityInput = document.getElementById('wiz-city');
-      const badge = document.getElementById('wizard-identity-qr-badge');
-      const badgeText = document.getElementById('wizard-identity-qr-text');
+      const nameInput = document.getElementById("wiz-fullname");
+      const phoneInput = document.getElementById("wiz-phone");
+      const countryInput = document.getElementById("wiz-country");
+      const cityInput = document.getElementById("wiz-city");
+      const badge = document.getElementById("wizard-identity-qr-badge");
+      const badgeText = document.getElementById("wizard-identity-qr-text");
 
       if (nameInput && data.holderName) nameInput.value = data.holderName;
       if (phoneInput && data.phone) phoneInput.value = data.phone;
@@ -5973,30 +7573,36 @@ const App = {
       if (cityInput && data.city) cityInput.value = data.city;
 
       if (badge && badgeText) {
-        badge.style.display = 'flex';
-        badgeText.textContent = `${data.typeLabel || 'CNI Biométrique'} N° ${data.docNumber || ''} • Titulaire : ${data.holderName || ''} (Authentifié 100% via UEMOA QR)`;
+        badge.style.display = "flex";
+        badgeText.textContent = `${data.typeLabel || "CNI Biométrique"} N° ${data.docNumber || ""} • Titulaire : ${data.holderName || ""} (Authentifié 100% via UEMOA QR)`;
       }
 
-      this.showToast('Informations d\'identité et KYC renseignées automatiquement depuis le QR Code', 'success');
+      this.showToast(
+        "Informations d'identité et KYC renseignées automatiquement depuis le QR Code",
+        "success",
+      );
     } else {
       // Auto attach document in step 6 or general
-      const docBadge = document.getElementById('wizard-doc-qr-badge');
-      const docBadgeText = document.getElementById('wizard-doc-qr-text');
+      const docBadge = document.getElementById("wizard-doc-qr-badge");
+      const docBadgeText = document.getElementById("wizard-doc-qr-text");
 
       if (docBadge && docBadgeText) {
-        docBadge.style.display = 'flex';
-        docBadgeText.textContent = `${data.typeLabel || 'Document Officiel'} (${data.docNumber || 'Réf certifiée'}) rattaché au dossier avec empreinte cryptographique validée.`;
+        docBadge.style.display = "flex";
+        docBadgeText.textContent = `${data.typeLabel || "Document Officiel"} (${data.docNumber || "Réf certifiée"}) rattaché au dossier avec empreinte cryptographique validée.`;
       }
 
       // If invoice amount exists and amount input is on step 4 or guarantee
       if (data.amount) {
-        const guaranteeValInput = document.getElementById('wiz-guarantee-val');
-        if (guaranteeValInput && String(data.amount).includes('1 200 000')) {
+        const guaranteeValInput = document.getElementById("wiz-guarantee-val");
+        if (guaranteeValInput && String(data.amount).includes("1 200 000")) {
           guaranteeValInput.value = 1200000;
         }
       }
 
-      this.showToast('Document officiel certifié rattaché avec succès au dossier', 'success');
+      this.showToast(
+        "Document officiel certifié rattaché avec succès au dossier",
+        "success",
+      );
     }
 
     this.closeQrScannerModal();
@@ -6008,9 +7614,9 @@ const App = {
   openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     setTimeout(() => {
-      modal.classList.add('active');
+      modal.classList.add("active");
     }, 10);
   },
 
@@ -6018,42 +7624,54 @@ const App = {
     if (!modalId) return;
     const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.remove('active');
+      modal.classList.remove("active");
       setTimeout(() => {
-        if (!modal.classList.contains('active')) {
-          modal.style.display = 'none';
+        if (!modal.classList.contains("active")) {
+          modal.style.display = "none";
         }
       }, 250);
     }
-    if (window.AppInteractions && typeof window.AppInteractions.closeModal === 'function') {
+    if (
+      window.AppInteractions &&
+      typeof window.AppInteractions.closeModal === "function"
+    ) {
       window.AppInteractions.closeModal(modalId);
     }
   },
 
   openDossier360(dossierIdentifier) {
-    if (window.AppInteractions && typeof window.AppInteractions.openDossierModal === 'function') {
+    if (
+      window.AppInteractions &&
+      typeof window.AppInteractions.openDossierModal === "function"
+    ) {
       window.AppInteractions.openDossierModal(dossierIdentifier);
     }
   },
 
   openDossierModal(dossierIdentifier) {
-    if (window.AppInteractions && typeof window.AppInteractions.openDossierModal === 'function') {
+    if (
+      window.AppInteractions &&
+      typeof window.AppInteractions.openDossierModal === "function"
+    ) {
       window.AppInteractions.openDossierModal(dossierIdentifier);
     }
   },
 
   closeDossierModal() {
-    this.closeModal('dossier-modal');
+    this.closeModal("dossier-modal");
   },
 
   openCommitteeModal(dossierId) {
-    if (window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === 'function') {
+    if (
+      window.AppInteractions &&
+      typeof window.AppInteractions.openCommitteeModal === "function"
+    ) {
       window.AppInteractions.openCommitteeModal(dossierId);
     }
   },
 
   closeCommitteeModal() {
-    this.closeModal('committee-modal');
+    this.closeModal("committee-modal");
   },
 
   // ==========================================================================
@@ -6062,21 +7680,25 @@ const App = {
   isAmortizationScheduleOpen: false,
 
   updateCompactEstimator() {
-    const amountSlider = document.getElementById('compact-est-amount-range');
-    const durationSlider = document.getElementById('compact-est-duration-range');
+    const amountSlider = document.getElementById("compact-est-amount-range");
+    const durationSlider = document.getElementById(
+      "compact-est-duration-range",
+    );
     if (!amountSlider || !durationSlider) return;
 
     const amount = parseInt(amountSlider.value, 10) || 2500000;
     const duration = parseInt(durationSlider.value, 10) || 12;
 
-    const amountValEl = document.getElementById('compact-est-amount-val');
-    const durationValEl = document.getElementById('compact-est-duration-val');
-    if (amountValEl) amountValEl.textContent = CreditScoringEngine.formatFCFA(amount);
+    const amountValEl = document.getElementById("compact-est-amount-val");
+    const durationValEl = document.getElementById("compact-est-duration-val");
+    if (amountValEl)
+      amountValEl.textContent = CreditScoringEngine.formatFCFA(amount);
     if (durationValEl) durationValEl.textContent = `${duration} Mois`;
 
     // Standard UEMOA microfinance scale: 1.2% per month (14.4% per annum degressive)
     const rateMonthly = 0.012;
-    const monthlyPaymentRaw = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    const monthlyPaymentRaw =
+      (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
     const totalPayments = monthlyPaymentRaw * duration;
     const totalInterest = Math.round(totalPayments - amount);
     const insuranceAndFees = Math.round(amount * 0.012);
@@ -6089,65 +7711,103 @@ const App = {
     const avgMonthlyPrincipal = Math.round(amount / duration);
     const avgMonthlyInterest = Math.round(totalInterest / duration);
 
-    const monthlyValEl = document.getElementById('compact-est-monthly-val');
-    const totalValEl = document.getElementById('compact-est-total-val');
-    const totalInterestEl = document.getElementById('compact-est-total-interest');
-    const costValEl = document.getElementById('compact-est-cost-val');
-    const monthlyPrincipalEl = document.getElementById('compact-est-monthly-principal');
-    const monthlyInterestEl = document.getElementById('compact-est-monthly-interest');
-    const monthlyInsuranceEl = document.getElementById('compact-est-monthly-insurance');
+    const monthlyValEl = document.getElementById("compact-est-monthly-val");
+    const totalValEl = document.getElementById("compact-est-total-val");
+    const totalInterestEl = document.getElementById(
+      "compact-est-total-interest",
+    );
+    const costValEl = document.getElementById("compact-est-cost-val");
+    const monthlyPrincipalEl = document.getElementById(
+      "compact-est-monthly-principal",
+    );
+    const monthlyInterestEl = document.getElementById(
+      "compact-est-monthly-interest",
+    );
+    const monthlyInsuranceEl = document.getElementById(
+      "compact-est-monthly-insurance",
+    );
 
-    if (monthlyValEl) monthlyValEl.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
-    if (totalValEl) totalValEl.textContent = CreditScoringEngine.formatFCFA(totalRepaid);
-    if (totalInterestEl) totalInterestEl.textContent = CreditScoringEngine.formatFCFA(totalInterest);
-    if (costValEl) costValEl.textContent = CreditScoringEngine.formatFCFA(totalCost);
-    if (monthlyPrincipalEl) monthlyPrincipalEl.textContent = CreditScoringEngine.formatFCFA(avgMonthlyPrincipal);
-    if (monthlyInterestEl) monthlyInterestEl.textContent = CreditScoringEngine.formatFCFA(avgMonthlyInterest);
-    if (monthlyInsuranceEl) monthlyInsuranceEl.textContent = CreditScoringEngine.formatFCFA(monthlyInsurance);
+    if (monthlyValEl)
+      monthlyValEl.textContent = CreditScoringEngine.formatFCFA(monthlyTotal);
+    if (totalValEl)
+      totalValEl.textContent = CreditScoringEngine.formatFCFA(totalRepaid);
+    if (totalInterestEl)
+      totalInterestEl.textContent =
+        CreditScoringEngine.formatFCFA(totalInterest);
+    if (costValEl)
+      costValEl.textContent = CreditScoringEngine.formatFCFA(totalCost);
+    if (monthlyPrincipalEl)
+      monthlyPrincipalEl.textContent =
+        CreditScoringEngine.formatFCFA(avgMonthlyPrincipal);
+    if (monthlyInterestEl)
+      monthlyInterestEl.textContent =
+        CreditScoringEngine.formatFCFA(avgMonthlyInterest);
+    if (monthlyInsuranceEl)
+      monthlyInsuranceEl.textContent =
+        CreditScoringEngine.formatFCFA(monthlyInsurance);
 
     // Update compact pie chart & breakdown percentages
     const pctCapital = Math.round((amount / totalRepaid) * 100);
     const pctInterest = Math.round((totalInterest / totalRepaid) * 100);
     const pctFees = Math.max(1, 100 - pctCapital - pctInterest);
 
-    const pieValCapital = document.getElementById('compact-pie-val-capital');
-    const pieValInterest = document.getElementById('compact-pie-val-interest');
-    const pieValFees = document.getElementById('compact-pie-val-fees');
-    const piePctCapital = document.getElementById('compact-pie-pct-capital');
-    const piePctInterest = document.getElementById('compact-pie-pct-interest');
-    const piePctFees = document.getElementById('compact-pie-pct-fees');
+    const pieValCapital = document.getElementById("compact-pie-val-capital");
+    const pieValInterest = document.getElementById("compact-pie-val-interest");
+    const pieValFees = document.getElementById("compact-pie-val-fees");
+    const piePctCapital = document.getElementById("compact-pie-pct-capital");
+    const piePctInterest = document.getElementById("compact-pie-pct-interest");
+    const piePctFees = document.getElementById("compact-pie-pct-fees");
 
-    if (pieValCapital) pieValCapital.textContent = CreditScoringEngine.formatFCFA(amount);
-    if (pieValInterest) pieValInterest.textContent = CreditScoringEngine.formatFCFA(totalInterest);
-    if (pieValFees) pieValFees.textContent = CreditScoringEngine.formatFCFA(insuranceAndFees);
+    if (pieValCapital)
+      pieValCapital.textContent = CreditScoringEngine.formatFCFA(amount);
+    if (pieValInterest)
+      pieValInterest.textContent =
+        CreditScoringEngine.formatFCFA(totalInterest);
+    if (pieValFees)
+      pieValFees.textContent = CreditScoringEngine.formatFCFA(insuranceAndFees);
     if (piePctCapital) piePctCapital.textContent = `${pctCapital}%`;
     if (piePctInterest) piePctInterest.textContent = `${pctInterest}%`;
     if (piePctFees) piePctFees.textContent = `${pctFees}%`;
 
-    if (window.AppCharts && typeof window.AppCharts.renderLoanBreakdownPie === 'function') {
+    if (
+      window.AppCharts &&
+      typeof window.AppCharts.renderLoanBreakdownPie === "function"
+    ) {
       window.AppCharts.renderLoanBreakdownPie(
-        'compact-estimator-pie-chart',
+        "compact-estimator-pie-chart",
         amount,
         totalInterest,
-        insuranceAndFees
+        insuranceAndFees,
       );
     }
 
     // Update active preset chips
-    document.querySelectorAll('.compact-preset-chip').forEach(chip => chip.classList.remove('active'));
+    document
+      .querySelectorAll(".compact-preset-chip")
+      .forEach((chip) => chip.classList.remove("active"));
     const amountChip = document.getElementById(`chip-amount-${amount}`);
     const durationChip = document.getElementById(`chip-duration-${duration}`);
-    if (amountChip) amountChip.classList.add('active');
-    if (durationChip) durationChip.classList.add('active');
+    if (amountChip) amountChip.classList.add("active");
+    if (durationChip) durationChip.classList.add("active");
 
     // Update Amortization Schedule Table
-    this.renderAmortizationScheduleTable(amount, duration, rateMonthly, monthlyInsurance);
+    this.renderAmortizationScheduleTable(
+      amount,
+      duration,
+      rateMonthly,
+      monthlyInsurance,
+    );
   },
 
-  renderAmortizationScheduleTable(amount, duration, rateMonthly, monthlyInsurance) {
-    const tbody = document.getElementById('client-amortization-table-body');
-    const tfoot = document.getElementById('client-amortization-table-foot');
-    const titleEl = document.getElementById('amortization-table-summary-title');
+  renderAmortizationScheduleTable(
+    amount,
+    duration,
+    rateMonthly,
+    monthlyInsurance,
+  ) {
+    const tbody = document.getElementById("client-amortization-table-body");
+    const tfoot = document.getElementById("client-amortization-table-foot");
+    const titleEl = document.getElementById("amortization-table-summary-title");
     if (!tbody) return;
 
     if (titleEl) {
@@ -6155,13 +7815,14 @@ const App = {
     }
 
     let remainingBalance = amount;
-    const monthlyPaymentConstant = (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
+    const monthlyPaymentConstant =
+      (amount * rateMonthly) / (1 - Math.pow(1 + rateMonthly, -duration));
     let totalPrincipalAmortized = 0;
     let sumInterest = 0;
     let sumInsurance = 0;
     let sumTotalPayment = 0;
 
-    let rowsHtml = '';
+    let rowsHtml = "";
     const now = new Date();
 
     for (let month = 1; month <= duration; month++) {
@@ -6180,18 +7841,22 @@ const App = {
       sumTotalPayment += totalMonth;
 
       const dueDate = new Date(now.getFullYear(), now.getMonth() + month, 5);
-      const dueDateStr = dueDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const dueDateStr = dueDate.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
 
       rowsHtml += `
         <tr style="transition: background 0.15s ease;">
-          <td><span class="badge ${month === 1 ? 'badge-approved' : 'badge-submitted'}" style="font-size: 0.68rem; font-weight: 700;">Mois ${month}</span></td>
+          <td><span class="badge ${month === 1 ? "badge-approved" : "badge-submitted"}" style="font-size: 0.68rem; font-weight: 700;">Mois ${month}</span></td>
           <td style="color: var(--text-secondary); font-size: 0.76rem;"><i class="fas fa-calendar-day mr-1 text-primary"></i>${dueDateStr}</td>
           <td style="text-align: right; font-family: var(--font-family-code); color: var(--text-primary);">${CreditScoringEngine.formatFCFA(initialBalance)}</td>
           <td style="text-align: right; font-family: var(--font-family-code); color: #0284c7; font-weight: 700;">${CreditScoringEngine.formatFCFA(principalMonth)}</td>
           <td style="text-align: right; font-family: var(--font-family-code); color: #d97706; font-weight: 600;">${CreditScoringEngine.formatFCFA(interestMonth)}</td>
           <td style="text-align: right; font-family: var(--font-family-code); color: #059669;">${CreditScoringEngine.formatFCFA(monthlyInsurance)}</td>
           <td style="text-align: right; font-family: var(--font-family-code); font-weight: 800; color: var(--text-primary); background: rgba(16, 185, 129, 0.04);">${CreditScoringEngine.formatFCFA(totalMonth)}</td>
-          <td style="text-align: right; font-family: var(--font-family-code); font-weight: 600; color: ${remainingBalance === 0 ? '#10b981' : 'var(--text-muted)'};">${CreditScoringEngine.formatFCFA(remainingBalance)}</td>
+          <td style="text-align: right; font-family: var(--font-family-code); font-weight: 600; color: ${remainingBalance === 0 ? "#10b981" : "var(--text-muted)"};">${CreditScoringEngine.formatFCFA(remainingBalance)}</td>
         </tr>
       `;
     }
@@ -6214,35 +7879,45 @@ const App = {
   },
 
   toggleAmortizationScheduleTable() {
-    const wrapper = document.getElementById('client-amortization-schedule-wrapper');
-    const labelEl = document.getElementById('label-toggle-amortization');
+    const wrapper = document.getElementById(
+      "client-amortization-schedule-wrapper",
+    );
+    const labelEl = document.getElementById("label-toggle-amortization");
     if (!wrapper) return;
 
     this.isAmortizationScheduleOpen = !this.isAmortizationScheduleOpen;
     if (this.isAmortizationScheduleOpen) {
-      wrapper.style.display = 'block';
-      if (labelEl) labelEl.textContent = 'Masquer l\'Échéancier';
-      wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      wrapper.style.display = "block";
+      if (labelEl) labelEl.textContent = "Masquer l'Échéancier";
+      wrapper.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } else {
-      wrapper.style.display = 'none';
-      if (labelEl) labelEl.textContent = 'Tableau d\'Amortissement';
+      wrapper.style.display = "none";
+      if (labelEl) labelEl.textContent = "Tableau d'Amortissement";
     }
   },
 
   downloadSimulatedAmortizationPdf() {
-    const amountSlider = document.getElementById('compact-est-amount-range');
-    const durationSlider = document.getElementById('compact-est-duration-range');
+    const amountSlider = document.getElementById("compact-est-amount-range");
+    const durationSlider = document.getElementById(
+      "compact-est-duration-range",
+    );
     const amount = amountSlider ? parseInt(amountSlider.value, 10) : 2500000;
     const duration = durationSlider ? parseInt(durationSlider.value, 10) : 12;
 
-    this.showToast(`Génération du Tableau d'Amortissement Prévisionnel (${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois)...`, 'info');
+    this.showToast(
+      `Génération du Tableau d'Amortissement Prévisionnel (${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois)...`,
+      "info",
+    );
     setTimeout(() => {
-      this.showToast(`Échéancier Prévisionnel de Prêt téléchargé avec succès (Format PDF A/4)`, 'success');
+      this.showToast(
+        `Échéancier Prévisionnel de Prêt téléchargé avec succès (Format PDF A/4)`,
+        "success",
+      );
     }, 700);
   },
 
   setCompactPresetAmount(amount) {
-    const slider = document.getElementById('compact-est-amount-range');
+    const slider = document.getElementById("compact-est-amount-range");
     if (slider) {
       slider.value = amount;
       this.updateCompactEstimator();
@@ -6250,7 +7925,7 @@ const App = {
   },
 
   setCompactPresetDuration(months) {
-    const slider = document.getElementById('compact-est-duration-range');
+    const slider = document.getElementById("compact-est-duration-range");
     if (slider) {
       slider.value = months;
       this.updateCompactEstimator();
@@ -6258,32 +7933,41 @@ const App = {
   },
 
   applyFromCompactEstimator() {
-    const amountSlider = document.getElementById('compact-est-amount-range');
-    const durationSlider = document.getElementById('compact-est-duration-range');
+    const amountSlider = document.getElementById("compact-est-amount-range");
+    const durationSlider = document.getElementById(
+      "compact-est-duration-range",
+    );
     const amount = amountSlider ? parseInt(amountSlider.value, 10) : 2500000;
     const duration = durationSlider ? parseInt(durationSlider.value, 10) : 12;
 
-    this.openNewLoanModal({ amount, duration, purpose: 'Financement de projet CIF' });
-    this.showToast(`Paramètres appliqués : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`, 'success');
+    this.openNewLoanModal({
+      amount,
+      duration,
+      purpose: "Financement de projet CIF",
+    });
+    this.showToast(
+      `Paramètres appliqués : ${CreditScoringEngine.formatFCFA(amount)} sur ${duration} mois`,
+      "success",
+    );
   },
 
   // ==========================================================================
   // [FEATURE] SUCCESS ANIMATION MODAL CONTROLLER (GREEN CHECKMARK)
   // ==========================================================================
   successOnPrimaryCallback: null,
-  successReceiptFilename: 'Recipisse_Transaction_CIF.pdf',
+  successReceiptFilename: "Recipisse_Transaction_CIF.pdf",
 
   showSuccessModal(config = {}) {
-    const modal = document.getElementById('modal-success-animation');
+    const modal = document.getElementById("modal-success-animation");
     if (!modal) return;
 
-    const titleEl = document.getElementById('success-modal-title');
-    const subtitleEl = document.getElementById('success-modal-subtitle');
-    const refEl = document.getElementById('success-detail-ref');
-    const amountEl = document.getElementById('success-detail-amount');
-    const paymentEl = document.getElementById('success-detail-payment');
-    const statusEl = document.getElementById('success-detail-status');
-    const primaryBtn = document.getElementById('success-modal-primary-btn');
+    const titleEl = document.getElementById("success-modal-title");
+    const subtitleEl = document.getElementById("success-modal-subtitle");
+    const refEl = document.getElementById("success-detail-ref");
+    const amountEl = document.getElementById("success-detail-amount");
+    const paymentEl = document.getElementById("success-detail-payment");
+    const statusEl = document.getElementById("success-detail-status");
+    const primaryBtn = document.getElementById("success-modal-primary-btn");
 
     if (titleEl && config.title) titleEl.textContent = config.title;
     if (subtitleEl && config.subtitle) subtitleEl.textContent = config.subtitle;
@@ -6303,24 +7987,25 @@ const App = {
     }
 
     this.successOnPrimaryCallback = config.onPrimaryClick || null;
-    this.successReceiptFilename = config.receiptTitle || 'Recipisse_Transaction_CIF.pdf';
+    this.successReceiptFilename =
+      config.receiptTitle || "Recipisse_Transaction_CIF.pdf";
 
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     setTimeout(() => {
-      modal.classList.add('active');
+      modal.classList.add("active");
     }, 10);
   },
 
   closeSuccessModal() {
-    const modal = document.getElementById('modal-success-animation');
+    const modal = document.getElementById("modal-success-animation");
     if (modal) {
-      modal.classList.remove('active');
+      modal.classList.remove("active");
       setTimeout(() => {
-        modal.style.display = 'none';
+        modal.style.display = "none";
       }, 250);
     }
 
-    if (typeof this.successOnPrimaryCallback === 'function') {
+    if (typeof this.successOnPrimaryCallback === "function") {
       const cb = this.successOnPrimaryCallback;
       this.successOnPrimaryCallback = null;
       cb();
@@ -6328,9 +8013,15 @@ const App = {
   },
 
   downloadSuccessReceipt() {
-    this.showToast(`Génération du récépissé officiel sécurisé (${this.successReceiptFilename})...`, 'info');
+    this.showToast(
+      `Génération du récépissé officiel sécurisé (${this.successReceiptFilename})...`,
+      "info",
+    );
     setTimeout(() => {
-      this.showToast(`Récépissé ${this.successReceiptFilename} téléchargé avec succès !`, 'success');
+      this.showToast(
+        `Récépissé ${this.successReceiptFilename} téléchargé avec succès !`,
+        "success",
+      );
     }, 600);
   },
 
@@ -6339,65 +8030,72 @@ const App = {
   // ==========================================================================
   docLightboxZoom: 1,
   docLightboxRotation: 0,
-  currentLightboxDocKey: 'proforma',
+  currentLightboxDocKey: "proforma",
 
-  openDocLightbox(docKey = 'proforma') {
+  openDocLightbox(docKey = "proforma") {
     this.currentLightboxDocKey = docKey;
     this.docLightboxZoom = 1;
     this.docLightboxRotation = 0;
 
-    const modal = document.getElementById('modal-doc-lightbox');
+    const modal = document.getElementById("modal-doc-lightbox");
     if (!modal) return;
 
     const docData = this.getDocLightboxData(docKey);
 
     // Set Topbar info
-    const titleEl = document.getElementById('doc-lightbox-title');
-    const metaEl = document.getElementById('doc-lightbox-meta');
-    const badgeEl = document.getElementById('doc-lightbox-badge');
-    const iconEl = document.getElementById('doc-lightbox-file-icon');
-    const confScoreEl = document.getElementById('doc-lightbox-conf-score');
+    const titleEl = document.getElementById("doc-lightbox-title");
+    const metaEl = document.getElementById("doc-lightbox-meta");
+    const badgeEl = document.getElementById("doc-lightbox-badge");
+    const iconEl = document.getElementById("doc-lightbox-file-icon");
+    const confScoreEl = document.getElementById("doc-lightbox-conf-score");
 
     if (titleEl) titleEl.textContent = docData.title;
     if (metaEl) metaEl.textContent = docData.meta;
     if (badgeEl) {
-      badgeEl.className = `badge ${docData.badgeClass || 'badge-approved'}`;
+      badgeEl.className = `badge ${docData.badgeClass || "badge-approved"}`;
       badgeEl.innerHTML = docData.badgeHtml;
     }
-    if (iconEl) iconEl.className = docData.iconClass || 'fas fa-file-pdf';
-    if (confScoreEl) confScoreEl.textContent = `${docData.confidenceScore || '99.8%'} Confiance`;
+    if (iconEl) iconEl.className = docData.iconClass || "fas fa-file-pdf";
+    if (confScoreEl)
+      confScoreEl.textContent = `${docData.confidenceScore || "99.8%"} Confiance`;
 
     // Render OCR Fields in Sidebar
-    const fieldsList = document.getElementById('doc-lightbox-fields-list');
+    const fieldsList = document.getElementById("doc-lightbox-fields-list");
     if (fieldsList) {
-      fieldsList.innerHTML = docData.fields.map(f => `
+      fieldsList.innerHTML = docData.fields
+        .map(
+          (f) => `
         <div class="doc-ocr-field-row">
           <span class="doc-ocr-field-lbl">${f.label}</span>
           <span class="doc-ocr-field-val">${f.value}</span>
         </div>
-      `).join('');
+      `,
+        )
+        .join("");
     }
 
     // Render Document Sheet Content
-    const renderedContent = document.getElementById('doc-lightbox-rendered-content');
+    const renderedContent = document.getElementById(
+      "doc-lightbox-rendered-content",
+    );
     if (renderedContent) {
       renderedContent.innerHTML = docData.sheetHtml;
     }
 
     this.applyLightboxTransform();
 
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     setTimeout(() => {
-      modal.classList.add('active');
+      modal.classList.add("active");
     }, 10);
   },
 
   closeDocLightbox() {
-    const modal = document.getElementById('modal-doc-lightbox');
+    const modal = document.getElementById("modal-doc-lightbox");
     if (!modal) return;
-    modal.classList.remove('active');
+    modal.classList.remove("active");
     setTimeout(() => {
-      modal.style.display = 'none';
+      modal.style.display = "none";
     }, 250);
   },
 
@@ -6422,8 +8120,8 @@ const App = {
   },
 
   applyLightboxTransform() {
-    const sheet = document.getElementById('doc-lightbox-sheet');
-    const zoomVal = document.getElementById('doc-lightbox-zoom-val');
+    const sheet = document.getElementById("doc-lightbox-sheet");
+    const zoomVal = document.getElementById("doc-lightbox-zoom-val");
     if (sheet) {
       sheet.style.transform = `scale(${this.docLightboxZoom}) rotate(${this.docLightboxRotation}deg)`;
     }
@@ -6434,9 +8132,15 @@ const App = {
 
   downloadDocLightbox() {
     const docData = this.getDocLightboxData(this.currentLightboxDocKey);
-    this.showToast(`Téléchargement de : ${docData.filename || 'Document_Officiel.pdf'}...`, 'info');
+    this.showToast(
+      `Téléchargement de : ${docData.filename || "Document_Officiel.pdf"}...`,
+      "info",
+    );
     setTimeout(() => {
-      this.showToast(`Document "${docData.title}" téléchargé avec succès`, 'success');
+      this.showToast(
+        `Document "${docData.title}" téléchargé avec succès`,
+        "success",
+      );
     }, 500);
   },
 
@@ -6446,7 +8150,7 @@ const App = {
         title: "Carte Nationale d'Identité Biométrique CEDEAO",
         meta: "PDF / Image HD • 1.1 Mo • Certifié OCR UEMOA 100%",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Identité Certifiée",
+        badgeHtml: '<i class="fas fa-check-circle"></i> Identité Certifiée',
         iconClass: "fas fa-id-card",
         confidenceScore: "100%",
         filename: "CNI_Biometrique_Fatou_Ndiaye.pdf",
@@ -6456,8 +8160,11 @@ const App = {
           { label: "Date de Naissance", value: "14/03/1989 (Bamako)" },
           { label: "Nationalité", value: "Malienne (CEDEAO / UEMOA)" },
           { label: "Délivrée le", value: "15/03/2019 par Police Bamako" },
-          { label: "Date d'Expiration", value: "14/03/2029 (En cours de validité)" },
-          { label: "Puce Biométrique", value: "UID-ML-882104-OK" }
+          {
+            label: "Date d'Expiration",
+            value: "14/03/2029 (En cours de validité)",
+          },
+          { label: "Puce Biométrique", value: "UID-ML-882104-OK" },
         ],
         sheetHtml: `
           <div style="border: 2px solid #15803d; border-radius: 12px; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
@@ -6499,24 +8206,36 @@ const App = {
               MALI<br>OFFICIEL<br>UEMOA
             </div>
           </div>
-        `
+        `,
       },
       rccm: {
         title: "Extrait Registre du Commerce et du Crédit Mobilier (RCCM)",
         meta: "PDF • 850 Ko • Greffe Tribunal de Commerce de Bamako",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-check-circle\"></i> RCCM Authentifié",
+        badgeHtml: '<i class="fas fa-check-circle"></i> RCCM Authentifié',
         iconClass: "fas fa-landmark",
         confidenceScore: "99.9%",
         filename: "RCCM_Confection_Fatou_Bamako.pdf",
         fields: [
           { label: "N° Immatriculation RCCM", value: "ML.BKO.2022.A.18402" },
           { label: "NIF (Fiscal)", value: "008923412 2A2" },
-          { label: "Dénomination Commerciale", value: "ATELIER COUTURE & WAX FATOU" },
-          { label: "Forme Juridique", value: "Entreprise Individuelle (Artisanat)" },
+          {
+            label: "Dénomination Commerciale",
+            value: "ATELIER COUTURE & WAX FATOU",
+          },
+          {
+            label: "Forme Juridique",
+            value: "Entreprise Individuelle (Artisanat)",
+          },
           { label: "Date Immatriculation", value: "18/02/2022" },
-          { label: "Siège Social", value: "Grand Marché Rue 314, Bamako (Mali)" },
-          { label: "Activité Déclarée", value: "Confection textile, négoce de tissus et prêt-à-porter" }
+          {
+            label: "Siège Social",
+            value: "Grand Marché Rue 314, Bamako (Mali)",
+          },
+          {
+            label: "Activité Déclarée",
+            value: "Confection textile, négoce de tissus et prêt-à-porter",
+          },
         ],
         sheetHtml: `
           <div style="border: 2px solid #334155; padding: 2rem; background: #ffffff; color: #0f172a; font-family: serif;">
@@ -6546,25 +8265,35 @@ const App = {
               </div>
             </div>
           </div>
-        `
+        `,
       },
       proforma: {
         title: "Facture Proforma Fournisseur Stock Wax Bamako",
         meta: "PDF • 1.4 Mo • Éts Textile Grand Marché Bamako (Mali)",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Devis & Proforma Validé",
+        badgeHtml:
+          '<i class="fas fa-check-circle"></i> Devis & Proforma Validé',
         iconClass: "fas fa-file-invoice-dollar",
         confidenceScore: "99.8%",
         filename: "Facture_Proforma_PF-2026-0881.pdf",
         fields: [
-          { label: "Fournisseur", value: "Établissements Textile Grand Marché & Cie" },
+          {
+            label: "Fournisseur",
+            value: "Établissements Textile Grand Marché & Cie",
+          },
           { label: "Réf Devis Proforma", value: "PF-2026-0881" },
           { label: "Date d'Émission", value: "08 Août 2026" },
-          { label: "Validité de l'Offre", value: "30 Jours (jusqu'au 07/09/2026)" },
+          {
+            label: "Validité de l'Offre",
+            value: "30 Jours (jusqu'au 07/09/2026)",
+          },
           { label: "Montant HT", value: "2 300 000 FCFA" },
           { label: "Transport & TVA", value: "200 000 FCFA" },
           { label: "Montant Total TTC", value: "2 500 000 FCFA" },
-          { label: "Objet d'Achat", value: "Rouleaux Wax Hollandais & Bazin Riche" }
+          {
+            label: "Objet d'Achat",
+            value: "Rouleaux Wax Hollandais & Bazin Riche",
+          },
         ],
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 1px solid #e2e8f0; color: #1e293b; font-family: sans-serif;">
@@ -6650,13 +8379,13 @@ const App = {
               </div>
             </div>
           </div>
-        `
+        `,
       },
       senelec: {
         title: "Quittance d'Électricité EDM-SA (Justificatif Domicile)",
         meta: "PDF • 920 Ko • Énergie du Mali (EDM-SA) Bamako",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Domicile Certifié",
+        badgeHtml: '<i class="fas fa-check-circle"></i> Domicile Certifié',
         iconClass: "fas fa-bolt",
         confidenceScore: "99.5%",
         filename: "Facture_EDM_Fatou_Ndiaye.pdf",
@@ -6666,7 +8395,7 @@ const App = {
           { label: "Titulaire Abonnement", value: "Mme Fatou NDIAYE" },
           { label: "Adresse Fournie", value: "Grand Marché Rue 314, Bamako" },
           { label: "Période Facturée", value: "Juillet 2026" },
-          { label: "Statut Règlement", value: "Acquitté / 0 F solde impayé" }
+          { label: "Statut Règlement", value: "Acquitté / 0 F solde impayé" },
         ],
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 1px solid #e2e8f0; color: #1e293b; font-family: sans-serif;">
@@ -6700,23 +8429,29 @@ const App = {
               <span style="color: #15803d; font-weight: 700;">SOLDE ANTÉRIEUR : 0 FCFA</span>
             </div>
           </div>
-        `
+        `,
       },
       guarantee: {
         title: "Attestation de Nantissement d'Épargne CreditFast",
         meta: "PDF • 1.8 Mo • Agence CreditFast Grand Marché Bamako",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-check-circle\"></i> Sûreté Enregistrée",
+        badgeHtml: '<i class="fas fa-check-circle"></i> Sûreté Enregistrée',
         iconClass: "fas fa-shield-halved",
         confidenceScore: "100%",
         filename: "Attestation_Nantissement_Epargne.pdf",
         fields: [
-          { label: "Type de Sûreté", value: "Gage Espèces & Nantissement Compte Épargne" },
+          {
+            label: "Type de Sûreté",
+            value: "Gage Espèces & Nantissement Compte Épargne",
+          },
           { label: "N° Compte Gagiste", value: "ML-BKO-SAV-004128" },
           { label: "Titulaire du Compte", value: "Mme Fatou NDIAYE" },
           { label: "Montant Bloqué", value: "500 000 FCFA" },
           { label: "Taux de Couverture", value: "20% du Prêt Principal" },
-          { label: "Caisse Dépositaire", value: "Agence CreditFast Grand Marché Bamako" }
+          {
+            label: "Caisse Dépositaire",
+            value: "Agence CreditFast Grand Marché Bamako",
+          },
         ],
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 2px solid #4f46e5; border-radius: 8px; color: #1e293b; font-family: sans-serif;">
@@ -6740,13 +8475,13 @@ const App = {
               </div>
             </div>
           </div>
-        `
+        `,
       },
       contract: {
         title: "Contrat Cadre de Financement & Prêt Électronique CreditFast",
         meta: "PDF • 2.2 Mo • Signé Numériquement via OTP UEMOA",
         badgeClass: "badge-approved",
-        badgeHtml: "<i class=\"fas fa-signature\"></i> Signé & Scellé",
+        badgeHtml: '<i class="fas fa-signature"></i> Signé & Scellé',
         iconClass: "fas fa-file-contract",
         confidenceScore: "100%",
         filename: "Contrat_Pret_CreditFast_2026_0895.pdf",
@@ -6754,10 +8489,16 @@ const App = {
           { label: "Contrat N°", value: "CTR-CF-BKO-2026-0895" },
           { label: "Emprunteur", value: "Mme Fatou NDIAYE" },
           { label: "Montant du Financement", value: "2 500 000 FCFA" },
-          { label: "Taux d'Intérêt", value: "1.20% / mois dégressif (14.4% l'an)" },
+          {
+            label: "Taux d'Intérêt",
+            value: "1.20% / mois dégressif (14.4% l'an)",
+          },
           { label: "Échéances", value: "12 mensualités de 235 000 FCFA" },
           { label: "Horodatage Signature", value: "18/08/2026 à 09:30:14 GMT" },
-          { label: "Signature Électronique", value: "Certifiée conforme OTP SMS (SHA-256 Validé)" }
+          {
+            label: "Signature Électronique",
+            value: "Certifiée conforme OTP SMS (SHA-256 Validé)",
+          },
         ],
         sheetHtml: `
           <div style="background: #ffffff; padding: 2rem; border: 2px solid #047857; border-radius: 8px; color: #1e293b; font-family: serif;">
@@ -6777,24 +8518,27 @@ const App = {
               <div style="color: #334155;">Signé par Fatou NDIAYE (OTP +223 77 540 88 12) • Horodatage certifié SHA-256 : <code>9f83ab20...551c4a</code></div>
             </div>
           </div>
-        `
-      }
+        `,
+      },
     };
 
     return docs[docKey] || docs.proforma;
-  }
+  },
 };
 
 window.App = App;
-window.openEditProfileModal = () => App.openEditProfileModal && App.openEditProfileModal();
-window.closeEditProfileModal = () => App.closeEditProfileModal && App.closeEditProfileModal();
+window.openEditProfileModal = () =>
+  App.openEditProfileModal && App.openEditProfileModal();
+window.closeEditProfileModal = () =>
+  App.closeEditProfileModal && App.closeEditProfileModal();
 window.saveUserProfile = () => App.saveUserProfile && App.saveUserProfile();
-window.openLogoutConfirmModal = () => App.openLogoutConfirmModal && App.openLogoutConfirmModal();
-window.closeLogoutConfirmModal = () => App.closeLogoutConfirmModal && App.closeLogoutConfirmModal();
+window.openLogoutConfirmModal = () =>
+  App.openLogoutConfirmModal && App.openLogoutConfirmModal();
+window.closeLogoutConfirmModal = () =>
+  App.closeLogoutConfirmModal && App.closeLogoutConfirmModal();
 window.confirmLogout = () => App.confirmLogout && App.confirmLogout();
 window.logout = () => App.logout && App.logout();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   App.init();
 });
-

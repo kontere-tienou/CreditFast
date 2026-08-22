@@ -963,6 +963,9 @@ const AppInteractions = {
 
     if (window.App.currentRole === 'COMMITTEE') {
       window.App.renderCommitteeDashboard();
+      if (typeof window.App.renderCommitteeDossiersPage === 'function') {
+        window.App.renderCommitteeDossiersPage();
+      }
     }
   },
 

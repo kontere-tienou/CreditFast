@@ -170,6 +170,13 @@ ${scripts}
       fs.mkdirSync(targetPath, { recursive: true });
     }
     fs.writeFileSync(path.join(targetPath, 'index.html'), outputHtml, 'utf-8');
+    
+    // Clean stale views directory in target
+    const targetViewsPath = path.join(targetPath, 'views');
+    if (fs.existsSync(targetViewsPath)) {
+      fs.rmSync(targetViewsPath, { recursive: true, force: true });
+    }
+
     copyDir(path.join(__dirname, 'css'), path.join(targetPath, 'css'));
     copyDir(path.join(__dirname, 'assets'), path.join(targetPath, 'assets'));
     copyDir(path.join(__dirname, 'js'), path.join(targetPath, 'js'));
