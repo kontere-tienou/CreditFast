@@ -1,4 +1,4 @@
-# CreditFast - Plateforme d'Octroi, Scoring & Conformité Microfinance (UEMOA)
+# CreditFast - Plateforme d'Octroi, Scoring & Conformité Microfinance
 
 ## 📁 Architecture Modulaire par Rôle & Utilisateur
 
