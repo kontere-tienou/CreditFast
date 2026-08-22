@@ -419,7 +419,7 @@ const App = {
     }
 
     // Dynamic Topbar Flag & Country sync based on logged-in user profile
-    const userCountryCode = user.countryCode || (user.id === 'demo-client' ? 'ML' : user.id === 'demo-agent' ? 'TG' : user.id === 'demo-committee' ? 'ML' : user.id === 'demo-compliance' ? 'BJ' : 'BF');
+    const userCountryCode = user.countryCode || 'ML';
     this.updateUserCountry(userCountryCode);
   },
 
@@ -568,6 +568,8 @@ const App = {
       this.renderAnalystAnomalies();
     } else if (viewId === 'view-role-committee') {
       this.renderCommitteeDashboard();
+    } else if (viewId === 'view-committee-dossiers') {
+      this.renderCommitteeDossiersPage();
     } else if (viewId === 'view-committee-signed') {
       this.renderSignedPvTable();
     } else if (viewId === 'view-role-compliance' || viewId === 'view-compliance-screening') {
@@ -2222,6 +2224,150 @@ const App = {
               </button>
               <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Délibérer, ajuster les termes et voter">
                 <i class="fas fa-gavel"></i> Voter
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  committeeDossiersFilter: 'ALL',
+  committeeDossiersSearch: '',
+
+  filterCommitteeDossiers(filterType, btn) {
+    this.committeeDossiersFilter = filterType;
+    if (btn) {
+      const container = document.getElementById('com-dossiers-filter-tabs');
+      if (container) {
+        container.querySelectorAll('button').forEach(b => {
+          b.classList.remove('btn-primary');
+          if (!b.classList.contains('btn-secondary')) b.classList.add('btn-secondary');
+        });
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-primary');
+      }
+    }
+    this.renderCommitteeDossiersPage();
+  },
+
+  searchCommitteeDossiers(query) {
+    this.committeeDossiersSearch = query;
+    this.renderCommitteeDossiersPage();
+  },
+
+  openFirstPendingCommitteeVote() {
+    const pendingReqs = DB.get('credit_requests').filter(r => r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS');
+    if (pendingReqs.length > 0 && window.AppInteractions && typeof window.AppInteractions.openCommitteeModal === 'function') {
+      window.AppInteractions.openCommitteeModal(pendingReqs[0].id);
+    } else {
+      this.showToast('Tous les dossiers de la séance ont déjà été votés.', 'info');
+    }
+  },
+
+  renderCommitteeDossiersPage() {
+    const tbody = document.getElementById('com-dossiers-page-table-body');
+    const countBadge = document.getElementById('com-dossiers-count-badge');
+    if (!tbody) return;
+
+    const allRequests = DB.get('credit_requests');
+    const clients = DB.get('clients');
+
+    let filtered = allRequests.filter(r => {
+      const client = clients.find(c => c.id === r.client_id) || {};
+      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+
+      if (this.committeeDossiersFilter === 'PENDING_VOTE') {
+        return r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS';
+      }
+      if (this.committeeDossiersFilter === 'FAVORABLE') {
+        return (evalData.overallScore || r.score || 0) >= 75;
+      }
+      if (this.committeeDossiersFilter === 'COLD_START') {
+        return client.is_cold_start === true;
+      }
+      return true; // 'ALL'
+    });
+
+    if (this.committeeDossiersSearch) {
+      const q = this.committeeDossiersSearch.toLowerCase();
+      filtered = filtered.filter(r => {
+        const client = clients.find(c => c.id === r.client_id) || {};
+        return (
+          (r.request_number && r.request_number.toLowerCase().includes(q)) ||
+          (r.client_name && r.client_name.toLowerCase().includes(q)) ||
+          (r.city && r.city.toLowerCase().includes(q)) ||
+          (r.purpose && r.purpose.toLowerCase().includes(q)) ||
+          (client.activity && client.activity.toLowerCase().includes(q))
+        );
+      });
+    }
+
+    if (countBadge) {
+      countBadge.textContent = `${filtered.length} dossier${filtered.length > 1 ? 's' : ''} affiché${filtered.length > 1 ? 's' : ''}`;
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--text-subtle);"><i class="fas fa-folder-open"></i></div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-secondary);">Aucun dossier ne correspond à vos critères</div>
+            <div style="font-size: 0.78rem; margin-top: 4px;">Modifiez les filtres ou réinitialisez la recherche.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(r => {
+      const evalData = CreditScoringEngine.evaluateDossier(r.id) || {};
+      
+      const isPendingVote = r.status === 'COMMITTEE' || r.status === 'CREDIT_REVIEW' || r.status === 'ANALYSIS';
+      const isApproved = r.status === 'APPROVED' || r.status === 'DISBURSED';
+      
+      const riskBadgeClass = evalData.riskLevel === 'CRITIQUE' ? 'badge-rejected' : (evalData.riskLevel === 'ELEVE' ? 'badge-warning' : 'badge-approved');
+      const riskLabel = evalData.riskLevel === 'FAIBLE' ? 'Faible' : (evalData.riskLevel === 'MODERE' ? 'Modéré' : evalData.riskLevel || 'Faible');
+
+      return `
+        <tr class="schedule-table-row" onclick="App.openCommitteeDrawer(${r.id})" style="cursor: pointer;" title="Cliquer pour ouvrir le volet latéral d'analyse complète">
+          <!-- Colonne 1: Dossier & Emprunteur (Ligne unique) -->
+          <td style="white-space: nowrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-family: var(--font-family-code); font-size: 0.76rem; font-weight: 700; color: var(--primary-700);">${r.request_number}</span>
+              <span style="color: var(--text-muted);">•</span>
+              <strong style="font-size: 0.85rem; color: var(--text-primary);">${r.client_name}</strong>
+            </div>
+          </td>
+          <!-- Colonne 2: Montant Demandé (Ligne unique) -->
+          <td style="white-space: nowrap;">
+            <strong class="amount-cell" style="color: var(--primary-700); font-size: 0.88rem;">${CreditScoringEngine.formatFCFA(r.requested_amount)}</strong>
+            <span style="font-size: 0.74rem; color: var(--text-muted); margin-left: 4px;">(${r.duration_months} mois)</span>
+          </td>
+          <!-- Colonne 3: Score & Risque IA (Ligne unique) -->
+          <td style="white-space: nowrap;">
+            <span style="font-weight: 800; font-size: 0.88rem; color: ${evalData.riskColor || '#059669'};">${evalData.overallScore || r.score || 85}</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">/100</span>
+            <span class="badge ${riskBadgeClass}" style="font-size: 0.65rem; margin-left: 5px; padding: 2px 6px;">${riskLabel}</span>
+          </td>
+          <!-- Colonne 4: Statut du Vote (Ligne unique) -->
+          <td style="white-space: nowrap;">
+            ${isPendingVote ? `
+              <span class="badge badge-warning" style="font-size: 0.7rem;"><i class="fas fa-clock mr-1"></i> À voter (2/3)</span>
+            ` : isApproved ? `
+              <span class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-check-double mr-1"></i> Accord Validé</span>
+            ` : `
+              <span class="badge badge-submitted" style="font-size: 0.7rem;">En Examen</span>
+            `}
+          </td>
+          <!-- Colonne 5: Action (Ligne unique) -->
+          <td style="text-align: right; white-space: nowrap;">
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); App.openCommitteeDrawer(${r.id})" title="Ouvrir le volet d'analyse approfondie" style="padding: 3px 8px; font-size: 0.75rem;">
+                <i class="fas fa-eye text-primary"></i> Détails
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); AppInteractions.openCommitteeModal(${r.id})" title="Ouvrir la délibération et voter" style="font-weight: 700; padding: 3px 8px; font-size: 0.75rem;">
+                <i class="fas fa-gavel"></i> ${isPendingVote ? 'Voter' : 'Modifier'}
               </button>
             </div>
           </td>

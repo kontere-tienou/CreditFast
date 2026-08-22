@@ -28,7 +28,7 @@ export function buildIndexHtml() {
   const analystDossiers = readView('analyst/dossiers.html');
   const analystAnomalies = readView('analyst/anomalies.html');
   const committeeDashboard = readView('committee/dashboard.html');
-  const complianceDashboard = readView('committee/compliance.html');
+  const committeeDossiers = readView('committee/dossiers.html');
   const scoringAdmin = readView('analyst/scoring-admin.html');
   const clientWizard = readView('client/wizard.html');
   const auditLogs = readView('committee/audit-logs.html');
@@ -102,7 +102,8 @@ ${analystAnomalies.split('\n').map(l => '      ' + l).join('\n')}
 
 ${committeeDashboard.split('\n').map(l => '      ' + l).join('\n')}
 
-${complianceDashboard.split('\n').map(l => '      ' + l).join('\n')}
+${committeeDossiers.split('\n').map(l => '      ' + l).join('\n')}
+
 
 ${scoringAdmin.split('\n').map(l => '      ' + l).join('\n')}
 

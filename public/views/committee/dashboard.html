@@ -7,18 +7,18 @@
       <h1>Séance de Délibération du Comité de Crédit</h1>
       <div class="page-breadcrumb">
         <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
-        <span>Délibérations Collégiales, Vote & Conformité LBC/FT</span>
+        <span>Délibérations Collégiales, Vote & Décisions d'Octroi</span>
       </div>
     </div>
     <div class="page-actions">
+      <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-dossiers')">
+        <i class="fas fa-folder-gavel"></i> Dossiers à Délibérer & Votes
+      </button>
       <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')">
-        <i class="fas fa-file-signature"></i> Décisions Signées
+        <i class="fas fa-file-signature"></i> Procès-Verbaux (PV)
       </button>
-      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">
-        <i class="fas fa-shield-halved"></i> Console Conformité
-      </button>
-      <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-reports')">
-        <i class="fas fa-chart-pie"></i> Rapports d'Octroi
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-audit-logs')">
+        <i class="fas fa-clock-rotate-left"></i> Journal d'Audit
       </button>
     </div>
   </div>

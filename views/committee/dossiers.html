@@ -1,0 +1,120 @@
+<!-- ====================================================================
+     [COMITÉ] VUE DÉDIÉE : DOSSIERS À DÉLIBÉRER & VOTES ÉLECTRONIQUES
+     ==================================================================== -->
+<section id="view-committee-dossiers" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Dossiers à Délibérer & Votes Électroniques</h1>
+      <div class="page-breadcrumb">
+        <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
+        <span>Séance Active • Examen Collégial & Décisions d'Octroi</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')" title="Retour au tableau de bord">
+        <i class="fas fa-chart-pie"></i> Vue Synthèse
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')" title="Consulter les PV signés">
+        <i class="fas fa-file-signature"></i> Registre PV
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.openFirstPendingCommitteeVote()" title="Voter le premier dossier en attente">
+        <i class="fas fa-gavel"></i> Voter le Dossier Suivant
+      </button>
+    </div>
+  </div>
+
+  <!-- Quorum & Live Session Banner -->
+  <div class="card" style="padding: 1.1rem 1.4rem; margin-bottom: 1.25rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0.08) 100%); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: var(--radius-md);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 46px; height: 46px; border-radius: var(--radius-md); background: #8b5cf6; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: var(--shadow-sm); flex-shrink: 0;">
+          <i class="fas fa-users-between-lines"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+              Séance Ordinaire N° COM-2026-08/BKO
+            </h3>
+            <span class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-circle-dot mr-1"></i> Quorum Atteint (3/3 Présents)</span>
+            <span class="badge badge-committee" style="font-size: 0.7rem;">Agence Régionale Bamako</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0 0;">
+            Présidence : <strong>Mariam Keita</strong> • Membres : Direction des Engagements & Responsable Risque • <strong>5 dossiers soumis au vote</strong>
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="text-align: right; padding-right: 0.75rem; border-right: 1px solid var(--border-color);">
+          <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Enveloppe Séance</div>
+          <div style="font-size: 1.15rem; font-weight: 900; color: var(--primary-700); font-family: var(--font-family-code);">18 500 000 F</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Dossiers Votés</div>
+          <div style="font-size: 1.15rem; font-weight: 900; color: #059669; font-family: var(--font-family-code);">3 / 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Search Toolbar -->
+  <div class="card" style="padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem;">
+      
+      <!-- Filter Tabs -->
+      <div id="com-dossiers-filter-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-primary btn-sm" onclick="App.filterCommitteeDossiers('ALL', this)">
+          <i class="fas fa-list-ul"></i> Tous les dossiers (5)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterCommitteeDossiers('PENDING_VOTE', this)">
+          <i class="fas fa-hourglass-half text-warning"></i> En attente de vote (2)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterCommitteeDossiers('FAVORABLE', this)">
+          <i class="fas fa-thumbs-up text-emerald"></i> Avis Favorable (4)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterCommitteeDossiers('COLD_START', this)">
+          <i class="fas fa-shield-halved text-info"></i> Profils Cold Start (2)
+        </button>
+      </div>
+
+      <!-- Search Box & Agency Filter -->
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; max-width: 380px; min-width: 240px;">
+        <div class="form-group" style="margin: 0; width: 100%; position: relative;">
+          <input type="text" id="com-dossiers-search-input" class="form-control" placeholder="Rechercher emprunteur, #REQ, agence..." oninput="App.searchCommitteeDossiers(this.value)" style="padding-left: 2rem; font-size: 0.82rem;">
+          <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dossiers List Table -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-folder-gavel text-primary"></i> Dossiers Transmis pour Délibération et Vote</h3>
+        <p class="card-subtitle">Examinez les synthèses de risque, délibérez en séance et confirmez le vote d'octroi</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="badge badge-submitted" id="com-dossiers-count-badge">5 dossiers affichés</span>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th>Dossier & Emprunteur</th>
+            <th>Montant Demandé</th>
+            <th>Score & Risque IA</th>
+            <th>Statut du Vote</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="com-dossiers-page-table-body">
+          <!-- Dynamically Injected by App.renderCommitteeDossiersPage() -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
