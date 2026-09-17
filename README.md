@@ -1,5 +1,15 @@
 # CreditFast - Plateforme d'Octroi, Scoring & Conformité Microfinance
 
+The production HTML/CSS/JS app stays at the repository root. The React SPA (Vite + TypeScript) lives in `web/` and is not wired to screens yet.
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+API base URL: `web/.env.example` (`VITE_API_URL`).
+
 ## 📁 Architecture Modulaire par Rôle & Utilisateur
 
 Le projet est structuré avec une séparation claire et modulaire des dossiers selon les rôles utilisateurs et les domaines fonctionnels :
