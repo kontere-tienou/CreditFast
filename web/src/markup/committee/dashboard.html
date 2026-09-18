@@ -1,0 +1,301 @@
+<!-- ====================================================================
+     [COMITÉ] VUE 1 : SÉANCE DE DÉLIBÉRATION DU COMITÉ DE CRÉDIT
+     ==================================================================== -->
+<section id="view-role-committee" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Séance de Délibération du Comité de Crédit</h1>
+      <div class="page-breadcrumb">
+        <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
+        <span>Délibérations Collégiales, Vote & Décisions d'Octroi</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-dossiers')">
+        <i class="fas fa-folder-gavel"></i> Dossiers à Délibérer & Votes
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')">
+        <i class="fas fa-file-signature"></i> Procès-Verbaux (PV)
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-audit-logs')">
+        <i class="fas fa-clock-rotate-left"></i> Journal d'Audit
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Committee Cards -->
+  <div class="grid-4">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-scale-balanced"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Dossiers en Séance</div>
+        <div class="stat-trend down"><i class="fas fa-gavel"></i> Délibération requise</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-vault"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">18.5 M</div>
+        <div class="stat-label">Volume Total Délibéré</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> 5 dossiers</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">84%</div>
+        <div class="stat-label">Taux d'Approbation</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux seuils CreditFast</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-stopwatch"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">48 h</div>
+        <div class="stat-label">Délai Moyen Décision</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif &lt; 72h</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Committee Deliberation Table -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
+        <p class="card-subtitle">Cliquez sur une ligne ou sur « Détails » pour afficher le volet d'analyse approfondie</p>
+      </div>
+      <span class="badge badge-committee"><i class="fas fa-circle-dot mr-1 text-emerald"></i> Séance en cours</span>
+    </div>
+    <div data-app-table="committee-session"></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     [COMITÉ] VUE 2 : DÉCISIONS SIGNÉES & PROCÈS-VERBAUX NUMÉRIQUES
+     ==================================================================== -->
+<section id="view-committee-signed" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Registre des Décisions & Procès-Verbaux Signés</h1>
+      <div class="page-breadcrumb">
+        <span>Gouvernance Régionale</span> <i class="fas fa-chevron-right"></i>
+        <span>Historique des Actes de Décision Scellés</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance en Cours
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.downloadAllSignedPvsCsv()">
+        <i class="fas fa-file-export"></i> Exporter le Registre
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-file-signature text-emerald"></i> Procès-Verbaux Validés & Notifiés aux Agences</h3>
+        <p class="card-subtitle">Cliquez sur une ligne ou sur « Détails » pour ouvrir le procès-verbal scellé et les signatures</p>
+      </div>
+      <!-- <span class="badge badge-approved"><i class="fas fa-fingerprint mr-1"></i> Certifiés SHA-256</span> -->
+    </div>
+    <div data-app-table="committee-signed"></div>
+  </div>
+
+  <!-- Sidedrawer Volet Latéral : Procès-Verbal Scellé & Décision de Comité -->
+  <div id="signed-pv-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeSignedPvDrawer()">
+    <div id="signed-pv-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail procès-verbal signé">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="pv-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">PV-2026-0889</span>
+            <span id="pv-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> Accord Collégial</span>
+            <!-- <span class="badge badge-committee" style="font-size: 0.68rem;">Scellé SHA-256</span> -->
+          </div>
+          <h3 id="pv-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Seydou Keita</h3>
+          <p id="pv-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Procès-Verbal Officiel de Décision du Comité de Crédit</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeSignedPvDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Synthèse de la Décision & Termes Validés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-contract text-primary mr-1"></i> Termes & Conditions Financières</h4>
+            <span id="pv-drawer-date" class="badge badge-submitted" style="font-size: 0.68rem;">18/08/2026</span>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Montant Validé</div>
+              <div id="pv-drawer-amount" style="font-size: 1.15rem; font-weight: 800; color: #059669; font-family: var(--font-family-code);">3 000 000 F</div>
+              <div id="pv-drawer-requested-diff" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Demande initiale : 3 000 000 F</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Modalités & Échéance</div>
+              <div id="pv-drawer-terms" style="font-size: 1.05rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">9.5% • 18 mois</div>
+              <div id="pv-drawer-monthly" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Échéance : ~190 400 F / mois</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Emprunteur & Activité</span>
+              <span id="pv-drawer-client-info" class="drawer-kv-value" style="font-weight: 600;">Seydou Keita (Menuiserie & BTP)</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Agence de Rattachement</span>
+              <span id="pv-drawer-agency" class="drawer-kv-value">Bamako Principale (Mali)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Collège des Signataires & Quorum -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-signature text-emerald mr-1"></i> Signatures Électroniques & Visas</h4>
+            <span id="pv-drawer-quorum-badge" class="badge badge-approved"><i class="fas fa-users-check"></i> Quorum 3/3</span>
+          </div>
+          <div id="pv-drawer-signers-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <!-- Rendered list of signers -->
+          </div>
+        </div>
+
+        <!-- Section 3 : Garanties & Conditions de Décaissement -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-shield-halved text-warning mr-1"></i> Sûretés & Modalités de Déblocage</h4>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Garanties & Cautions Enregistrées</span>
+              <p id="pv-drawer-guarantees" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10%
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Conditions Préalables au Décaissement</span>
+              <p id="pv-drawer-disbursement" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Décaissement sur présentation de facture proforma fournisseur acquittée.
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Motivation Collégiale du Comité</span>
+              <p id="pv-drawer-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Dossier solide avec marge opérationnelle démontrée.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 : Scellement Cryptographique & Horodatage -->
+        <!-- <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-fingerprint text-info mr-1"></i> Intégrité & Empreinte SHA-256</h4>
+            <span class="badge badge-submitted" style="font-size: 0.68rem;">Horodatage Certifié</span>
+          </div>
+          <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">HASH SHA-256 IMMUABLE :</div>
+            <code id="pv-drawer-sha" style="font-size: 0.72rem; word-break: break-all; color: var(--primary-700); font-weight: 700;">9a8f4c21e5b7890123456789abcdef0123456789abcdef0123456789abcdef01</code>
+          </div>
+        </div> -->
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer" style="padding: 1rem 1.4rem; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <button class="btn btn-secondary" onclick="App.closeSignedPvDrawer()" style="padding: 0.6rem 1rem;">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="App.notifyAgencyForPv()" style="padding: 0.6rem 0.9rem;" title="Notifier l'agence par SMS/WhatsApp">
+            <i class="fas fa-paper-plane mr-1 text-primary"></i> Notifier Agence
+          </button>
+          <button class="btn btn-primary" onclick="App.downloadSignedPvPdf()" style="padding: 0.6rem 1.15rem; font-weight: 700;">
+            <i class="fas fa-file-pdf mr-1"></i> Télécharger PV
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     [COMITÉ] VUE 3 : RAPPORTS D'OCTROI & STATISTIQUES CREDITFAST RÉGIONALES
+     ==================================================================== -->
+<section id="view-committee-reports" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Rapports d'Octroi & Gouvernance CreditFast Régionale</h1>
+      <div class="page-breadcrumb">
+        <span>Pilotage Stratégique</span> <i class="fas fa-chevron-right"></i>
+        <span>Indicateurs de Portefeuille & Respect des Normes Prudentielles</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance du Comité
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.showToast('Génération du rapport prudentiel UEMOA au format PDF...', 'info')">
+        <i class="fas fa-file-lines"></i> Rapport Prudentiel
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 1.25rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">142 M</div>
+        <div class="stat-label">Volume Octroyé Q3 2026</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12% vs Q2</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-shield-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1.8%</div>
+        <div class="stat-label">Taux de PAR 30 Jours</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> Sous la norme BCEAO (&lt;3%)</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-users-viewfinder"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">420</div>
+        <div class="stat-label">Crédits en Cours de Remboursement</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Taux de recouvrement : 98.4%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Répartition des Crédits par Caisses & Agences CreditFast (Bamako)</h3>
+    </div>
+    <div data-app-table="committee-agencies"></div>
+  </div>
+</section>
+

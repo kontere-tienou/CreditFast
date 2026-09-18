@@ -1,0 +1,53 @@
+<!-- ==========================================================================
+     1. Left Vertical Sidebar (Rendu Dynamique selon le Rôle)
+     ========================================================================== -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <a href="#" class="brand-logo" onclick="App.switchView(APP_CONSTANTS.ROLES[App.currentRole].homeView)">
+      <div class="brand-icon" title="Crédit Fast UEMOA">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </div>
+      <div class="brand-title-group">
+        <span class="brand-name">CRÉDIT FAST</span>
+        <!-- <span class="brand-tag">CIF-WA+</span> -->
+      </div>
+    </a>
+    <!-- Close Drawer Button for Mobile / Tablet -->
+    <button id="sidebar-close-btn" class="sidebar-close-btn" title="Fermer le menu">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- User Mini Profile -->
+  <div class="sidebar-user-card">
+    <div class="user-avatar-wrap">
+      <img id="user-avatar-display" src="images/profil/profil01-04.jpg" alt="Avatar" class="user-avatar">
+      <!-- <span class="avatar-flag-badge sidebar-flag" id="sidebar-avatar-flag" title="Pays de l'utilisateur"></span> -->
+    </div>
+    <div class="user-info">
+      <div id="user-name-display" class="user-name">Aminata Diallo</div>
+      <div id="user-role-display" class="user-role-badge">Analyste Risque Senior</div>
+      <!-- <div class="user-region-badge" id="sidebar-region-badge">
+        <i class="fas fa-location-dot"></i> <span id="sidebar-country-text">Mali (Bamako)</span> 
+      </div> -->
+    </div>
+  </div>
+
+  <!-- Dynamic Menu Container (Rempli par renderSidebarForRole) -->
+  <nav class="sidebar-menu" id="sidebar-menu-container">
+    <!-- Injected Dynamically based on Authenticated Role -->
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="digicoop-card">
+      <div class="digicoop-text" style="width: 100%;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <h6>Réseau CreditFast Mali</h6>
+          <span
+            style="font-size: 0.62rem; color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.15); padding: 1px 5px; border-radius: 4px;">MALI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>

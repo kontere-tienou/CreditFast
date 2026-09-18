@@ -656,6 +656,7 @@ body.sidebar-collapsed .sidebar-footer .btn-action-logout:hover::after {
   color: #38bdf8;
 }
 
+.nav-link.active,
 .nav-item.active .nav-link {
   background: rgba(79, 70, 229, 0.25);
   color: #ffffff;
@@ -663,6 +664,7 @@ body.sidebar-collapsed .sidebar-footer .btn-action-logout:hover::after {
   font-weight: 600;
 }
 
+.nav-link.active i,
 .nav-item.active .nav-link i {
   color: #818cf8;
 }
@@ -1721,10 +1723,14 @@ button.mobile-search-btn,
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.55rem 1rem;
+  box-sizing: border-box;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 1.05rem;
   border-radius: var(--radius-md);
   font-size: 0.82rem;
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
@@ -1780,16 +1786,13 @@ button.mobile-search-btn,
   color: #78350f;
 }
 
-.btn-sm {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.76rem;
-  border-radius: var(--radius-sm);
-}
-
+.btn-sm,
 .btn-lg {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
-  border-radius: var(--radius-lg);
+  min-height: 40px;
+  height: 40px;
+  padding: 0 1.05rem;
+  font-size: 0.82rem;
+  border-radius: var(--radius-md);
 }
 
 /* Status Badges */
@@ -1911,6 +1914,7 @@ button.mobile-search-btn,
 .card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--transition-speed), border-color var(--transition-speed);

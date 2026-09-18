@@ -1,0 +1,92 @@
+<!-- ====================================================================
+     MODAL RAPPORT D'INSPECTION TERRAIN DES GARANTIES (AGENT DE CRÉDIT)
+     ==================================================================== -->
+<div id="modal-inspection" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog" style="max-width: 650px;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <div>
+          <h3 class="modal-title" id="modal-insp-title">Rapport d'Inspection Terrain</h3>
+          <div style="font-size: 0.75rem; color: var(--text-subtle);" id="modal-insp-subtitle">Contrôle physique, valorisation et solvabilité locale</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="App.closeModal('modal-inspection')">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="insp-guarantee-id" value="">
+      
+      <!-- Guarantee info banner -->
+      <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);" id="insp-client-name">Fatou Ndiaye • #REQ-2026-0891</div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);" id="insp-guarantee-type">Stock de Marchandises (Rouleaux Wax)</div>
+          </div>
+          <span class="badge badge-warning" id="insp-status-badge">À Visiter</span>
+        </div>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">Valeur Déclarée (FCFA)</label>
+          <input type="text" id="insp-declared-val" class="form-control" readonly style="background: var(--bg-body); font-weight: 600;">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--primary-700);">Valeur Expertisée / Retenue (FCFA) *</label>
+          <input type="number" id="insp-verified-val" class="form-control" placeholder="ex: 3400000" style="font-weight: 700; color: var(--primary-700); border-color: var(--primary-400);">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" style="font-size: 0.8rem;">Localisation & Zone Visité Terrain *</label>
+        <input type="text" id="insp-location" class="form-control" placeholder="ex: Grand Marché Bamako, Rue 314 (Boutique physique)">
+      </div>
+
+      <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">État Physique & Conservabilité *</label>
+          <select id="insp-condition" class="form-control">
+            <option value="EXCELLENT">Excellent état / Neuf ou sous emballage</option>
+            <option value="BON" selected>Bon état / Rotation rapide de stock</option>
+            <option value="MOYEN">État moyen / Vétusté partielle</option>
+            <option value="MAUVAIS">Mauvais état / Risque de dépréciation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem;">Avis Enquête de Voisinage & Moralité *</label>
+          <select id="insp-reputation" class="form-control">
+            <option value="TRES_FAVORABLE" selected>Très favorable (Bonne notoriété au marché)</option>
+            <option value="FAVORABLE">Favorable (Activité régulière constatée)</option>
+            <option value="RESERVE">Réserves (Activité récente ou intermittente)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" style="font-size: 0.8rem;">Observations Détaillées de l'Agent *</label>
+        <textarea id="insp-notes" class="form-control" rows="3" placeholder="Constats effectués sur place, vérification physique des stocks/machines, concordance avec le registre de commerce..."></textarea>
+      </div>
+
+      <!-- Photo upload / mock -->
+      <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; text-align: center; background: var(--bg-body); margin-bottom: 1rem;">
+        <i class="fas fa-camera text-primary" style="font-size: 1.4rem; margin-bottom: 0.25rem;"></i>
+        <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">Photos & Justificatifs Terrain</div>
+        <div style="font-size: 0.7rem; color: var(--text-subtle);">2 photos géolocalisées enregistrées par l'application mobile CreditFast</div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+      <button class="btn btn-secondary" onclick="App.closeModal('modal-inspection')">Annuler</button>
+      <button class="btn btn-primary" onclick="App.saveInspectionReport()">
+        <i class="fas fa-check-circle mr-1"></i> Valider le Contrôle Terrain
+      </button>
+    </div>
+  </div>
+</div>

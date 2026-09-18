@@ -1,0 +1,126 @@
+<!-- ====================================================================
+     MODAL: SCANNER APPAREIL PHOTO & DÉTECTEUR QR CODES DOCUMENTS OFFICIELS UEMOA
+     ==================================================================== -->
+<div id="modal-qr-scanner" class="modal-backdrop" style="display: none;">
+  <div class="modal-dialog modal-dialog-lg qr-scanner-modal-dialog">
+    <div class="modal-header">
+      <div class="modal-header-title">
+        <i class="fas fa-camera text-primary mr-2"></i>
+        <div>
+          <h4 style="margin: 0; font-size: 1.05rem;">Scanner de QR Code Officiel UEMOA</h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Extraction automatique & Vérification d'authenticité de document</span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="App.closeQrScannerModal()" title="Fermer le scanner">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 1.25rem;">
+      <!-- Main Scanning View -->
+      <div id="qr-camera-viewport-container" class="qr-viewport-container">
+        <!-- Live Camera Video -->
+        <video id="qr-video-feed" class="qr-video-element" playsinline autoplay muted></video>
+        <canvas id="qr-canvas-buffer" style="display: none;"></canvas>
+
+        <!-- Viewfinder Overlay Box -->
+        <div class="qr-viewfinder-overlay" id="qr-viewfinder-overlay">
+          <div class="qr-viewfinder-box">
+            <div class="corner-border top-left"></div>
+            <div class="corner-border top-right"></div>
+            <div class="corner-border bottom-left"></div>
+            <div class="corner-border bottom-right"></div>
+            <div class="qr-laser-line" id="qr-laser-line"></div>
+          </div>
+          <div class="qr-viewfinder-status" id="qr-scanner-status-text">
+            <i class="fas fa-circle-notch fa-spin mr-1"></i> Initialisation de la caméra...
+          </div>
+        </div>
+
+        <!-- Fallback Message if camera is denied or unavailable -->
+        <div id="qr-camera-error-banner" class="qr-error-overlay" style="display: none;">
+          <i class="fas fa-video-slash" style="font-size: 2.2rem; color: var(--warning); margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.25rem;">Accès Caméra Non Disponible</h5>
+          <p id="qr-camera-error-desc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem; max-width: 320px; text-align: center;">
+            Veuillez autoriser l'accès à la caméra dans les permissions du navigateur ou importer un fichier image.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+            <button class="btn btn-primary btn-sm" onclick="App.startCameraFeed()">
+              <i class="fas fa-rotate-right"></i> Réessayer
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('qr-file-fallback-input').click()">
+              <i class="fas fa-image"></i> Importer Image
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls Toolbar -->
+      <div class="qr-controls-toolbar">
+        <div class="qr-controls-left">
+          <button class="btn btn-secondary btn-sm" id="btn-qr-switch-camera" onclick="App.switchCameraFacingMode()" title="Changer d'objectif (Avant / Arrière)">
+            <i class="fas fa-camera-rotate"></i> <span>Changer Caméra</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-qr-toggle-torch" onclick="App.toggleCameraTorch()" title="Allumer la lampe torche / Flash">
+            <i class="fas fa-bolt"></i> <span>Flash</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('qr-file-fallback-input').click()" title="Analyser une image enregistrée">
+            <i class="fas fa-upload"></i> <span>Importer Fichier</span>
+          </button>
+          <input type="file" id="qr-file-fallback-input" accept="image/*" style="display: none;" onchange="App.handleQrImageUpload(event)">
+        </div>
+
+        <div class="qr-controls-right">
+          <span class="badge badge-submitted" id="qr-camera-status-badge">
+            <i class="fas fa-satellite-dish mr-1"></i> Mode Direct
+          </span>
+        </div>
+      </div>
+
+      <!-- Demo One-Click Test Presets -->
+      <div class="qr-demo-presets-card">
+        <div class="qr-demo-presets-title">
+          <i class="fas fa-flask text-primary mr-1"></i>
+          <span>Simulateur d'échantillons officiels UEMOA (Test instantané) :</span>
+        </div>
+        <div class="qr-demo-presets-buttons">
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('cni')">
+            <i class="fas fa-id-card text-emerald"></i> CNI Biométrique NINA
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('invoice')">
+            <i class="fas fa-receipt text-primary"></i> Facture Normalisée DGI
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="App.simulateQrScanPreset('rccm')">
+            <i class="fas fa-certificate text-amber"></i> Registre RCCM & Activité
+          </button>
+        </div>
+      </div>
+
+      <!-- Decoded Result Verification Box (Displayed when a QR is scanned) -->
+      <div id="qr-scan-result-card" class="qr-scan-result-card" style="display: none;">
+        <div class="qr-result-header">
+          <div class="qr-result-status-badge success">
+            <i class="fas fa-shield-check"></i>
+            <span>Signature Cryptographique Certifiée UEMOA / BCEAO</span>
+          </div>
+          <span class="badge badge-submitted" id="qr-doc-type-badge">CNI Biométrique</span>
+        </div>
+
+        <div class="qr-result-body">
+          <div class="qr-extracted-grid" id="qr-extracted-fields-container">
+            <!-- Dynamic Key-Value Pairs populated via JS -->
+          </div>
+        </div>
+
+        <div class="qr-result-actions">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.resetQrScannerState()">
+            <i class="fas fa-arrows-rotate"></i> Scanner un autre document
+          </button>
+          <button type="button" class="btn btn-success" id="btn-apply-qr-data" onclick="App.applyQrScanData()">
+            <i class="fas fa-check-double"></i> Appliquer les données au dossier
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
