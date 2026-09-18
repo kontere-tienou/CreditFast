@@ -1,4 +1,4 @@
-export type RoleCode = 'CLIENT' | 'CREDIT_OFFICER' | 'ANALYST' | 'COMMITTEE';
+export type RoleCode = 'CLIENT' | 'CREDIT_OFFICER' | 'ANALYST' | 'COMMITTEE' | 'ADMIN';
 
 export type NavItem = {
   id: string;
@@ -33,7 +33,6 @@ export const VIEW_PATHS: Record<string, string> = {
   'view-client-schedule': '/app/client/schedule',
   'view-client-documents': '/app/client/documents',
   'view-client-advisor': '/app/client/advisor',
-  'view-client-wizard': '/app/client/wizard',
   'view-role-agent': '/app/agent',
   'view-agent-inspections': '/app/agent/inspections',
   'view-agent-clients': '/app/agent/clients',
@@ -46,6 +45,10 @@ export const VIEW_PATHS: Record<string, string> = {
   'view-role-committee': '/app/committee',
   'view-committee-dossiers': '/app/committee/dossiers',
   'view-committee-signed': '/app/committee/signed',
+  'view-role-admin': '/app/admin',
+  'view-admin-users': '/app/admin/users',
+  'view-admin-scoring': '/app/admin/scoring',
+  'view-admin-audit': '/app/admin/audit',
 };
 
 export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
@@ -57,7 +60,7 @@ export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
     avatar: '/images/profil/profil01-02.jpg',
     displayName: 'Faratigi Ndiaye',
     title: 'Emprunteuse • Commerçante Grossiste',
-    badgeColor: '#10b981',
+    badgeColor: '#518e45',
     navGroups: [
       {
         title: 'Mon Espace Crédit',
@@ -124,7 +127,7 @@ export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
     avatar: '/images/profil/profil01-03.jpg',
     displayName: 'Adama Traore',
     title: 'Chargé de Crédit & Clientèle',
-    badgeColor: '#0ea5e9',
+    badgeColor: '#f1ca30',
     navGroups: [
       {
         title: 'Guichet & Collecte',
@@ -174,7 +177,7 @@ export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
     avatar: '/images/profil/profil01-04.jpg',
     displayName: 'Ali Diallo',
     title: 'Analyste Risque Senior',
-    badgeColor: '#4f46e5',
+    badgeColor: '#1b4332',
     navGroups: [
       {
         title: 'Supervision & Analyse',
@@ -234,7 +237,7 @@ export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
     avatar: '/images/profil/profil01-01.jpg',
     displayName: 'Mariam Keita',
     title: 'Comité de Crédit',
-    badgeColor: '#8b5cf6',
+    badgeColor: '#ff9800',
     navGroups: [
       {
         title: 'Délibérations',
@@ -271,9 +274,58 @@ export const ROLE_PROFILES: Record<RoleCode, RoleProfile> = {
       },
     ],
   },
+  ADMIN: {
+    code: 'ADMIN',
+    name: 'Administration Système',
+    shortName: 'Administration',
+    homePath: '/app/admin',
+    avatar: '/images/profil/profil01-01.jpg',
+    displayName: 'Administrateur',
+    title: 'Contrôle & Paramétrage CreditFast',
+    badgeColor: '#1b4332',
+    navGroups: [
+      {
+        title: 'Pilotage',
+        items: [
+          {
+            id: 'nav-admin-dash',
+            path: '/app/admin',
+            icon: 'fa-gauge-high',
+            label: 'Tableau de Bord Admin',
+          },
+          {
+            id: 'nav-admin-users',
+            path: '/app/admin/users',
+            icon: 'fa-user-gear',
+            label: 'Comptes & Utilisateurs',
+          },
+        ],
+      },
+      {
+        title: 'Contrôle & Système',
+        items: [
+          {
+            id: 'nav-admin-scoring',
+            path: '/app/admin/scoring',
+            icon: 'fa-sliders',
+            label: 'Modèles de Scoring',
+          },
+          {
+            id: 'nav-admin-audit',
+            path: '/app/admin/audit',
+            icon: 'fa-clipboard-list',
+            label: "Journal d'Audit",
+          },
+        ],
+      },
+    ],
+  },
 };
 
 export function roleFromPath(pathname: string): RoleCode {
+  if (pathname.startsWith('/app/admin')) {
+    return 'ADMIN';
+  }
   if (pathname.startsWith('/app/agent')) {
     return 'CREDIT_OFFICER';
   }

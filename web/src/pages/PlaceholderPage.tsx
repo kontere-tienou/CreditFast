@@ -12,7 +12,7 @@ export function PlaceholderPage() {
       }}
     >
       <section style={{ maxWidth: '36rem', textAlign: 'center' }}>
-        <p style={{ fontWeight: 600, letterSpacing: '0.04em', color: '#4f46e5' }}>CreditFast</p>
+        <p style={{ fontWeight: 600, letterSpacing: '0.04em', color: 'var(--ds-30)' }}>CreditFast</p>
         <h1 style={{ marginTop: '0.5rem', fontSize: '1.875rem' }}>React app scaffold</h1>
         <p style={{ marginTop: '1rem' }}>
           Screens are not migrated yet. Existing HTML/CSS/JS stay at the repository root. This app

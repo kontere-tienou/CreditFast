@@ -1,7 +1,9 @@
 import { toast } from '@heroui/react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { getUiSession, setUiSession } from '@/app/session';
+import { loginWithCredentials } from '@/api';
+import { getUiSession } from '@/app/session';
+import { ROLE_PROFILES } from '@/app/roles';
 import { Button } from '@/shared/ui';
 
 const SLIDE_COUNT = 3;
@@ -35,6 +37,11 @@ export function AuthPage() {
     setSlideIndex(((index % SLIDE_COUNT) + SLIDE_COUNT) % SLIDE_COUNT);
   };
 
+  const enterWorkspace = async (rawInput: string, secret: string) => {
+    const session = await loginWithCredentials(rawInput, secret, { persist: rememberMe });
+    navigate(ROLE_PROFILES[session.role].homePath);
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const rawInput = identifier.trim();
@@ -48,30 +55,23 @@ export function AuthPage() {
     setIsSubmitting(true);
 
     toast.promise(
-      new Promise<{ ok: true }>((resolve, reject) => {
+      (async () => {
         if (!rawInput || !password.trim()) {
-          setIsSubmitting(false);
-          reject(new Error('Saisissez vos identifiants.'));
-          return;
+          throw new Error('Saisissez vos identifiants.');
         }
-
-        window.setTimeout(() => {
-          setUiSession({ identifier: rawInput, role: 'CLIENT' });
-          setIsSubmitting(false);
-          resolve({ ok: true });
-          navigate('/app/client');
-        }, 800);
-      }),
+        await enterWorkspace(rawInput, password);
+      })().finally(() => setIsSubmitting(false)),
       {
         loading: 'Authentification sécurisée...',
         success: 'Espace chargé',
-        error: (err) => err.message,
+        error: (err) => (err instanceof Error ? err.message : 'Connexion impossible'),
       },
     );
   };
 
   if (getUiSession()) {
-    return <Navigate to="/app/client" replace />;
+    const session = getUiSession();
+    return <Navigate to={session ? ROLE_PROFILES[session.role].homePath : '/app/client'} replace />;
   }
 
   return (
@@ -147,7 +147,7 @@ export function AuthPage() {
                   <span
                     style={{
                       fontSize: '0.74rem',
-                      color: '#fbbf24',
+                      color: '#ffd700',
                       fontWeight: 700,
                       letterSpacing: '0.5px',
                     }}
@@ -274,7 +274,7 @@ export function AuthPage() {
                 <h4
                   className="m-0 fw-bold"
                   style={{
-                    color: 'var(--primary-700, #3730a3)',
+                    color: 'var(--primary-700)',
                     fontSize: '1.15rem',
                     lineHeight: 1.2,
                   }}
@@ -289,13 +289,13 @@ export function AuthPage() {
 
             <div className="auth-header">
               <h2>Portail d'Accès Sécurisé</h2>
-              <p>Saisissez vos identifiants pour accéder à votre espace.</p>
+              <p>Clients : numéro de téléphone. Équipe CreditFast : e-mail professionnel.</p>
             </div>
 
             <form id="login-form" noValidate onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label" htmlFor="login-email">
-                  Identifiant, ou Numéro de Téléphone
+                  Téléphone ou e-mail professionnel
                 </label>
                 <div className="input-with-icon">
                   <i className="fas fa-user-check input-prefix-icon"></i>
@@ -303,7 +303,7 @@ export function AuthPage() {
                     type="text"
                     id="login-email"
                     className="form-control"
-                    placeholder="Email ou numéro de téléphone"
+                    placeholder="+223… ou vous@creditfast.ml"
                     value={identifier}
                     autoComplete="username"
                     required

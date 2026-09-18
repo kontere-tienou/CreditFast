@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { hydrateLegacyPage } from '@/app/legacy-runtime';
 
 type HtmlViewProps = {
   html: string;
@@ -50,7 +51,12 @@ export function HtmlView({ html, viewId, slots }: HtmlViewProps) {
       }
     }
 
+    const frame = window.requestAnimationFrame(() => {
+      hydrateLegacyPage(viewId);
+    });
+
     setMountVersion((current) => current + 1);
+    return () => window.cancelAnimationFrame(frame);
   }, [markup, viewId]);
 
   const portals =

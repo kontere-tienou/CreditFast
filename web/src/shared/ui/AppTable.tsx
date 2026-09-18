@@ -1,4 +1,4 @@
-import { useMemo, useState, type Key, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type Key, type ReactNode } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 import { PaginationPageMinimalCenter } from '@/components/application/pagination/pagination';
 import { Table, TableCard } from '@/components/application/table/table';
@@ -25,6 +25,7 @@ type AppTableProps<T extends { id: string }> = {
   pageSize?: number;
   defaultSort?: SortDescriptor;
   onRowAction?: (key: Key) => void;
+  rowClassName?: (item: T) => string | undefined;
   showMenu?: boolean;
   chrome?: 'card' | 'plain';
   className?: string;
@@ -50,9 +51,10 @@ export function AppTable<T extends { id: string }>({
   items,
   columns,
   selectionMode = 'none',
-  pageSize = 8,
+  pageSize = 6,
   defaultSort,
   onRowAction,
+  rowClassName,
   showMenu = false,
   chrome = 'card',
   className,
@@ -61,6 +63,10 @@ export function AppTable<T extends { id: string }>({
     defaultSort ?? { column: columns[0]?.id ?? 'id', direction: 'ascending' },
   );
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setPage(1);
+  }, [items.length]);
 
   const sortedItems = useMemo(() => {
     const columnId = String(sortDescriptor.column);
@@ -106,7 +112,7 @@ export function AppTable<T extends { id: string }>({
         </Table.Header>
         <Table.Body items={pageItems}>
           {(item) => (
-            <Table.Row id={item.id}>
+            <Table.Row id={item.id} className={rowClassName?.(item)}>
               {columns.map((column) => (
                 <Table.Cell key={column.id} className={column.className}>
                   {column.render(item)}
@@ -116,7 +122,7 @@ export function AppTable<T extends { id: string }>({
           )}
         </Table.Body>
       </Table>
-      {totalPages > 1 ? (
+      {sortedItems.length > pageSize ? (
         <PaginationPageMinimalCenter
           page={currentPage}
           total={totalPages}

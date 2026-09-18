@@ -17,6 +17,45 @@
       href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.__CREDITFAST_SPA__ = true;
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#6366f1',
+                600: '#4f46e5',
+                700: '#4338ca',
+                800: '#3730a3',
+                900: '#312e81',
+                DEFAULT: '#4f46e5',
+              },
+              cif: {
+                gold: '#f59e0b',
+                emerald: '#10b981',
+                navy: '#1e293b',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="/js/constants.js"></script>
+    <script src="/js/data.js"></script>
+    <script src="/js/credit-scoring.js"></script>
+    <script src="/js/ocr-engine.js"></script>
+    <script src="/js/charts.js"></script>
+    <script src="/js/interactions.js"></script>
+    <script src="/js/app.js"></script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,7 +1,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ROLE_PROFILES, roleFromPath } from '@/app/roles';
-import { clearUiSession, installLegacyAppBridge } from '@/app/session';
-import { Button } from '@/shared/ui';
+import { getUiSession, installLegacyAppBridge, consumeQueuedLoanModal } from '@/app/session';
+import { logoutFromApi } from '@/api';
+import { Button, callApp as invokeLegacyApp } from '@/shared/ui';
 import { toast } from '@heroui/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
@@ -12,11 +13,17 @@ type AppShellProps = {
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = roleFromPath(location.pathname);
+  const session = getUiSession();
+  const role = session?.role ?? roleFromPath(location.pathname);
   const profile = ROLE_PROFILES[role];
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const displayName = session?.name || profile.displayName;
+  const [isCollapsed, setIsCollapsed] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1280 && window.innerWidth >= 768,
+  );
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const userToggledCollapse = useRef(false);
 
   useEffect(() => {
     installLegacyAppBridge((path) => {
@@ -26,12 +33,44 @@ export function AppShell({ children }: AppShellProps) {
       }
       navigate(path);
     });
+
+    if (!consumeQueuedLoanModal()) {
+      return;
+    }
+    const frame = window.requestAnimationFrame(() => invokeLegacyApp('openNewLoanModal'));
+    return () => window.cancelAnimationFrame(frame);
   }, [location.pathname, navigate]);
 
   useEffect(() => {
-    document.body.classList.toggle('sidebar-collapsed', isCollapsed);
-    return () => document.body.classList.remove('sidebar-collapsed');
+    const applyCollapsedClass = () => {
+      const iconRail = isCollapsed && window.innerWidth >= 768;
+      document.body.classList.toggle('sidebar-collapsed', iconRail);
+    };
+
+    applyCollapsedClass();
+    window.addEventListener('resize', applyCollapsedClass);
+    return () => {
+      window.removeEventListener('resize', applyCollapsedClass);
+      document.body.classList.remove('sidebar-collapsed');
+    };
   }, [isCollapsed]);
+
+  useEffect(() => {
+    const syncDefaultCollapse = () => {
+      if (window.innerWidth < 768) {
+        setIsMobileOpen(false);
+        return;
+      }
+      if (userToggledCollapse.current) {
+        return;
+      }
+      setIsCollapsed(window.innerWidth < 1280);
+    };
+
+    syncDefaultCollapse();
+    window.addEventListener('resize', syncDefaultCollapse);
+    return () => window.removeEventListener('resize', syncDefaultCollapse);
+  }, []);
 
   useEffect(() => {
     if (!profileOpen) {
@@ -59,8 +98,7 @@ export function AppShell({ children }: AppShellProps) {
 
   const logout = () => {
     setProfileOpen(false);
-    clearUiSession();
-    navigate('/');
+    void logoutFromApi().finally(() => navigate('/'));
   };
 
   const callApp = (method: string) => {
@@ -71,7 +109,12 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div id="app-wrapper" style={{ display: 'flex' }}>
-      <aside id="sidebar">
+      <div
+        id="sidebar-backdrop"
+        className={isMobileOpen ? 'active' : ''}
+        onClick={() => setIsMobileOpen(false)}
+      />
+      <aside id="sidebar" className={isMobileOpen ? 'mobile-open' : undefined}>
         <div className="sidebar-header">
           <a
             href={profile.homePath}
@@ -93,7 +136,14 @@ export function AppShell({ children }: AppShellProps) {
             className="sidebar-close-btn"
             title="Fermer le menu"
             type="button"
-            onClick={() => setIsCollapsed(true)}
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                setIsMobileOpen(false);
+                return;
+              }
+              userToggledCollapse.current = true;
+              setIsCollapsed(true);
+            }}
           >
             <i className="fas fa-times"></i>
           </button>
@@ -117,6 +167,9 @@ export function AppShell({ children }: AppShellProps) {
                       to={item.path}
                       className={({ isActive: linkActive }) => `nav-link${linkActive ? ' active' : ''}`}
                       end={exactMatch}
+                      title={item.label}
+                      data-nav-title={item.label}
+                      onClick={() => setIsMobileOpen(false)}
                     >
                       <i className={`fas ${item.icon}`}></i>
                       <span className="nav-link-text">{item.label}</span>
@@ -147,9 +200,9 @@ export function AppShell({ children }: AppShellProps) {
                 <span
                   style={{
                     fontSize: '0.62rem',
-                    color: '#38bdf8',
+                    color: '#f1ca30',
                     fontWeight: 700,
-                    background: 'rgba(56, 189, 248, 0.15)',
+                    background: 'rgba(241, 202, 48, 0.18)',
                     padding: '1px 5px',
                     borderRadius: 4,
                   }}
@@ -170,7 +223,14 @@ export function AppShell({ children }: AppShellProps) {
               className="sidebar-toggle-btn"
               title="Basculer le menu latéral (Drawer)"
               type="button"
-              onClick={() => setIsCollapsed((current) => !current)}
+              onClick={() => {
+                if (window.innerWidth < 768) {
+                  setIsMobileOpen((open) => !open);
+                  return;
+                }
+                userToggledCollapse.current = true;
+                setIsCollapsed((current) => !current);
+              }}
             >
               <i className="fas fa-bars"></i>
             </button>
@@ -185,7 +245,7 @@ export function AppShell({ children }: AppShellProps) {
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={profileOpen}
-                aria-label={profile.displayName}
+                aria-label={displayName}
                 title="Mon Profil & Paramètres"
                 onClick={() => setProfileOpen((open) => !open)}
               >
@@ -193,7 +253,7 @@ export function AppShell({ children }: AppShellProps) {
                   <img src={profile.avatar} alt="Avatar" className="topbar-avatar" />
                 </div>
                 <div className="topbar-user-meta">
-                  <span className="topbar-user-name">{profile.displayName}</span>
+                  <span className="topbar-user-name">{displayName}</span>
                   <span className="topbar-user-role">{profile.shortName}</span>
                 </div>
                 <i className="fas fa-chevron-down profile-caret"></i>
@@ -273,7 +333,8 @@ export function AppShell({ children }: AppShellProps) {
             </div>
           </div>
         </header>
-        {children}
+        <div id="content-area">{children}</div>
+        <div id="toast-container"></div>
       </div>
     </div>
   );
