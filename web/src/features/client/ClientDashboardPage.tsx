@@ -1,70 +1,95 @@
+import { useEffect, useState } from 'react';
 import { Screen } from '@/shared/ui/Screen';
 import { Button } from '@/shared/ui/Button';
 import { callApp } from '@/shared/ui/legacy';
-import { ClientCalendarTable } from '@/shared/tables/registry';
-import { InsightTiles } from '@/shared/ui/InsightTiles';
-import { KpiHeroGrid } from '@/shared/ui/KpiHeroGrid';
-import { ScoreHeroCard } from '@/shared/ui/ScoreHeroCard';
+import { AppTable } from '@/shared/ui/AppTable';
+import { getUiSession } from '@/app/session';
+import { type CreditRequest } from '@/api/credit';
+import { type Loan, type LoanRepayment } from '@/api/loans';
+import { fetchClientProfile, savingsBalanceFromProfile, type ClientProfile } from '@/api/profile';
+import { creditStatusLabel, formatDate, formatFcfa, loanStatusLabel, repaymentStatusLabel, REQUESTS_CHANGED_EVENT, PROFILE_CHANGED_EVENT } from '@/features/workflow/workflow';
+import { isCommitteeGranted, loadGrantedClientLoans, loadLoanRepayments, pickPrimaryLoan } from '@/features/loans/granted';
 
 export function ClientDashboardPage() {
+  const session = getUiSession();
+  const [profile, setProfile] = useState<ClientProfile | null>(null);
+  const [requests, setRequests] = useState<CreditRequest[]>([]);
+  const [loans, setLoans] = useState<Loan[]>([]);
+  const [repayments, setRepayments] = useState<LoanRepayment[]>([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [nextProfile, granted] = await Promise.all([
+          fetchClientProfile().catch(() => null),
+          loadGrantedClientLoans(),
+        ]);
+        setProfile(nextProfile);
+        setRequests(granted.requests);
+        setLoans(granted.loans);
+        const active = pickPrimaryLoan(granted.loans);
+        if (active) {
+          const schedule = await loadLoanRepayments(active);
+          setRepayments(schedule.rows);
+        } else {
+          setRepayments([]);
+        }
+      } catch {
+        setRequests([]);
+        setLoans([]);
+        setRepayments([]);
+      }
+    };
+    void load();
+    const onChange = () => void load();
+    window.addEventListener(REQUESTS_CHANGED_EVENT, onChange);
+    window.addEventListener(PROFILE_CHANGED_EVENT, onChange);
+    return () => {
+      window.removeEventListener(REQUESTS_CHANGED_EVENT, onChange);
+      window.removeEventListener(PROFILE_CHANGED_EVENT, onChange);
+    };
+  }, []);
+
+  const displayName = session?.name || profile?.user?.full_name || 'Demandeur';
+  const memberNum = profile?.client_number || (session?.userId ? `#${session.userId}` : '—');
+  const city = profile?.city || profile?.residential_zone || '';
+  const occupation = profile?.occupation || '';
+  const liveRequests = requests.filter((row) => (row.status || '').toUpperCase() !== 'REJECTED');
+  const grantedRequest = requests.find((row) => isCommitteeGranted(row.status));
+  const activeRequest =
+    grantedRequest ?? liveRequests.find((row) => (row.status || '').toUpperCase() !== 'DRAFT') ?? liveRequests[0];
+  const activeLoan = pickPrimaryLoan(loans);
+  const nextDue = repayments.find((row) => (row.status || '').toUpperCase() !== 'PAID');
+  const paidCount = repayments.filter((row) => (row.status || '').toUpperCase() === 'PAID').length;
+  const financingAmount = activeLoan?.principal_amount ?? activeLoan?.funds_received ?? (grantedRequest?.approved_amount ?? grantedRequest?.requested_amount) ?? activeRequest?.requested_amount;
+  const financingDuration = activeLoan?.duration_months ?? grantedRequest?.approved_duration_months ?? grantedRequest?.duration_months ?? activeRequest?.duration_months;
+  const financingHint = activeLoan
+    ? `${financingDuration ? `${financingDuration} mensualités` : 'Crédit accordé'} • ${loanStatusLabel(activeLoan.status)}`
+    : grantedRequest
+      ? `${financingDuration ? `${financingDuration} mois` : 'Crédit accordé'} • ${creditStatusLabel(grantedRequest.status)}`
+      : activeRequest
+        ? `${financingDuration ? `${financingDuration} mois` : 'Dossier ouvert'} • ${creditStatusLabel(activeRequest.status)}`
+        : 'Aucun financement en cours';
+  const nextDueLate = Boolean(nextDue && ((nextDue.status || '').toUpperCase() === 'LATE' || (nextDue.days_late ?? 0) > 0));
+  const savingsAmount = savingsBalanceFromProfile(profile);
+
   return (
     <Screen viewId="view-role-client">
-      <div
-        id="borrower-offline-alert"
-        className="card"
-        style={{
-          display: 'none',
-          background: '#fffbeb',
-          border: '1px solid #fde68a',
-          padding: '0.75rem 1rem',
-          marginBottom: '1.25rem',
-          borderRadius: 'var(--radius-md)',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                background: '#fef3c7',
-                color: '#ff9800',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.95rem',
-              }}
-            >
-              <i className="fas fa-shield-heart"></i>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#92400e' }}>Mode Sérénité Hors-Ligne Actif</div>
-              <div style={{ fontSize: '0.72rem', color: '#b45309' }}>
-                Même sans connexion internet, vous consultez vos règlements, vos documents et l&apos;état de votre projet en toute fluidité.
-              </div>
-            </div>
-          </div>
-          <span className="badge badge-approved" style={{ fontSize: '0.68rem' }}>
-            <i className="fas fa-circle-check mr-1"></i> Informations Toujours Disponibles
-          </span>
-        </div>
-      </div>
-
       <div className="borrower-welcome-banner">
         <div>
           <span
             className="badge badge-client"
             style={{ background: 'rgba(81, 142, 69, 0.2)', color: '#518e45', border: '1px solid rgba(81, 142, 69, 0.4)', marginBottom: '0.5rem' }}
           >
-            <i className="fas fa-star mr-1"></i> Mon Espace Financement & Projet
+            <i className="fas fa-star mr-1"></i> Mon Espace Financement
           </span>
           <h2 style={{ fontSize: '1.6rem', marginBottom: '0.35rem', color: 'white' }}>
-            Bienvenue, <span id="borrower-banner-name">Faratigi Ndiaye</span>
+            Bienvenue, <span id="borrower-banner-name">{displayName}</span>
           </h2>
           <p style={{ color: '#cbd5e1', fontSize: '0.85rem', maxWidth: 600 }}>
-            N° Membre : <strong id="borrower-member-num">ML-BKO-008821</strong> • Agence CreditFast Grand Marché (Bamako, Mali) • Activité : Commerce & Textile
+            N° membre : <strong>{memberNum}</strong>
+            {city ? ` • ${city}` : ''}
+            {occupation ? ` • ${occupation}` : ''}
           </p>
         </div>
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -81,100 +106,146 @@ export function ClientDashboardPage() {
         </div>
       </div>
 
-      <KpiHeroGrid>
-        <ScoreHeroCard
-          chart="arc"
-          label="Votre indice CreditFast"
-          value={782}
-          min={300}
-          max={850}
-          display="782"
-          caption="Solvabilité sereine"
-          rangeMin="300"
-          rangeMax="850"
-          trend={
-            <>
-              <i className="fas fa-arrow-up"></i> +16 pts
-            </>
-          }
-        />
-        <InsightTiles
-          tiles={[
-            {
-              label: 'Ponctualité',
-              value: '100%',
-              hint: 'Échéances réglées à temps',
-              ring: 100,
-              badge: 'Excellent',
-              tone: 'good',
-            },
-            {
-              label: 'Ratio d’effort',
-              value: '28%',
-              hint: 'Mensualité / revenu d’activité',
-              ring: 28,
-              badge: 'Confortable',
-              tone: 'good',
-            },
-            {
-              label: 'Ancienneté',
-              value: '4 ans',
-              hint: 'Relation agence Grand Marché',
-              ring: 62,
-            },
-            {
-              label: 'Épargne de sécurité',
-              value: '1.45 M',
-              hint: 'Matelas disponible CreditFast',
-              ring: 74,
-              badge: 'Actif',
-              tone: 'info',
-            },
-          ]}
-        />
-      </KpiHeroGrid>
-      <div id="borrower-active-amount" hidden>
-        2 500 000 FCFA
+      <div className="borrower-metrics-grid">
+        <div className="borrower-metric-box">
+          <div className="borrower-metric-icon" style={{ background: 'var(--cif-primary-50)', color: 'var(--cif-primary-600)' }}>
+            <i className="fas fa-hand-holding-dollar"></i>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 700 }}>Mon financement en cours</div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-family-code)' }}>{formatFcfa(financingAmount)}</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--cif-emerald-500)', fontWeight: 600 }}>{financingHint}</div>
+          </div>
+        </div>
+        <div className="borrower-metric-box">
+          <div className="borrower-metric-icon" style={{ background: 'var(--cif-gold-50)', color: 'var(--cif-gold-600)' }}>
+            <i className="fas fa-calendar-check"></i>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 700 }}>Mon prochain règlement</div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-family-code)', color: 'var(--cif-gold-700)' }}>
+              {nextDue ? formatFcfa(nextDue.expected_amount ?? nextDue.remaining_amount) : '—'}
+            </div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-subtle)' }}>
+              {nextDue?.due_date ? (
+                <>
+                  À régler le {formatDate(nextDue.due_date)}
+                  {' • '}
+                  <span style={{ color: nextDueLate ? '#b45309' : '#518e45', fontWeight: 600 }}>
+                    {nextDueLate ? `${nextDue.days_late ?? 0} j de retard` : 'Aucun retard'}
+                  </span>
+                </>
+              ) : (
+                'Aucune échéance à régler'
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="borrower-metric-box">
+          <div className="borrower-metric-icon" style={{ background: 'var(--cif-emerald-50)', color: 'var(--cif-emerald-600)' }}>
+            <i className="fas fa-piggy-bank"></i>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-subtle)', textTransform: 'uppercase', fontWeight: 700 }}>Mon épargne</div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-family-code)', color: 'var(--cif-emerald-700)' }}>
+              {formatFcfa(savingsAmount)}
+            </div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--cif-emerald-500)' }}>
+              {savingsAmount != null ? 'Compte enregistré par votre chargé' : 'Aucun compte d’épargne enregistré'}
+            </div>
+          </div>
+        </div>
       </div>
+
+      {loans.length || grantedRequest ? (
+        <div className="card" style={{ marginBottom: '1.25rem', borderColor: 'rgba(81, 142, 69, 0.35)', background: 'rgba(81, 142, 69, 0.08)' }}>
+          <div className="card-body" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+            <div>
+              <strong>Crédit accordé par le comité</strong>
+              <p style={{ margin: '0.25rem 0 0', fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+                {formatFcfa(financingAmount)}
+                {financingDuration ? ` sur ${financingDuration} mois` : ''}. Consultez l’échéancier à régler.
+              </p>
+            </div>
+            <Button onClick={() => callApp('switchView', 'view-client-schedule')}>
+              <i className="fas fa-calendar-days mr-1"></i> Voir l’échéancier
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {(activeRequest?.status || '').toUpperCase() === 'VERIFICATION_REQUIRED' ? (
+        <div className="card" style={{ marginBottom: '1.25rem', borderColor: 'rgba(180, 83, 9, 0.35)', background: 'rgba(255, 152, 0, 0.08)' }}>
+          <div className="card-body" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+            <div>
+              <strong>L’agent attend des compléments</strong>
+              <p style={{ margin: '0.25rem 0 0', fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+                Joignez la pièce ou la garantie manquante. Le dossier sera renvoyé à l’agent dès que le dossier est complet.
+              </p>
+            </div>
+            <Button onClick={() => callApp('switchView', 'view-client-documents')}>
+              <i className="fas fa-cloud-arrow-up mr-1"></i> Joindre une pièce
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="card" style={{ marginTop: '1.25rem', marginBottom: '1.5rem' }}>
         <div className="card-header">
           <div>
             <h3 className="card-title">
-              <i className="fas fa-route text-primary"></i>{' '}
-              <span>
-                Le Parcours de votre Projet #<span id="borrower-active-ref">REQ-2026-0891</span>
-              </span>
+              <i className="fas fa-route text-primary"></i> Dossier en cours
             </h3>
-            <p className="card-subtitle" id="borrower-active-purpose">
-              Achat de stock tissus wax pour la fête de Tabaski
+            <p className="card-subtitle">
+              {activeRequest ? activeRequest.purpose || `Dossier #${activeRequest.id}` : 'Aucune demande en base pour le moment.'}
             </p>
           </div>
-          <div id="borrower-active-status">
-            <span className="badge badge-analysis">
-              <i className="fas fa-spinner fa-spin mr-1"></i> Étude Attentive en Cours
-            </span>
-          </div>
+          {activeRequest ? (
+            <span className="badge badge-analysis">{creditStatusLabel(activeRequest.status)}</span>
+          ) : null}
         </div>
         <div className="card-body">
-          <div className="loan-progress-stepper">
-            <DashStep completed label="1. Projet Déposé" meta="11/08/2026" />
-            <DashStep completed label="2. Documents Validés" meta="11/08/2026" />
-            <DashStep completed label="3. Confort Financier Vérifié" meta="12/08/2026" />
-            <DashStep active label="4. Relecture Personnalisée" meta="En Cours" />
-            <DashStep number="5" label="5. Accord du Comité" meta="Très prochainement" />
-            <DashStep number="6" label="6. Versement de vos Fonds" meta="Directement sur votre compte" />
-          </div>
-          <div className="anomaly-item info" style={{ marginTop: '1.25rem' }}>
-            <i className="fas fa-comment anomaly-icon" style={{ color: '#1b4332' }}></i>
-            <div className="anomaly-content">
-              <h5 style={{ color: '#0d2818', fontWeight: 700 }}>Le mot encourageant de votre agence CreditFast :</h5>
-              <p style={{ color: '#0c4a6e', fontSize: '0.84rem', lineHeight: 1.5 }}>
-                Excellente nouvelle ! Tous vos justificatifs ont été validés avec succès. Votre projet avance très bien et est programmé pour validation finale afin de
-                déclencher rapidement la mise à disposition de vos fonds.
-              </p>
+          {activeRequest ? (
+            <div className="loan-progress-stepper">
+              <DashStep completed={Boolean(activeRequest.created_at)} label="1. Demande" meta={formatDate(activeRequest.created_at)} />
+              <DashStep
+                completed={Boolean(activeRequest.submitted_at) && (activeRequest.status || '').toUpperCase() !== 'DRAFT'}
+                active={(activeRequest.status || '').toUpperCase() === 'DRAFT'}
+                label="2. Chez l’agent"
+                meta={activeRequest.submitted_at ? formatDate(activeRequest.submitted_at) : 'À envoyer'}
+              />
+              <DashStep
+                completed={!['DRAFT', 'VERIFICATION_REQUIRED'].includes((activeRequest.status || '').toUpperCase()) && Boolean(activeRequest.submitted_at)}
+                active={(activeRequest.status || '').toUpperCase() === 'VERIFICATION_REQUIRED'}
+                label="3. Pièces & conformité"
+                meta={(activeRequest.status || '').toUpperCase() === 'VERIFICATION_REQUIRED' ? 'Compléments demandés' : 'Lecture des pièces'}
+              />
+              <DashStep
+                completed={['ANALYSIS', 'IN_ANALYSIS', 'COMMITTEE', 'APPROVED', 'AMENDED'].includes((activeRequest.status || '').toUpperCase())}
+                active={['SUBMITTED', 'RECEIVED', 'UNDER_REVIEW'].includes((activeRequest.status || '').toUpperCase())}
+                label="4. Contrôle terrain"
+                meta="Agent"
+              />
+              <DashStep
+                completed={['COMMITTEE', 'APPROVED', 'AMENDED'].includes((activeRequest.status || '').toUpperCase())}
+                active={(activeRequest.status || '').toUpperCase().includes('ANALY')}
+                number="5"
+                label="5. Analyste"
+                meta="—"
+              />
+              <DashStep
+                completed={isCommitteeGranted(activeRequest.status) || (activeLoan?.status || '').toUpperCase() === 'ACTIVE'}
+                active={(activeRequest.status || '').toUpperCase().includes('COMMITTEE')}
+                number="6"
+                label="6. Comité"
+                meta={isCommitteeGranted(activeRequest.status) ? 'Accordé' : activeLoan ? formatFcfa(activeLoan.funds_received) : '—'}
+              />
             </div>
-          </div>
+          ) : (
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.86rem' }}>
+              Déposez une demande pour suivre ici son parcours réel.
+            </p>
+          )}
         </div>
       </div>
 
@@ -185,61 +256,53 @@ export function ClientDashboardPage() {
           <div className="card-header">
             <div>
               <h3 className="card-title">
-                <i className="fas fa-calendar-check text-primary"></i> <span title="Mon Calendrier de Remboursement">Mon Calendrier de Remboursement</span>
+                <i className="fas fa-calendar-check text-primary"></i> Échéancier
               </h3>
-              <p className="card-subtitle" title="Suivez vos versements en toute clarté">
-                Suivez vos versements en toute clarté
+              <p className="card-subtitle">
+                {activeLoan ? `${paidCount}/${repayments.length || activeLoan.duration_months || 0} mensualités` : 'Aucun crédit accordé'}
               </p>
             </div>
             <Button variant="secondary" className="btn-sm" onClick={() => callApp('switchView', 'view-client-schedule')}>
-              <i className="fas fa-arrow-right"></i> Voir Tout l&apos;Échéancier
+              <i className="fas fa-arrow-right"></i> Voir l&apos;échéancier
             </Button>
           </div>
-          <ClientCalendarTable />
+          {repayments.length ? (
+            <AppTable
+              chrome="plain"
+              className="cf-table-compact"
+              title=""
+              searchable={false}
+              showMenu={false}
+              items={repayments.slice(0, 6).map((row) => ({ ...row, id: String(row.id) }))}
+              columns={[
+                { id: 'due', label: 'Échéance', isRowHeader: true, render: (row) => formatDate(row.due_date) },
+                { id: 'amount', label: 'Montant', render: (row) => formatFcfa(row.expected_amount) },
+                { id: 'status', label: 'Statut', render: (row) => repaymentStatusLabel(row.status) },
+              ]}
+            />
+          ) : (
+            <div className="card-body">
+              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.84rem' }}>Pas encore d’échéances en base.</p>
+            </div>
+          )}
         </div>
 
         <div className="card">
           <div className="card-header">
             <div>
               <h3 className="card-title">
-                <i className="fas fa-user-tie text-emerald"></i> <span>Votre Conseiller Dédié</span>
+                <i className="fas fa-user-tie text-emerald"></i> Conseiller
               </h3>
-              <p className="card-subtitle">Un accompagnement humain à chaque étape</p>
+              <p className="card-subtitle">Assignation dès qu’un chargé est lié à votre dossier</p>
             </div>
             <Button variant="secondary" className="btn-sm" onClick={() => callApp('switchView', 'view-client-advisor')}>
-              <i className="fas fa-comment-dots"></i> Échanger
+              <i className="fas fa-comment-dots"></i> Espace conseiller
             </Button>
           </div>
           <div className="card-body">
-            <div className="agent-contact-card" style={{ marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <img src="/images/profil/profil01-03.jpg" alt="Agent" className="user-avatar" style={{ width: 50, height: 50 }} />
-                <div>
-                  <h5 style={{ fontSize: '1rem', marginBottom: 2 }}>Adama Traore</h5>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-subtle)' }}>Votre Expert Accompagnement Microfinance</div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--cif-emerald-500)', fontWeight: 600 }}>Agence CreditFast Grand Marché (Bamako, Mali)</div>
-                </div>
-              </div>
-            </div>
-            <div style={{ fontSize: '0.82rem', lineHeight: 1.6, color: 'var(--text-muted-dark)', marginBottom: '1.25rem' }}>
-              <div>
-                <i className="fas fa-phone mr-1 text-primary"></i> <strong>Ligne directe :</strong> +223 20 22 44 00
-              </div>
-              <div>
-                <i className="fas fa-envelope mr-1 text-primary"></i> <strong>Email :</strong> adama.traore@cif-ao.org
-              </div>
-              <div>
-                <i className="fas fa-clock mr-1 text-primary"></i> <strong>Horaires d&apos;agence :</strong> Lun - Ven : 08h00 - 17h00
-              </div>
-            </div>
-            <div className="advisor-actions">
-              <Button className="btn-sm" onClick={() => callApp('switchView', 'view-client-advisor')}>
-                <i className="fas fa-comment-dots"></i> Écrire à mon conseiller
-              </Button>
-              <Button variant="secondary" className="btn-sm" onClick={() => callApp('openAppointmentModal')}>
-                <i className="fas fa-calendar-plus"></i> Prendre Rendez-vous
-              </Button>
-            </div>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.84rem' }}>
+              Aucun conseiller n’est encore rattaché à ce compte.
+            </p>
           </div>
         </div>
       </div>
@@ -269,7 +332,7 @@ function CompactEstimator() {
             <div className="compact-estimator-heading">
               <h3 className="compact-estimator-heading-title">Calculateur d&apos;Amortissement & Simulation de Prêt</h3>
               <span className="badge badge-client compact-estimator-live-badge">
-                <i className="fas fa-bolt mr-1"></i> Calcul Instantané en Direct
+                <i className="fas fa-bolt mr-1"></i> Calcul du dossier
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '3px 0 0 0' }}>
@@ -279,7 +342,7 @@ function CompactEstimator() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span className="badge badge-approved" style={{ fontSize: '0.72rem' }}>
-            <i className="fas fa-shield-halved mr-1"></i> Taux Dégressif UEMOA (1.2% / mois)
+            <i className="fas fa-shield-halved mr-1"></i> Mensualités du dossier
           </span>
         </div>
       </div>
@@ -385,7 +448,7 @@ function CompactEstimator() {
           <div className="compact-monthly-highlight">
             <div className="compact-monthly-label">Mensualité tout compris</div>
             <div className="compact-monthly-amount" id="compact-est-monthly-val">
-              227 439 FCFA
+              —
             </div>
             <div className="compact-monthly-hint">
               <i className="fas fa-circle-check mr-1"></i> Remboursement constant • aucun frais caché

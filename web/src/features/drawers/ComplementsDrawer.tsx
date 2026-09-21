@@ -10,7 +10,7 @@ export function ComplementsDrawer() {
             <span className="badge badge-warning" id="comp-drawer-severity-badge"><i className="fas fa-triangle-exclamation"></i> Action Requise</span>
             <span id="comp-drawer-status-badge" className="badge badge-submitted">En Attente GED</span>
           </div>
-          <h3 id="comp-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>Pièce Requise • Dossier REQ-2026-0000</h3>
+          <h3 id="comp-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>Pièce requise</h3>
           <p id="comp-drawer-subtitle" className="schedule-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0, marginTop: "2px" }}>Régularisation documentaire et historique des relances</p>
         </div>
         <button type="button" className="modal-close-btn" onClick={() => callApp("closeComplementsDrawer")} title="Fermer le volet">
@@ -23,23 +23,23 @@ export function ComplementsDrawer() {
         <div className="drawer-panel">
           <div className="drawer-panel-header">
             <h4 className="drawer-panel-title"><i className="fas fa-user-circle text-primary mr-1"></i> Client Emprunteur</h4>
-            <span id="comp-drawer-req-num" className="badge badge-submitted" style={{ fontFamily: "var(--font-family-code)", fontSize: "0.7rem" }}>REQ-2026-0891</span>
+            <span id="comp-drawer-req-num" className="badge badge-submitted" style={{ fontFamily: "var(--font-family-code)", fontSize: "0.7rem" }}>—</span>
           </div>
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "0.75rem" }}>
             <img id="comp-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" className="user-avatar" style={{ width: "44px", height: "44px", borderRadius: "var(--radius-md)", flexShrink: 0 }} />
             <div style={{ minWidth: 0 }}>
-              <div id="comp-drawer-client-name" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-primary)" }}>Fatou Ndiaye</div>
-              <div id="comp-drawer-client-loc" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}><i className="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali</div>
+              <div id="comp-drawer-client-name" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-primary)" }}>Demandeur</div>
+              <div id="comp-drawer-client-loc" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>—</div>
             </div>
           </div>
           <div className="drawer-grid-2">
             <div className="drawer-kv">
               <span className="drawer-kv-label"><i className="fas fa-phone text-emerald mr-1"></i> Téléphone</span>
-              <span id="comp-drawer-client-phone" className="drawer-kv-value" style={{ fontFamily: "var(--font-family-code)", fontWeight: 600 }}>+223 77 45 67 89</span>
+              <span id="comp-drawer-client-phone" className="drawer-kv-value" style={{ fontFamily: "var(--font-family-code)", fontWeight: 600 }}>—</span>
             </div>
             <div className="drawer-kv">
               <span className="drawer-kv-label"><i className="fas fa-coins text-warning mr-1"></i> Montant Demandé</span>
-              <span id="comp-drawer-loan-amount" className="drawer-kv-value" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)", fontWeight: 700 }}>2 500 000 FCFA</span>
+              <span id="comp-drawer-loan-amount" className="drawer-kv-value" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)", fontWeight: 700 }}>—</span>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ export function ComplementsDrawer() {
               Nouvelle Facture Proforma Quincaillerie (&lt; 30 jours)
             </div>
             <div style={{ background: "rgba(239, 68, 68, 0.08)", borderLeft: "3px solid #ef4444", padding: "0.6rem 0.8rem", borderRadius: "0 var(--radius-sm) var(--radius-sm) 0", fontSize: "0.76rem", color: "#991b1b", lineHeight: 1.45 }} id="comp-drawer-reason">
-              Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.
+              Date ou montant illisibles, ou pièce trop ancienne. Joignez une pièce récente et lisible.
             </div>
           </div>
           <div style={{ background: "var(--bg-body)", padding: "0.65rem 0.85rem", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-color)", fontSize: "0.74rem" }}>

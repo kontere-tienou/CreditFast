@@ -1,0 +1,1137 @@
+<div id="analyst-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnalystDossierDrawer()">
+    <div id="analyst-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet instruction approfondie analyste risque">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <span class="badge badge-submitted" id="analyst-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0891</span>
+            <span id="analyst-drawer-model-badge" class="badge badge-warning" style="font-size: 0.68rem;"><i class="fas fa-seedling"></i> Cold Start</span>
+            <span id="analyst-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> En Analyse</span>
+          </div>
+          <h3 id="analyst-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fatou Ndiaye</h3>
+          <p id="analyst-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Fiche d'Instruction Analytique 360° • Solvabilité, OCR & Risque</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" id="analyst-drawer-toggle-coldstart" onclick="App.toggleColdStartInDrawer()" title="Basculer la simulation entre Modèle Standard et Cold Start" style="font-size: 0.72rem; padding: 0.3rem 0.6rem;">
+            <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+          </button>
+          <button class="modal-close-btn" onclick="App.closeAnalystDossierDrawer()" title="Fermer le volet">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Hero Score & Solvabilité Banner -->
+        <div class="drawer-hero-banner" style="background: linear-gradient(135deg, rgba(27, 67, 50, 0.06), rgba(81, 142, 69, 0.04)); border-color: rgba(27, 67, 50, 0.2); padding: 1rem 1.15rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="text-align: left;">
+              <div class="drawer-hero-label">Score d'Éligibilité & Risque XAI</div>
+              <div style="display: flex; align-items: baseline; gap: 0.5rem;">
+                <span id="analyst-drawer-score-val" style="font-size: 2rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">93</span>
+                <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 600;">/100</span>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div id="analyst-drawer-risk-tag" class="badge badge-approved" style="font-size: 0.8rem; padding: 0.3rem 0.7rem; margin-bottom: 4px;">
+                <i class="fas fa-shield-halved mr-1"></i> Risque Faible
+              </div>
+              <div id="analyst-drawer-confidence" style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">
+                Indice de Confiance : <strong class="text-emerald">95%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1 : Emprunteur & Capacité Financière Nette -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Reste à Vivre</h4>
+            <span id="analyst-drawer-client-id" class="badge badge-submitted" style="font-size: 0.68rem;">ML-BKO-008821</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem;">
+            <img id="analyst-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div>
+              <div id="analyst-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="analyst-drawer-client-activity" style="font-size: 0.76rem; color: var(--text-secondary);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
+              <div id="analyst-drawer-client-loc" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 1px;">
+                <i class="fas fa-location-dot text-primary mr-1"></i> Bamako (Grand Marché), Mali • Agence Marché Médine
+              </div>
+            </div>
+          </div>
+
+          <!-- Équation financière Reste à Vivre -->
+          <div style="background: var(--bg-surface-secondary); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+              <i class="fas fa-calculator text-primary mr-1"></i> Décomposition de la Capacité Nette
+            </div>
+            <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Revenus Mensuels</span>
+                <span id="analyst-drawer-income" class="drawer-kv-value" style="color: #518e45; font-weight: 700;">800 000 FCFA</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Charges & Dettes</span>
+                <span id="analyst-drawer-expenses" class="drawer-kv-value" style="color: #dc2626; font-weight: 700;">380 000 FCFA</span>
+              </div>
+            </div>
+            <div class="drawer-grid-2" style="padding-top: 0.4rem; border-top: 1px dashed var(--border-color);">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Reste à Vivre Dégagé</span>
+                <span id="analyst-drawer-disposable" class="drawer-kv-value" style="color: var(--primary-700); font-weight: 800; font-size: 0.95rem;">420 000 FCFA</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Mensualité Prévue</span>
+                <span id="analyst-drawer-installment" class="drawer-kv-value" style="font-weight: 800; font-size: 0.95rem;">235 000 FCFA</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="analyst-drawer-cap-banner" class="capacity-comparison pass" style="margin: 0; padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem;">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Section 2 : Extraction OCR & Pièces Justificatives GED -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Contrôle OCR</h4>
+            <span id="analyst-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 documents</span>
+          </div>
+          <div id="analyst-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered Docs -->
+          </div>
+        </div>
+
+        <!-- Section 3 : Alertes & Détection des Anomalies -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-triangle-exclamation text-warning mr-1"></i> Signaux & Contrôles Automatisés</h4>
+            <span id="analyst-drawer-anom-count" class="badge badge-warning" style="font-size: 0.68rem;">0 alerte</span>
+          </div>
+          <div id="analyst-drawer-anomalies-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered Anomalies -->
+          </div>
+        </div>
+
+        <!-- Section 4 : Explicabilité & 5 Piliers CreditFast -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-scale-balanced text-primary mr-1"></i> Grille d'Explicabilité Multi-Facteurs</h4>
+            <span class="badge badge-approved" style="font-size: 0.68rem;">Norme CreditFast</span>
+          </div>
+          <div id="analyst-drawer-factors-list" class="factors-list" style="gap: 0.5rem; display: flex; flex-direction: column;">
+            <!-- Rendered Factors -->
+          </div>
+        </div>
+
+        <!-- Section 5 : Avis & Recommandation pour le Comité -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Recommandation de l'Analyste</h4>
+            <span class="badge badge-submitted" style="font-size: 0.68rem;">Comité d'Octroi</span>
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" style="font-size: 0.75rem;">Avis Consultatif</label>
+            <select id="analyst-drawer-reco-select" class="form-control" style="font-size: 0.8rem;">
+              <option value="FAVORABLE">Favorable pour passage en Comité</option>
+              <option value="RESERVE">Favorable sous réserve de compléments</option>
+              <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.75rem;">Note d'Analyse Synthétique</label>
+            <textarea id="analyst-drawer-notes-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Synthèse pour les membres du comité...">Capacité de remboursement vérifiée et confirmée. Activité commerciale mature et régulière sur le marché de Bamako. Pièces justificatives et factures proforma validées.</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAnalystDossierDrawer()">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="App.requestComplementFromAnalystDrawer()" title="Demander une contre-expertise terrain ou un document complémentaire">
+            <i class="fas fa-motorcycle text-warning mr-1"></i> Complément Terrain
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="App.submitAnalystReviewFromDrawer()">
+            <i class="fas fa-paper-plane mr-1"></i> Transmettre au Comité
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="anomaly-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAnomalyDrawer()">
+    <div id="anomaly-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet diagnostic approfondi anomalie risque">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <span class="badge badge-submitted" id="anom-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">REQ-2026-0893</span>
+            <span id="anom-drawer-sev-badge" class="badge badge-rejected"><i class="fas fa-circle-exclamation mr-1"></i> Critique</span>
+            <span id="anom-drawer-status-badge" class="badge badge-verification"><i class="fas fa-clock mr-1"></i> Ouvert</span>
+          </div>
+          <h3 id="anom-drawer-title" class="schedule-drawer-title" style="font-size: 1.08rem; font-weight: 800; color: var(--text-primary); margin: 0;">Validité Temporelle Pièce Proforma</h3>
+          <p id="anom-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Contrôle de conformité OCR & Règles Prudentielles</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeAnomalyDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Hero Diagnostic & Engine Banner -->
+        <div class="drawer-hero-banner" id="anom-drawer-hero-banner" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(255, 152, 0, 0.05)); border-color: rgba(239, 68, 68, 0.25); padding: 0.9rem 1.15rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <div class="drawer-hero-label" id="anom-drawer-type-label">Type d'Anomalie Détectée</div>
+              <div id="anom-drawer-type-name" style="font-size: 1.15rem; font-weight: 800; color: #b91c1c; font-family: var(--font-family-code);">DATE_INCOHERENTE</div>
+            </div>
+            <div style="text-align: right;">
+              <span id="anom-drawer-engine-badge" class="badge" style="background: rgba(27, 67, 50, 0.1); color: #1b4332; border: 1px solid rgba(27, 67, 50, 0.3); font-size: 0.74rem;">
+                <i class="fas fa-microchip mr-1"></i> Moteur OCR Tesseract 
+              </span>
+              <div id="anom-drawer-detected-date" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 3px;">
+                Détecté le 14/08/2026 à 11:12
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1 : Emprunteur & Dossier Associé -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur & Demande Associée</h4>
+            <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-view-dossier" onclick="App.openDossierFromAnomalyDrawer()" style="font-size: 0.72rem; padding: 0.25rem 0.55rem;">
+              <i class="fas fa-magnifying-glass-chart mr-1"></i> Dossier 360°
+            </button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <img id="anom-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 42px; height: 42px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div>
+              <div id="anom-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Kodjo Mensah</div>
+              <div id="anom-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Montant du Crédit</span>
+              <span id="anom-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">1 800 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Score Risque Actuel</span>
+              <span id="anom-drawer-risk-score" class="drawer-kv-value" style="font-weight: 800; color: #dc2626;">31 / 100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Diagnostic Détaillé & Rapprochement -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-magnifying-glass-chart text-warning mr-1"></i> Rapprochement & Constats</h4>
+            <span id="anom-drawer-category-badge" class="badge badge-submitted">Contrôle OCR</span>
+          </div>
+          
+          <div style="margin-bottom: 0.75rem;">
+            <label class="form-label" style="font-size: 0.75rem; color: var(--text-muted);">Description du Risque Identifié</label>
+            <p id="anom-drawer-desc" style="background: var(--bg-surface-secondary); padding: 0.7rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.78rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+              La date extraite par OCR sur la facture d'outillage est antérieure de plus de 18 mois au dépôt du dossier.
+            </p>
+          </div>
+
+          <div class="drawer-grid-2" style="margin-bottom: 0.5rem;">
+            <div class="drawer-metric-box" style="border-left: 3px solid #dc2626;">
+              <div class="drawer-kv-label" style="color: #dc2626; font-weight: 700;"><i class="fas fa-xmark mr-1"></i> Valeur Détectée (Anormale)</div>
+              <div id="anom-drawer-val-detected" style="font-size: 0.88rem; font-weight: 700; color: #b91c1c; font-family: var(--font-family-code); margin-top: 3px;">12/01/2025</div>
+            </div>
+            <div class="drawer-metric-box" style="border-left: 3px solid #518e45;">
+              <div class="drawer-kv-label" style="color: #518e45; font-weight: 700;"><i class="fas fa-check mr-1"></i> Valeur Attendue / Norme</div>
+              <div id="anom-drawer-val-expected" style="font-size: 0.88rem; font-weight: 700; color: #1b4332; font-family: var(--font-family-code); margin-top: 3px;">Moins de 30 jours (&lt; 16/07/2026)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Pièce Justificative GED Associée -->
+        <div class="drawer-panel" id="anom-drawer-doc-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-invoice text-info mr-1"></i> Document & Extraction Numérique</h4>
+            <span id="anom-drawer-doc-ocr-score" class="badge badge-submitted">OCR: 94%</span>
+          </div>
+          <div id="anom-drawer-doc-content" style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.75rem; background: var(--bg-surface-secondary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <i class="fas fa-file-pdf text-danger" style="font-size: 1.25rem;"></i>
+              <div>
+                <div id="anom-drawer-doc-name" style="font-weight: 700; font-size: 0.82rem; color: var(--text-primary);">Facture Proforma Outillage.pdf</div>
+                <div id="anom-drawer-doc-type" style="font-size: 0.7rem; color: var(--text-muted);">Type : FACTURE • Rattaché le 14/08/2026</div>
+              </div>
+            </div>
+            <span id="anom-drawer-doc-status" class="badge badge-warning">À rectifier</span>
+          </div>
+        </div>
+
+        <!-- Section 4 : Traitement Contradictoire & Décision -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-pen-to-square text-emerald mr-1"></i> Résolution & Justification</h4>
+            <span id="anom-drawer-resolution-badge" class="badge badge-verification">En Attente</span>
+          </div>
+          
+          <div id="anom-drawer-resolved-info" style="display: none; background: rgba(81, 142, 69, 0.08); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(81, 142, 69, 0.25); margin-bottom: 0.75rem;">
+            <div style="font-size: 0.75rem; color: #1b4332; font-weight: 700; margin-bottom: 3px;">
+              <i class="fas fa-check-circle mr-1"></i> Signalement Levé & Régularisé
+            </div>
+            <p id="anom-drawer-resolved-comment" style="font-size: 0.74rem; color: var(--text-primary); margin: 0; line-height: 1.4;">
+              Contrôle contradictoire effectué. Pièce rectifiée intégrée.
+            </p>
+            <div id="anom-drawer-resolved-meta" style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+              Levée par Analyste Risque #1 le 17/08/2026
+            </div>
+          </div>
+
+          <div id="anom-drawer-form-resolution">
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.75rem;">Commentaire d'Instruction / Motif de Levée</label>
+              <textarea id="anom-drawer-comment-input" class="form-control" rows="2" style="font-size: 0.78rem;" placeholder="Indiquez le constat contradictoire ou la justification de levée..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAnomalyDrawer()">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" id="anom-drawer-btn-field" onclick="App.requestFieldCheckFromAnomalyDrawer()" title="Demander une contre-expertise terrain">
+            <i class="fas fa-motorcycle text-warning mr-1"></i> Contre-Expertise Terrain
+          </button>
+          <button class="btn btn-primary btn-sm" id="anom-drawer-btn-resolve" onclick="App.resolveAnomalyFromDrawer()">
+            <i class="fas fa-check mr-1"></i> Lever l'Anomalie
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="agent-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeAgentDrawer()">
+  <div class="schedule-drawer" onclick="event.stopPropagation()">
+    <!-- Drawer Header -->
+    <div class="schedule-drawer-header">
+      <div class="schedule-drawer-title-box">
+        <div class="schedule-drawer-icon">
+          <i class="fas fa-folder-open"></i>
+        </div>
+        <div>
+          <h3 id="agent-drawer-title" style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Dossier N° REQ-2026-0891</h3>
+          <p id="agent-drawer-date" style="font-size: 0.74rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Déposé le 11/08/2026 • Agence Assigamé</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeAgentDrawer()" title="Fermer le volet">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="schedule-drawer-body">
+      <!-- 1. Hero Amount & Status Summary Banner -->
+      <div class="drawer-hero-banner">
+        <div class="drawer-hero-label">Montant Net Demandé</div>
+        <div id="agent-drawer-hero-amount" class="drawer-hero-val">2 500 000 FCFA</div>
+        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <span id="agent-drawer-hero-status-container">
+            <span id="agent-drawer-hero-status" class="badge badge-submitted">En Traitement</span>
+          </span>
+          <span id="agent-drawer-hero-mode" class="badge badge-submitted" style="font-size: 0.7rem;"><i class="fas fa-history"></i> Standard</span>
+          <span id="agent-drawer-hero-score-badge" class="badge badge-approved" style="font-size: 0.7rem;"><i class="fas fa-microchip"></i> Score IA : 84/100</span>
+        </div>
+      </div>
+
+      <!-- 2. Borrower & Contact Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-user-circle text-primary"></i> Profil Emprunteur & Contact
+          </h4>
+          <span id="agent-drawer-client-number" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.68rem;">SN-DKR-008821</span>
+        </div>
+
+        <div style="display: flex; gap: 0.85rem; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border-color);">
+          <img id="agent-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Fatou+Ndiaye&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 46px; height: 46px; border-radius: var(--radius-md); flex-shrink: 0;">
+          <div style="flex: 1; min-width: 0;">
+            <div id="agent-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Fatou Ndiaye</div>
+            <div id="agent-drawer-client-occupation" style="font-size: 0.76rem; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Commerçante / Grossiste Textiles</div>
+          </div>
+        </div>
+
+        <div class="drawer-grid-2">
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-location-dot text-primary mr-1"></i> Localisation</span>
+            <span id="agent-drawer-client-location" class="drawer-kv-value">Bamako, Mali</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-phone text-emerald mr-1"></i> Téléphone</span>
+            <span id="agent-drawer-client-phone" class="drawer-kv-value" style="font-family: var(--font-family-code);">+223 77 45 67 89</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-envelope text-info mr-1"></i> Email</span>
+            <span id="agent-drawer-client-email" class="drawer-kv-value" style="font-size: 0.76rem;">fatou.ndiaye@gmail.com</span>
+          </div>
+          <div class="drawer-kv">
+            <span class="drawer-kv-label"><i class="fas fa-id-card text-gold mr-1"></i> Conformité KYC</span>
+            <span id="agent-drawer-client-kyc" class="badge badge-approved" style="font-size: 0.68rem; align-self: flex-start;"><i class="fas fa-check-circle"></i> Conforme</span>
+          </div>
+        </div>
+
+        <!-- Quick Contact Action Buttons -->
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color-light, #f1f5f9);">
+          <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-sms" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+            <i class="fas fa-comment-sms text-primary"></i> Relance SMS
+          </button>
+          <button class="btn btn-secondary btn-sm" id="agent-drawer-btn-call" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+            <i class="fas fa-phone text-emerald"></i> Appeler
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Financial Capacity & Repayment Schedule Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-coins text-gold"></i> Paramètres Prêt & Capacité
+          </h4>
+          <span id="agent-drawer-capacity-badge">
+            <span class="badge badge-capacity-sufficient"><i class="fas fa-check-circle"></i> Suffisante</span>
+          </span>
+        </div>
+
+        <div class="drawer-grid-2" style="margin-bottom: 0.75rem;">
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Durée Accordée</div>
+            <div id="agent-drawer-duration" style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-family-code);">18 Mois</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Mensualité Estimée</div>
+            <div id="agent-drawer-monthly-payment" style="font-size: 0.95rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Revenus Mensuels</div>
+            <div id="agent-drawer-income" style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-family-code);">1 450 000 FCFA</div>
+          </div>
+          <div class="drawer-metric-box">
+            <div class="drawer-kv-label">Reste à Vivre Net</div>
+            <div id="agent-drawer-disposable" style="font-size: 0.9rem; font-weight: 700; color: var(--cif-emerald-700); font-family: var(--font-family-code);">780 000 FCFA</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+          <span>Charges mensuelles déclarées :</span>
+          <strong id="agent-drawer-expenses" style="color: var(--text-primary); font-family: var(--font-family-code);">670 000 FCFA</strong>
+        </div>
+      </div>
+
+      <!-- 4. Financing Purpose & Collaterals Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-shield-halved text-emerald"></i> Objet du Prêt & Garanties
+          </h4>
+          <span id="agent-drawer-guarantee-status" class="badge badge-approved" style="font-size: 0.68rem;"><i class="fas fa-check"></i> Inspecté sur terrain</span>
+        </div>
+
+        <div style="background: var(--bg-surface-secondary); padding: 0.75rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 0.75rem;">
+          <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;">Objet déclaré</div>
+          <p id="agent-drawer-purpose" style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin: 0; line-height: 1.45;">
+            Acquisition broyeur industriel et ensacheuse moderne
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.78rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Type de garantie :</span>
+            <strong id="agent-drawer-guarantee-type" style="color: var(--text-primary);">Stock Marchandises & Matériel</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Description :</span>
+            <span id="agent-drawer-guarantee-desc" style="font-weight: 500; text-align: right; max-width: 60%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Broyeur 15kW et ensacheuse</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding-top: 0.35rem; border-top: 1px dashed var(--border-color);">
+            <span>Valeur déclarée : <strong id="agent-drawer-guarantee-declared" style="color: var(--text-primary); font-family: var(--font-family-code);">6 500 000 FCFA</strong></span>
+            <span>Expertise terrain : <strong id="agent-drawer-guarantee-verified" style="color: var(--cif-emerald-700); font-family: var(--font-family-code);">5 800 000 FCFA</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Attached Documents (GED) & OCR Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-file-contract text-primary"></i> Pièces Justificatives (GED)
+          </h4>
+          <span id="agent-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">3 documents</span>
+        </div>
+
+        <div id="agent-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 6. Scoring V2 & Recommendation Panel -->
+      <div class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h4 class="drawer-panel-title">
+            <i class="fas fa-chart-line text-purple"></i> Scoring  & Décision IA
+          </h4>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span id="agent-drawer-score-val" style="font-size: 1.25rem; font-weight: 800; color: #518e45; font-family: var(--font-family-code);">84</span>
+            <span style="font-size: 0.75rem; color: var(--text-subtle);">/100</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; margin-bottom: 0.65rem;">
+          <span id="agent-drawer-score-label" class="badge badge-approved" style="font-size: 0.7rem;">Risque Faible</span>
+          <span style="color: var(--text-muted);">Indice de confiance : <strong id="agent-drawer-confidence-val" style="color: var(--cif-emerald-600);">94%</strong></span>
+        </div>
+
+        <div style="height: 6px; background: var(--bg-surface-secondary); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color);">
+          <div id="agent-drawer-score-progress" style="width: 84%; height: 100%; background: linear-gradient(90deg, #518e45, #518e45); border-radius: var(--radius-full);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="schedule-drawer-footer">
+      <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer()">
+        Fermer
+      </button>
+      <div id="agent-drawer-footer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeAgentDrawer(); App.switchView('view-agent-inspections');">
+          <i class="fas fa-motorcycle mr-1"></i> Inspections Terrain
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="App.closeAgentDrawer(); AppInteractions.openDossierModal(1);">
+          <i class="fas fa-magnifying-glass-chart mr-1"></i> Analyser 360°
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="inspection-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeInspectionDrawer()">
+    <div id="inspection-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail inspection et caution">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="insp-drawer-type-badge"><i class="fas fa-shield"></i> Garantie</span>
+            <span id="insp-drawer-status-badge" class="badge badge-approved"><i class="fas fa-check"></i> Validée</span>
+          </div>
+          <h3 id="insp-drawer-title" class="schedule-drawer-title" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0;">Inspection • Dossier REQ-2026-0891</h3>
+          <p id="insp-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Contrôle physique, valorisation et garanties</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeInspectionDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Emprunteur & Dossier -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Emprunteur Associé</h4>
+            <span id="insp-drawer-req-num" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.7rem;">REQ-2026-0891</span>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem;">
+            <img id="insp-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div style="min-width: 0;">
+              <div id="insp-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="insp-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali (Zone Urbaine)</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Montant du Prêt</span>
+              <span id="insp-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">2 500 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Taux Couverture Garantie</span>
+              <span id="insp-drawer-coverage-ratio" class="drawer-kv-value" style="color: #518e45; font-weight: 700;">140%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Valorisation Financière & Expertise -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-scale-balanced text-warning mr-1"></i> Expertise Financière</h4>
+            <span id="insp-drawer-eval-status" class="badge badge-approved">Conforme</span>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.75rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Valeur Déclarée Client</div>
+              <div id="insp-drawer-val-declared" style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-family-code);">3 500 000 F</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Valeur Retenue Expert</div>
+              <div id="insp-drawer-val-verified" style="font-size: 0.95rem; font-weight: 800; color: #1b4332; font-family: var(--font-family-code);">3 400 000 F</div>
+            </div>
+          </div>
+          <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+              <span style="color: var(--text-muted);">Décote / Dépréciation appliquée :</span>
+              <strong id="insp-drawer-discount-pct" style="color: var(--text-primary);">3.0%</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Gage enregistré au RCCM :</span>
+              <span class="badge badge-approved" style="font-size: 0.65rem;"><i class="fas fa-check"></i> Acte Enregistré</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Constats & Détails Terrain -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-clipboard-list text-info mr-1"></i> Constats sur Site</h4>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Description Complète du Bien</span>
+              <span id="insp-drawer-desc" class="drawer-kv-value" style="font-weight: 600; color: var(--text-primary);">Stock de 450 rouleaux de tissus Wax Super-Bazin et dentelles importées</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Localisation Exacte</span>
+              <span id="insp-drawer-location" class="drawer-kv-value">Grand Marché de Bamako, Rue 314, Boutique 12</span>
+            </div>
+            <div class="drawer-grid-2">
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">État & Conservabilité</span>
+                <span id="insp-drawer-condition" class="badge badge-approved" style="align-self: flex-start;">Bon état / Rotation rapide</span>
+              </div>
+              <div class="drawer-kv">
+                <span class="drawer-kv-label">Avis Enquête Voisinage</span>
+                <span id="insp-drawer-reputation" class="badge badge-submitted" style="align-self: flex-start;">Très Favorable</span>
+              </div>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Observations Détaillées de l'Agent</span>
+              <p id="insp-drawer-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Visite sur site effectuée le 14/08/2026. Stock physique vérifié, conforme aux factures d'achat et aux déclarations du registre d'inventaire.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 : Justificatifs & Photos Terrain -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-camera text-emerald mr-1"></i> Pièces & Preuves Terrain</h4>
+            <span class="badge badge-submitted">2 Photos Géolocalisées</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; text-align: center; background: var(--bg-body);">
+              <i class="fas fa-image text-primary" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+              <span style="font-size: 0.7rem; font-weight: 600; color: var(--text-primary); display: block;">Vue_Ensemble_Stock.jpg</span>
+              <span style="font-size: 0.65rem; color: var(--text-subtle);">Horodatée GPS 12.6392°N</span>
+            </div>
+            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; text-align: center; background: var(--bg-body);">
+              <i class="fas fa-file-contract text-warning" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+              <span style="font-size: 0.7rem; font-weight: 600; color: var(--text-primary); display: block;">Acte_Gage_RCCM.pdf</span>
+              <span style="font-size: 0.65rem; color: var(--text-subtle);">Signé & Enregistré</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeInspectionDrawer()">Fermer</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="insp-drawer-btn-edit" class="btn btn-primary btn-sm" onclick="App.openInspectionModalFromDrawer()">
+            <i class="fas fa-pen-to-square mr-1"></i> Modifier / Ré-inspecter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="complements-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeComplementsDrawer()">
+    <div id="complements-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail pièce à collecter et relance">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-warning" id="comp-drawer-severity-badge"><i class="fas fa-triangle-exclamation"></i> Action Requise</span>
+            <span id="comp-drawer-status-badge" class="badge badge-submitted">En Attente GED</span>
+          </div>
+          <h3 id="comp-drawer-title" class="schedule-drawer-title" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0;">Pièce Requise • Dossier REQ-2026-0000</h3>
+          <p id="comp-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Régularisation documentaire et historique des relances</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeComplementsDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <!-- Section 1 : Emprunteur & Coordonnées -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-user-circle text-primary mr-1"></i> Client Emprunteur</h4>
+            <span id="comp-drawer-req-num" class="badge badge-submitted" style="font-family: var(--font-family-code); font-size: 0.7rem;">REQ-2026-0891</span>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem;">
+            <img id="comp-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" class="user-avatar" style="width: 44px; height: 44px; border-radius: var(--radius-md); flex-shrink: 0;">
+            <div style="min-width: 0;">
+              <div id="comp-drawer-client-name" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary);">Fatou Ndiaye</div>
+              <div id="comp-drawer-client-loc" style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label"><i class="fas fa-phone text-emerald mr-1"></i> Téléphone</span>
+              <span id="comp-drawer-client-phone" class="drawer-kv-value" style="font-family: var(--font-family-code); font-weight: 600;">+223 77 45 67 89</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label"><i class="fas fa-coins text-warning mr-1"></i> Montant Demandé</span>
+              <span id="comp-drawer-loan-amount" class="drawer-kv-value" style="color: var(--primary-700); font-family: var(--font-family-code); font-weight: 700;">2 500 000 FCFA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 : Détail du Document & Motif du Rejet / Incomplétude -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-circle-exclamation text-danger mr-1"></i> Document & Motif de Rejet</h4>
+            <span id="comp-drawer-doc-type" class="badge badge-submitted" style="font-family: var(--font-mono); font-size: 0.65rem;">FACTURE_PROFORMA</span>
+          </div>
+          <div style="margin-bottom: 0.65rem;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;" id="comp-drawer-doc-name">
+              Nouvelle Facture Proforma Quincaillerie (< 30 jours)
+            </div>
+            <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; padding: 0.6rem 0.8rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.76rem; color: #991b1b; line-height: 1.45;" id="comp-drawer-reason">
+              Date OCR antérieure de 18 mois (12/01/2025). Écart de montant de 600 000 F constaté par rapport au plan de financement.
+            </div>
+          </div>
+          <div style="background: var(--bg-body); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.74rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="color: var(--text-muted);">Impact sur le Scoring :</span>
+              <strong style="color: #b91c1c;">Blocage Étape Comité (-15 pts)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Délai de conformité UEMOA :</span>
+              <span style="font-weight: 600; color: var(--text-primary);">48 heures ouvrées</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 : Historique des Relances Client -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-paper-plane text-info mr-1"></i> Journal des Relances</h4>
+            <span id="comp-drawer-reminders-count" class="badge badge-submitted">2 Relances envoyées</span>
+          </div>
+          <div id="comp-drawer-timeline" style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
+            <div style="display: flex; gap: 0.5rem; align-items: flex-start; background: var(--bg-body); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <i class="fas fa-comment-sms text-emerald" style="margin-top: 3px;"></i>
+              <div style="flex: 1;">
+                <div style="font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                  <span>SMS Automatique de Notification</span>
+                  <span style="font-size: 0.68rem; color: var(--text-subtle);">Il y a 2 jours</span>
+                </div>
+                <p style="margin: 2px 0 0; color: var(--text-muted); font-size: 0.72rem;">« CreditFast : Merci de téléverser votre facture proforma actualisée via votre espace client ou en agence. »</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: flex-start; background: var(--bg-body); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <i class="fab fa-whatsapp text-emerald" style="margin-top: 3px;"></i>
+              <div style="flex: 1;">
+                <div style="font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between;">
+                  <span>Message Direct WhatsApp Agent</span>
+                  <span style="font-size: 0.68rem; color: var(--text-subtle);">Hier à 11h20</span>
+                </div>
+                <p style="margin: 2px 0 0; color: var(--text-muted); font-size: 0.72rem;">Lien direct de dépôt sécurisé envoyé sur le numéro de l'emprunteur.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 : Régularisation & Téléversement Direct -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-cloud-arrow-up text-primary mr-1"></i> Réceptionner la Pièce Directement</h4>
+          </div>
+          <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 1rem; text-align: center; background: var(--bg-body); cursor: pointer;" onclick="App.triggerDrawerFileUpload()">
+            <i class="fas fa-file-circle-plus text-primary" style="font-size: 1.6rem; margin-bottom: 0.35rem; display: block;"></i>
+            <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary); display: block;">Glissez le document ou cliquez pour scanner</span>
+            <span style="font-size: 0.7rem; color: var(--text-subtle);">Formats acceptés : PDF, JPG, PNG (Max 10 Mo)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidedrawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="App.closeComplementsDrawer()">Fermer</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="comp-drawer-btn-remind" class="btn btn-secondary btn-sm" onclick="App.triggerReminderFromDrawer()">
+            <i class="fas fa-paper-plane text-primary mr-1"></i> Relancer SMS / WhatsApp
+          </button>
+          <button id="comp-drawer-btn-validate" class="btn btn-primary btn-sm" onclick="App.markDocReceivedFromDrawer()">
+            <i class="fas fa-check mr-1"></i> Valider & Conforme
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="client-request-drawer-backdrop" class="schedule-drawer-backdrop" onclick="if(event.target === this) App.closeClientRequestDrawer()">
+    <div class="schedule-drawer" style="max-width: 560px;">
+      <!-- Drawer Header -->
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-title-box">
+          <div class="schedule-drawer-icon" style="background: var(--cif-primary-50); color: var(--cif-primary-600);">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <div>
+            <h3 id="crd-drawer-title" style="font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--text-primary);">Dossier #REQ-2026-0891</h3>
+            <p id="crd-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Déposé le 11/08/2026 • Agence Grand Marché Bamako</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeClientRequestDrawer()" title="Fermer le volet latéral">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Body -->
+      <div class="schedule-drawer-body">
+        <!-- Hero Amount & Status Card -->
+        <div class="schedule-drawer-hero">
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">
+            Montant du Financement Demandé
+          </div>
+          <div id="crd-drawer-amount" style="font-size: 1.85rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">
+            2 500 000 FCFA
+          </div>
+          <div id="crd-drawer-status" style="margin-top: 8px;">
+            <span class="badge badge-analysis"><i class="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque</span>
+          </div>
+          <div id="crd-drawer-purpose" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 8px; font-weight: 500;">
+            Achat de stock tissus wax pour la fête de Tabaski
+          </div>
+        </div>
+
+        <!-- Panel 1: Conditions Financières & Échéances -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-calculator text-primary"></i> Modalités Financières & Échéances
+            </h4>
+            <span id="crd-drawer-duration-badge" class="badge badge-submitted">12 Mois</span>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Durée du Prêt</span>
+              <span class="drawer-kv-value" id="crd-drawer-duration-val">12 Mois</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Mensualité tout compris</span>
+              <span class="drawer-kv-value" id="crd-drawer-monthly-val" style="color: var(--primary-700); font-family: var(--font-family-code);">235 000 FCFA</span>
+            </div>
+            <!-- <div class="drawer-kv">
+              <span class="drawer-kv-label">Taux Dégressif UEMOA</span>
+              <span class="drawer-kv-value" id="crd-drawer-rate-val">1.20% / mois</span>
+            </div> -->
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Assurance Emprunteur</span>
+              <span class="drawer-kv-value" id="crd-drawer-insurance-val">13 750 FCFA / mois</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Coût Global du Crédit</span>
+              <span class="drawer-kv-value" id="crd-drawer-cost-val" style="color: var(--cif-gold-700); font-family: var(--font-family-code);">320 000 FCFA</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Versement des Fonds</span>
+              <span class="drawer-kv-value" id="crd-drawer-disbursement-val">Mobile Money & Agence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Parcours d'Instruction & Étapes Clés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-route text-primary"></i> Parcours d'Instruction en Direct
+            </h4>
+            <span id="crd-drawer-step-badge" class="badge badge-analysis" style="font-size: 0.68rem;">Étape 4 / 6</span>
+          </div>
+          <div id="crd-drawer-stepper-container" style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <!-- Stepper Dynamic Nodes -->
+          </div>
+        </div>
+
+        <!-- Panel 3: Pièces Justificatives Associées -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-file-shield text-emerald"></i> Pièces & Justificatifs 
+            </h4>
+            <span id="crd-drawer-docs-count" class="badge badge-submitted" style="font-size: 0.68rem;">4 pièces</span>
+          </div>
+          <div id="crd-drawer-docs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Dynamic docs list -->
+          </div>
+        </div>
+
+        <!-- Panel 4: Garanties & Sûretés -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-shield-halved text-warning"></i> Garanties & Sûretés
+            </h4>
+            <span id="crd-drawer-guar-status" class="badge badge-approved" style="font-size: 0.68rem;">Vérifiée</span>
+          </div>
+          <div id="crd-drawer-guar-content" style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
+            <!-- Dynamic guarantee content -->
+          </div>
+        </div>
+
+        <!-- Panel 5: Agence & Conseiller Dédié -->
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title">
+              <i class="fas fa-user-tie text-primary"></i> Agence & Conseiller Attitré
+            </h4>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <img src="images/profil/profil01-03.jpg" alt="Agent" class="user-avatar" style="width: 44px; height: 44px;">
+            <div style="flex: 1;">
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-primary);">Adama Traore</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted);">Conseiller Clientèle Professionnelle & Microcrédit</div>
+              <div style="font-size: 0.72rem; color: var(--cif-emerald-600); font-weight: 600;">Agence Grand Marché (Bamako, Mali) • +223 20 22 44 00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Footer Actions -->
+      <div class="schedule-drawer-footer">
+        <button class="btn btn-secondary" onclick="App.closeClientRequestDrawer()">
+          Fermer
+        </button>
+        <div id="crd-drawer-footer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <!-- Dynamic Action Buttons -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="schedule-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeScheduleDrawer()">
+  <div class="schedule-drawer" onclick="event.stopPropagation()">
+    <!-- Drawer Header -->
+    <div class="schedule-drawer-header">
+      <div class="schedule-drawer-title-box">
+        <div class="schedule-drawer-icon">
+          <i class="fas fa-receipt"></i>
+        </div>
+        <div>
+          <h3 id="drawer-installment-title" style="font-size: 1.05rem; font-weight: 700; margin: 0;">Échéance N° 3 sur 12</h3>
+          <p id="drawer-installment-date" style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Exigibilité : 05 Septembre 2026</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="App.closeScheduleDrawer()" title="Fermer le volet">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="schedule-drawer-body">
+      <!-- Hero Amount & Status Card -->
+      <div class="schedule-drawer-hero">
+        <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">
+          Montant Net de la Mensualité
+        </div>
+        <div id="drawer-hero-amount" style="font-size: 1.75rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">
+          235 000 FCFA
+        </div>
+        <div id="drawer-hero-status" style="margin-top: 8px;">
+          <span class="badge badge-verification"><i class="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>
+        </div>
+      </div>
+
+      <!-- Financial Breakdown Card -->
+      <div class="card" style="padding: 1.25rem;">
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 1rem;">
+          <i class="fas fa-chart-pie text-primary mr-1"></i> Décomposition Financière
+        </h4>
+        
+        <!-- Segmented Visual Bar -->
+        <div style="height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; display: flex; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+          <div id="drawer-bar-principal" style="width: 85%; background: var(--cif-primary-600);" title="Capital principal"></div>
+          <div id="drawer-bar-interest" style="width: 9%; background: var(--cif-gold-500);" title="Intérêts CreditFast"></div>
+          <div id="drawer-bar-insurance" style="width: 6%; background: var(--cif-emerald-500);" title="Assurance prêt"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.82rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-primary-600);"></span>
+              <span>Capital Principal Amorti</span>
+            </span>
+            <strong id="drawer-val-principal" style="font-family: var(--font-family-code);">200 195 FCFA</strong>
+          </div>
+
+          <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-gold-500);"></span>
+              <span>Intérêts Dégressifs (12% l'an)</span>
+            </span>
+            <strong id="drawer-val-interest" style="font-family: var(--font-family-code);">21 055 FCFA</strong>
+          </div> -->
+
+          <!-- <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cif-emerald-500);"></span>
+              <span>Prime d'Assurance Emprunteur</span>
+            </span>
+            <strong id="drawer-val-insurance" style="font-family: var(--font-family-code);">13 750 FCFA</strong>
+          </div> -->
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
+            <span style="color: var(--text-muted); font-weight: 600;">Capital Restant Dû après échéance :</span>
+            <strong id="drawer-val-remaining" style="color: var(--primary-800); font-family: var(--font-family-code);">1 905 343 FCFA</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settlement Tracing / Receipt Info -->
+      <div class="card" style="padding: 1.25rem;">
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.85rem;">
+          <i class="fas fa-shield-check text-emerald mr-1"></i> Traçabilité & Quittance
+        </h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Contrat de Prêt :</span>
+            <span style="font-weight: 600;">CF-DKR-8821 (REQ-2025-0412)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Mode de règlement :</span>
+            <span id="drawer-val-provider" style="font-weight: 600;">Mobile Money / Agence CreditFast</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Règlement effectif :</span>
+            <span id="drawer-val-paydate" style="font-weight: 600;">Non réglé (Échéance ouverte)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Référence Quittance :</span>
+            <span id="drawer-val-receipt" style="font-weight: 600; font-family: var(--font-family-code);">Générée après paiement</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Certification :</span>
+            <span style="color: var(--cif-emerald-600); font-weight: 600;"><i class="fas fa-check-circle"></i> Sceau Digital DigiCoop</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="schedule-drawer-footer">
+      <button class="btn btn-secondary" onclick="App.closeScheduleDrawer()">
+        Fermer
+      </button>
+      <div id="drawer-footer-actions" style="display: flex; gap: 0.5rem;">
+        <!-- Dynamic based on payment status -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="signed-pv-drawer-backdrop" class="schedule-drawer-backdrop" onclick="App.closeSignedPvDrawer()">
+    <div id="signed-pv-sidedrawer" class="schedule-drawer" onclick="event.stopPropagation()" aria-label="Volet détail procès-verbal signé">
+      <div class="schedule-drawer-header">
+        <div class="schedule-drawer-header-content">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span class="badge badge-submitted" id="pv-drawer-ref-badge" style="font-family: var(--font-family-code); font-weight: 700;">PV-2026-0889</span>
+            <span id="pv-drawer-status-badge" class="badge badge-approved"><i class="fas fa-circle-check"></i> Accord Collégial</span>
+          </div>
+          <h3 id="pv-drawer-title" class="schedule-drawer-title" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Seydou Keita</h3>
+          <p id="pv-drawer-subtitle" class="schedule-drawer-subtitle" style="font-size: 0.76rem; color: var(--text-muted); margin: 0; margin-top: 2px;">Procès-Verbal Officiel de Décision du Comité de Crédit</p>
+        </div>
+        <button class="modal-close-btn" onclick="App.closeSignedPvDrawer()" title="Fermer le volet">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="schedule-drawer-body">
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-file-contract text-primary mr-1"></i> Termes & Conditions Financières</h4>
+            <span id="pv-drawer-date" class="badge badge-submitted" style="font-size: 0.68rem;">18/08/2026</span>
+          </div>
+          <div class="drawer-grid-2" style="margin-bottom: 0.6rem;">
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Montant Validé</div>
+              <div id="pv-drawer-amount" style="font-size: 1.15rem; font-weight: 800; color: #518e45; font-family: var(--font-family-code);">3 000 000 F</div>
+              <div id="pv-drawer-requested-diff" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Demande initiale : 3 000 000 F</div>
+            </div>
+            <div class="drawer-metric-box">
+              <div class="drawer-kv-label">Modalités & Échéance</div>
+              <div id="pv-drawer-terms" style="font-size: 1.05rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">9.5% • 18 mois</div>
+              <div id="pv-drawer-monthly" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Échéance : ~190 400 F / mois</div>
+            </div>
+          </div>
+          <div class="drawer-grid-2">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Emprunteur & Activité</span>
+              <span id="pv-drawer-client-info" class="drawer-kv-value" style="font-weight: 600;">Seydou Keita (Menuiserie & BTP)</span>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Agence de Rattachement</span>
+              <span id="pv-drawer-agency" class="drawer-kv-value">Bamako Principale (Mali)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-signature text-emerald mr-1"></i> Signatures Électroniques & Visas</h4>
+            <span id="pv-drawer-quorum-badge" class="badge badge-approved"><i class="fas fa-users-check"></i> Quorum 3/3</span>
+          </div>
+          <div id="pv-drawer-signers-list" style="display: flex; flex-direction: column; gap: 0.6rem;"></div>
+        </div>
+
+        <div class="drawer-panel">
+          <div class="drawer-panel-header">
+            <h4 class="drawer-panel-title"><i class="fas fa-shield-halved text-warning mr-1"></i> Sûretés & Modalités de Déblocage</h4>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.78rem;">
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Garanties & Cautions Enregistrées</span>
+              <p id="pv-drawer-guarantees" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Caution solidaire Maître Artisan enregistrée + Dépôt de garantie bloqué 10%
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Conditions Préalables au Décaissement</span>
+              <p id="pv-drawer-disbursement" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Décaissement sur présentation de facture proforma fournisseur acquittée.
+              </p>
+            </div>
+            <div class="drawer-kv">
+              <span class="drawer-kv-label">Motivation Collégiale du Comité</span>
+              <p id="pv-drawer-notes" style="background: var(--bg-body); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-primary); margin: 0; line-height: 1.45;">
+                Dossier solide avec marge opérationnelle démontrée.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-drawer-footer" style="padding: 1rem 1.4rem; border-top: 1px solid var(--border-color); background: var(--bg-surface); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <button class="btn btn-secondary" onclick="App.closeSignedPvDrawer()" style="padding: 0.6rem 1rem;">
+          <i class="fas fa-times mr-1"></i> Fermer
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="App.notifyAgencyForPv()" style="padding: 0.6rem 0.9rem;" title="Notifier l'agence par SMS/WhatsApp">
+            <i class="fas fa-paper-plane mr-1 text-primary"></i> Notifier Agence
+          </button>
+          <button class="btn btn-primary" onclick="App.downloadSignedPvPdf()" style="padding: 0.6rem 1.15rem; font-weight: 700;">
+            <i class="fas fa-file-pdf mr-1"></i> Télécharger PV
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

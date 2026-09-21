@@ -27,15 +27,15 @@ export function SuccessAnimationModal() {
     <div className="success-details-card" id="success-modal-details-card">
       <div className="success-detail-row">
         <span className="success-detail-label">Référence :</span>
-        <span className="success-detail-val" id="success-detail-ref">REQ-2026-0895</span>
+        <span className="success-detail-val" id="success-detail-ref">—</span>
       </div>
       <div className="success-detail-row">
         <span className="success-detail-label">Montant :</span>
-        <span className="success-detail-val" id="success-detail-amount" style={{ color: "var(--primary-700)" }}>2 500 000 FCFA</span>
+        <span className="success-detail-val" id="success-detail-amount" style={{ color: "var(--primary-700)" }}>—</span>
       </div>
       <div className="success-detail-row">
         <span className="success-detail-label">Mensualité Estimée :</span>
-        <span className="success-detail-val" id="success-detail-payment" style={{ color: "var(--cif-emerald-600)" }}>235 000 FCFA</span>
+        <span className="success-detail-val" id="success-detail-payment" style={{ color: "var(--cif-emerald-600)" }}>—</span>
       </div>
       <div className="success-detail-row">
         <span className="success-detail-label">Statut :</span>

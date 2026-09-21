@@ -1,10 +1,14 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ROLE_PROFILES, roleFromPath } from '@/app/roles';
 import { getUiSession, installLegacyAppBridge, consumeQueuedLoanModal } from '@/app/session';
-import { logoutFromApi } from '@/api';
+import { logoutFromApi, fetchUserPhotoFile } from '@/api';
+import { PROFILE_CHANGED_EVENT } from '@/features/workflow/workflow';
 import { Button, callApp as invokeLegacyApp } from '@/shared/ui';
 import { toast } from '@heroui/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { EditProfileModal } from '@/features/modals/EditProfileModal';
+import { ChangePasswordModal } from '@/features/modals/ChangePasswordModal';
+import { NotificationBell } from '@/features/workflow/NotificationBell';
 
 type AppShellProps = {
   children: ReactNode;
@@ -22,6 +26,10 @@ export function AppShell({ children }: AppShellProps) {
   );
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar);
+  const [sessionNonce, setSessionNonce] = useState(0);
   const profileRef = useRef<HTMLDivElement>(null);
   const userToggledCollapse = useRef(false);
 
@@ -40,6 +48,41 @@ export function AppShell({ children }: AppShellProps) {
     const frame = window.requestAnimationFrame(() => invokeLegacyApp('openNewLoanModal'));
     return () => window.cancelAnimationFrame(frame);
   }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    const userId = Number(session?.userId);
+    if (!userId) {
+      setAvatarUrl(profile.avatar);
+      return;
+    }
+    let revoked = false;
+    let objectUrl: string | null = null;
+    const load = () => {
+      void fetchUserPhotoFile(userId)
+        .then(({ blob }) => {
+          objectUrl = URL.createObjectURL(blob);
+          if (!revoked) {
+            setAvatarUrl(objectUrl);
+          } else {
+            URL.revokeObjectURL(objectUrl);
+          }
+        })
+        .catch(() => {
+          if (!revoked) {
+            setAvatarUrl(profile.avatar);
+          }
+        });
+    };
+    load();
+    window.addEventListener(PROFILE_CHANGED_EVENT, load);
+    return () => {
+      revoked = true;
+      window.removeEventListener(PROFILE_CHANGED_EVENT, load);
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [session?.userId, sessionNonce, profile.avatar]);
 
   useEffect(() => {
     const applyCollapsedClass = () => {
@@ -236,9 +279,7 @@ export function AppShell({ children }: AppShellProps) {
             </button>
           </div>
           <div className="topbar-right">
-            <button className="topbar-action-btn" title="Centre de Notifications" type="button">
-              <i className="fas fa-bell"></i>
-            </button>
+            <NotificationBell />
             <div className="profile-dropdown-container" ref={profileRef}>
               <button
                 className={`topbar-profile-btn${profileOpen ? ' active' : ''}`}
@@ -250,7 +291,7 @@ export function AppShell({ children }: AppShellProps) {
                 onClick={() => setProfileOpen((open) => !open)}
               >
                 <div className="topbar-avatar-wrap">
-                  <img src={profile.avatar} alt="Avatar" className="topbar-avatar" />
+                  <img src={avatarUrl} alt="Avatar" className="topbar-avatar" />
                 </div>
                 <div className="topbar-user-meta">
                   <span className="topbar-user-name">{displayName}</span>
@@ -267,7 +308,12 @@ export function AppShell({ children }: AppShellProps) {
                       className="profile-menu-item"
                       onClick={(event) => {
                         event.preventDefault();
-                        callApp('openEditProfileModal');
+                        setProfileOpen(false);
+                        if (role === 'CLIENT') {
+                          navigate('/app/client/profile');
+                          return;
+                        }
+                        setEditProfileOpen(true);
                       }}
                     >
                       <i className="fas fa-user-pen text-primary"></i>
@@ -294,11 +340,11 @@ export function AppShell({ children }: AppShellProps) {
                       onClick={(event) => {
                         event.preventDefault();
                         setProfileOpen(false);
-                        toast.info('Sécurité du compte : Authentification 2FA active');
+                        setPasswordOpen(true);
                       }}
                     >
                       <i className="fas fa-shield-halved text-emerald"></i>
-                      <span>Sécurité &amp; Clés d&apos;Accès</span>
+                      <span>Sécurité &amp; mot de passe</span>
                     </a>
                   </li>
                   <li>
@@ -336,6 +382,14 @@ export function AppShell({ children }: AppShellProps) {
         <div id="content-area">{children}</div>
         <div id="toast-container"></div>
       </div>
+      <EditProfileModal
+        open={editProfileOpen}
+        onClose={() => {
+          setEditProfileOpen(false);
+          setSessionNonce((value) => value + 1);
+        }}
+      />
+      <ChangePasswordModal open={passwordOpen} onClose={() => setPasswordOpen(false)} />
     </div>
   );
 }

@@ -1,86 +1,67 @@
 import { Screen } from '@/shared/ui/Screen';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { StatCard } from '@/shared/ui/StatCard';
-import { Button } from '@/shared/ui/Button';
+import { AppTable } from '@/shared/ui/AppTable';
+import { DossierBrowser } from '@/shared/ui/DossierBrowser';
 import { callApp } from '@/shared/ui/legacy';
-import { AgentInspectionsTable } from '@/shared/tables/registry';
+import { borrowerName, formatFcfa } from '@/features/workflow/workflow';
+import { useAgentWorkspace } from './useAgentWorkspace';
 
 export function AgentInspectionsPage() {
+  const { guarantees, pendingGuarantees } = useAgentWorkspace();
+  const verified = guarantees.filter((row) => (row.guarantee.verification_status || '').toUpperCase() === 'VERIFIED');
+  const rejected = guarantees.filter((row) => (row.guarantee.verification_status || '').toUpperCase() === 'REJECTED');
+  const verifiedValue = verified.reduce((sum, row) => sum + (row.guarantee.verified_value ?? row.guarantee.declared_value ?? 0), 0);
+
   return (
     <Screen viewId="view-agent-inspections">
-      <PageHeader
-        title={
-          <>
-            <i className="fas fa-clipboard-check text-warning mr-2"></i> Inspections & Visites Terrain des Garanties
-          </>
-        }
-        crumbs={['Espace Agent de Crédit', 'Contrôle Physique & Valorisation des Actifs CreditFast']}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => callApp('openQrScannerModal', 'guarantee')} title="Scanner le QR Code d'un certificat de gage ou d'une carte grise">
-              <i className="fas fa-qrcode text-primary mr-1"></i> Scanner Gage QR
-            </Button>
-            <Button onClick={() => callApp('openNewInspectionModal')}>
-              <i className="fas fa-plus-circle mr-1"></i> Planifier une Visite Terrain
-            </Button>
-          </>
-        }
-      />
+      <PageHeader title="Contrôle terrain des garanties" crumbs={['Espace agent', 'Visite et validation']} />
 
       <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
-        <StatCard
-          tone="amber"
-          icon="fa-motorcycle"
-          value="3"
-          valueId="insp-kpi-pending"
-          label="Visites Terrain à Réaliser"
-          trendUp={false}
-          trend={
-            <>
-              <i className="fas fa-clock"></i> 2 prévues aujourd&apos;hui
-            </>
-          }
-        />
-        <StatCard
-          tone="emerald"
-          icon="fa-shield-halved"
-          value="14.6M"
-          valueId="insp-kpi-verified"
-          label="Valeur Garanties Vérifiées"
-          trend={
-            <>
-              <i className="fas fa-arrow-up"></i> 100% conformes{' '}
-            </>
-          }
-        />
-        <StatCard
-          tone="primary"
-          icon="fa-scale-balanced"
-          value="138%"
-          valueId="insp-kpi-ratio"
-          label="Couverture Moyenne / Prêt"
-          trend={
-            <>
-              <i className="fas fa-check-double"></i> Au-dessus du seuil (120%)
-            </>
-          }
-        />
-        <StatCard
-          tone="rose"
-          icon="fa-triangle-exclamation"
-          value="1"
-          valueId="insp-kpi-anomalies"
-          label="Écart de Valorisation"
-          trendUp={false}
-          trend={
-            <>
-              <i className="fas fa-magnifying-glass"></i> À contre-expertiser
-            </>
-          }
-        />
+        <StatCard tone="amber" icon="fa-clipboard-check" value={String(pendingGuarantees.length)} label="À examiner sur le terrain" trend={<>Contrôle non encore validé</>} />
+        <StatCard tone="emerald" icon="fa-shield-halved" value={verified.length ? formatFcfa(verifiedValue) : '—'} label="Valeur retenue" trend={<>Garanties déjà contrôlées</>} />
+        <StatCard tone="primary" icon="fa-list" value={String(guarantees.length)} label="Garanties déclarées" trend={<>Sur les dossiers de la file</>} />
+        <StatCard tone="rose" icon="fa-ban" value={String(rejected.length)} label="Refusées" trend={<>Non retenues après visite</>} />
       </div>
 
-      <AgentInspectionsTable />
+      <DossierBrowser
+        heading="Garanties"
+        items={guarantees.map((row) => ({
+          id: String(row.guarantee.id),
+          title: borrowerName(row.request),
+          meta: `${row.guarantee.guarantee_type || 'Garantie'} · ${row.guarantee.verification_status || 'PENDING'}`,
+          hint: formatFcfa(row.guarantee.declared_value),
+        }))}
+        onOpen={(id) => callApp('openInspectionDrawer', id)}
+        listView={
+          guarantees.length ? (
+            <AppTable
+              chrome="plain"
+              title="Garanties"
+              items={guarantees.map((row) => ({
+                id: String(row.guarantee.id),
+                requestId: row.request.id,
+                name: borrowerName(row.request),
+                type: row.guarantee.guarantee_type || '—',
+                status: row.guarantee.verification_status || 'PENDING',
+                declared: formatFcfa(row.guarantee.declared_value),
+                verified: formatFcfa(row.guarantee.verified_value),
+                purpose: row.request.purpose || '',
+              }))}
+              columns={[
+                { id: 'name', label: 'Emprunteur', isRowHeader: true, render: (row) => row.name },
+                { id: 'type', label: 'Type', render: (row) => row.type },
+                { id: 'declared', label: 'Valeur déclarée', render: (row) => row.declared },
+                { id: 'verified', label: 'Valeur retenue', render: (row) => row.verified },
+                { id: 'status', label: 'Contrôle', render: (row) => row.status },
+              ]}
+              onRowAction={(key) => callApp('openInspectionDrawer', String(key))}
+            />
+          ) : (
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.86rem' }}>Aucune garantie en base pour les dossiers de cette file.</p>
+          )
+        }
+      />
     </Screen>
   );
 }

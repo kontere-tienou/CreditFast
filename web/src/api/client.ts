@@ -19,9 +19,13 @@ async function parseErrorBody(response: Response): Promise<ApiErrorBody | undefi
 export async function apiClient(path: string, init: ApiClientOptions = {}): Promise<Response> {
   const { skipAuth, headers: initHeaders, ...rest } = init;
   const headers = new Headers(initHeaders);
-  headers.set('Accept', 'application/json');
+  if (!headers.has('Accept')) {
+    headers.set('Accept', 'application/json');
+  }
 
-  if (rest.body && !headers.has('Content-Type')) {
+  if (rest.body instanceof FormData) {
+    headers.delete('Content-Type');
+  } else if (rest.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
 
@@ -42,6 +46,24 @@ export async function apiClient(path: string, init: ApiClientOptions = {}): Prom
   }
 
   return response;
+}
+
+export async function apiBlob(path: string): Promise<{ blob: Blob; contentType: string; filename?: string }> {
+  const response = await apiClient(path, {
+    headers: { Accept: '*/*' },
+  });
+  if (!response.ok) {
+    const body = await parseErrorBody(response);
+    throw new ApiError(body?.message || `Impossible de télécharger le fichier (${response.status})`, response.status, body);
+  }
+  const disposition = response.headers.get('Content-Disposition') || '';
+  const named = disposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
+  const blob = await response.blob();
+  return {
+    blob,
+    contentType: response.headers.get('Content-Type') || blob.type || 'application/octet-stream',
+    filename: named?.[1] ? decodeURIComponent(named[1].trim()) : undefined,
+  };
 }
 
 export async function apiJson<T>(path: string, init: ApiClientOptions = {}): Promise<T> {

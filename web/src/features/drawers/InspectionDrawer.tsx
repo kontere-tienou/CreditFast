@@ -10,7 +10,7 @@ export function InspectionDrawer() {
             <span className="badge badge-submitted" id="insp-drawer-type-badge"><i className="fas fa-shield"></i> Garantie</span>
             <span id="insp-drawer-status-badge" className="badge badge-approved"><i className="fas fa-check"></i> Validée</span>
           </div>
-          <h3 id="insp-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>Inspection • Dossier REQ-2026-0891</h3>
+          <h3 id="insp-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>Inspection</h3>
           <p id="insp-drawer-subtitle" className="schedule-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0, marginTop: "2px" }}>Contrôle physique, valorisation et garanties</p>
         </div>
         <button type="button" className="modal-close-btn" onClick={() => callApp("closeInspectionDrawer")} title="Fermer le volet">
@@ -23,19 +23,19 @@ export function InspectionDrawer() {
         <div className="drawer-panel">
           <div className="drawer-panel-header">
             <h4 className="drawer-panel-title"><i className="fas fa-user-circle text-primary mr-1"></i> Emprunteur Associé</h4>
-            <span id="insp-drawer-req-num" className="badge badge-submitted" style={{ fontFamily: "var(--font-family-code)", fontSize: "0.7rem" }}>REQ-2026-0891</span>
+            <span id="insp-drawer-req-num" className="badge badge-submitted" style={{ fontFamily: "var(--font-family-code)", fontSize: "0.7rem" }}>—</span>
           </div>
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginBottom: "0.75rem" }}>
             <img id="insp-drawer-client-avatar" src="https://ui-avatars.com/api/?name=Client&background=4f46e5&color=fff" alt="" className="user-avatar" style={{ width: "44px", height: "44px", borderRadius: "var(--radius-md)", flexShrink: 0 }} />
             <div style={{ minWidth: 0 }}>
-              <div id="insp-drawer-client-name" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-primary)" }}>Fatou Ndiaye</div>
-              <div id="insp-drawer-client-loc" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}><i className="fas fa-location-dot text-primary mr-1"></i> Bamako, Mali (Zone Urbaine)</div>
+              <div id="insp-drawer-client-name" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-primary)" }}>Demandeur</div>
+              <div id="insp-drawer-client-loc" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>—</div>
             </div>
           </div>
           <div className="drawer-grid-2">
             <div className="drawer-kv">
               <span className="drawer-kv-label">Montant du Prêt</span>
-              <span id="insp-drawer-loan-amount" className="drawer-kv-value" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)", fontWeight: 700 }}>2 500 000 FCFA</span>
+              <span id="insp-drawer-loan-amount" className="drawer-kv-value" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)", fontWeight: 700 }}>—</span>
             </div>
             <div className="drawer-kv">
               <span className="drawer-kv-label">Taux Couverture Garantie</span>

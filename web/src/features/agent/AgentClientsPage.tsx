@@ -1,130 +1,123 @@
+import { useMemo, useState } from 'react';
 import { Screen } from '@/shared/ui/Screen';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { StatCard } from '@/shared/ui/StatCard';
 import { Button } from '@/shared/ui/Button';
+import { AppTable } from '@/shared/ui/AppTable';
 import { callApp } from '@/shared/ui/legacy';
+import { agentClientName } from '@/api/agent';
+import { useAgentWorkspace } from './useAgentWorkspace';
+import { AgentClientSheet } from './AgentClientSheet';
 
 export function AgentClientsPage() {
+  const { clients, loading, reloadAll } = useAgentWorkspace();
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<'ALL' | 'KYC' | 'PENDING'>('ALL');
+  const [openClientId, setOpenClientId] = useState<number | null>(null);
+
+  const verified = clients.filter((row) => (row.kyc_status || '').toUpperCase() === 'VERIFIED');
+  const pendingKyc = clients.filter((row) => (row.kyc_status || '').toUpperCase() !== 'VERIFIED');
+
+  const visible = useMemo(() => {
+    const byStatus =
+      filter === 'KYC' ? verified : filter === 'PENDING' ? pendingKyc : clients;
+    const needle = query.trim().toLowerCase();
+    if (!needle) {
+      return byStatus;
+    }
+    return byStatus.filter((row) =>
+      [agentClientName(row), row.client_number, row.city, row.occupation, row.user?.phone, row.user?.email]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+        .includes(needle),
+    );
+  }, [clients, filter, pendingKyc, query, verified]);
+
   return (
     <Screen viewId="view-agent-clients">
       <PageHeader
-        title={
-          <>
-            <i className="fas fa-users text-primary mr-2"></i> Portefeuille Emprunteurs & Sociétaires CreditFast
-          </>
-        }
-        crumbs={['Espace Agent de Crédit', 'Gestion Relation Client & Suivi des Engagements']}
+        title="Portefeuille emprunteurs"
+        crumbs={['Espace agent', 'Fiches clients']}
         actions={
-          <>
-            <Button variant="secondary" onClick={() => callApp('exportClientsCsv')}>
-              <i className="fas fa-file-excel text-emerald mr-1"></i> Exporter Portefeuille (CSV)
-            </Button>
-            <Button onClick={() => callApp('openNewLoanModal')} title="Enregistrer une nouvelle demande de crédit au guichet">
-              <i className="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
-            </Button>
-          </>
+          <Button onClick={() => callApp('openNewLoanModal')}>
+            <i className="fas fa-file-circle-plus mr-1"></i> Enregistrer une demande
+          </Button>
         }
       />
 
       <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
-        <StatCard
-          tone="primary"
-          icon="fa-address-book"
-          value="5"
-          valueId="client-kpi-total"
-          label="Clients Actifs dans l'Agence"
-          trend={
-            <>
-              <i className="fas fa-arrow-up"></i> 100% Sociétaires CreditFast
-            </>
-          }
-        />
-        <StatCard
-          tone="emerald"
-          icon="fa-piggy-bank"
-          value="4.67M"
-          valueId="client-kpi-savings"
-          label="Épargne CreditFast Mobilisée"
-          trend={
-            <>
-              <i className="fas fa-coins"></i> Solde moyen : 935 000 F
-            </>
-          }
-        />
-        <StatCard
-          tone="amber"
-          icon="fa-hand-holding-dollar"
-          value="9.3M"
-          valueId="client-kpi-loans"
-          label="Encours Brut de Crédits"
-          trend={
-            <>
-              <i className="fas fa-chart-line"></i> PAR 30 : 0.0%
-            </>
-          }
-        />
-        <StatCard
-          tone="purple"
-          icon="fa-seedling"
-          value="1"
-          valueId="client-kpi-coldstart"
-          label="Primo-Demandeur (Cold Start)"
-          trend={
-            <>
-              <i className="fas fa-shield-heart"></i> Inclusion financière
-            </>
-          }
-        />
+        <StatCard tone="primary" icon="fa-address-book" value={String(clients.length)} label="Fiches en base" trend={<>Portefeuille chargé</>} />
+        <StatCard tone="emerald" icon="fa-check-circle" value={String(verified.length)} label="KYC validé" trend={<>Statut VERIFIED</>} />
+        <StatCard tone="amber" icon="fa-hourglass-half" value={String(pendingKyc.length)} label="KYC en attente" trend={<>À examiner</>} />
+        <StatCard tone="purple" icon="fa-rotate" value={loading ? '…' : String(visible.length)} label="Résultat affiché" trend={<>Filtre courant</>} />
       </div>
 
       <div className="card" style={{ marginBottom: '1.25rem' }}>
-        <div
-          className="card-body"
-          style={{
-            padding: '1rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-          }}
-        >
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }} id="clients-filter-buttons">
-            <button type="button" className="btn btn-primary btn-sm" onClick={(event) => callApp('filterClientPortfolio', 'ALL', event.currentTarget)}>
-              Tous les Membres (<span id="clients-count-all">5</span>)
+        <div className="card-body" style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button type="button" className={`btn btn-sm ${filter === 'ALL' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFilter('ALL')}>
+              Tous ({clients.length})
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={(event) => callApp('filterClientPortfolio', 'COLD_START', event.currentTarget)}
-              style={{ borderColor: '#518e45', color: '#1b4332', background: '#eef4ee' }}
-            >
-              <i className="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
+            <button type="button" className={`btn btn-sm ${filter === 'KYC' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFilter('KYC')}>
+              KYC validé ({verified.length})
             </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={(event) => callApp('filterClientPortfolio', 'ACTIVE_LOAN', event.currentTarget)}>
-              <i className="fas fa-file-invoice-dollar mr-1"></i> Crédit en Cours
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={(event) => callApp('filterClientPortfolio', 'VERIFIED', event.currentTarget)}>
-              <i className="fas fa-check-circle text-emerald mr-1"></i> KYC Validé
+            <button type="button" className={`btn btn-sm ${filter === 'PENDING' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setFilter('PENDING')}>
+              KYC en attente ({pendingKyc.length})
             </button>
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <div style={{ position: 'relative', minWidth: 250 }}>
-              <input
-                type="text"
-                id="clients-search-input"
-                className="form-control form-control-sm"
-                placeholder="Recherche par nom, compte, ville, activité..."
-                onInput={(event) => callApp('searchClientPortfolio', event.currentTarget.value)}
-                style={{ paddingLeft: '2rem' }}
-              />
-              <i className="fas fa-search" style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.8rem' }}></i>
-            </div>
-          </div>
+          <input
+            type="search"
+            className="form-control form-control-sm"
+            placeholder="Nom, n° membre, ville…"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            style={{ minWidth: 220 }}
+          />
         </div>
       </div>
 
-      <div className="grid-3" id="agent-clients-grid" style={{ gap: '1.25rem' }}></div>
+      {visible.length ? (
+        <AppTable
+          chrome="plain"
+          title="Fiches clients"
+          items={visible.map((row) => ({ ...row, id: String(row.id) }))}
+          onRowAction={(key) => setOpenClientId(Number(key))}
+          columns={[
+            { id: 'name', label: 'Emprunteur', isRowHeader: true, render: (row) => agentClientName({ ...row, id: Number(row.id) }) },
+            { id: 'number', label: 'N° membre', render: (row) => row.client_number || '—' },
+            { id: 'city', label: 'Ville', render: (row) => row.city || row.residential_zone || '—' },
+            { id: 'kyc', label: 'KYC', render: (row) => row.kyc_status || '—' },
+            { id: 'phone', label: 'Téléphone', render: (row) => row.user?.phone || '—' },
+            {
+              id: 'actions',
+              label: '',
+              className: 'actions',
+              render: (row) => (
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-xs"
+                  title="Ouvrir la fiche : comptes, mouvements, épargne"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setOpenClientId(Number(row.id));
+                  }}
+                >
+                  <i className="fas fa-piggy-bank"></i> Épargne
+                </button>
+              ),
+            },
+          ]}
+        />
+      ) : (
+        <div className="card">
+          <div className="card-body">
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.86rem' }}>Aucune fiche client en base pour le moment.</p>
+          </div>
+        </div>
+      )}
+
+      <AgentClientSheet clientId={openClientId} onClose={() => setOpenClientId(null)} onChanged={() => void reloadAll()} />
     </Screen>
   );
 }

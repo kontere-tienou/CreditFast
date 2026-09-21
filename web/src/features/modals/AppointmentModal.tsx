@@ -1,3 +1,4 @@
+import { CfSelect } from '@/shared/ui/CfSelect';
 import { callApp } from '@/shared/ui/legacy';
 
 export function AppointmentModal() {
@@ -19,7 +20,7 @@ export function AppointmentModal() {
           <h4 style={{ fontSize: "1.05rem", fontWeight: 800, margin: 0, color: "white" }}>
             Prendre Rendez-vous
           </h4>
-          <span style={{ fontSize: "0.76rem", color: "#cbd5e1" }}>Avec votre conseiller attitré Adama Traore</span>
+          <span style={{ fontSize: "0.76rem", color: "#cbd5e1" }}>Avec votre conseiller CreditFast</span>
         </div>
       </div>
       <button type="button" className="modal-close-btn" style={{ color: "white", background: "rgba(255,255,255,0.2)", border: "none", width: "32px", height: "32px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} onClick={() => callApp("closeAppointmentModal")} title="Fermer">
@@ -33,10 +34,12 @@ export function AppointmentModal() {
       {/* Advisor Quick Info Strip */}
       <div style={{ background: "var(--bg-body)", border: "1px solid var(--border-color)", borderRadius: "var(--radius-lg)", padding: "0.85rem 1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <img src="/images/profil/profil01-03.jpg" alt="Adama Traore" className="user-avatar" style={{ width: "42px", height: "42px", border: "2px solid var(--primary-300)" }} />
+          <div className="user-avatar" style={{ width: "42px", height: "42px", border: "2px solid var(--primary-300)", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-surface)" }}>
+            <i className="fas fa-user-tie"></i>
+          </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--text-primary)" }}>Adama Traore</div>
-            <div style={{ fontSize: "0.74rem", color: "var(--primary-600)", fontWeight: 600 }}>Expert Microfinance • Agence Grand Marché Bamako (Mali)</div>
+            <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--text-primary)" }}>Conseiller</div>
+            <div style={{ fontSize: "0.74rem", color: "var(--primary-600)", fontWeight: 600 }}>Assignation dès qu’un chargé est lié à votre dossier</div>
           </div>
         </div>
         <span className="badge badge-approved" style={{ fontSize: "0.68rem" }}>
@@ -70,30 +73,30 @@ export function AppointmentModal() {
         {/* Reason */}
         <div className="form-group" style={{ marginBottom: "1rem" }}>
           <label className="form-label" style={{ fontSize: "0.78rem", fontWeight: 700 }}>Motif du Rendez-vous *</label>
-          <select id="appt-modal-reason" className="form-control" required style={{ fontSize: "0.82rem" }}>
-            <option value="EXAM_DOSSIER" selected>Finalisation & Signature de mon Financement</option>
+          <CfSelect id="appt-modal-reason" className="form-control" required defaultValue="EXAM_DOSSIER" style={{ fontSize: "0.82rem" }}>
+            <option value="EXAM_DOSSIER">Finalisation & Signature de mon Financement</option>
             <option value="GUARANTEE_DROP">Dépôt de justificatifs complémentaires</option>
             <option value="SAVINGS_ADVICE">Conseils personnalisés en épargne & développement</option>
             <option value="SCHEDULE_REVIEW">Échéancier de remboursement & questions</option>
             <option value="OTHER">Autre question ou accompagnement</option>
-          </select>
+          </CfSelect>
         </div>
 
         {/* Date & Time Row */}
         <div className="grid-2" style={{ gap: "0.75rem", marginBottom: "1rem" }}>
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label" style={{ fontSize: "0.78rem", fontWeight: 700 }}>Date souhaitée *</label>
-            <input type="date" id="appt-modal-date" className="form-control" defaultValue="2026-08-21" required style={{ fontSize: "0.82rem" }} />
+            <input type="date" id="appt-modal-date" className="form-control" required style={{ fontSize: "0.82rem" }} />
           </div>
           <div className="form-group" style={{ margin: 0 }}>
             <label className="form-label" style={{ fontSize: "0.78rem", fontWeight: 700 }}>Créneau horaire *</label>
-            <select id="appt-modal-time" className="form-control" required style={{ fontSize: "0.82rem" }}>
+            <CfSelect id="appt-modal-time" className="form-control" required defaultValue="14:00" style={{ fontSize: "0.82rem" }}>
               <option value="09:00">09h00 - 09h45</option>
               <option value="10:30">10h30 - 11h15</option>
-              <option value="14:00" selected>14h00 - 14h45</option>
+              <option value="14:00">14h00 - 14h45</option>
               <option value="15:30">15h30 - 16h15</option>
               <option value="16:30">16h30 - 17h15</option>
-            </select>
+            </CfSelect>
           </div>
         </div>
 

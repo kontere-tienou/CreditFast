@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+import { CfSelect } from '@/shared/ui/CfSelect';
 import { callInteractions } from '@/shared/ui/legacy';
 
 export function AnalystDossierModal() {
@@ -35,7 +37,7 @@ export function AnalystDossierModal() {
             <div style={{ fontSize: "0.78rem", color: "var(--text-subtle)" }}>Commerçante / Grossiste Textiles • 6 ans d'activité</div>
           </div>
           <div className="score-main-display" style={{ padding: "0.75rem 1.25rem" }}>
-            <div className="score-gauge" id="modal-score-gauge" style={{ '--score-deg': "0deg", width: "70px", height: "70px" }}>
+            <div className="score-gauge" id="modal-score-gauge" style={{ width: "70px", height: "70px", ['--score-deg']: "0deg" } as CSSProperties}>
               <div className="score-gauge-inner" style={{ width: "54px", height: "54px" }}>
                 <div className="score-number" id="modal-score-val" style={{ fontSize: "1.2rem" }}>0</div>
               </div>
@@ -80,7 +82,7 @@ export function AnalystDossierModal() {
         {/* Left: Supporting Docs & Human Verification */}
         <div>
           <h4 style={{ fontSize: "0.95rem", marginBottom: "0.75rem" }}>
-            <i className="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Extraction OCR
+            <i className="fas fa-file-invoice text-primary mr-1"></i> Pièces justificatives & lecture automatique
           </h4>
           <div id="modal-docs-list">
             {/* Documents Rendered Dynamically */}
@@ -121,11 +123,11 @@ export function AnalystDossierModal() {
                 <h5 style={{ fontSize: "0.88rem", marginBottom: "0.5rem" }}><i className="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
                 <div className="form-group" style={{ marginBottom: "0.75rem" }}>
                   <label className="form-label">Avis Consultatif</label>
-                  <select id="analyst-reco-select" className="form-control">
+                  <CfSelect id="analyst-reco-select" className="form-control">
                     <option value="FAVORABLE">Favorable pour passage en Comité</option>
                     <option value="RESERVE">Favorable sous réserve de compléments</option>
                     <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
-                  </select>
+                  </CfSelect>
                 </div>
                 <div className="form-group" style={{ marginBottom: "0.75rem" }}>
                   <label className="form-label">Note d'analyse de synthèse</label>

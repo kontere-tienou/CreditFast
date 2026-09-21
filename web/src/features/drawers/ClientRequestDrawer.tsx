@@ -11,8 +11,8 @@ export function ClientRequestDrawer() {
             <i className="fas fa-folder-open"></i>
           </div>
           <div>
-            <h3 id="crd-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>Dossier #REQ-2026-0891</h3>
-            <p id="crd-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0 }}>Déposé le 11/08/2026 • Agence Grand Marché Bamako</p>
+            <h3 id="crd-drawer-title" style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>Dossier</h3>
+            <p id="crd-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0 }}>—</p>
           </div>
         </div>
         <button type="button" className="modal-close-btn" onClick={() => callApp("closeClientRequestDrawer")} title="Fermer le volet latéral">
@@ -28,13 +28,13 @@ export function ClientRequestDrawer() {
             Montant du Financement Demandé
           </div>
           <div id="crd-drawer-amount" style={{ fontSize: "1.85rem", fontWeight: 800, color: "var(--primary-700)", fontFamily: "var(--font-family-code)" }}>
-            2 500 000 FCFA
+            —
           </div>
           <div id="crd-drawer-status" style={{ marginTop: "8px" }}>
-            <span className="badge badge-analysis"><i className="fas fa-spinner fa-spin mr-1"></i> Revue Analyste Risque</span>
+            <span className="badge badge-submitted">—</span>
           </div>
           <div id="crd-drawer-purpose" style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginTop: "8px", fontWeight: 500 }}>
-            Achat de stock tissus wax pour la fête de Tabaski
+            —
           </div>
         </div>
 
@@ -44,16 +44,16 @@ export function ClientRequestDrawer() {
             <h4 className="drawer-panel-title">
               <i className="fas fa-calculator text-primary"></i> Modalités Financières & Échéances
             </h4>
-            <span id="crd-drawer-duration-badge" className="badge badge-submitted">12 Mois</span>
+            <span id="crd-drawer-duration-badge" className="badge badge-submitted">—</span>
           </div>
           <div className="drawer-grid-2">
             <div className="drawer-kv">
               <span className="drawer-kv-label">Durée du Prêt</span>
-              <span className="drawer-kv-value" id="crd-drawer-duration-val">12 Mois</span>
+              <span className="drawer-kv-value" id="crd-drawer-duration-val">—</span>
             </div>
             <div className="drawer-kv">
               <span className="drawer-kv-label">Mensualité tout compris</span>
-              <span className="drawer-kv-value" id="crd-drawer-monthly-val" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)" }}>235 000 FCFA</span>
+              <span className="drawer-kv-value" id="crd-drawer-monthly-val" style={{ color: "var(--primary-700)", fontFamily: "var(--font-family-code)" }}>—</span>
             </div>
             {/* <div class="drawer-kv">
               <span class="drawer-kv-label">Taux Dégressif UEMOA</span>
@@ -61,11 +61,11 @@ export function ClientRequestDrawer() {
             </div> */}
             <div className="drawer-kv">
               <span className="drawer-kv-label">Assurance Emprunteur</span>
-              <span className="drawer-kv-value" id="crd-drawer-insurance-val">13 750 FCFA / mois</span>
+              <span className="drawer-kv-value" id="crd-drawer-insurance-val">—</span>
             </div>
             <div className="drawer-kv">
               <span className="drawer-kv-label">Coût Global du Crédit</span>
-              <span className="drawer-kv-value" id="crd-drawer-cost-val" style={{ color: "var(--cif-gold-700)", fontFamily: "var(--font-family-code)" }}>320 000 FCFA</span>
+              <span className="drawer-kv-value" id="crd-drawer-cost-val" style={{ color: "var(--cif-gold-700)", fontFamily: "var(--font-family-code)" }}>—</span>
             </div>
             <div className="drawer-kv">
               <span className="drawer-kv-label">Versement des Fonds</span>
@@ -80,7 +80,7 @@ export function ClientRequestDrawer() {
             <h4 className="drawer-panel-title">
               <i className="fas fa-route text-primary"></i> Parcours d'Instruction en Direct
             </h4>
-            <span id="crd-drawer-step-badge" className="badge badge-analysis" style={{ fontSize: "0.68rem" }}>Étape 4 / 6</span>
+            <span id="crd-drawer-step-badge" className="badge badge-submitted" style={{ fontSize: "0.68rem" }}>—</span>
           </div>
           <div id="crd-drawer-stepper-container" style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
             {/* Stepper Dynamic Nodes */}
@@ -93,7 +93,7 @@ export function ClientRequestDrawer() {
             <h4 className="drawer-panel-title">
               <i className="fas fa-file-shield text-emerald"></i> Pièces & Justificatifs 
             </h4>
-            <span id="crd-drawer-docs-count" className="badge badge-submitted" style={{ fontSize: "0.68rem" }}>4 pièces</span>
+            <span id="crd-drawer-docs-count" className="badge badge-submitted" style={{ fontSize: "0.68rem" }}>0 pièce</span>
           </div>
           <div id="crd-drawer-docs-list" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             {/* Dynamic docs list */}
@@ -106,7 +106,7 @@ export function ClientRequestDrawer() {
             <h4 className="drawer-panel-title">
               <i className="fas fa-shield-halved text-warning"></i> Garanties & Sûretés
             </h4>
-            <span id="crd-drawer-guar-status" className="badge badge-approved" style={{ fontSize: "0.68rem" }}>Vérifiée</span>
+            <span id="crd-drawer-guar-status" className="badge badge-submitted" style={{ fontSize: "0.68rem" }}>—</span>
           </div>
           <div id="crd-drawer-guar-content" style={{ fontSize: "0.8rem", lineHeight: 1.5, color: "var(--text-secondary)" }}>
             {/* Dynamic guarantee content */}
@@ -121,11 +121,12 @@ export function ClientRequestDrawer() {
             </h4>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-            <img src="/images/profil/profil01-03.jpg" alt="Agent" className="user-avatar" style={{ width: "44px", height: "44px" }} />
+            <div className="user-avatar" style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--bg-body)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>
+              <i className="fas fa-user-tie"></i>
+            </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-primary)" }}>Adama Traore</div>
-              <div style={{ fontSize: "0.74rem", color: "var(--text-muted)" }}>Conseiller Clientèle Professionnelle & Microcrédit</div>
-              <div style={{ fontSize: "0.72rem", color: "var(--cif-emerald-600)", fontWeight: 600 }}>Agence Grand Marché (Bamako, Mali) • +223 20 22 44 00</div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-primary)" }}>Non assigné</div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-muted)" }}>Aucun conseiller n’est encore lié à ce dossier.</div>
             </div>
           </div>
         </div>

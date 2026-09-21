@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Badge, BadgeWithDot } from '@/components/base/badges/badges';
-import { Button } from '@/shared/ui/Button';
 import { AppTable } from '@/shared/ui/AppTable';
 
 type LoanRow = {
@@ -20,25 +19,45 @@ function callApp(method: string, ...args: Array<string | number>) {
 }
 
 function PersonCell({ title, subtitle }: { title: string; subtitle: string }) {
+  const initials = title
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+
   return (
-    <div className="cf-table-stack">
-      <p className="cf-table-strong">{title}</p>
-      <p className="cf-table-muted">{subtitle}</p>
+    <div className="cf-table-person">
+      <span className="cf-table-avatar" aria-hidden>
+        {initials || '•'}
+      </span>
+      <div className="cf-table-stack">
+        <p className="cf-table-strong">{title}</p>
+        {subtitle ? (
+          <p className="cf-table-muted" title={subtitle}>
+            {subtitle}
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }
 
-function DetailsButton({ onClick, label = 'Détails' }: { onClick: () => void; label?: string }) {
+function DetailsButton({ onClick, label = 'Afficher' }: { onClick: () => void; label?: string }) {
   return (
-    <Button
-      variant="secondary"
-      onClick={(event) => {
-        event.stopPropagation();
-        onClick();
-      }}
-    >
-      {label}
-    </Button>
+    <div className="cf-table-actions">
+      <button
+        type="button"
+        className="cf-table-icon-btn is-view"
+        title={label}
+        onClick={(event) => {
+          event.stopPropagation();
+          onClick();
+        }}
+      >
+        <i className="fas fa-eye"></i>
+      </button>
+    </div>
   );
 }
 
@@ -62,8 +81,8 @@ const extraStatuses: Array<{ status: string; statusTone: LoanRow['statusTone'] }
 
 const extraClientRequests: LoanRow[] = extraPeople.map((person, index) => ({
   id: person.req,
-  name: person.req,
-  subtitle: `Fonds de commerce • ${person.name}`,
+  name: person.name,
+  subtitle: 'Fonds de commerce',
   amount: `${(700_000 + index * 180_000).toLocaleString('fr-FR')} FCFA`,
   amountValue: 700000 + index * 180000,
   status: index % 3 === 0 ? 'En cours' : 'Clôturé',
@@ -110,8 +129,8 @@ const extraAnomalies = extraPeople.map((person, index) => ({
 const clientRequests: LoanRow[] = [
   {
     id: 'REQ-2026-0891',
-    name: 'REQ-2026-0891',
-    subtitle: 'Achat de stock tissus wax Tabaski • Agence Grand Marché',
+    name: 'Fatou Ndiaye',
+    subtitle: 'Achat de stock tissus wax Tabaski',
     amount: '2 500 000 FCFA',
     amountValue: 2500000,
     status: 'En cours',
@@ -120,7 +139,7 @@ const clientRequests: LoanRow[] = [
   },
   {
     id: 'REQ-2025-0412',
-    name: 'REQ-2025-0412',
+    name: 'Aminata Diallo',
     subtitle: 'Équipement machine à coudre industrielle',
     amount: '1 200 000 FCFA',
     amountValue: 1200000,
@@ -130,7 +149,7 @@ const clientRequests: LoanRow[] = [
   },
   {
     id: 'REQ-2024-0199',
-    name: 'REQ-2024-0199',
+    name: 'Mariam Sow',
     subtitle: 'Fonds de roulement boutique Médina',
     amount: '800 000 FCFA',
     amountValue: 800000,
@@ -158,7 +177,7 @@ const scheduleRows = Array.from({ length: 12 }, (_, index) => {
   };
 });
 
-const pipelineRows: LoanRow[] = [
+export const pipelineRows: LoanRow[] = [
   { id: '1', name: 'Fatou Ndiaye', subtitle: 'REQ-2026-0891', amount: '2 500 000 FCFA', amountValue: 2500000, status: 'En analyse', statusTone: 'brand' },
   { id: '2', name: 'Amadou Sanogo', subtitle: 'REQ-2026-0892', amount: '5 000 000 FCFA', amountValue: 5000000, status: 'Comité', statusTone: 'warning' },
   { id: '3', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', amount: '1 800 000 FCFA', amountValue: 1800000, status: 'Vérif. requise', statusTone: 'gray' },
@@ -167,7 +186,7 @@ const pipelineRows: LoanRow[] = [
   ...extraPipeline,
 ];
 
-const inspectionRows = [
+export const inspectionRows = [
   { id: '1', name: 'Fatou Ndiaye', subtitle: 'REQ-2026-0891', amount: '3 400 000 FCFA', guarantee: 'Stock & marchandises', status: 'Vérifiée', statusTone: 'success' as LoanRow['statusTone'] },
   { id: '2', name: 'Amadou Sanogo', subtitle: 'REQ-2026-0892', amount: '7 000 000 FCFA', guarantee: 'Équipement & matériel', status: 'Vérifiée', statusTone: 'success' as LoanRow['statusTone'] },
   { id: '3', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', amount: '2 000 000 FCFA', guarantee: 'Caution solidaire', status: 'À inspecter', statusTone: 'warning' as LoanRow['statusTone'] },
@@ -175,14 +194,14 @@ const inspectionRows = [
   ...extraInspections,
 ];
 
-const complementRows = [
+export const complementRows = [
   { id: '101', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', piece: 'Facture proforma DGI actualisée' },
   { id: '102', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', piece: 'CNI recto / verso certifié' },
   { id: '103', name: 'Ibrahima Koné', subtitle: 'REQ-2026-0895', piece: 'Engagement caution solidaire' },
   ...extraComplements,
 ];
 
-const anomalyRows = [
+export const anomalyRows = [
   { id: '1', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', rule: 'Validité temporelle pièce proforma', severity: 'Critique' },
   { id: '2', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', rule: 'Concordance devis vs demande', severity: 'Avertissement' },
   { id: '3', name: 'Kodjo Mensah', subtitle: 'REQ-2026-0893', rule: 'Ratio reste à vivre / échéance', severity: 'Critique' },
@@ -191,7 +210,7 @@ const anomalyRows = [
 
 function LoanStatus({ tone, label }: { tone: LoanRow['statusTone']; label: string }) {
   return (
-    <BadgeWithDot size="sm" color={tone === 'brand' ? 'indigo' : tone} type="modern">
+    <BadgeWithDot size="sm" color={tone === 'brand' ? 'brand' : tone} type="modern">
       {label}
     </BadgeWithDot>
   );
@@ -207,18 +226,15 @@ export function ClientRequestsTable() {
       selectionMode="multiple"
       onRowAction={(key) => callApp('openClientRequestDrawer', String(key))}
       columns={[
-        { id: 'name', label: 'Réf. Dossier', isRowHeader: true, allowsSorting: true, render: (item) => <PersonCell title={item.name} subtitle={item.date ?? ''} /> },
-        { id: 'subtitle', label: 'Objet du Financement', allowsSorting: true, render: (item) => <span>{item.subtitle}</span> },
-        { id: 'amountValue', label: 'Montant Demandé', allowsSorting: true, render: (item) => <span className="cf-table-amount">{item.amount}</span> },
+        { id: 'name', label: 'Emprunteur', isRowHeader: true, allowsSorting: true, render: (item) => <PersonCell title={item.name} subtitle={item.date ?? ''} /> },
+        { id: 'subtitle', label: 'Objet', allowsSorting: true, render: (item) => <span>{item.subtitle}</span> },
+        { id: 'amountValue', label: 'Montant', allowsSorting: true, render: (item) => <span className="cf-table-amount">{item.amount}</span> },
         { id: 'status', label: 'Statut', allowsSorting: true, render: (item) => <LoanStatus tone={item.statusTone} label={item.status} /> },
         {
           id: 'actions',
-          label: '',
-          render: (item) => (
-            <div className="cf-table-actions">
-              <DetailsButton onClick={() => callApp('openClientRequestDrawer', item.id)} />
-            </div>
-          ),
+          label: 'Action',
+          className: 'cf-table-actions-col',
+          render: (item) => <DetailsButton onClick={() => callApp('openClientRequestDrawer', item.id)} />,
         },
       ]}
     />
@@ -258,6 +274,8 @@ export function ClientCalendarTable() {
       chrome="plain"
       className="cf-table-compact"
       title="Calendrier"
+      searchable={false}
+      showMenu={false}
       items={scheduleRows.slice(0, 4).map((row) => ({
         ...row,
         name: `Mensualité N° ${row.installment}`,
@@ -313,9 +331,8 @@ export function AgentPipelineTable() {
       items={pipelineRows}
       onRowAction={(key) => callApp('openAgentDrawer', String(key))}
       columns={[
-        { id: 'id', label: 'N° Dossier', isRowHeader: true, allowsSorting: true, render: (item) => <span className="cf-table-strong">{item.subtitle}</span> },
-        { id: 'name', label: 'Client Emprunteur', allowsSorting: true, render: (item) => <PersonCell title={item.name} subtitle="Bamako • Commerce" /> },
-        { id: 'amountValue', label: 'Montant & Durée', allowsSorting: true, render: (item) => <PersonCell title={item.amount} subtitle="12 mois" /> },
+        { id: 'name', label: 'Emprunteur', isRowHeader: true, allowsSorting: true, render: (item) => <PersonCell title={item.name} subtitle="Bamako • Commerce" /> },
+        { id: 'amountValue', label: 'Montant', allowsSorting: true, render: (item) => <PersonCell title={item.amount} subtitle="12 mois" /> },
         { id: 'status', label: 'Statut', allowsSorting: true, render: (item) => <LoanStatus tone={item.statusTone} label={item.status} /> },
         {
           id: 'actions',
@@ -563,24 +580,22 @@ export function CommitteeSignedTable() {
       onRowAction={(key) => callApp('openSignedPvDrawer', String(key))}
       columns={[
         {
-          id: 'id',
-          label: 'Réf. PV / Dossier',
-          isRowHeader: true,
-          allowsSorting: true,
-          render: (item) => <PersonCell title={item.id} subtitle={item.req} />,
-        },
-        {
           id: 'name',
           label: 'Emprunteur',
+          isRowHeader: true,
           allowsSorting: true,
           render: (item) => <PersonCell title={item.name} subtitle={item.city} />,
         },
         {
           id: 'amount',
-          label: 'Conditions Accordées',
-          render: (item) => (
-            <PersonCell title={item.amount} subtitle={item.terms} />
-          ),
+          label: 'Conditions',
+          render: (item) => <PersonCell title={item.amount} subtitle={item.terms} />,
+        },
+        {
+          id: 'date',
+          label: 'Date',
+          allowsSorting: true,
+          render: (item) => item.date,
         },
         {
           id: 'decision',
@@ -660,7 +675,7 @@ export function AuditLogsTable() {
       items={items}
       columns={[
         { id: 'time', label: 'Horodatage', isRowHeader: true, allowsSorting: true, render: (item) => item.time },
-        { id: 'action', label: 'Action', allowsSorting: true, render: (item) => <Badge color="indigo">{item.action}</Badge> },
+        { id: 'action', label: 'Action', allowsSorting: true, render: (item) => <Badge color="brand">{item.action}</Badge> },
         { id: 'entity', label: 'Entité Modifiée', allowsSorting: true, render: (item) => item.entity },
         { id: 'details', label: "Détails de l'Opération", render: (item) => item.details },
         { id: 'ip', label: 'Adresse IP', render: (item) => item.ip },
@@ -700,7 +715,6 @@ export function ClientDocumentsTable({ items }: { items: ClientDocumentRow[] }) 
           render: (item) => <PersonCell title={item.title} subtitle={item.file} />,
         },
         { id: 'category', label: 'Catégorie', allowsSorting: true, render: (item) => item.category },
-        { id: 'reference', label: 'Référence', render: (item) => item.reference },
         {
           id: 'validityValue',
           label: 'Validité',

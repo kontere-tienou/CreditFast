@@ -12,4 +12,6 @@ export { ScoreHeroCard } from './ScoreHeroCard';
 export { BarHero, PieHero } from './HeroCharts';
 export { InsightTiles } from './InsightTiles';
 export { PulseTimeline } from './PulseTimeline';
+export { ConfirmAlert } from './ConfirmAlert';
+export type { ConfirmAlertProps, ConfirmAlertTone } from './ConfirmAlert';
 export { callApp, callCharts, callInteractions } from './legacy';

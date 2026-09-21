@@ -8,18 +8,15 @@ type PaginationProps = {
 };
 
 export function PaginationPageMinimalCenter({ page, total, className, onPageChange }: PaginationProps) {
-  const pages = Array.from({ length: Math.max(total, 1) }, (_, index) => index + 1);
-  const visible = pages.length > 7 ? [1, 2, 3, '...', pages.length - 1, pages.length] : pages;
+  const last = Math.max(total, 1);
+  const pages = Array.from({ length: last }, (_, index) => index + 1);
+  const visible =
+    pages.length > 5 ? [1, Math.min(2, last), Math.min(3, last), '...', last].filter((item, index, list) => list.indexOf(item) === index) : pages;
 
   return (
     <nav className={cx('cf-table-pagination', className)} aria-label="Pagination">
-      <button
-        type="button"
-        className="cf-table-page-btn"
-        disabled={page <= 1}
-        onClick={() => onPageChange?.(page - 1)}
-      >
-        Précédent
+      <button type="button" className="cf-table-page-btn" disabled={page <= 1} onClick={() => onPageChange?.(page - 1)} title="Page précédente">
+        <i className="fas fa-chevron-left"></i>
       </button>
       <div className="cf-table-page-list">
         {visible.map((item, index) =>
@@ -39,13 +36,8 @@ export function PaginationPageMinimalCenter({ page, total, className, onPageChan
           ),
         )}
       </div>
-      <button
-        type="button"
-        className="cf-table-page-btn"
-        disabled={page >= total}
-        onClick={() => onPageChange?.(page + 1)}
-      >
-        Suivant
+      <button type="button" className="cf-table-page-btn" disabled={page >= last} onClick={() => onPageChange?.(page + 1)} title="Page suivante">
+        <i className="fas fa-chevron-right"></i>
       </button>
     </nav>
   );

@@ -11,8 +11,8 @@ export function ScheduleDrawer() {
           <i className="fas fa-receipt"></i>
         </div>
         <div>
-          <h3 id="drawer-installment-title" style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>Échéance N° 3 sur 12</h3>
-          <p id="drawer-installment-date" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0 }}>Exigibilité : 05 Septembre 2026</p>
+          <h3 id="drawer-installment-title" style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>Échéance</h3>
+          <p id="drawer-installment-date" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0 }}>—</p>
         </div>
       </div>
       <button type="button" className="modal-close-btn" onClick={() => callApp("closeScheduleDrawer")} title="Fermer le volet">
@@ -28,10 +28,10 @@ export function ScheduleDrawer() {
           Montant Net de la Mensualité
         </div>
         <div id="drawer-hero-amount" style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--primary-700)", fontFamily: "var(--font-family-code)" }}>
-          235 000 FCFA
+          —
         </div>
         <div id="drawer-hero-status" style={{ marginTop: "8px" }}>
-          <span className="badge badge-verification"><i className="fas fa-hourglass-half"></i> À Régler (Échéance Active)</span>
+          <span className="badge badge-submitted">—</span>
         </div>
       </div>
 
@@ -54,7 +54,7 @@ export function ScheduleDrawer() {
               <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "var(--cif-primary-600)" }}></span>
               <span>Capital Principal Amorti</span>
             </span>
-            <strong id="drawer-val-principal" style={{ fontFamily: "var(--font-family-code)" }}>200 195 FCFA</strong>
+            <strong id="drawer-val-principal" style={{ fontFamily: "var(--font-family-code)" }}>—</strong>
           </div>
 
           {/* <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
@@ -75,7 +75,7 @@ export function ScheduleDrawer() {
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "0.25rem" }}>
             <span style={{ color: "var(--text-muted)", fontWeight: 600 }}>Capital Restant Dû après échéance :</span>
-            <strong id="drawer-val-remaining" style={{ color: "var(--primary-800)", fontFamily: "var(--font-family-code)" }}>1 905 343 FCFA</strong>
+            <strong id="drawer-val-remaining" style={{ color: "var(--primary-800)", fontFamily: "var(--font-family-code)" }}>—</strong>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@ export function ScheduleDrawer() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.8rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: "var(--text-muted)" }}>Contrat de Prêt :</span>
-            <span style={{ fontWeight: 600 }}>CF-DKR-8821 (REQ-2025-0412)</span>
+            <span id="drawer-val-contract" style={{ fontWeight: 600 }}>—</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: "var(--text-muted)" }}>Mode de règlement :</span>

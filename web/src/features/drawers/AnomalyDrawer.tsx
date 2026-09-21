@@ -11,8 +11,9 @@ export function AnomalyDrawer() {
             <span id="anom-drawer-sev-badge" className="badge badge-rejected"><i className="fas fa-circle-exclamation mr-1"></i> Critique</span>
             <span id="anom-drawer-status-badge" className="badge badge-verification"><i className="fas fa-clock mr-1"></i> Ouvert</span>
           </div>
-          <h3 id="anom-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.08rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>Validité Temporelle Pièce Proforma</h3>
-          <p id="anom-drawer-subtitle" className="schedule-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0, marginTop: "2px" }}>Contrôle de conformité OCR & Règles Prudentielles</p>
+          <h3 id="anom-drawer-title" className="schedule-drawer-title" style={{ fontSize: "1.08rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>Point de contrôle</h3>
+          <p id="anom-drawer-subtitle" className="schedule-drawer-subtitle" style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0, marginTop: "2px" }}>—</p>
+          <input type="hidden" id="anom-drawer-id" defaultValue="" />
         </div>
         <button type="button" className="modal-close-btn" onClick={() => callApp("closeAnomalyDrawer")} title="Fermer le volet">
           <i className="fas fa-times"></i>
@@ -25,11 +26,11 @@ export function AnomalyDrawer() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.75rem" }}>
             <div>
               <div className="drawer-hero-label" id="anom-drawer-type-label">Type d'Anomalie Détectée</div>
-              <div id="anom-drawer-type-name" style={{ fontSize: "1.15rem", fontWeight: 800, color: "#b91c1c", fontFamily: "var(--font-family-code)" }}>DATE_INCOHERENTE</div>
+              <div id="anom-drawer-type-name" style={{ fontSize: "1.15rem", fontWeight: 800, color: "#b91c1c" }}>—</div>
             </div>
             <div style={{ textAlign: "right" }}>
               <span id="anom-drawer-engine-badge" className="badge" style={{ background: "rgba(27, 67, 50, 0.1)", color: "#1b4332", border: "1px solid rgba(27, 67, 50, 0.3)", fontSize: "0.74rem" }}>
-                <i className="fas fa-microchip mr-1"></i> Moteur OCR Tesseract 
+                <i className="fas fa-clipboard-check mr-1"></i> Contrôle dossier 
               </span>
               <div id="anom-drawer-detected-date" style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "3px" }}>
                 Détecté le 14/08/2026 à 11:12
@@ -69,13 +70,13 @@ export function AnomalyDrawer() {
         <div className="drawer-panel">
           <div className="drawer-panel-header">
             <h4 className="drawer-panel-title"><i className="fas fa-magnifying-glass-chart text-warning mr-1"></i> Rapprochement & Constats</h4>
-            <span id="anom-drawer-category-badge" className="badge badge-submitted">Contrôle OCR</span>
+            <span id="anom-drawer-category-badge" className="badge badge-submitted">Contrôle des pièces</span>
           </div>
           
           <div style={{ marginBottom: "0.75rem" }}>
             <label className="form-label" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Description du Risque Identifié</label>
             <p id="anom-drawer-desc" style={{ background: "var(--bg-surface-secondary)", padding: "0.7rem 0.85rem", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-color)", fontSize: "0.78rem", color: "var(--text-primary)", margin: 0, lineHeight: 1.45 }}>
-              La date extraite par OCR sur la facture d'outillage est antérieure de plus de 18 mois au dépôt du dossier.
+              La lecture automatique a signalé un écart sur cette pièce. Vérifiez le dossier avant de transmettre.
             </p>
           </div>
 
@@ -94,8 +95,8 @@ export function AnomalyDrawer() {
         {/* Section 3 : Pièce Justificative GED Associée */}
         <div className="drawer-panel" id="anom-drawer-doc-panel">
           <div className="drawer-panel-header">
-            <h4 className="drawer-panel-title"><i className="fas fa-file-invoice text-info mr-1"></i> Document & Extraction Numérique</h4>
-            <span id="anom-drawer-doc-ocr-score" className="badge badge-submitted">OCR: 94%</span>
+            <h4 className="drawer-panel-title"><i className="fas fa-file-invoice text-info mr-1"></i> Pièce concernée</h4>
+            <span id="anom-drawer-doc-ocr-score" className="badge badge-submitted">Lecture automatique</span>
           </div>
           <div id="anom-drawer-doc-content" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.6rem 0.75rem", background: "var(--bg-surface-secondary)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-color)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
@@ -143,11 +144,11 @@ export function AnomalyDrawer() {
           <i className="fas fa-times mr-1"></i> Fermer
         </button>
         <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-          <button type="button" className="btn btn-secondary btn-sm" id="anom-drawer-btn-field" onClick={() => callApp("requestFieldCheckFromAnomalyDrawer")} title="Demander une contre-expertise terrain">
-            <i className="fas fa-motorcycle text-warning mr-1"></i> Contre-Expertise Terrain
+          <button type="button" className="btn btn-secondary btn-sm" id="anom-drawer-btn-field" onClick={() => { callApp("closeAnomalyDrawer"); callApp("openAnalystDossierDrawer"); }}>
+            <i className="fas fa-magnifying-glass-chart mr-1"></i> Ouvrir l'analyse
           </button>
           <button type="button" className="btn btn-primary btn-sm" id="anom-drawer-btn-resolve" onClick={() => callApp("resolveAnomalyFromDrawer")}>
-            <i className="fas fa-check mr-1"></i> Lever l'Anomalie
+            <i className="fas fa-check mr-1"></i> Lever le point
           </button>
         </div>
       </div>

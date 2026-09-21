@@ -8,11 +8,12 @@ import {
   ClientAdvisorPage,
   ClientDashboardPage,
   ClientDocumentsPage,
+  ClientProfilePage,
   ClientRequestsPage,
   ClientSchedulePage,
   ClientSimulatorPage,
 } from '@/features/client';
-import { AgentClientsPage, AgentComplementsPage, AgentDashboardPage, AgentInspectionsPage } from '@/features/agent';
+import { AgentClientsPage, AgentComplementsPage, AgentDashboardPage, AgentInspectionsPage, AgentLoansPage } from '@/features/agent';
 import { AnalystAnomaliesPage, AnalystDashboardPage, AnalystDossiersPage, AnalystScoringPage } from '@/features/analyst';
 import { CommitteeDashboardPage, CommitteeDossiersPage, CommitteeSignedPage } from '@/features/committee';
 import { AuditLogsPage } from '@/features/shared/AuditLogsPage';
@@ -20,6 +21,7 @@ import { RequireRole } from '@/app/RequireRole';
 import {
   AdminAuditPage,
   AdminDashboardPage,
+  AdminRolesPage,
   AdminScoringPage,
   AdminUsersPage,
 } from '@/features/admin';
@@ -60,6 +62,7 @@ export function AppRouter() {
           <Route path="client/simulator" element={<ClientSimulatorPage />} />
           <Route path="client/schedule" element={<ClientSchedulePage />} />
           <Route path="client/documents" element={<ClientDocumentsPage />} />
+          <Route path="client/profile" element={<ClientProfilePage />} />
           <Route path="client/advisor" element={<ClientAdvisorPage />} />
         </Route>
         <Route path="client/wizard" element={<LoanWizardRedirect />} />
@@ -68,6 +71,7 @@ export function AppRouter() {
           <Route path="agent/inspections" element={<AgentInspectionsPage />} />
           <Route path="agent/clients" element={<AgentClientsPage />} />
           <Route path="agent/complements" element={<AgentComplementsPage />} />
+          <Route path="agent/loans" element={<AgentLoansPage />} />
         </Route>
         <Route element={<RequireRole allow={['ANALYST']} />}>
           <Route path="analyst" element={<AnalystDashboardPage />} />
@@ -85,6 +89,7 @@ export function AppRouter() {
         <Route element={<RequireRole allow={['ADMIN']} />}>
           <Route path="admin" element={<AdminDashboardPage />} />
           <Route path="admin/users" element={<AdminUsersPage />} />
+          <Route path="admin/roles" element={<AdminRolesPage />} />
           <Route path="admin/scoring" element={<AdminScoringPage />} />
           <Route path="admin/audit" element={<AdminAuditPage />} />
         </Route>

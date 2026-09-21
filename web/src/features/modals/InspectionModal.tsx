@@ -1,3 +1,4 @@
+import { CfSelect } from '@/shared/ui/CfSelect';
 import { callApp } from '@/shared/ui/legacy';
 
 export function InspectionModal() {
@@ -30,8 +31,8 @@ export function InspectionModal() {
       <div style={{ background: "var(--bg-body)", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)", padding: "0.85rem 1rem", marginBottom: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)" }} id="insp-client-name">Fatou Ndiaye • #REQ-2026-0891</div>
-            <div style={{ fontSize: "0.72rem", color: "var(--text-subtle)" }} id="insp-guarantee-type">Stock de Marchandises (Rouleaux Wax)</div>
+            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)" }} id="insp-client-name">—</div>
+            <div style={{ fontSize: "0.72rem", color: "var(--text-subtle)" }} id="insp-guarantee-type">—</div>
           </div>
           <span className="badge badge-warning" id="insp-status-badge">À Visiter</span>
         </div>
@@ -57,20 +58,20 @@ export function InspectionModal() {
       <div className="grid-2" style={{ gap: "1rem", marginBottom: "1rem" }}>
         <div className="form-group">
           <label className="form-label" style={{ fontSize: "0.8rem" }}>État Physique & Conservabilité *</label>
-          <select id="insp-condition" className="form-control">
+          <CfSelect id="insp-condition" className="form-control" defaultValue="BON">
             <option value="EXCELLENT">Excellent état / Neuf ou sous emballage</option>
-            <option value="BON" selected>Bon état / Rotation rapide de stock</option>
+            <option value="BON">Bon état / Rotation rapide de stock</option>
             <option value="MOYEN">État moyen / Vétusté partielle</option>
             <option value="MAUVAIS">Mauvais état / Risque de dépréciation</option>
-          </select>
+          </CfSelect>
         </div>
         <div className="form-group">
           <label className="form-label" style={{ fontSize: "0.8rem" }}>Avis Enquête de Voisinage & Moralité *</label>
-          <select id="insp-reputation" className="form-control">
-            <option value="TRES_FAVORABLE" selected>Très favorable (Bonne notoriété au marché)</option>
+          <CfSelect id="insp-reputation" className="form-control" defaultValue="TRES_FAVORABLE">
+            <option value="TRES_FAVORABLE">Très favorable (Bonne notoriété au marché)</option>
             <option value="FAVORABLE">Favorable (Activité régulière constatée)</option>
             <option value="RESERVE">Réserves (Activité récente ou intermittente)</option>
-          </select>
+          </CfSelect>
         </div>
       </div>
 

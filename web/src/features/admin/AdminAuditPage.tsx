@@ -7,6 +7,42 @@ import { Badge } from '@/components/base/badges/badges';
 import { isApiError } from '@/api';
 import { listAdminAuditLogs, type AuditLog } from '@/api/admin';
 
+function displayAuditValue(value: unknown): string {
+  if (value == null || value === '') {
+    return '—';
+  }
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map(displayAuditValue).filter((part) => part !== '—').join(', ') || '—';
+  }
+  if (typeof value === 'object') {
+    return Object.entries(value as Record<string, unknown>)
+      .map(([key, nested]) => `${key}: ${displayAuditValue(nested)}`)
+      .join(' · ');
+  }
+  return String(value);
+}
+
+function formatAuditWhen(value: unknown): string {
+  const raw = displayAuditValue(value);
+  if (raw === '—') {
+    return raw;
+  }
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) {
+    return raw;
+  }
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
 export function AdminAuditPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,12 +61,12 @@ export function AdminAuditPage() {
       logs.map((log, index) => ({
         ...log,
         id: String(log.id ?? index),
-        actionLabel: log.action || '—',
-        entityLabel: log.entity || log.entity_type || '—',
-        detailLabel: log.details || log.description || '—',
+        actionLabel: displayAuditValue(log.action),
+        entityLabel: displayAuditValue(log.entity || log.entity_type),
+        detailLabel: displayAuditValue(log.details ?? log.description),
         actor: log.user?.full_name || log.user?.email || log.user_name || '—',
-        when: log.created_at || '—',
-        ipLabel: log.ip || log.ip_address || '—',
+        when: formatAuditWhen(log.created_at),
+        ipLabel: displayAuditValue(log.ip || log.ip_address),
       })),
     [logs],
   );
@@ -48,7 +84,7 @@ export function AdminAuditPage() {
             id: 'actionLabel',
             label: 'Action',
             allowsSorting: true,
-            render: (item) => <Badge color="indigo">{item.actionLabel}</Badge>,
+            render: (item) => <Badge color="brand">{item.actionLabel}</Badge>,
           },
           { id: 'actor', label: 'Acteur', render: (item) => item.actor },
           { id: 'entityLabel', label: 'Entité', render: (item) => item.entityLabel },

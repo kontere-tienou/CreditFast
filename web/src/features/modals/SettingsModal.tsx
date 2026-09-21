@@ -1,3 +1,4 @@
+import { CfSelect } from '@/shared/ui/CfSelect';
 import { callApp } from '@/shared/ui/legacy';
 
 export function SettingsModal() {
@@ -44,9 +45,9 @@ export function SettingsModal() {
         <div className="form-row">
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" style={{ fontSize: "0.75rem" }}>Pays / Caisse d'attache</label>
-            <select id="setting-country" className="form-control" onChange={(event) => callApp("updateUserCountry", event.currentTarget.value)}>
-              <option value="ML" selected>Mali (Bamako - Direction Régionale)</option>
-            </select>
+            <CfSelect id="setting-country" className="form-control" defaultValue="ML" onChange={(event) => callApp("updateUserCountry", event.currentTarget.value)}>
+              <option value="ML">Mali (Bamako - Direction Régionale)</option>
+            </CfSelect>
           </div>
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" style={{ fontSize: "0.75rem" }}>Fuseau Horaire</label>
@@ -63,7 +64,7 @@ export function SettingsModal() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
           <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.82rem", cursor: "pointer" }}>
             <input type="checkbox" id="setting-notif-alerts" defaultChecked style={{ accentColor: "var(--primary-500)", width: "16px", height: "16px" }} />
-            <span>Alertes en temps réel sur détection d'anomalies OCR</span>
+            <span>Alertes lorsqu’une pièce n’est pas conforme</span>
           </label>
           <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.82rem", cursor: "pointer" }}>
             <input type="checkbox" id="setting-notif-sound" defaultChecked style={{ accentColor: "var(--primary-500)", width: "16px", height: "16px" }} />

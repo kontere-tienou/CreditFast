@@ -1,8 +1,36 @@
+import { useEffect } from 'react';
+import { CfSelect } from '@/shared/ui/CfSelect';
 import { callApp } from '@/shared/ui/legacy';
+import { getUiSession } from '@/app/session';
+
+function LoanWizardSessionPrefill() {
+  useEffect(() => {
+    const session = getUiSession();
+    const name = document.getElementById('wiz-fullname') as HTMLInputElement | null;
+    const phone = document.getElementById('wiz-phone') as HTMLInputElement | null;
+    if (name && session?.name) {
+      name.value = session.name;
+    }
+    if (phone && session?.phone) {
+      phone.value = session.phone;
+    }
+    const file = document.getElementById('wiz-doc-file') as HTMLInputElement | null;
+    const label = document.getElementById('wiz-doc-file-name');
+    const onFile = () => {
+      if (label) {
+        label.textContent = file?.files?.[0]?.name || 'Aucune pièce sélectionnée';
+      }
+    };
+    file?.addEventListener('change', onFile);
+    return () => file?.removeEventListener('change', onFile);
+  }, []);
+  return null;
+}
 
 export function LoanApplicationModal() {
   return (
     <>
+      <LoanWizardSessionPrefill />
 {/* ====================================================================
      [MODAL] DEMANDE DE FINANCEMENT & CRÉDIT CREDITFAST (PARCOURS EN 6 ÉTAPES)
      Plateforme Régionale CreditFast UEMOA
@@ -90,23 +118,25 @@ export function LoanApplicationModal() {
         <div className="form-row">
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Nom et Prénom *</label>
-            <input type="text" id="wiz-fullname" className="form-control" defaultValue="Fatou Ndiaye" required />
+            <input type="text" id="wiz-fullname" className="form-control" placeholder="Nom et prénom" required />
+            <input type="hidden" id="wiz-draft-id" />
+            <input type="hidden" id="wiz-activity-id" />
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Numéro de Téléphone *</label>
-            <input type="tel" id="wiz-phone" className="form-control" defaultValue="+223 77 54 01 28" required />
+            <input type="tel" id="wiz-phone" className="form-control" placeholder="+223 …" required />
           </div>
         </div>
         <div className="form-row">
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Pays de Résidence</label>
-            <select id="wiz-country" className="form-control">
-              <option value="Mali" selected>Mali (Bamako)</option>
-            </select>
+            <CfSelect id="wiz-country" className="form-control" defaultValue="Mali">
+              <option value="Mali">Mali (Bamako)</option>
+            </CfSelect>
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Ville & Quartier / Zone</label>
-            <input type="text" id="wiz-city" className="form-control" defaultValue="Bamako - Grand Marché" />
+            <input type="text" id="wiz-city" className="form-control" placeholder="Ville, quartier" />
           </div>
         </div>
 
@@ -165,26 +195,27 @@ export function LoanApplicationModal() {
         </h4>
         <div className="form-group">
           <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Secteur d'Activité *</label>
-          <select id="wiz-sector" className="form-control">
-            <option value="Commerce de Tissus & Habillement (Wax/Bazin)" selected>Commerce de Tissus & Habillement
+          <CfSelect id="wiz-sector" className="form-control" defaultValue="">
+            <option value="">Sélectionner un secteur</option>
+            <option value="Commerce de Tissus & Habillement (Wax/Bazin)">Commerce de Tissus & Habillement
               (Wax/Bazin)</option>
             <option value="Artisanat & Menuiserie Bois">Artisanat & Menuiserie Bois</option>
             <option value="Transformation Agroalimentaire">Transformation Agroalimentaire</option>
             <option value="Commerce Général & Demi-Gros">Commerce Général & Demi-Gros</option>
             <option value="Aviculture & Élevage">Aviculture & Élevage</option>
             <option value="BTP & Quincaillerie">BTP & Quincaillerie</option>
-          </select>
+          </CfSelect>
         </div>
         <div className="form-row">
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Ancienneté de votre activité
               (Années)</label>
-            <input type="number" id="wiz-seniority" className="form-control" defaultValue="4" />
+            <input type="number" id="wiz-seniority" className="form-control" min="0" placeholder="0" />
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Emplacement Commercial /
               Boutique</label>
-            <input type="text" id="wiz-location" className="form-control" defaultValue="Grand Marché / Dabanani, Bamako (Mali)" />
+            <input type="text" id="wiz-location" className="form-control" placeholder="Adresse de l’activité" />
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
@@ -202,12 +233,12 @@ export function LoanApplicationModal() {
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Revenu Mensuel Moyen de l'Activité
               (FCFA) *</label>
-            <input type="number" id="wiz-income" className="form-control" defaultValue="850000" />
+            <input type="number" id="wiz-income" className="form-control" min="0" placeholder="0" />
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Dépenses Mensuelles & Ménage (FCFA)
               *</label>
-            <input type="number" id="wiz-expenses" className="form-control" defaultValue="320000" />
+            <input type="number" id="wiz-expenses" className="form-control" min="0" placeholder="0" />
           </div>
         </div>
         <div className="form-row">
@@ -218,7 +249,7 @@ export function LoanApplicationModal() {
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Nombre de personnes à charge</label>
-            <input type="number" id="wiz-dependents" className="form-control" defaultValue="3" />
+            <input type="number" id="wiz-dependents" className="form-control" min="0" placeholder="0" />
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
@@ -235,17 +266,17 @@ export function LoanApplicationModal() {
         <div className="form-row">
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Montant Demandé (FCFA) *</label>
-            <input type="number" id="wiz-amount" className="form-control" defaultValue="2500000" min="100000" step="50000" />
+            <input type="number" id="wiz-amount" className="form-control" min="10000" step="50000" placeholder="10000" />
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Durée Souhaitée (Mois) *</label>
-            <input type="number" id="wiz-duration" className="form-control" defaultValue="12" min="3" max="36" />
+            <input type="number" id="wiz-duration" className="form-control" min="1" max="60" placeholder="12" />
           </div>
         </div>
         <div className="form-group">
           <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Objet précis de votre financement
             *</label>
-          <textarea id="wiz-purpose" className="form-control" rows={2} defaultValue={"Achat de stock conteneur tissus wax et bazin riche pour les commandes de Tabaski"} />
+          <textarea id="wiz-purpose" className="form-control" rows={2} placeholder="Objet du financement" />
         </div>
 
         {/* Live Capacity Simulator Card */}
@@ -255,17 +286,16 @@ export function LoanApplicationModal() {
           </h5>
           <div className="capacity-equation" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
             <div className="capacity-item">
-              <div className="val" id="wiz-calc-disposable" style={{ fontSize: "1.1rem", fontWeight: 800, color: "#1b4332" }}>530
-                000 FCFA</div>
+              <div className="val" id="wiz-calc-disposable" style={{ fontSize: "1.1rem", fontWeight: 800, color: "#1b4332" }}>—</div>
               <div className="lbl" style={{ fontSize: "0.72rem", color: "var(--text-subtle)" }}>Reste à Vivre Disponible</div>
             </div>
             <div className="capacity-op" style={{ fontWeight: 700, color: "var(--text-subtle)" }}>vs</div>
             <div className="capacity-item">
-              <div className="val" id="wiz-calc-installment" style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--primary-700)" }}>235 000 FCFA</div>
+              <div className="val" id="wiz-calc-installment" style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--primary-700)" }}>—</div>
               <div className="lbl" style={{ fontSize: "0.72rem", color: "var(--text-subtle)" }}>Mensualité Estimée</div>
             </div>
             <div className="capacity-item">
-              <span id="wiz-calc-status" className="badge badge-capacity-sufficient" style={{ fontSize: "0.76rem", padding: "6px 12px" }}>Capacité Suffisante</span>
+              <span id="wiz-calc-status" className="badge" style={{ fontSize: "0.76rem", padding: "6px 12px" }}>À calculer</span>
             </div>
           </div>
         </div>
@@ -283,22 +313,24 @@ export function LoanApplicationModal() {
         </h4>
         <div className="form-group">
           <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Type de Garantie Proposée</label>
-          <select id="wiz-guarantee-type" className="form-control">
-            <option value="STOCK_MARCHANDISE" selected>Stock de marchandise / Tissus & Devis</option>
-            <option value="CAUTION_SOLIDAIRE">Caution solidaire d'un commerçant / artisan</option>
-            <option value="EQUIPEMENT_MATERIEL">Équipement professionnel / Matériel</option>
-            <option value="PARCELLE_TERRAIN">Titre foncier / Attestation d'attribution</option>
-          </select>
+          <CfSelect id="wiz-guarantee-type" className="form-control" defaultValue="">
+            <option value="">Choisissez une garantie (obligatoire)</option>
+            <option value="BOUTIQUE">Boutique / stock / fonds de commerce</option>
+            <option value="MATERIEL">Matériel ou équipement</option>
+            <option value="CAUTION">Caution d’une personne</option>
+            <option value="FONCIER">Terrain ou immeuble</option>
+            <option value="EPARGNE">Épargne nantie</option>
+          </CfSelect>
         </div>
         <div className="form-row">
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Valeur Estimée de la Garantie
               (FCFA)</label>
-            <input type="number" id="wiz-guarantee-val" className="form-control" defaultValue="3200000" />
+            <input type="number" id="wiz-guarantee-val" className="form-control" min="0" placeholder="0" />
           </div>
           <div className="form-group">
             <label className="form-label" style={{ fontSize: "0.8rem", fontWeight: 600 }}>Description de la garantie</label>
-            <input type="text" id="wiz-guarantee-desc" className="form-control" defaultValue="Stock tissus wax et factures proforma certifiées Bamako" />
+            <input type="text" id="wiz-guarantee-desc" className="form-control" placeholder="Ex. moto, stock de tissus, caution d’un parent…" />
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
@@ -308,11 +340,14 @@ export function LoanApplicationModal() {
         </div>
       </div>
 
-      {/* Step 6: Justificatifs & OCR */}
+      {/* Step 6: Justificatifs */}
       <div id="modal-wizard-step-6" className="modal-wizard-step-content" style={{ display: "none" }}>
         <h4 style={{ marginBottom: "1.25rem", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)" }}>
-          <i className="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des Justificatifs & Signature
+          <i className="fas fa-file-arrow-up text-primary mr-2"></i> Étape 6 : Dépôt des justificatifs
         </h4>
+        <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "-0.5rem", marginBottom: "1rem" }}>
+          Après envoi, le système lit chaque pièce. L’agent confirme ensuite la conformité.
+        </p>
 
         <div className="grid-2" style={{ gap: "1rem", marginBottom: "1.25rem" }}>
           {/* Option A: Scanner via Caméra QR Code */}
@@ -326,7 +361,7 @@ export function LoanApplicationModal() {
                 Scannez le QR Code officiel de votre devis normalisé, facture DGI ou reçu.
               </p>
             </div>
-            <button type="button" className="btn btn-primary btn-sm" onClick={() => callApp("openQrScannerModal", 'document')} style={{ width: "100%", justifyContent: "center" }}>
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => callApp("showToast", 'Joignez plutôt un fichier PDF ou photo. Le scan n’est pas requis pour envoyer.', 'info')} style={{ width: "100%", justifyContent: "center" }}>
               <i className="fas fa-qrcode mr-2"></i> Lancer la Caméra & Scanner QR
             </button>
           </div>
@@ -340,12 +375,22 @@ export function LoanApplicationModal() {
               <h5 style={{ marginBottom: "0.25rem", fontSize: "0.9rem", fontWeight: 700 }}>Joindre un Fichier (PDF / Photo)
               </h5>
               <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.75rem" }}>
-                Format PDF, JPEG ou PNG .
+                Facture, quittance, contrat de bail ou justificatif de revenu (PDF, JPEG ou PNG).
               </p>
             </div>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={() => callApp("showToast", 'Document joint avec succès (Devis_Fournisseur_bko.pdf)', 'success')} style={{ width: "100%", justifyContent: "center" }}>
+            <CfSelect id="wiz-doc-type" className="form-control" defaultValue="PREUVE_REVENU" style={{ marginBottom: "0.65rem" }}>
+              <option value="PREUVE_REVENU">Justificatif de revenu</option>
+              <option value="JUSTIFICATIF_DOMICILE">Justificatif de domicile</option>
+              <option value="FACTURE_ELECTRICITE">Facture d’électricité</option>
+              <option value="CONTRAT_BAIL">Contrat de bail</option>
+              <option value="RELEVE_BANCAIRE">Relevé</option>
+              <option value="CNI">Pièce d’identité</option>
+            </CfSelect>
+          <button type="button" className="btn btn-secondary btn-sm" onClick={() => document.getElementById('wiz-doc-file')?.click()} style={{ width: "100%", justifyContent: "center" }}>
               <i className="fas fa-folder-open mr-2"></i> Parcourir Fichiers...
             </button>
+            <input type="file" id="wiz-doc-file" accept=".pdf,.jpg,.jpeg,.png" style={{ display: "none" }} />
+            <p id="wiz-doc-file-name" style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0.5rem 0 0" }}>Aucune pièce sélectionnée</p>
           </div>
         </div>
 
@@ -372,6 +417,9 @@ export function LoanApplicationModal() {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem", borderTop: "1px solid var(--border-color)", paddingTop: "1rem" }}>
           <button type="button" className="btn btn-secondary" onClick={() => callApp("setModalWizardStep", 5)}><i className="fas fa-arrow-left mr-1"></i> Précédent</button>
+          <button type="button" className="btn btn-secondary" onClick={() => callApp("saveDraftCreditRequest")}>
+            <i className="fas fa-floppy-disk mr-1"></i> Enregistrer le brouillon
+          </button>
           <button type="button" id="modal-loan-app-submit-btn" className="btn btn-success btn-lg" onClick={() => callApp("submitNewCreditRequest")}>
             <i className="fas fa-paper-plane mr-2"></i> Confirmer & Soumettre ma Demande
           </button>

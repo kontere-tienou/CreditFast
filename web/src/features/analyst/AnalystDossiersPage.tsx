@@ -1,18 +1,31 @@
+import { useState } from 'react';
 import { Screen } from '@/shared/ui/Screen';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { Button } from '@/shared/ui/Button';
-import { callInteractions } from '@/shared/ui/legacy';
-import { AnalystDossiersTable } from '@/shared/tables/registry';
+import { callApp } from '@/shared/ui/legacy';
+import { CreditWorkflowBoard } from '@/features/workflow/CreditWorkflowBoard';
+import { useAnalystWorkspace } from './useAnalystWorkspace';
+
+const FILTERS = [
+  { id: 'ALL', label: 'Tous les dossiers' },
+  { id: 'ANALYSIS', label: 'En analyse' },
+  { id: 'VERIFICATION_REQUIRED', label: 'Compléments demandés' },
+  { id: 'COMMITTEE', label: 'Chez le comité' },
+  { id: 'APPROVED', label: 'Approuvés' },
+] as const;
 
 export function AnalystDossiersPage() {
+  const { reload, loading } = useAnalystWorkspace();
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]['id']>('ALL');
+
   return (
     <Screen viewId="view-analyst-dossiers">
       <PageHeader
-        title="Dossiers à Instruire • Espace Analyste"
-        crumbs={['Analyse Risque', 'Instruction & Risque']}
+        title="Dossiers à instruire"
+        crumbs={['Espace analyste', 'Instruction']}
         actions={
-          <Button variant="secondary" className="btn-sm" onClick={() => callInteractions('renderRequestsTable', 'ALL')}>
-            <i className="fas fa-rotate mr-1"></i> Actualiser
+          <Button variant="secondary" className="btn-sm" onClick={() => void reload()} disabled={loading}>
+            <i className={`fas ${loading ? 'fa-circle-notch fa-spin' : 'fa-rotate'} mr-1`}></i> Actualiser
           </Button>
         }
       />
@@ -30,48 +43,29 @@ export function AnalystDossiersPage() {
           }}
         >
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              id="btn-filter-all"
-              onClick={(event) => callInteractions('renderRequestsTable', 'ALL', '', event.currentTarget)}
-            >
-              Tous les dossiers
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              id="btn-filter-coldstart"
-              onClick={(event) => callInteractions('renderRequestsTable', 'COLD_START', '', event.currentTarget)}
-              style={{ borderColor: '#518e45', color: '#1b4332', background: '#eef4ee' }}
-            >
-              <i className="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={(event) => callInteractions('renderRequestsTable', 'ANALYSIS', '', event.currentTarget)}>
-              En Analyse
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={(event) => callInteractions('renderRequestsTable', 'VERIFICATION_REQUIRED', '', event.currentTarget)}
-            >
-              Vérif. Requise
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={(event) => callInteractions('renderRequestsTable', 'COMMITTEE', '', event.currentTarget)}>
-              En Comité
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={(event) => callInteractions('renderRequestsTable', 'APPROVED', '', event.currentTarget)}>
-              Approuvés
-            </button>
+            {FILTERS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`btn btn-sm ${filter === item.id ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => setFilter(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)' }}>
-            <i className="fas fa-info-circle text-primary mr-1"></i> Cliquez sur une ligne ou sur <strong>Détails 360°</strong> pour ouvrir le volet
-            d&apos;instruction latérale.
+            Ouvrez un dossier pour consulter le score, les pièces et donner votre avis au comité.
           </div>
         </div>
       </div>
 
-      <AnalystDossiersTable />
+      <CreditWorkflowBoard
+        source="analyst"
+        heading="Liste des dossiers"
+        statusFilter={filter}
+        onOpen={(id) => callApp('openAnalystDossierDrawer', id)}
+      />
     </Screen>
   );
 }

@@ -4,7 +4,6 @@ import { AppointmentModal } from './AppointmentModal';
 import { PaymentModal } from './PaymentModal';
 import { CommitteeOverlays } from './CommitteeOverlays';
 import { DocLightboxModal } from './DocLightboxModal';
-import { EditProfileModal } from './EditProfileModal';
 import { QrScannerModal } from './QrScannerModal';
 import { SettingsModal } from './SettingsModal';
 import { SuccessAnimationModal } from './SuccessAnimationModal';
@@ -20,7 +19,6 @@ export function LegacyDialogs() {
       <PaymentModal />
       <CommitteeOverlays />
       <DocLightboxModal />
-      <EditProfileModal />
       <QrScannerModal />
       <SettingsModal />
       <SuccessAnimationModal />

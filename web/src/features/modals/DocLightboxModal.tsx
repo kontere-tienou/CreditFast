@@ -17,14 +17,14 @@ export function DocLightboxModal() {
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h4 style={{ fontSize: "0.95rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }} id="doc-lightbox-title">
-              Facture Proforma Stock Wax Assigamé
+              Pièce
             </h4>
-            <span className="badge badge-approved" id="doc-lightbox-badge" style={{ fontSize: "0.68rem" }}>
-              <i className="fas fa-check-circle"></i> OCR Validé 100%
+            <span className="badge badge-submitted" id="doc-lightbox-badge" style={{ fontSize: "0.68rem" }}>
+              Contrôle des pièces
             </span>
           </div>
           <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }} id="doc-lightbox-meta">
-            PDF • 1.4 Mo • Horodaté le 11/08/2026 à 10:15
+            —
           </span>
         </div>
       </div>
@@ -74,35 +74,26 @@ export function DocLightboxModal() {
       <div className="doc-lightbox-sidebar">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.85rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.65rem" }}>
           <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-            <i className="fas fa-brain text-primary"></i> Moteur IA & OCR CIF
+            <i className="fas fa-magnifying-glass text-primary"></i> Lecture automatique
           </div>
-          <span className="badge badge-client" style={{ fontSize: "0.68rem" }} id="doc-lightbox-conf-score">99.8% Confiance</span>
+          <span className="badge badge-client" style={{ fontSize: "0.68rem" }} id="doc-lightbox-conf-score">Lecture</span>
         </div>
 
         <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: "1rem" }}>
-          Toutes les données textuelles et métadonnées ont été extraites par Reconnaissance Optique de Caractères conforme UEMOA.
+          Le système relève les informations visibles sur la pièce. Un agent confirme ensuite la conformité.
         </p>
 
         {/* Dynamic Extracted Fields Container */}
-        <div id="doc-lightbox-fields-list" style={{ marginBottom: "1.25rem" }}>
-          {/* Items injected dynamically */}
-        </div>
+        <div id="doc-lightbox-fields-list" style={{ marginBottom: "1.25rem" }} />
 
-        {/* Compliance & Fraud Checks */}
+        <div id="doc-lightbox-actions" style={{ marginBottom: "1rem" }} />
+
         <div style={{ marginTop: "auto", background: "var(--bg-body)", borderRadius: "var(--radius-md)", padding: "0.75rem", border: "1px solid var(--border-color)" }}>
           <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.4rem", textTransform: "uppercase" }}>
-            <i className="fas fa-shield-halved text-emerald mr-1"></i> Contrôles de Conformité
+            <i className="fas fa-shield-halved text-emerald mr-1"></i> Contrôle
           </div>
-          <div style={{ fontSize: "0.7rem", color: "var(--text-subtle)", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-              <i className="fas fa-check text-emerald"></i> Format conforme UEMOA
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-              <i className="fas fa-check text-emerald"></i> Signature et cachet reconnus
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-              <i className="fas fa-check text-emerald"></i> Intégrité du fichier certifiée SHA-256
-            </div>
+          <div id="doc-lightbox-checks" style={{ fontSize: "0.7rem", color: "var(--text-subtle)", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            <div>En attente de lecture</div>
           </div>
         </div>
       </div>

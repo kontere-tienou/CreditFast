@@ -10,6 +10,8 @@ export type UiSession = {
   token: string;
   name?: string;
   userId?: string;
+  email?: string;
+  phone?: string;
 };
 
 function readStoredSession(storage: Storage): UiSession | null {
@@ -29,6 +31,8 @@ function readStoredSession(storage: Storage): UiSession | null {
       token: parsed.token,
       name: parsed.name,
       userId: parsed.userId,
+      email: parsed.email,
+      phone: parsed.phone,
     };
   } catch {
     return null;
@@ -51,6 +55,15 @@ export function setUiSession(session: UiSession, persist = false): void {
     return;
   }
   window.localStorage.removeItem(SESSION_KEY);
+}
+
+export function patchUiSession(patch: Partial<UiSession>): void {
+  const current = getUiSession();
+  if (!current) {
+    return;
+  }
+  const persist = Boolean(window.localStorage.getItem(SESSION_KEY));
+  setUiSession({ ...current, ...patch }, persist);
 }
 
 export function clearUiSession(): void {

@@ -91,9 +91,9 @@
       </div>
 
       <!-- Cold Start Mode Toggle in Simulator -->
-      <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div style="background: rgba(81, 142, 69, 0.06); border: 1px solid rgba(81, 142, 69, 0.25); border-radius: var(--radius-md); padding: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <div style="width: 32px; height: 32px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: #518e45; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">
             <i class="fas fa-seedling"></i>
           </div>
           <div>
@@ -103,7 +103,7 @@
         </div>
         <label class="toggle-switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
           <input type="checkbox" id="sim-cold-start-toggle" onchange="App.updateClientSimulation()" checked style="opacity: 0; width: 0; height: 0;">
-          <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #10b981; transition: .3s; border-radius: 24px;"></span>
+          <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #518e45; transition: .3s; border-radius: 24px;"></span>
         </label>
       </div>
     </div>
@@ -168,24 +168,24 @@
             <div style="flex: 1; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.75rem;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #0284c7; display: inline-block;"></span>
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #1b4332; display: inline-block;"></span>
                   Capital (<span id="sim-pie-capital-pct">92%</span>)
                 </span>
                 <strong style="color: var(--text-primary); font-family: var(--font-family-code);" id="sim-pie-capital-val">2 500 000 F</strong>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff9800; display: inline-block;"></span>
                   Intérêts (<span id="sim-pie-interest-pct">6%</span>)
                 </span>
-                <strong style="color: #d97706; font-family: var(--font-family-code);" id="sim-pie-interest-val">167 000 F</strong>
+                <strong style="color: #ff9800; font-family: var(--font-family-code);" id="sim-pie-interest-val">167 000 F</strong>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted);">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #518e45; display: inline-block;"></span>
                   Assurance & Frais (<span id="sim-pie-fees-pct">2%</span>)
                 </span>
-                <strong style="color: #059669; font-family: var(--font-family-code);" id="sim-pie-fees-val">37 500 F</strong>
+                <strong style="color: #518e45; font-family: var(--font-family-code);" id="sim-pie-fees-val">37 500 F</strong>
               </div>
             </div>
           </div>
@@ -195,14 +195,14 @@
         <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
           <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.78rem;">
             <span>Taux d'Endettement Projeté :</span>
-            <strong id="sim-ratio-output" style="color: #047857;">26.1% (Norme UEMOA ≤ 33%)</strong>
+            <strong id="sim-ratio-output" style="color: #1b4332;">26.1% (Norme UEMOA ≤ 33%)</strong>
           </div> -->
           <div style="width: 100%; height: 8px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 0.5rem;">
-            <div id="sim-ratio-bar" style="width: 26.1%; height: 100%; background: #10b981; border-radius: var(--radius-full); transition: width 0.3s ease;"></div>
+            <div id="sim-ratio-bar" style="width: 26.1%; height: 100%; background: #518e45; border-radius: var(--radius-full); transition: width 0.3s ease;"></div>
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--text-muted);">
             <span>Reste à Vivre Estimé :</span>
-            <strong id="sim-rest-to-live-output" style="color: #047857; font-family: var(--font-family-code);">447 750 FCFA / mois</strong>
+            <strong id="sim-rest-to-live-output" style="color: #1b4332; font-family: var(--font-family-code);">447 750 FCFA / mois</strong>
           </div>
         </div>
       </div>

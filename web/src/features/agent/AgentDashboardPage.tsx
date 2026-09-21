@@ -1,141 +1,149 @@
 import { Screen } from '@/shared/ui/Screen';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { StatCard } from '@/shared/ui/StatCard';
-import { KpiHeroGrid } from '@/shared/ui/KpiHeroGrid';
-import { PulseTimeline } from '@/shared/ui/PulseTimeline';
-import { ScoreHeroCard } from '@/shared/ui/ScoreHeroCard';
 import { Button } from '@/shared/ui/Button';
 import { callApp } from '@/shared/ui/legacy';
-import { AgentPipelineTable } from '@/shared/tables/registry';
+import { CreditWorkflowBoard } from '@/features/workflow/CreditWorkflowBoard';
+import { useAgentWorkspace } from './useAgentWorkspace';
+
+function lastSevenDayCounts(dates: Array<string | null | undefined>) {
+  const buckets = Array.from({ length: 7 }, () => 0);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  dates.forEach((value) => {
+    if (!value) {
+      return;
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return;
+    }
+    date.setHours(0, 0, 0, 0);
+    const diff = Math.round((now.getTime() - date.getTime()) / 86400000);
+    if (diff >= 0 && diff < 7) {
+      buckets[6 - diff] += 1;
+    }
+  });
+  return buckets;
+}
+
+function ActivitySparkline({ values }: { values: number[] }) {
+  const width = 130;
+  const height = 38;
+  const max = Math.max(...values, 1);
+  const step = values.length > 1 ? width / (values.length - 1) : width;
+  const points = values.map((value, index) => {
+    const x = index * step;
+    const y = height - 4 - (value / max) * (height - 8);
+    return `${x},${y}`;
+  });
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      <polyline fill="none" stroke="#5b4bdb" strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" points={points.join(' ')} />
+      {values.map((value, index) => {
+        const x = index * step;
+        const y = height - 4 - (value / max) * (height - 8);
+        return <circle key={index} cx={x} cy={y} r={index === values.length - 1 ? 3.2 : 0} fill="#5b4bdb" />;
+      })}
+    </svg>
+  );
+}
 
 export function AgentDashboardPage() {
+  const { items, complements, pendingGuarantees, clients } = useAgentWorkspace();
+  const atCounter = items.filter((row) => {
+    const status = (row.status || '').toUpperCase();
+    return !['ANALYSIS', 'IN_ANALYSIS', 'PENDING_ANALYSIS', 'COMMITTEE', 'PENDING_COMMITTEE', 'APPROVED', 'REJECTED', 'AMENDED'].includes(status);
+  });
+  const verifiedKyc = clients.filter((row) => (row.kyc_status || '').toUpperCase() === 'VERIFIED').length;
+  const kycShare = clients.length ? Math.round((verifiedKyc / clients.length) * 100) : 0;
+  const weekBuckets = lastSevenDayCounts(items.map((row) => row.submitted_at || row.created_at));
+  const weekTotal = weekBuckets.reduce((sum, value) => sum + value, 0);
+
   return (
     <Screen viewId="view-role-agent">
       <PageHeader
         title="Espace Agent de Crédit • Portefeuille & Instruction"
-        crumbs={['Opérations Guichet', 'Agence Nyèsigiso Grand Marché (Bamako, Mali • CreditFast)']}
+        crumbs={['Opérations Guichet', 'File agent • CreditFast']}
         extra={
-          <div className="header-sparkline-widget" id="agent-activity-widget" title="Rythme de soumission des demandes sur les 7 derniers jours">
+          <div className="header-sparkline-widget" title="Dossiers déposés sur les 7 derniers jours">
             <div className="sparkline-meta">
               <div className="sparkline-title">
                 <i className="fas fa-chart-line text-primary"></i>
-                <span>Tendance d&apos;Activité</span>
+                <span>Tendance d'activité</span>
               </div>
               <div className="sparkline-stat">
-                <span className="sparkline-val">23</span>
+                <span className="sparkline-val">{weekTotal}</span>
                 <span className="sparkline-sub">dossiers / 7j</span>
-                <span className="sparkline-trend">
-                  <i className="fas fa-arrow-trend-up"></i> +18%
-                </span>
               </div>
             </div>
             <div className="sparkline-canvas-container">
-              <canvas id="agent-activity-sparkline"></canvas>
+              <ActivitySparkline values={weekBuckets} />
             </div>
           </div>
         }
         actions={
-          <Button onClick={() => callApp('openNewLoanModal')} title="Enregistrer une nouvelle demande de crédit pour un emprunteur">
+          <Button onClick={() => callApp('openNewLoanModal')} title="Enregistrer une nouvelle demande de crédit">
             <i className="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
           </Button>
         }
       />
 
-      <KpiHeroGrid>
-        <ScoreHeroCard
-          chart="bar"
-          label="Charge du guichet"
-          bars={[
-            { label: 'Guichet', value: 42, color: '#1b4332' },
-            { label: 'Inspections', value: 8, color: '#f1ca30' },
-            { label: 'Pièces', value: 12, color: '#c2410c' },
-          ]}
-          trend={
-            <>
-              <i className="fas fa-arrow-up"></i> Semaine en cours
-            </>
-          }
-        />
+      <div className="grid-4">
         <StatCard
           tone="primary"
           icon="fa-inbox"
-          value="42"
+          value={String(items.length)}
           label="Dossiers au Guichet"
           onClick={() => callApp('switchView', 'view-role-agent')}
-          title="Voir tous les dossiers de financement"
           trend={
             <>
-              <i className="fas fa-arrow-up"></i> +8 cette semaine
+              <i className="fas fa-arrow-up"></i> {atCounter.length} à instruire
             </>
           }
         />
         <StatCard
           tone="amber"
           icon="fa-clipboard-check"
-          value="8"
+          value={String(pendingGuarantees.length)}
           label="Pré-inspections Garanties"
-          trendUp={false}
           onClick={() => callApp('switchView', 'view-agent-inspections')}
-          title="Accéder aux inspections garanties terrain"
           trend={
             <>
               <i className="fas fa-motorcycle"></i> À visiter sur le terrain
             </>
           }
+          trendUp={false}
         />
         <StatCard
           tone="rose"
           icon="fa-triangle-exclamation"
-          value="12"
+          value={String(complements.length)}
           label="Pièces Manquantes"
-          trendUp={false}
           onClick={() => callApp('switchView', 'view-agent-complements')}
-          title="Accéder aux pièces manquantes et relances"
           trend={
             <>
               <i className="fas fa-phone"></i> Relances nécessaires
             </>
           }
+          trendUp={false}
         />
-      </KpiHeroGrid>
+        <StatCard
+          tone="emerald"
+          icon="fa-users"
+          value={`${kycShare}%`}
+          label="Portefeuille Sociétaires"
+          onClick={() => callApp('switchView', 'view-agent-clients')}
+          trend={
+            <>
+              <i className="fas fa-check"></i> {clients.length} membres actifs
+            </>
+          }
+        />
+      </div>
 
-      <PulseTimeline
-        title="Rythme d’instruction · 7 jours"
-        steps={[
-          { title: 'Collecte', meta: 'Guichet', state: 'done' },
-          { title: 'OCR', meta: 'Pièces', state: 'done' },
-          { title: 'Terrain', meta: '3 visites', state: 'active' },
-          { title: 'Relance', meta: '12 dossiers', state: 'todo' },
-          { title: 'Analyse', meta: 'Transmission', state: 'todo' },
-          { title: 'Comité', meta: 'Calé', state: 'todo' },
-          { title: 'PV', meta: 'Suivi', state: 'todo' },
-        ]}
-      />
-
-      <div className="card" style={{ marginTop: '1.25rem' }}>
-        <div className="card-header" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-          <div>
-            <h3 className="card-title">
-              <i className="fas fa-file-invoice-dollar text-primary mr-1"></i> Registre des Demandes de Financement
-            </h3>
-            <p className="card-subtitle">Instruction Guichet & Terrain • Cliquez sur une ligne pour ouvrir la fiche détaillée du dossier</p>
-          </div>
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            <button type="button" id="filter-agent-all" className="btn btn-secondary btn-sm active" onClick={(event) => callApp('filterAgentPipeline', 'ALL', event.currentTarget)}>
-              Toutes (<span id="agent-filter-count-all">0</span>)
-            </button>
-            <button type="button" id="filter-agent-submitted" className="btn btn-secondary btn-sm" onClick={(event) => callApp('filterAgentPipeline', 'SUBMITTED', event.currentTarget)}>
-              <i className="fas fa-inbox text-primary"></i> Soumises (<span id="agent-filter-count-submitted">0</span>)
-            </button>
-            <button type="button" id="filter-agent-review" className="btn btn-secondary btn-sm" onClick={(event) => callApp('filterAgentPipeline', 'REVIEW', event.currentTarget)}>
-              <i className="fas fa-hourglass-half text-warning"></i> En Vérification (<span id="agent-filter-count-review">0</span>)
-            </button>
-            <button type="button" id="filter-agent-approved" className="btn btn-secondary btn-sm" onClick={(event) => callApp('filterAgentPipeline', 'APPROVED', event.currentTarget)}>
-              <i className="fas fa-circle-check text-success"></i> Comité / Accordées (<span id="agent-filter-count-approved">0</span>)
-            </button>
-          </div>
-        </div>
-        <AgentPipelineTable />
+      <div className="card" style={{ marginTop: '1.25rem', padding: '1rem 1.15rem 1.15rem' }}>
+        <CreditWorkflowBoard source="agent" heading="File guichet" onOpen={(id) => callApp('openAgentDrawer', id)} />
       </div>
     </Screen>
   );

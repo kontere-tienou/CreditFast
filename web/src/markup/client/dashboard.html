@@ -6,7 +6,7 @@
   <div id="borrower-offline-alert" class="card" style="display: none; background: #fffbeb; border: 1px solid #fde68a; padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
       <div style="display: flex; align-items: center; gap: 0.65rem;">
-        <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #ff9800; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
           <i class="fas fa-shield-heart"></i>
         </div>
         <div>
@@ -23,7 +23,7 @@
   <!-- Borrower Welcome Banner -->
   <div class="borrower-welcome-banner">
     <div>
-      <span class="badge badge-client" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); margin-bottom: 0.5rem;">
+      <span class="badge badge-client" style="background: rgba(81, 142, 69, 0.2); color: #518e45; border: 1px solid rgba(81, 142, 69, 0.4); margin-bottom: 0.5rem;">
         <i class="fas fa-star mr-1"></i> Mon Espace Financement & Projet
       </span>
       <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem; color: white;">
@@ -60,7 +60,7 @@
       <div>
         <div style="font-size: 0.74rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Mon Prochain Règlement</div>
         <div style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-code); color: var(--cif-gold-700);">235 000 FCFA</div>
-        <div style="font-size: 0.72rem; color: var(--text-subtle);">À régler le 05/09/2026 • <span style="color: #10b981; font-weight: 600;">0 retard, bravo !</span></div>
+        <div style="font-size: 0.72rem; color: var(--text-subtle);">À régler le 05/09/2026 • <span style="color: #518e45; font-weight: 600;">0 retard, bravo !</span></div>
       </div>
     </div>
 
@@ -122,9 +122,9 @@
       </div>
 
       <div class="anomaly-item info" style="margin-top: 1.25rem;">
-        <i class="fas fa-comment-sparkles anomaly-icon" style="color: #0ea5e9;"></i>
+        <i class="fas fa-comment-sparkles anomaly-icon" style="color: #1b4332;"></i>
         <div class="anomaly-content">
-          <h5 style="color: #0369a1; font-weight: 700;">Le mot encourageant de votre agence CreditFast :</h5>
+          <h5 style="color: #0d2818; font-weight: 700;">Le mot encourageant de votre agence CreditFast :</h5>
           <p style="color: #0c4a6e; font-size: 0.84rem; line-height: 1.5;">
             Excellente nouvelle ! Tous vos justificatifs ont été validés avec succès. Votre projet avance très bien et est programmé pour validation finale afin de déclencher rapidement la mise à disposition de vos fonds.
           </p>
@@ -220,7 +220,7 @@
       <!-- Output Calculation Box with Interactive Pie Chart & Monthly Breakdown -->
       <div class="compact-output-box">
         <!-- Monthly Payment Big Highlight -->
-        <div class="compact-monthly-highlight" style="background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%); padding: 0.85rem; border-radius: var(--radius-md);">
+        <div class="compact-monthly-highlight" style="background: linear-gradient(180deg, rgba(81, 142, 69, 0.08) 0%, transparent 100%); padding: 0.85rem; border-radius: var(--radius-md);">
           <div class="compact-monthly-label" style="color: var(--primary-700); font-weight: 700;">Mensualité Tout Compris Estimée</div>
           <div class="compact-monthly-amount" id="compact-est-monthly-val" style="font-size: 1.85rem; color: var(--cif-emerald-600); margin: 0.25rem 0;">235 000 FCFA</div>
           <div style="font-size: 0.74rem; color: var(--cif-emerald-600); font-weight: 600;">
@@ -232,15 +232,15 @@
         <div class="compact-breakdown-grid">
           <div>
             <div class="compact-breakdown-label">Part Capital / mois</div>
-            <div id="compact-est-monthly-principal" class="compact-breakdown-val" style="color: #0284c7;">208 333 F</div>
+            <div id="compact-est-monthly-principal" class="compact-breakdown-val" style="color: #1b4332;">208 333 F</div>
           </div>
           <div>
             <div class="compact-breakdown-label">Intérêt Moyen / mois</div>
-            <div id="compact-est-monthly-interest" class="compact-breakdown-val" style="color: #d97706;">24 167 F</div>
+            <div id="compact-est-monthly-interest" class="compact-breakdown-val" style="color: #ff9800;">24 167 F</div>
           </div>
           <div>
             <div class="compact-breakdown-label">Assurance / mois</div>
-            <div id="compact-est-monthly-insurance" class="compact-breakdown-val" style="color: #059669;">2 500 F</div>
+            <div id="compact-est-monthly-insurance" class="compact-breakdown-val" style="color: #518e45;">2 500 F</div>
           </div>
         </div>
 
@@ -254,16 +254,16 @@
           </div>
           <div class="compact-pie-legend">
             <div class="compact-pie-row">
-              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #0284c7;"></span> Capital Prêté (<span id="compact-pie-pct-capital">88%</span>)</span>
+              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #1b4332;"></span> Capital Prêté (<span id="compact-pie-pct-capital">88%</span>)</span>
               <strong id="compact-pie-val-capital">2 500 000 F</strong>
             </div>
             <div class="compact-pie-row">
-              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #f59e0b;"></span> Total Intérêts (<span id="compact-pie-pct-interest">11%</span>)</span>
-              <strong id="compact-pie-val-interest" style="color: #d97706;">290 000 F</strong>
+              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #ff9800;"></span> Total Intérêts (<span id="compact-pie-pct-interest">11%</span>)</span>
+              <strong id="compact-pie-val-interest" style="color: #ff9800;">290 000 F</strong>
             </div>
             <div class="compact-pie-row">
-              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #10b981;"></span> Assurance & Frais (<span id="compact-pie-pct-fees">1%</span>)</span>
-              <strong id="compact-pie-val-fees" style="color: #059669;">30 000 F</strong>
+              <span class="compact-pie-key"><span class="compact-pie-dot" style="background: #518e45;"></span> Assurance & Frais (<span id="compact-pie-pct-fees">1%</span>)</span>
+              <strong id="compact-pie-val-fees" style="color: #518e45;">30 000 F</strong>
             </div>
           </div>
         </div>
@@ -272,7 +272,7 @@
         <div class="compact-stats-row" style="margin-bottom: 0.75rem;">
           <div class="compact-stat-item" style="background: var(--bg-body); padding: 0.5rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
             <span class="compact-stat-label">Total Intérêts Cumulés :</span>
-            <span class="compact-stat-val" id="compact-est-total-interest" style="color: #d97706; font-size: 0.95rem;">290 000 FCFA</span>
+            <span class="compact-stat-val" id="compact-est-total-interest" style="color: #ff9800; font-size: 0.95rem;">290 000 FCFA</span>
           </div>
           <div class="compact-stat-item" style="background: var(--bg-body); padding: 0.5rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
             <span class="compact-stat-label">Montant Total à Rembourser :</span>

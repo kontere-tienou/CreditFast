@@ -10,7 +10,7 @@ export function ClientSimulatorPage() {
           <h2 className="page-title">
             <i className="fas fa-calculator text-primary mr-2"></i> Simulateur de Crédit & Capacité d&apos;Emprunt
           </h2>
-          <p className="page-subtitle">Estimez vos mensualités, vérifiez votre taux d&apos;endettement et simulez votre reste à vivre en direct</p>
+          <p className="page-subtitle">Estimez vos mensualités et votre reste à vivre, puis déposez la demande avec ces montants</p>
         </div>
         <div className="page-actions">
           <Button onClick={() => callApp('applyFromSimulation')}>
@@ -30,76 +30,44 @@ export function ClientSimulatorPage() {
           <SimRange id="sim-amount-range" labelId="sim-amount-label" label="Montant du Prêt (FCFA)" min={200000} max={10000000} step={50000} defaultValue={2500000} ticks={['200 000 FCFA', '5 000 000 FCFA', '10 000 000 FCFA']} />
           <SimRange id="sim-duration-range" labelId="sim-duration-label" label="Durée de Remboursement" min={3} max={36} step={1} defaultValue={12} ticks={['3 Mois', '12 Mois', '24 Mois', '36 Mois']} />
 
-          <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label" style={{ fontSize: '0.78rem' }}>
-                Différé de Remboursement
-              </label>
-              <select id="sim-grace-select" className="form-control" style={{ fontSize: '0.82rem' }} defaultValue="0" onChange={() => callApp('updateClientSimulation')}>
-                <option value="0">Aucun différé (immédiat)</option>
-                <option value="1">1 Mois de différé</option>
-                <option value="2">2 Mois de différé</option>
-                <option value="3">3 Mois de différé (Agricole)</option>
-              </select>
-            </div>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label" style={{ fontSize: '0.78rem' }}>
-                Type de Financement
-              </label>
-              <select id="sim-product-select" className="form-control" style={{ fontSize: '0.82rem' }} defaultValue="COMMERCIAL" onChange={() => callApp('updateClientSimulation')}>
-                <option value="COMMERCIAL">Crédit Commercial & Stock (12% dégressif)</option>
-                <option value="AGRICULTURAL">Crédit Campagne Agricole (9.5% annuel)</option>
-                <option value="EQUIPMENT">Équipement & Machines (11% annuel)</option>
-                <option value="GROUP">Crédit Solidaire de Groupe (13.5% annuel)</option>
-              </select>
-            </div>
-          </div>
-
           <div style={{ background: 'var(--bg-body)', padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <i className="fas fa-coins text-gold"></i> Test d&apos;Éligibilité & Reste à Vivre
+              <i className="fas fa-coins text-gold"></i> Revenus et charges (reste à vivre)
             </div>
             <div className="grid-2" style={{ gap: '0.75rem' }}>
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="form-label" style={{ fontSize: '0.72rem' }}>
-                  Revenu Net Mensuel de l&apos;Activité
+                  Revenu net mensuel
                 </label>
-                <input type="number" id="sim-income-input" className="form-control" defaultValue={850000} style={{ fontSize: '0.82rem' }} onInput={() => callApp('updateClientSimulation')} />
+                <input
+                  type="number"
+                  id="sim-income-input"
+                  className="form-control"
+                  placeholder="0"
+                  style={{ fontSize: '0.82rem' }}
+                  onInput={(event) => {
+                    event.currentTarget.dataset.userEdited = '1';
+                    callApp('updateClientSimulation');
+                  }}
+                />
               </div>
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="form-label" style={{ fontSize: '0.72rem' }}>
-                  Charges & Autres Crédits en Cours
+                  Charges et crédits en cours
                 </label>
-                <input type="number" id="sim-charges-input" className="form-control" defaultValue={180000} style={{ fontSize: '0.82rem' }} onInput={() => callApp('updateClientSimulation')} />
+                <input
+                  type="number"
+                  id="sim-charges-input"
+                  className="form-control"
+                  placeholder="0"
+                  style={{ fontSize: '0.82rem' }}
+                  onInput={(event) => {
+                    event.currentTarget.dataset.userEdited = '1';
+                    callApp('updateClientSimulation');
+                  }}
+                />
               </div>
             </div>
-          </div>
-
-          <div
-            style={{
-              background: 'rgba(81, 142, 69, 0.06)',
-              border: '1px solid rgba(81, 142, 69, 0.25)',
-              borderRadius: 'var(--radius-md)',
-              padding: '0.85rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '0.75rem',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#518e45', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>
-                <i className="fas fa-seedling"></i>
-              </div>
-              <div>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>Profil Primo-Demandeur (Cold Start)</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-subtle)' }}>Pas d&apos;historique bancaire exigé • Pondération d&apos;inclusion CreditFast</div>
-              </div>
-            </div>
-            <label className="toggle-switch" style={{ position: 'relative', display: 'inline-block', width: 44, height: 24, margin: 0 }}>
-              <input type="checkbox" id="sim-cold-start-toggle" defaultChecked onChange={() => callApp('updateClientSimulation')} style={{ opacity: 0, width: 0, height: 0 }} />
-              <span style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#518e45', transition: '.3s', borderRadius: 24 }}></span>
-            </label>
           </div>
         </div>
 
@@ -111,30 +79,34 @@ export function ClientSimulatorPage() {
                   <i className="fas fa-receipt text-emerald"></i> Résultats de la Simulation
                 </h3>
                 <div style={{ fontSize: '0.73rem', color: 'var(--emerald)', fontWeight: 600 }} id="sim-scoring-mode-label">
-                  <i className="fas fa-seedling"></i> Modèle Cold Start Appliqué
+                  Comparaison calculée pour votre dossier
                 </div>
               </div>
-              <span className="badge badge-approved" id="sim-eligibility-badge">
-                <i className="fas fa-circle-check"></i> Éligible CreditFast
+              <span className="badge badge-info" id="sim-eligibility-badge">
+                En attente du calcul
               </span>
             </div>
 
             <div style={{ background: 'var(--bg-surface)', padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '2px solid var(--primary-300)', textAlign: 'center', marginBottom: '1.5rem' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Mensualité TTC Estimée</div>
               <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--primary-700)', fontFamily: 'var(--font-family-code)', margin: '0.25rem 0' }} id="sim-monthly-output">
-                222 250 FCFA
+                —
               </div>
-              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Comprend Capital + Intérêts dégressifs + Assurance Décès/Invalidité</div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Mensualité calculée selon le montant et la durée choisis</div>
+            </div>
+
+            <div id="sim-compare-list" style={{ marginBottom: '1.25rem', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-surface)' }}>
+              <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-muted)' }}>Autres durées à comparer…</p>
             </div>
 
             <div style={{ fontSize: '0.82rem', lineHeight: 2, color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
-              <SimRow label="Capital Net Emprunté :" id="sim-capital-output" value="2 500 000 FCFA" />
-              <SimRow label="Total des Intérêts CreditFast :" id="sim-interest-output" value="167 000 FCFA" />
-              <SimRow label="Assurance & Frais de Dossier (1.5%) :" id="sim-fees-output" value="37 500 FCFA" />
+              <SimRow label="Capital emprunté :" id="sim-capital-output" value="—" />
+              <SimRow label="Intérêts :" id="sim-interest-output" value="—" />
+              <SimRow label="Frais et assurance :" id="sim-fees-output" value="—" />
               <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed var(--border-color)', paddingTop: 4, fontWeight: 700 }}>
-                <span style={{ color: 'var(--text-primary)' }}>Coût Total du Crédit :</span>
+                <span style={{ color: 'var(--text-primary)' }}>Coût total :</span>
                 <strong style={{ color: 'var(--primary-700)' }} id="sim-total-cost-output">
-                  2 704 500 FCFA
+                  —
                 </strong>
               </div>
             </div>
@@ -156,21 +128,21 @@ export function ClientSimulatorPage() {
                   </div>
                 </div>
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.75rem' }}>
-                  <PieLegend color="#1b4332" label="Capital" pctId="sim-pie-capital-pct" valId="sim-pie-capital-val" pct="92%" value="2 500 000 F" />
-                  <PieLegend color="#ff9800" label="Intérêts" pctId="sim-pie-interest-pct" valId="sim-pie-interest-val" pct="6%" value="167 000 F" valueColor="#ff9800" />
-                  <PieLegend color="#518e45" label="Assurance & Frais" pctId="sim-pie-fees-pct" valId="sim-pie-fees-val" pct="2%" value="37 500 F" valueColor="#518e45" />
+                  <PieLegend color="#1b4332" label="Capital" pctId="sim-pie-capital-pct" valId="sim-pie-capital-val" pct="—" value="—" />
+                  <PieLegend color="#ff9800" label="Intérêts" pctId="sim-pie-interest-pct" valId="sim-pie-interest-val" pct="—" value="—" valueColor="#ff9800" />
+                  <PieLegend color="#518e45" label="Frais" pctId="sim-pie-fees-pct" valId="sim-pie-fees-val" pct="—" value="—" valueColor="#518e45" />
                 </div>
               </div>
             </div>
 
             <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
               <div style={{ width: '100%', height: 8, background: 'var(--bg-body)', borderRadius: 'var(--radius-full)', overflow: 'hidden', marginBottom: '0.5rem' }}>
-                <div id="sim-ratio-bar" style={{ width: '26.1%', height: '100%', background: '#518e45', borderRadius: 'var(--radius-full)', transition: 'width 0.3s ease' }}></div>
+                <div id="sim-ratio-bar" style={{ width: '0%', height: '100%', background: '#518e45', borderRadius: 'var(--radius-full)', transition: 'width 0.3s ease' }}></div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                <span>Reste à Vivre Estimé :</span>
+                <span>Reste à vivre estimé :</span>
                 <strong id="sim-rest-to-live-output" style={{ color: '#1b4332', fontFamily: 'var(--font-family-code)' }}>
-                  447 750 FCFA / mois
+                  —
                 </strong>
               </div>
             </div>

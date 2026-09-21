@@ -1,6 +1,7 @@
 import type { DragEvent } from 'react';
 import { callApp } from '@/shared/ui/legacy';
 import { Button } from '@/shared/ui/Button';
+import { CfSelect } from '@/shared/ui/CfSelect';
 
 function openClientFileInput() {
   document.getElementById('client-file-input')?.click();
@@ -64,7 +65,7 @@ export function UploadDocumentModal() {
             </div>
             <div>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: 'white' }}>Téléverser un document</h4>
-              <span style={{ fontSize: '0.76rem', color: '#d1fae5' }}>OCR automatique • PDF, PNG, JPG • 10 Mo max</span>
+              <span style={{ fontSize: '0.76rem', color: '#d1fae5' }}>PDF, PNG ou JPG • 10 Mo max</span>
             </div>
           </div>
           <button
@@ -126,8 +127,29 @@ export function UploadDocumentModal() {
             </div>
             <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.25rem' }}>Glissez-déposez vos justificatifs ici</h4>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              Factures proforma, quittances, contrat de bail, garanties.
+              Factures, quittances, contrat de bail ou justificatif de revenu. Le système lit le fichier après dépôt.
             </p>
+            <div className="form-group" style={{ textAlign: 'left', marginBottom: '0.85rem' }}>
+              <label className="form-label" htmlFor="upload-doc-type" style={{ fontSize: '0.78rem' }}>
+                Type de pièce
+              </label>
+              <CfSelect id="upload-doc-type" className="form-control" defaultValue="PREUVE_REVENU">
+                <option value="PREUVE_REVENU">Justificatif de revenu</option>
+                <option value="JUSTIFICATIF_DOMICILE">Justificatif de domicile</option>
+                <option value="FACTURE_ELECTRICITE">Facture d’électricité</option>
+                <option value="CONTRAT_BAIL">Contrat de bail</option>
+                <option value="RELEVE_BANCAIRE">Relevé</option>
+                <option value="CNI">Carte nationale d’identité</option>
+                <option value="PASSEPORT">Passeport</option>
+                <option value="PIECE_IDENTITE">Autre pièce d’identité</option>
+              </CfSelect>
+            </div>
+            <div className="form-group" style={{ textAlign: 'left', marginBottom: '0.85rem' }}>
+              <label className="form-label" htmlFor="upload-doc-number" style={{ fontSize: '0.78rem' }}>
+                Numéro de pièce (identité)
+              </label>
+              <input id="upload-doc-number" className="form-control" placeholder="Facultatif pour une CNI ou un passeport" />
+            </div>
             <Button variant="secondary" className="btn-sm" onClick={openClientFileInput}>
               <i className="fas fa-arrow-up-from-bracket"></i> Parcourir mes fichiers locaux
             </Button>

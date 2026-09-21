@@ -1,7 +1,7 @@
 import { toast } from '@heroui/react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { loginWithCredentials } from '@/api';
+import { loginWithCredentials, registerClient } from '@/api';
 import { getUiSession } from '@/app/session';
 import { ROLE_PROFILES } from '@/app/roles';
 import { Button } from '@/shared/ui';
@@ -13,13 +13,18 @@ export function AuthPage() {
   const navigate = useNavigate();
   const [slideIndex, setSlideIndex] = useState(0);
   const [isHeroHovered, setIsHeroHovered] = useState(false);
+  const [mode, setMode] = useState<'login' | 'register'>('login');
   const [identifier, setIdentifier] = useState(() => {
     return window.localStorage.getItem(REMEMBER_ME_KEY) ?? '';
   });
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     if (isHeroHovered) {
@@ -44,26 +49,54 @@ export function AuthPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const rawInput = identifier.trim();
+    const formData = new FormData(event.currentTarget);
+    const rawInput = String(formData.get('identifier') || identifier).trim();
+    const secret = String(formData.get('password') || password);
+    const givenName = String(formData.get('first_name') || firstName).trim();
+    const familyName = String(formData.get('last_name') || lastName).trim();
+    const confirm = String(formData.get('password_confirm') || passwordConfirm);
 
-    if (rememberMe && rawInput) {
+    if (rememberMe && rawInput && mode === 'login') {
       window.localStorage.setItem(REMEMBER_ME_KEY, rawInput);
-    } else {
+    } else if (!rememberMe) {
       window.localStorage.removeItem(REMEMBER_ME_KEY);
     }
 
+    setFormError('');
     setIsSubmitting(true);
 
     toast.promise(
       (async () => {
-        if (!rawInput || !password.trim()) {
+        if (!rawInput || !secret.trim()) {
           throw new Error('Saisissez vos identifiants.');
         }
-        await enterWorkspace(rawInput, password);
-      })().finally(() => setIsSubmitting(false)),
+        if (mode === 'register') {
+          if (!givenName || !familyName) {
+            throw new Error('Saisissez le prénom et le nom.');
+          }
+          if (secret.length < 8) {
+            throw new Error('Le mot de passe doit contenir au moins 8 caractères.');
+          }
+          if (secret !== confirm) {
+            throw new Error('La confirmation du mot de passe ne correspond pas.');
+          }
+          await registerClient({
+            first_name: givenName,
+            last_name: familyName,
+            phone: rawInput,
+            password: secret,
+          });
+        }
+        await enterWorkspace(rawInput, secret);
+      })()
+        .catch((err) => {
+          setFormError(err instanceof Error ? err.message : 'Connexion impossible');
+          throw err;
+        })
+        .finally(() => setIsSubmitting(false)),
       {
-        loading: 'Authentification sécurisée...',
-        success: 'Espace chargé',
+        loading: mode === 'register' ? 'Création du compte…' : 'Authentification sécurisée...',
+        success: mode === 'register' ? 'Compte créé, espace chargé' : 'Espace chargé',
         error: (err) => (err instanceof Error ? err.message : 'Connexion impossible'),
       },
     );
@@ -288,52 +321,100 @@ export function AuthPage() {
             </div>
 
             <div className="auth-header">
-              <h2>Portail d'Accès Sécurisé</h2>
-              <p>Clients : numéro de téléphone. Équipe CreditFast : e-mail professionnel.</p>
+              <h2>{mode === 'register' ? 'Créer un compte client' : "Portail d'Accès Sécurisé"}</h2>
+              <p>
+                {mode === 'register'
+                  ? 'Inscription publique : téléphone unique + mot de passe (8 caractères min.). Puis connexion automatique.'
+                  : 'Client : téléphone + mot de passe. Équipe : e-mail professionnel. Le compte client n’accepte pas l’e-mail.'}
+              </p>
             </div>
 
             <form id="login-form" noValidate onSubmit={handleSubmit}>
+              {mode === 'register' ? (
+                <div className="form-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                  <div>
+                    <label className="form-label" htmlFor="register-first-name">
+                      Prénom
+                    </label>
+                    <input
+                      type="text"
+                      id="register-first-name"
+                      name="first_name"
+                      className="form-control"
+                      value={firstName}
+                      autoComplete="given-name"
+                      required
+                      onChange={(event) => setFirstName(event.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label" htmlFor="register-last-name">
+                      Nom
+                    </label>
+                    <input
+                      type="text"
+                      id="register-last-name"
+                      name="last_name"
+                      className="form-control"
+                      value={lastName}
+                      autoComplete="family-name"
+                      required
+                      onChange={(event) => setLastName(event.target.value)}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
               <div className="form-group">
-                <label className="form-label" htmlFor="login-email">
-                  Téléphone ou e-mail professionnel
-                </label>
+                <div className="cf-auth-field-head">
+                  <label className="form-label" htmlFor="login-email">
+                    {mode === 'register' ? 'Téléphone' : 'Téléphone ou e-mail professionnel'}
+                  </label>
+                  {formError ? (
+                    <i
+                      className="fas fa-circle-exclamation cf-auth-field-error-icon"
+                      title={formError}
+                      aria-label={formError}
+                      role="img"
+                    ></i>
+                  ) : null}
+                </div>
                 <div className="input-with-icon">
                   <i className="fas fa-user-check input-prefix-icon"></i>
                   <input
                     type="text"
                     id="login-email"
+                    name="identifier"
                     className="form-control"
-                    placeholder="+223… ou vous@creditfast.ml"
+                    placeholder="+223 70 12 34 56"
                     value={identifier}
                     autoComplete="username"
                     required
-                    onChange={(event) => setIdentifier(event.target.value)}
+                    aria-invalid={formError ? true : undefined}
+                    onChange={(event) => {
+                      setIdentifier(event.target.value);
+                      if (formError) {
+                        setFormError('');
+                      }
+                    }}
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '0.35rem',
-                  }}
-                >
-                  <label className="form-label" htmlFor="login-password" style={{ marginBottom: 0 }}>
-                    Mot de Passe
-                  </label>
-                </div>
+                <label className="form-label" htmlFor="login-password">
+                  Mot de Passe
+                </label>
                 <div className="input-with-icon input-with-suffix">
                   <i className="fas fa-lock input-prefix-icon"></i>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="login-password"
+                    name="password"
                     className="form-control"
                     value={password}
-                    placeholder="Saisissez votre mot de passe"
-                    autoComplete="current-password"
+                    placeholder={mode === 'register' ? '8 caractères minimum' : 'Saisissez votre mot de passe'}
+                    autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
                     required
                     onChange={(event) => setPassword(event.target.value)}
                   />
@@ -350,27 +431,61 @@ export function AuthPage() {
                 </div>
               </div>
 
-              <div className="auth-options-row">
-                <label className="auth-checkbox-label" htmlFor="remember-me-checkbox">
+              {mode === 'register' ? (
+                <div className="form-group">
+                  <label className="form-label" htmlFor="register-password-confirm">
+                    Confirmer le mot de passe
+                  </label>
                   <input
-                    type="checkbox"
-                    id="remember-me-checkbox"
-                    checked={rememberMe}
-                    onChange={(event) => setRememberMe(event.target.checked)}
+                    type={showPassword ? 'text' : 'password'}
+                    id="register-password-confirm"
+                    name="password_confirm"
+                    className="form-control"
+                    value={passwordConfirm}
+                    autoComplete="new-password"
+                    required
+                    onChange={(event) => setPasswordConfirm(event.target.value)}
                   />
-                  <span>Mémoriser ma session</span>
-                </label>
-                <a
-                  href="#forgot-password"
-                  className="auth-link-subtle"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    toast.info('La réinitialisation du mot de passe sera bientôt disponible.');
-                  }}
-                >
-                  Mot de passe oublié ?
-                </a>
-              </div>
+                </div>
+              ) : null}
+
+              {mode === 'login' ? (
+                <div className="auth-options-row">
+                  <label className="auth-checkbox-label" htmlFor="remember-me-checkbox">
+                    <input
+                      type="checkbox"
+                      id="remember-me-checkbox"
+                      checked={rememberMe}
+                      onChange={(event) => setRememberMe(event.target.checked)}
+                    />
+                    <span>Mémoriser ma session</span>
+                  </label>
+                  <button
+                    type="button"
+                    className="auth-link-subtle"
+                    onClick={() => {
+                      setMode('register');
+                      setFormError('');
+                    }}
+                  >
+                    Créer un compte client
+                  </button>
+                </div>
+              ) : (
+                <div className="auth-options-row">
+                  <span />
+                  <button
+                    type="button"
+                    className="auth-link-subtle"
+                    onClick={() => {
+                      setMode('login');
+                      setFormError('');
+                    }}
+                  >
+                    Déjà un compte ? Se connecter
+                  </button>
+                </div>
+              )}
 
               <Button
                 type="submit"
@@ -382,8 +497,12 @@ export function AuthPage() {
                 <span id="login-btn-content">
                   {isSubmitting ? (
                     <>
-                      <i className="fas fa-circle-notch fa-spin mr-2"></i> Authentification
-                      sécurisée...
+                      <i className="fas fa-circle-notch fa-spin mr-2"></i>{' '}
+                      {mode === 'register' ? 'Création du compte…' : 'Authentification sécurisée...'}
+                    </>
+                  ) : mode === 'register' ? (
+                    <>
+                      <i className="fas fa-user-plus mr-1"></i> Créer le compte et entrer
                     </>
                   ) : (
                     <>
