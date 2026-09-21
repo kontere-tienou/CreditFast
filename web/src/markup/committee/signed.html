@@ -1,0 +1,26 @@
+<!-- ====================================================================
+     [COMITÉ] VUE 2 : DÉCISIONS SIGNÉES & PROCÈS-VERBAUX NUMÉRIQUES
+     ==================================================================== -->
+<section id="view-committee-signed" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Registre des Décisions & Procès-Verbaux Signés</h1>
+      <div class="page-breadcrumb">
+        <span>Gouvernance Régionale</span> <i class="fas fa-chevron-right"></i>
+        <span>Historique des Actes de Décision Scellés</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance en Cours
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.downloadAllSignedPvsCsv()">
+        <i class="fas fa-file-export"></i> Exporter le Registre
+      </button>
+    </div>
+  </div>
+
+  <div data-app-table="committee-signed"></div>
+
+  
+</section>

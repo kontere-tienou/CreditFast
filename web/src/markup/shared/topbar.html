@@ -1,0 +1,210 @@
+<!-- ==========================================================================
+     2. Top Navigation Bar
+     ========================================================================== -->
+<header id="topbar">
+  <div class="topbar-left">
+    <!-- Drawer / Sidebar Toggle Button -->
+    <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Basculer le menu latéral (Drawer)">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Global Quick Search (Desktop & Expandable Mobile)
+    <div class="search-container" id="topbar-search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="global-search-input" class="search-input" placeholder="Rechercher...">
+      <button id="search-close-mobile-btn" class="search-close-mobile-btn" title="Fermer la recherche">
+        <i class="fas fa-times"></i>
+      </button>
+    </div> -->
+
+    <!-- Mobile Search Trigger Button (Only visible on small mobile screens)
+    <button id="mobile-search-trigger-btn" class="topbar-action-btn mobile-search-btn" title="Ouvrir la recherche rapide">
+      <i class="fas fa-search"></i>
+    </button> -->
+
+    <!-- Live Date & Real-Time Clock Display 
+    <div class="topbar-datetime" id="topbar-datetime" title="Heure locale réseau CreditFast / UEMOA">
+      <i class="far fa-clock"></i>
+      <span id="topbar-clock-display">Chargement...</span>
+    </div>-->
+  </div>
+
+  <div class="topbar-right">
+    <!-- Offline Mode Indicator Badge -->
+    <div id="topbar-offline-badge" class="badge" style="display: none; background: rgba(255, 152, 0, 0.15); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.3); font-size: 0.72rem; padding: 0.3rem 0.6rem; align-items: center; gap: 0.35rem;" title="Mode hors-ligne actif : Données en cache local disponibles">
+      <i class="fas fa-wifi"></i> <span>Hors-Ligne (Cache Actif)</span>
+    </div>
+
+    <!-- Notifications Bell -->
+    <div class="notif-dropdown-container" style="position: relative;">
+      <button id="notif-bell-btn" class="topbar-action-btn" title="Centre de Notifications" aria-label="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="btn-badge" id="topbar-notif-badge">0</span>
+      </button>
+      <div id="notif-dropdown" class="notif-dropdown-menu" style="display: none;">
+        <!-- Header -->
+        <div class="notif-dropdown-header">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div class="notif-header-icon-box">
+              <i class="fas fa-bell text-primary"></i>
+            </div>
+            <div>
+              <h5 class="notif-header-title">Centre de Notifications</h5>
+              <div class="notif-header-subtitle" id="notif-header-subtitle">Alertes & Flux Métier Dédié</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge badge-submitted" id="notif-unread-count-badge">0 Non Lue</span>
+            <button class="notif-mark-read-btn" onclick="App.markAllNotificationsRead()" title="Marquer toutes les notifications comme lues">
+              <i class="fas fa-check-double"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Chips (Injected dynamically based on active role) -->
+        <div class="notif-filter-bar" id="notif-filter-bar">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- Notification List (Injected dynamically based on active role) -->
+        <div class="notif-list" id="notif-list-container">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- Footer -->
+        <div class="notif-dropdown-footer">
+          <button class="notif-footer-btn" id="notif-footer-action-btn" onclick="App.handleNotifFooterAction();">
+            <i class="fas fa-clock-rotate-left mr-1"></i> <span id="notif-footer-action-text">Consulter le journal d'activité</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Icon with Dropbox & Country Flag Overlay -->
+    <div class="profile-dropdown-container" id="profile-dropdown-container">
+      <button class="topbar-profile-btn" id="topbar-profile-btn" aria-haspopup="true" aria-expanded="false" title="Mon Profil & Paramètres">
+        <div class="topbar-avatar-wrap">
+          <img id="topbar-avatar-img" src="images/profil/profil01-04.jpg" alt="Avatar" class="topbar-avatar">
+          <!-- <span class="avatar-flag-badge" id="topbar-avatar-flag" title="Pays de l'utilisateur"></span> -->
+        </div>
+        <div class="topbar-user-meta">
+          <span id="topbar-user-name" class="topbar-user-name">Aminata Diallo</span>
+          <span id="topbar-user-role" class="topbar-user-role">Analyste Risque</span>
+        </div>
+        <i class="fas fa-chevron-down profile-caret"></i>
+      </button>
+
+      <!-- Dropdown Menu Box -->
+      <div
+  id="profile-dropdown-menu"
+  class="profile-dropdown-menu absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white py-2 shadow-xl"
+>
+  
+  <!-- <div class="profile-dropdown-header">
+    <div class="topbar-avatar-wrap">
+      <img
+        id="menu-avatar-img"
+        src="images/profil/profil01-04.jpg"
+        alt="Avatar"
+        class="menu-avatar"
+      >
+      <span
+        class="avatar-flag-badge lg"
+        id="menu-avatar-flag"
+        title="Pays de l'utilisateur"
+      ></span>
+    </div>
+
+    <div class="menu-user-details">
+      <h6 id="menu-user-name">Aminata Diallo</h6>
+
+      <span
+        id="menu-user-email"
+        class="menu-user-email"
+      >
+        aminata.diallo@cif-ao.org
+      </span>
+
+      <span
+        id="menu-user-role-badge"
+        class="badge badge-submitted mt-1 text-[0.68rem]"
+      >
+        Analyste Risque V2
+      </span>
+    </div>
+  </div> -->
+
+  <!-- Divider -->
+  <div class="profile-dropdown-divider my-2 h-px bg-slate-200"></div>
+
+  <!-- Menu -->
+  <ul class="profile-menu-list space-y-1 px-2">
+
+    <li>
+      <a
+        href="#"
+        class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+        id="btn-edit-profile"
+        onclick="App.openEditProfileModal(); return false;"
+      >
+        <i class="fas fa-user-pen w-4 text-center text-primary"></i>
+        <span>Modifier mon Profil</span>
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="#"
+        class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+        id="btn-open-settings"
+        onclick="App.openSettingsModal(); return false;"
+      >
+        <i class="fas fa-sliders-h w-4 text-center text-secondary"></i>
+        <span>Paramètres &amp; Préférences</span>
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="#"
+        class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+        onclick="App.showToast('Sécurité du compte : Authentification 2FA active', 'info'); return false;"
+      >
+        <i class="fas fa-shield-halved w-4 text-center text-emerald"></i>
+        <span>Sécurité &amp; Clés d'Accès</span>
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="#"
+        class="profile-menu-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+        onclick="App.showToast('Support CIF DigiCoop-WA+ disponible 24/7', 'info'); return false;"
+      >
+        <i class="fas fa-circle-question w-4 text-center text-info"></i>
+        <span>Centre d'Aide CreditFast</span>
+      </a>
+    </li>
+
+  </ul>
+
+  <!-- Divider -->
+  <div class="profile-dropdown-divider my-2 h-px bg-slate-200"></div>
+
+  <!-- Footer -->
+  <div class="profile-dropdown-footer px-3 pb-2 pt-1">
+    <button
+      type="button"
+      class="btn btn-danger-subtle btn-sm btn-action-logout flex w-full justify-center gap-2 rounded-lg px-4 py-2.5 transition hover:bg-red-100"
+      id="btn-topbar-logout"
+      onclick="App.openLogoutConfirmModal(); return false;"
+    >
+      <i class="fas fa-right-from-bracket"></i>
+      Se Déconnecter
+    </button>
+  </div>
+
+</div>
+    </div>
+  </div>
+</header>

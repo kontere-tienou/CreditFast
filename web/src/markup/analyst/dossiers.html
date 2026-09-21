@@ -1,0 +1,44 @@
+<!-- ====================================================================
+     VIEW: ANALYST DOSSIERS MANAGEMENT (DOSSIERS À INSTRUIRE)
+     ==================================================================== -->
+<section id="view-analyst-dossiers" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Dossiers à Instruire • Espace Analyste</h1>
+      <div class="page-breadcrumb">
+        <span>Analyse Risque</span> <i class="fas fa-chevron-right"></i>
+        <span>Instruction & Risque</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ALL')">
+        <i class="fas fa-rotate mr-1"></i> Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 1.25rem;">
+    <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-primary btn-sm" id="btn-filter-all" onclick="AppInteractions.renderRequestsTable('ALL', '', this)">Tous les dossiers</button>
+        <button class="btn btn-secondary btn-sm" id="btn-filter-coldstart" onclick="AppInteractions.renderRequestsTable('COLD_START', '', this)" style="border-color: #518e45; color: #1b4332; background: #eef4ee;">
+          <i class="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('ANALYSIS', '', this)">En Analyse</button>
+        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('VERIFICATION_REQUIRED', '', this)">Vérif. Requise</button>
+        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('COMMITTEE', '', this)">En Comité</button>
+        <button class="btn btn-secondary btn-sm" onclick="AppInteractions.renderRequestsTable('APPROVED', '', this)">Approuvés</button>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-subtle);">
+        <i class="fas fa-info-circle text-primary mr-1"></i> Cliquez sur une ligne ou sur <strong>Détails 360°</strong> pour ouvrir le volet d'instruction latérale.
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 Colonnes Optimisées Tableau Analyste Risque -->
+  <div data-app-table="analyst-dossiers"></div>
+
+  <!-- Sidedrawer Volet Latéral : Instruction & Analyse Risque 360° -->
+  
+</section>
+

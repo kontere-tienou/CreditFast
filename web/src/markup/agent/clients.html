@@ -1,0 +1,102 @@
+<!-- ====================================================================
+     [ESPACE AGENT] PORTEFEUILLE EMPRUNTEURS & FICHES MEMBRES CREDITFAST
+     ==================================================================== -->
+<section id="view-agent-clients" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title"><i class="fas fa-users text-primary mr-2"></i> Portefeuille Emprunteurs & Sociétaires CreditFast</h1>
+      <div class="page-breadcrumb">
+        <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+        <span>Gestion Relation Client & Suivi des Engagements</span>
+      </div>
+    </div>
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="App.exportClientsCsv()">
+        <i class="fas fa-file-excel text-emerald mr-1"></i> Exporter Portefeuille (CSV)
+      </button>
+      <button class="btn btn-primary" onclick="App.openNewLoanModal()" title="Enregistrer une nouvelle demande de crédit au guichet">
+        <i class="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Metric Stats -->
+  <div class="grid-4" style="margin-bottom: 1.5rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-address-book"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="client-kpi-total">5</div>
+        <div class="stat-label">Clients Actifs dans l'Agence</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 100% Sociétaires CreditFast</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-piggy-bank"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="client-kpi-savings">4.67M</div>
+        <div class="stat-label">Épargne CreditFast Mobilisée</div>
+        <div class="stat-trend up"><i class="fas fa-coins"></i> Solde moyen : 935 000 F</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="client-kpi-loans">9.3M</div>
+        <div class="stat-label">Encours Brut de Crédits</div>
+        <div class="stat-trend up"><i class="fas fa-chart-line"></i> PAR 30 : 0.0%</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-seedling"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="client-kpi-coldstart">1</div>
+        <div class="stat-label">Primo-Demandeur (Cold Start)</div>
+        <div class="stat-trend up"><i class="fas fa-shield-heart"></i> Inclusion financière</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Bar -->
+  <div class="card" style="margin-bottom: 1.25rem;">
+    <div class="card-body" style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="clients-filter-buttons">
+        <button class="btn btn-primary btn-sm" onclick="App.filterClientPortfolio('ALL', this)">
+          Tous les Membres (<span id="clients-count-all">5</span>)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('COLD_START', this)" style="border-color: #518e45; color: #1b4332; background: #eef4ee;">
+          <i class="fas fa-seedling text-emerald mr-1"></i> Primo-Demandeurs (Cold Start)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('ACTIVE_LOAN', this)">
+          <i class="fas fa-file-invoice-dollar mr-1"></i> Crédit en Cours
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.filterClientPortfolio('VERIFIED', this)">
+          <i class="fas fa-check-circle text-emerald mr-1"></i> KYC Validé
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="position: relative; min-width: 250px;">
+          <input type="text" id="clients-search-input" class="form-control form-control-sm" placeholder="Recherche par nom, compte, ville, activité..." oninput="App.searchClientPortfolio(this.value)" style="padding-left: 2rem;">
+          <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clients Grid / Cards -->
+  <div class="grid-3" id="agent-clients-grid" style="gap: 1.25rem;">
+    <!-- Injected dynamically -->
+  </div>
+</section>

@@ -1,0 +1,130 @@
+<!-- ====================================================================
+     VIEW: SCORING ENGINE ADMINISTRATION (MOTEURS & RÈGLES SCORING V2)
+     ==================================================================== -->
+<section id="view-scoring-admin" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Administration des Modèles de Scoring</h1>
+      <div class="page-breadcrumb">
+        <span>Gouvernance des Algorithmes</span> <i class="fas fa-chevron-right"></i>
+        <span>Modèle Standard vs Cold Start (Inclusion)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Model 1: Standard UEMOA Model -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-code-branch text-primary"></i> Modèle Standard </h3>
+          <p class="card-subtitle">Actif • Pour clients avec historique bancaire ou d'épargne</p>
+        </div>
+        <span class="badge badge-approved">ACTIF</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
+          Ce modèle utilise l'intégralité des 10 sous-scores incluant la discipline d'épargne CreditFast et l'historique réel des remboursements.
+        </div>
+
+        <div data-app-table="scoring-standard"></div>
+      </div>
+    </div>
+
+    <!-- Model 2: Cold Start Model (Inclusion Financière) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-seedling text-emerald"></i> Modèle Cold Start Inclusion </h3>
+          <p class="card-subtitle">Actif • Pour primo-demandeurs sans antécédents financiers</p>
+        </div>
+        <span class="badge badge-approved">ACTIF</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size: 0.82rem; color: var(--text-muted-dark); margin-bottom: 1rem;">
+          <i class="fas fa-balance-scale text-primary"></i> <strong>Règle fondamentale :</strong> <em>Absence d'historique ≠ Mauvais historique</em>. Les poids sont redistribués sur la capacité nette, l'activité et les garanties/cautions solidaires.
+        </div>
+
+        <div data-app-table="scoring-coldstart"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Live Cold Start vs Standard Comparative Simulator -->
+  <div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-microchip text-primary"></i> Banc d'Essai Interactif : Modèle Standard vs Cold Start</h3>
+        <p class="card-subtitle">Testez en direct l'impact de la redistribution des pondérations pour un emprunteur primo-demandeur sans antécédents</p>
+      </div>
+      <span class="badge badge-warning"><i class="fas fa-bolt"></i> Calcul Temps Réel</span>
+    </div>
+    <div class="card-body">
+      <div class="grid-2" style="gap: 1.5rem; align-items: center;">
+        <!-- Controls -->
+        <div>
+          <!-- Factor 1: Reste à vivre -->
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+              <span>Capacité Nette (Reste à vivre / Mensualité) :</span>
+              <span id="cs-sim-cap-val" style="color: var(--primary-700);">2.2x (Très Bon)</span>
+            </div>
+            <input type="range" id="cs-sim-cap" min="0.5" max="3.5" step="0.1" value="2.2" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+          </div>
+
+          <!-- Factor 2: Ancienneté Activité -->
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+              <span>Ancienneté & Stabilité du Commerce :</span>
+              <span id="cs-sim-act-val" style="color: var(--primary-700);">4 ans d'activité</span>
+            </div>
+            <input type="range" id="cs-sim-act" min="0.5" max="10" step="0.5" value="4" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+          </div>
+
+          <!-- Factor 3: Caution & Garanties -->
+          <div style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+              <span>Couverture Caution Solidaire / Matériel :</span>
+              <span id="cs-sim-gar-val" style="color: var(--primary-700);">100% de couverture</span>
+            </div>
+            <input type="range" id="cs-sim-gar" min="0" max="150" step="10" value="100" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+          </div>
+
+          <!-- Factor 4: OCR & CNI -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.35rem;">
+              <span>Conformité KYC & Rapprochement OCR :</span>
+              <span id="cs-sim-ocr-val" style="color: var(--primary-700);">95% (NINA Certifiée)</span>
+            </div>
+            <input type="range" id="cs-sim-ocr" min="40" max="100" step="5" value="95" class="form-range" style="width: 100%; cursor: pointer;" oninput="App.updateColdStartComparisonSim()">
+          </div>
+        </div>
+
+        <!-- Comparative Output Display -->
+        <div style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+          <div class="grid-2" style="gap: 1rem; margin-bottom: 1rem;">
+            <!-- Standard Engine Result -->
+            <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-subtle); font-weight: 700;">Modèle Standard (Sans Antécédents)</div>
+              <div style="font-size: 2.2rem; font-weight: 900; color: #ef4444; margin: 0.3rem 0;" id="cs-sim-std-score">48<span style="font-size: 1rem; color: var(--text-subtle);">/100</span></div>
+              <span class="badge badge-rejected" id="cs-sim-std-badge">Pénalisé (Zéro antécédent)</span>
+              <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 6px;">Poids crédit & épargne = 0 pts</div>
+            </div>
+
+            <!-- Cold Start Result -->
+            <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 2px solid #518e45; text-align: center;">
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: #1b4332; font-weight: 700;">Modèle Cold Start (Inclusion)</div>
+              <div style="font-size: 2.2rem; font-weight: 900; color: #518e45; margin: 0.3rem 0;" id="cs-sim-cs-score">78<span style="font-size: 1rem; color: var(--text-subtle);">/100</span></div>
+              <span class="badge badge-approved" id="cs-sim-cs-badge"><i class="fas fa-check"></i> Éligible Comité</span>
+              <div style="font-size: 0.7rem; color: #1b4332; font-weight: 600; margin-top: 6px;" id="cs-sim-gain-badge">+30 pts d'Inclusion</div>
+            </div>
+          </div>
+
+          <div style="background: rgba(81, 142, 69, 0.08); border-left: 3px solid #518e45; padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.74rem; color: var(--text-muted-dark);">
+            <strong>Démonstration d'équité algorithmique :</strong> En désactivant la pénalisation d'absence d'historique et en accordant une prime au Reste à Vivre certifié et aux cautions de proximité, le candidat accède au financement sans dégrader le risque global.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

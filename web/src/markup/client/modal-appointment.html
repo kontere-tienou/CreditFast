@@ -1,0 +1,119 @@
+<!-- ====================================================================
+     [MODAL] PRISE DE RENDEZ-VOUS AVEC LE CONSEILLER (DEMANDEUR CIF)
+     ==================================================================== -->
+<div id="client-appointment-modal" class="modal" style="display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
+  <div class="modal-dialog" style="max-width: 540px; width: 92%; background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl); border: 1px solid var(--border-color); overflow: hidden; animation: modalFadeIn 0.25s ease-out;">
+    
+    <!-- Modal Header -->
+    <div class="modal-header" style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, var(--cif-primary-600), var(--cif-primary-800)); color: white; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+          <i class="fas fa-calendar-check text-white"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: white;">
+            Prendre Rendez-vous
+          </h4>
+          <span style="font-size: 0.76rem; color: #cbd5e1;">Avec votre conseiller attitré Adama Traore</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" style="color: white; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="App.closeAppointmentModal()" title="Fermer">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body" style="padding: 1.5rem; max-height: calc(90vh - 120px); overflow-y: auto;">
+      
+      <!-- Advisor Quick Info Strip -->
+      <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 0.85rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <img src="images/profil/profil01-03.jpg" alt="Adama Traore" class="user-avatar" style="width: 42px; height: 42px; border: 2px solid var(--primary-300);">
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">Adama Traore</div>
+            <div style="font-size: 0.74rem; color: var(--primary-600); font-weight: 600;">Expert Microfinance • Agence Grand Marché Bamako (Mali)</div>
+          </div>
+        </div>
+        <span class="badge badge-approved" style="font-size: 0.68rem;">
+          <i class="fas fa-circle-check"></i> Disponible
+        </span>
+      </div>
+
+      <form id="client-appointment-modal-form" onsubmit="App.handleBookAppointmentModal(event)">
+        <!-- Meeting Format Selection (Agency / Phone / Video) -->
+        <div class="form-group" style="margin-bottom: 1.1rem;">
+          <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Format du Rendez-vous *</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;" id="appt-modal-type-selection">
+            <label class="appt-type-option" style="border: 2px solid var(--primary-600); background: var(--primary-50); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="AGENCY" checked style="accent-color: var(--primary-600);">
+              <i class="fas fa-building-columns text-primary" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">En Agence</span>
+            </label>
+            <label class="appt-type-option" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="PHONE" style="accent-color: var(--primary-600);">
+              <i class="fas fa-phone-volume text-emerald" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">Par Téléphone</span>
+            </label>
+            <label class="appt-type-option" style="border: 1px solid var(--border-color); background: var(--bg-surface); padding: 0.65rem 0.5rem; border-radius: var(--radius-md); text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <input type="radio" name="appt_channel" value="VIDEO" style="accent-color: var(--primary-600);">
+              <i class="fas fa-video text-primary" style="font-size: 1rem;"></i>
+              <span style="font-size: 0.75rem; font-weight: 700;">Visioconférence</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Motif du Rendez-vous *</label>
+          <select id="appt-modal-reason" class="form-control" required style="font-size: 0.82rem;">
+            <option value="EXAM_DOSSIER" selected>Finalisation & Signature de mon Financement</option>
+            <option value="GUARANTEE_DROP">Dépôt de justificatifs complémentaires</option>
+            <option value="SAVINGS_ADVICE">Conseils personnalisés en épargne & développement</option>
+            <option value="SCHEDULE_REVIEW">Échéancier de remboursement & questions</option>
+            <option value="OTHER">Autre question ou accompagnement</option>
+          </select>
+        </div>
+
+        <!-- Date & Time Row -->
+        <div class="grid-2" style="gap: 0.75rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Date souhaitée *</label>
+            <input type="date" id="appt-modal-date" class="form-control" value="2026-08-21" required style="font-size: 0.82rem;">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 0.78rem; font-weight: 700;">Créneau horaire *</label>
+            <select id="appt-modal-time" class="form-control" required style="font-size: 0.82rem;">
+              <option value="09:00">09h00 - 09h45</option>
+              <option value="10:30">10h30 - 11h15</option>
+              <option value="14:00" selected>14h00 - 14h45</option>
+              <option value="15:30">15h30 - 16h15</option>
+              <option value="16:30">16h30 - 17h15</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" style="font-size: 0.78rem;">Précisions pour votre conseiller (facultatif)</label>
+          <textarea id="appt-modal-notes" class="form-control" rows="2" placeholder="Ex: Je souhaite faire le point sur la libération des fonds pour mon stock..." style="font-size: 0.82rem; resize: none;"></textarea>
+        </div>
+
+        <!-- Security / Confirmation Notice -->
+        <div style="background: rgba(81, 142, 69, 0.08); border: 1px solid rgba(81, 142, 69, 0.2); border-radius: var(--radius-md); padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.75rem; color: var(--cif-emerald-700); display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-bell text-emerald" style="font-size: 1rem;"></i>
+          <span>Un SMS de confirmation et de rappel 24h avant vous sera automatiquement envoyé au <strong>+223 77 540 88 12</strong>.</span>
+        </div>
+
+        <!-- Modal Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.closeAppointmentModal()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle mr-1"></i> Confirmer le Rendez-vous
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

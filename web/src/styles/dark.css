@@ -1,0 +1,73 @@
+/* ==========================================================================
+   CRÉDIT FAST - DARK THEME OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] {
+  --bg-app: #0d2818;
+  --bg-surface: #1b4332;
+  --bg-surface-elevated: #20372f;
+  --bg-surface-secondary: #0a1f13;
+  --bg-sidebar: #0a1f13;
+  --bg-sidebar-hover: #1b4332;
+
+  --border-color: #1e293b;
+  --border-color-light: #1e293b;
+  --border-color-dark: #334155;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+
+  --primary-50: rgba(var(--brand-rgb), 0.15);
+  --primary-100: rgba(var(--brand-rgb), 0.25);
+  --primary-200: #20372f;
+  --primary-500: #518e45;
+  --primary-600: #f1ca30;
+
+  --warning-bg: rgba(241, 202, 48, 0.15);
+  --warning-border: rgba(255, 152, 0, 0.35);
+  --success-bg: rgba(81, 142, 69, 0.15);
+  --success-border: rgba(81, 142, 69, 0.35);
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --danger-border: rgba(239, 68, 68, 0.3);
+  --info-bg: rgba(27, 67, 50, 0.15);
+  --info-border: rgba(27, 67, 50, 0.3);
+  --purple-bg: rgba(139, 92, 246, 0.15);
+  --purple-border: rgba(139, 92, 246, 0.3);
+
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .table-custom tbody tr:hover {
+  background-color: #1e293b;
+}
+
+[data-theme="dark"] .capacity-card {
+  background: linear-gradient(145deg, #111827, #0f172a);
+}
+
+[data-theme="dark"] .factor-item {
+  background: #111827;
+}
+
+[data-theme="dark"] .extraction-field-card {
+  background: #111827;
+}
+
+[data-theme="dark"] .committee-panel {
+  background: linear-gradient(145deg, #1b4332, #0d2818);
+  border-color: var(--cif-primary-600);
+}
+
+[data-theme="dark"] .vote-option-btn {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .wizard-step {
+  background: #111827;
+}
+
+

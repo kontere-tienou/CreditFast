@@ -1,0 +1,145 @@
+/* ==========================================================================
+   CRÉDIT FAST - CONSTANTS & DESIGN TOKENS
+   Fichier central de constantes pour la charte graphique et la palette de couleurs
+   Confédération des Institutions Financières d'Afrique de l'Ouest (CIF - DigiCoop-WA+)
+   ========================================================================== */
+
+:root {
+  /* ========================================================================
+     60-30-10 — CHARTE CREDITFAST MALI
+     60% crème #F9F6EB · 30% Deep Forest · 10% Golden Rush
+     ======================================================================== */
+  --ds-60: #f9f6eb;
+  --ds-30: #1b4332;
+  --ds-10: #f1ca30;
+  --brand-rgb: 27, 67, 50;
+  --accent-rgb: 241, 202, 48;
+
+  /* Deep Forest #0D2818 | #1B4332 + mid #518E45 */
+  --cif-primary-50: #eef4ee;
+  --cif-primary-100: #d5e3d4;
+  --cif-primary-200: #a8c5a4;
+  --cif-primary-300: #7aa972;
+  --cif-primary-400: #518e45;
+  --cif-primary-500: #1b4332;
+  --cif-primary-600: #20372f;
+  --cif-primary-700: #0d2818;
+  --cif-primary-800: #0d2818;
+  --cif-primary-900: #0a1f13;
+
+  --grad-primary: linear-gradient(135deg, #1b4332 0%, #0d2818 100%);
+  --grad-primary-soft: linear-gradient(135deg, #eef4ee 0%, #d5e3d4 100%);
+
+  /* ========================================================================
+     2. 10% ACCENT — GOLDEN RUSH #FFD700 | #FF9800
+     ======================================================================== */
+  --cif-emerald-50: #eef4ee;
+  --cif-emerald-100: #d5e3d4;
+  --cif-emerald-400: #7aa972;
+  --cif-emerald-500: #518e45;
+  --cif-emerald-600: #1b4332;
+  --cif-emerald-700: #0d2818;
+  --grad-emerald: linear-gradient(135deg, #518e45 0%, #1b4332 100%);
+
+  --cif-gold-50: #fff8dc;
+  --cif-gold-100: #fff3b0;
+  --cif-gold-400: #ffd700;
+  --cif-gold-500: #f1ca30;
+  --cif-gold-600: #ff9800;
+  --cif-gold-700: #e68900;
+  --grad-gold: linear-gradient(135deg, #ffd700 0%, #ff9800 100%);
+
+  /* Rouge Corail / Alerte Risque & Sanction LBC-FT */
+  --cif-danger-50: #fef2f2;
+  --cif-danger-100: #fee2e2;
+  --cif-danger-400: #f87171;
+  --cif-danger-500: #ce1126;
+  --cif-danger-600: #dc2626;
+  --cif-danger-700: #b91c1c;
+  --grad-danger: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+
+  /* Info uses brand forest so cyan does not leak into the 60-30-10 system */
+  --cif-info-50: #eef4ee;
+  --cif-info-500: #1b4332;
+  --cif-info-700: #0d2818;
+
+  /* Pourpre / Comité & Décision — aligned to forest so the SPA stays 60-30-10 */
+  --cif-purple-50: var(--cif-primary-50);
+  --cif-purple-500: var(--cif-primary-400);
+  --cif-purple-700: var(--cif-primary-700);
+
+  /* ========================================================================
+     3. SURFACES & NEUTRES (MODE CLAIR PAR DÉFAUT)
+     ======================================================================== */
+  --surface-app-bg: #f9f6eb;
+  --surface-card: #fffef8;
+  --surface-card-subtle: #f0ebdc;
+  --surface-sidebar: #0d2818;
+  --surface-sidebar-hover: #1b4332;
+  --surface-sidebar-active: rgba(var(--brand-rgb), 0.35);
+  
+  --border-light: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text-main: #0d2818;
+  --text-muted-dark: #475569;
+  --text-subtle: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* ========================================================================
+     4. TYPOGRAPHIE & RAYONS DE BORDURE (BORDER-RADIUS)
+     ======================================================================== */
+  --font-family-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-code: 'JetBrains Mono', monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* ========================================================================
+     5. OMBRES PORTÉES ÉLÉGANTES (ELEVATION)
+     ======================================================================== */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-drawer: -5px 0 25px rgba(0, 0, 0, 0.15);
+  --shadow-modal: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  --shadow-glow-primary: 0 0 20px rgba(var(--brand-rgb), 0.35);
+  --shadow-glow-emerald: 0 0 20px rgba(23, 163, 106, 0.35);
+  --shadow-glow-accent: 0 0 20px rgba(var(--accent-rgb), 0.35);
+
+  /* ========================================================================
+     6. BREAKPOINTS RESPONSIVE CROSS-SCREEN
+     ======================================================================== */
+  --screen-mobile: 480px;
+  --screen-tablet: 768px;
+  --screen-laptop: 1024px;
+  --screen-desktop: 1280px;
+  --screen-wide: 1536px;
+}
+
+/* ==========================================================================
+   THEME SOMBRE (DARK MODE CONSTANTS OVERRIDES)
+   ========================================================================== */
+[data-theme="dark"] {
+  --surface-app-bg: #0d2818;
+  --surface-card: #1b4332;
+  --surface-card-subtle: #20372f;
+  --surface-sidebar: #0a1f13;
+  --surface-sidebar-hover: #1b4332;
+
+  --border-light: #1e293b;
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+
+  --text-main: #f8fafc;
+  --text-muted-dark: #cbd5e1;
+  --text-subtle: #64748b;
+
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.6);
+}

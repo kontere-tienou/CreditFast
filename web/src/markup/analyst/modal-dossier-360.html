@@ -1,0 +1,139 @@
+<!-- ==========================================================================
+     4. MODAL: 360° RISK ANALYST & OCR INSPECTOR (SCORING V2 & COLD START)
+     ========================================================================== -->
+<div id="dossier-modal" class="modal-backdrop">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-header">
+      <div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;">
+          <i class="fas fa-folder-open text-primary mr-1"></i> Dossier <span id="modal-dossier-ref">REQ-2026-0891</span>
+        </h3>
+        <p style="font-size: 0.78rem; color: var(--text-subtle);" id="modal-client-location">Bamako, Mali • ML-BKO-008821</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem;" id="modal-header-actions">
+        <button class="btn btn-secondary btn-sm" id="modal-cold-start-btn" onclick="AppInteractions.toggleColdStartInModal()" title="Basculer la simulation entre Modèle Standard et Cold Start">
+          <i class="fas fa-seedling text-emerald"></i> Simuler Cold Start
+        </button>
+        <button class="modal-close-btn" onclick="AppInteractions.closeModal('dossier-modal')">&times;</button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Active Model & Confidence Badge Bar -->
+      <div id="modal-model-badge" style="margin-bottom: 0.85rem;"></div>
+
+      <!-- Top Overview Bar -->
+      <div class="capacity-card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div>
+            <h4 id="modal-client-name" style="font-size: 1.2rem; color: var(--text-main);">Fatou Ndiaye</h4>
+            <div style="font-size: 0.78rem; color: var(--text-subtle);">Commerçante / Grossiste Textiles • 6 ans d'activité</div>
+          </div>
+          <div class="score-main-display" style="padding: 0.75rem 1.25rem;">
+            <div class="score-gauge" id="modal-score-gauge" style="--score-deg: 0deg; width: 70px; height: 70px;">
+              <div class="score-gauge-inner" style="width: 54px; height: 54px;">
+                <div class="score-number" id="modal-score-val" style="font-size: 1.2rem;">0</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Score Explicable V2</div>
+              <div class="score-risk-tag" id="modal-score-risk-tag">Calcul en cours...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Capacity Breakdown Equation -->
+        <div class="capacity-equation">
+          <div class="capacity-item">
+            <div class="val" id="cap-income">800 000 FCFA</div>
+            <div class="lbl">Revenus Totaux</div>
+          </div>
+          <div class="capacity-op">-</div>
+          <div class="capacity-item">
+            <div class="val" id="cap-expenses">380 000 FCFA</div>
+            <div class="lbl">Charges & Dettes</div>
+          </div>
+          <div class="capacity-op">=</div>
+          <div class="capacity-item capacity-result">
+            <div class="val" id="cap-disposable">420 000 FCFA</div>
+            <div class="lbl">Reste à Vivre</div>
+          </div>
+          <div class="capacity-op">vs</div>
+          <div class="capacity-item">
+            <div class="val" id="cap-installment">235 000 FCFA</div>
+            <div class="lbl">Mensualité Prêt</div>
+          </div>
+        </div>
+
+        <div id="cap-banner" class="capacity-comparison pass">
+          <!-- Dynamically Injected -->
+        </div>
+      </div>
+
+      <!-- Main Tabs / 2-Column Inspector -->
+      <div class="ocr-grid">
+        <!-- Left: Supporting Docs & Human Verification -->
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">
+            <i class="fas fa-file-invoice text-primary mr-1"></i> Pièces Justificatives & Extraction OCR
+          </h4>
+          <div id="modal-docs-list">
+            <!-- Documents Rendered Dynamically -->
+          </div>
+
+          <!-- Anomalies Detected -->
+          <h4 style="font-size: 0.95rem; margin: 1.25rem 0 0.75rem;">
+            <i class="fas fa-triangle-exclamation text-warning mr-1"></i> Contrôles Automatisés & Signaux
+          </h4>
+          <div id="modal-anomalies-list">
+            <!-- Anomalies Rendered Dynamically -->
+          </div>
+        </div>
+
+        <!-- Right: Explainable Multi-Factor Scoring & Recommendation -->
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">
+            <i class="fas fa-scale-balanced text-primary mr-1"></i> Grille d'Explicabilité & Facteurs (Norme CreditFast)
+          </h4>
+          
+          <!-- Synthetic Matrix (Page 4 de la Note de Présentation) -->
+          <div id="modal-scoring-synthesis-box" style="margin-bottom: 1rem;">
+            <!-- Rendered Dynamically by JS -->
+          </div>
+
+          <div style="height: 170px; margin-bottom: 1rem;">
+            <canvas id="modal-radar-canvas"></canvas>
+          </div>
+
+          <div id="modal-factors-list" class="factors-list">
+            <!-- Factors Rendered Dynamically -->
+          </div>
+
+          <!-- Role-Adapted Decision / Tracking Box -->
+          <div id="modal-role-action-container">
+            <div class="card" style="margin-top: 1.25rem; background: var(--surface-card-subtle);">
+              <div class="card-body" style="padding: 1rem;">
+                <h5 style="font-size: 0.88rem; margin-bottom: 0.5rem;"><i class="fas fa-pen-to-square text-primary"></i> Avis & Recommandation de l'Analyste</h5>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Avis Consultatif</label>
+                  <select id="analyst-reco-select" class="form-control">
+                    <option value="FAVORABLE">Favorable pour passage en Comité</option>
+                    <option value="RESERVE">Favorable sous réserve de compléments</option>
+                    <option value="DEFAVORABLE">Défavorable (Risque trop élevé)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                  <label class="form-label">Note d'analyse de synthèse</label>
+                  <textarea id="analyst-notes-input" class="form-control" rows="2" placeholder="Synthèse pour le comité de crédit...">Capacité de remboursement vérifiée. Activité mature et stable. Documents proforma contrôlés avec succès.</textarea>
+                </div>
+                <button class="btn btn-primary btn-block" style="width: 100%;" onclick="AppInteractions.submitAnalystReview()">
+                  <i class="fas fa-paper-plane"></i> Transmettre au Comité de Crédit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<!-- ====================================================================
+     [DEMANDEUR] MON ÉCHÉANCIER RÉEL & PAIEMENT MOBILE MONEY
+     ==================================================================== -->
+<section id="view-client-schedule" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+    <div>
+      <h2 class="page-title"><i class="fas fa-calendar-days text-primary mr-2"></i> Mon Échéancier de Remboursement Réel</h2>
+      <p class="page-subtitle">Prêt Actif N° REQ-2025-0412 / Contrat CF-DKR-8821 • </p>
+      <!-- Taux UEMOA Dégressif 12.0% l'an -->
+    </div>
+    <div class="page-actions" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+      <button class="btn btn-secondary" onclick="App.showToast('Génération du relevé complet au format PDF en cours...', 'info')">
+        <i class="fas fa-file-pdf text-danger"></i> <span class="hide-xs">Télécharger le</span> Relevé PDF
+      </button>
+      <button class="btn btn-success" onclick="App.openClientPaymentModal()">
+        <i class="fas fa-wallet"></i> Payer une Échéance
+      </button>
+    </div>
+  </div>
+
+  <!-- Loan Progress & Summary Metrics -->
+  <div class="schedule-grid-responsive">
+    <!-- Metric 1: Capital Amorti vs Restant -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Progression du Prêt</div>
+          <div id="schedule-metric-progress-text" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-700); font-family: var(--font-family-code);">2 / 12 Mensualités</div>
+        </div>
+        <span id="schedule-metric-progress-badge" class="badge badge-approved"><i class="fas fa-check"></i> 16.7% Payé</span>
+      </div>
+      <!-- Progress Bar -->
+      <div style="width: 100%; height: 10px; background: var(--bg-body); border-radius: var(--radius-full); overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 0.5rem;">
+        <div id="schedule-metric-progress-bar" style="width: 16.7%; height: 100%; background: linear-gradient(90deg, var(--cif-emerald-500), var(--cif-emerald-600)); border-radius: var(--radius-full);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-subtle);">
+        <span>Remboursé : <strong id="schedule-metric-paid">470 000 FCFA</strong></span>
+        <span>Restant : <strong id="schedule-metric-remaining">2 030 000 FCFA</strong></span>
+      </div>
+    </div>
+
+    <!-- Metric 2: Prochaine Échéance -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Prochaine Échéance N° 3</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-gold-700); font-family: var(--font-family-code);">235 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="far fa-calendar text-gold mr-1"></i> Date limite : <strong>05 Septembre 2026</strong>
+          </div>
+        </div>
+        <button class="btn btn-warning btn-sm" onclick="App.openClientPaymentModal(3, 235000)">
+          <i class="fas fa-credit-card"></i> Régler
+        </button>
+      </div>
+    </div>
+
+    <!-- Metric 3: Épargne Nantie / Caution Solidaire -->
+    <div class="card" style="padding: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-subtle); text-transform: uppercase; font-weight: 700;">Épargne Nantie Sécurisée</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--cif-emerald-700); font-family: var(--font-family-code);">500 000 FCFA</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            <i class="fas fa-lock text-emerald mr-1"></i> Garantie bloquée à 20% du prêt
+          </div>
+        </div>
+        <div class="borrower-metric-icon" style="background: var(--cif-emerald-50); color: var(--cif-emerald-600); width: 38px; height: 38px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md);">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Money Quick Pay Strip -->
+  <div class="card schedule-quickpay-card">
+    <div class="card-body schedule-quickpay-body">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 44px; height: 44px; border-radius: var(--radius-lg); background: var(--cif-primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">
+          <i class="fas fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 2px;">PaiementMobile Money</h4>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Paiement instantané sans déplacement • Quittance numérique et SMS immédiat</p>
+        </div>
+      </div>
+      <div class="schedule-momo-buttons">
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Orange Money')" style="background: var(--bg-surface); border-color: #ff7900;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #ff7900; border-radius: 50%; margin-right: 4px;"></span> Orange Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Wave')" style="background: var(--bg-surface); border-color: #1dc5d8;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #1dc5d8; border-radius: 50%; margin-right: 4px;"></span> Wave
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('Moov Money')" style="background: var(--bg-surface); border-color: #005ba4;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #005ba4; border-radius: 50%; margin-right: 4px;"></span> Moov Money
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="App.triggerMobileMoneyPayment('MTN MoMo')" style="background: var(--bg-surface); border-color: #ffcc00;">
+          <span style="display: inline-block; width: 8px; height: 8px; background: #ffcc00; border-radius: 50%; margin-right: 4px;"></span> MTN MoMo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed 12-Month Schedule Table (Essential Columns Focus) -->
+  <div class="card">
+    <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div>
+        <h3 class="card-title"><i class="fas fa-list-ol text-primary mr-1"></i> Échéancier de Remboursement (12 Mois)</h3>
+        <p class="card-subtitle">Montant : 2 500 000 FCFA  • Cliquez sur une ligne pour voir le détail complet</p>
+      </div>
+      <!-- Filter Tabs -->
+      <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button id="filter-sched-all" class="btn btn-secondary btn-sm active" onclick="AppInteractions.filterScheduleTable('ALL', this)">Toutes (12)</button>
+        <button id="filter-sched-paid" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('PAID', this)"><i class="fas fa-circle-check text-success"></i> Payées (2)</button>
+        <button id="filter-sched-due" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('DUE', this)"><i class="fas fa-clock text-warning"></i> Exigibles (1)</button>
+        <button id="filter-sched-upcoming" class="btn btn-secondary btn-sm" onclick="AppInteractions.filterScheduleTable('UPCOMING', this)">À venir (9)</button>
+      </div>
+    </div>
+
+    <div data-app-table="client-schedule"></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SIDE DRAWER: DÉTAIL COMPLET DE L'ÉCHÉANCE
+     ==================================================================== -->
+

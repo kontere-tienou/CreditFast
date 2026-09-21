@@ -1,0 +1,153 @@
+<!-- ====================================================================
+     [DEMANDEUR] MON CONSEILLER ATTITRÉ & AGENCE CIF
+     ==================================================================== -->
+<section id="view-client-advisor" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title"><i class="fas fa-headset text-primary mr-2"></i> Mon Conseiller Dédié & Agence CreditFast
+      </h2>
+      <p class="page-subtitle">Échangez directement avec votre conseiller personnel et planifiez vos rendez-vous
+        d'accompagnement</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" onclick="App.openAppointmentModal()">
+        <i class="fas fa-calendar-plus"></i> Prendre Rendez-vous
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 1.5rem;">
+    <!-- Column 1: Advisor Profile Card -->
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+      <div style="position: relative; width: 84px; height: 84px; margin: 0 auto 1rem auto;">
+        <img src="images/profil/profil01-03.jpg" alt="Adama Traore" class="user-avatar"
+          style="width: 84px; height: 84px; border: 3px solid var(--primary-200); box-shadow: var(--shadow-md);">
+        <span
+          style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: #518e45; border: 2px solid white; border-radius: 50%;"
+          title="En ligne actuellement"></span>
+      </div>
+
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Adama Traore</h3>
+      <div style="font-size: 0.8rem; color: var(--primary-600); font-weight: 700; margin-bottom: 4px;">Votre Expert
+        Accompagnement Microfinance</div>
+      <span class="badge badge-approved" style="font-size: 0.7rem; margin-bottom: 1.25rem;">
+        <i class="fas fa-circle-check"></i> Conseiller Attitré Actif
+      </span>
+
+      <div
+        style="text-align: left; font-size: 0.8rem; line-height: 1.8; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; margin-bottom: 1.25rem;">
+        <div><i class="fas fa-building-columns text-primary mr-2"></i> <strong>Agence :</strong> Caisse CreditFast Grand
+          Marché (Bamako, Mali)</div>
+        <div><i class="fas fa-phone text-primary mr-2"></i> <strong>Direct :</strong> +223 20 22 44 00</div>
+        <div><i class="fas fa-mobile-screen text-primary mr-2"></i> <strong>Mobile :</strong> +223 77 54 01 28</div>
+        <div><i class="fas fa-envelope text-primary mr-2"></i> <strong>Email :</strong> adama.traore@cif-ao.org</div>
+        <div><i class="fas fa-language text-primary mr-2"></i> <strong>Langues :</strong> Français, Bambara, Soninké
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <!-- <button class="btn btn-primary btn-sm" style="width: 100%;" onclick="App.openAppointmentModal()">
+          <i class="fas fa-calendar-plus mr-1"></i> Prendre Rendez-vous
+        </button> -->
+        <button class="btn btn-secondary btn-sm" style="width: 100%;"
+          onclick="App.showToast('Appel direct initié vers le poste de Adama Traore (+223 20 22 44 00)...', 'info')">
+          <i class="fas fa-phone-volume mr-1"></i> Appeler le Conseiller
+        </button>
+      </div>
+    </div>
+
+    <!-- Column 2 & 3: Live Messaging Thread -->
+    <div class="card" style="grid-column: span 2; display: flex; flex-direction: column; min-height: 520px;">
+      <div class="card-header"
+        style="padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 10px; height: 10px; background: #518e45; border-radius: 50%;"></div>
+          <div>
+            <h4 style="font-size: 0.92rem; font-weight: 700; margin: 0;">Discussion Sécurisée avec Adama Traore</h4>
+            <span style="font-size: 0.72rem; color: var(--text-subtle);">Projet REQ-2026-0891 (Stock Tissus Wax) •
+              Réponse moyenne sous 15 min</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.4rem;">
+          <!-- <button class="btn btn-primary btn-sm" onclick="App.openAppointmentModal()">
+            <i class="fas fa-calendar-plus"></i> <span class="hide-xs">Prendre</span> Rendez-vous
+          </button> -->
+          <button class="btn btn-secondary btn-sm"
+            onclick="App.showToast('Historique des échanges archivé au format PDF', 'info')">
+            <i class="fas fa-download"></i> <span class="hide-xs">Exporter</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Body -->
+      <div id="advisor-chat-messages"
+        style="flex: 1; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: var(--bg-body);">
+        <!-- Advisor Message -->
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+          <img src="images/profil/profil01-03.jpg" alt="Adama" class="user-avatar"
+            style="width: 32px; height: 32px; flex-shrink: 0;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Adama Traore • 11/08/2026 à
+              11:30</div>
+            <div
+              style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+              Bonjour Madame Ndiaye, j'ai bien reçu votre demande de financement de 2 500 000 FCFA pour le stock de
+              tissus. Vos devis et pièces sont très clairs et nos équipes ont validé la conformité de vos documents.
+              Votre projet avance parfaitement.
+            </div>
+          </div>
+        </div>
+
+        <!-- Borrower Message (Self) -->
+        <div
+          style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%; align-self: flex-end; flex-direction: row-reverse;">
+          <div
+            style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-600); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">
+            FN
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px; text-align: right;">Vous •
+              11/08/2026 à 14:12</div>
+            <div
+              style="background: var(--primary-600); color: white; padding: 0.75rem 1rem; border-radius: var(--radius-lg); font-size: 0.82rem; line-height: 1.5;">
+              Merci Monsieur Traore. Mon fournisseur à Bamako m'a confirmé la réservation du conteneur jusqu'au 22 août.
+              Est-ce que le versement des fonds pourra se faire avant cette date dès l'accord ?
+            </div>
+          </div>
+        </div>
+
+        <!-- Advisor Message -->
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start; max-width: 80%;">
+          <img src="images/profil/profil01-03.jpg" alt="Adama" class="user-avatar"
+            style="width: 32px; height: 32px; flex-shrink: 0;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle); margin-bottom: 2px;">Adama Traore • 12/08/2026 à
+              09:20</div>
+            <div
+              style="background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.5; color: var(--text-primary);">
+              Absolument ! La commission se réunit le 20 août. Dès la décision favorable, vos fonds seront immédiatement
+              mis à votre disposition sur votre compte CreditFast ou par transfert Mobile Money selon votre préférence
+              dès le 21 août au matin.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Input Form -->
+      <div
+        style="padding: 0.85rem 1.25rem; background: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; gap: 0.5rem; align-items: center;">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('client-file-input').click()"
+          title="Joindre un document ou une photo">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <input type="text" id="advisor-msg-input" class="form-control"
+          placeholder="Écrivez votre message à Adama Traore..." style="flex: 1; font-size: 0.85rem;"
+          onkeypress="if(event.key === 'Enter') App.sendAdvisorMessage()">
+        <button class="btn btn-primary btn-sm" onclick="App.sendAdvisorMessage()">
+          <i class="fas fa-paper-plane"></i> Envoyer
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

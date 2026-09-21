@@ -1,0 +1,75 @@
+<!-- ====================================================================
+     [ESPACE 3 - PAGE 2] DÉTECTION DES ANOMALIES & CONTRÔLES RISQUES
+     ==================================================================== -->
+<section id="view-analyst-anomalies" class="app-view" style="display: none;" role="region" aria-label="Détection des Anomalies et Contrôles Risques">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title">Détection des Anomalies & Contrôles Risques</h1>
+      <div class="page-breadcrumb">
+        <span>Espace Analyste Risque</span> <i class="fas fa-chevron-right"></i>
+        <span>Audit Algorithmique & Rapprochement Automatisé (MALI)</span>
+      </div>
+    </div>
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="App.runFullAnomalyScan()" title="Lancer un scan global des règles et de l'OCR" aria-label="Lancer le scan automatisé en temps réel">
+        <i class="fas fa-arrows-rotate text-primary mr-1"></i> Scan Automatisé Temps Réel
+      </button>
+      <button class="btn btn-primary" onclick="App.exportAnomaliesCsv()" title="Télécharger le registre complet des anomalies en CSV" aria-label="Exporter le registre en CSV">
+        <i class="fas fa-file-csv mr-1"></i> Exporter Registre CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 Top KPI Stat Cards -->
+  <div class="grid-4" style="margin-bottom: 1.5rem;">
+    <div class="card stat-card" role="region" aria-label="Compteur Anomalies Actives">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="anom-kpi-total">5</div>
+        <div class="stat-label">Anomalies Actives Détectées</div>
+        <div class="stat-trend down"><i class="fas fa-shield-halved"></i> Surveillance Risque</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" role="region" aria-label="Compteur Discordances OCR">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-file-lines"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="anom-kpi-ocr">2</div>
+        <div class="stat-label">Discordances OCR & Pièces</div>
+        <div class="stat-trend down"><i class="fas fa-receipt"></i> Dates / Montants / Devis</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" role="region" aria-label="Compteur Solvabilité et Ratios">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-calculator"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="anom-kpi-fin">1</div>
+        <div class="stat-label">Solvabilité & Ratios</div>
+        <div class="stat-trend down"><i class="fas fa-coins"></i> Reste à vivre sous seuil</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" role="region" aria-label="Compteur Réseau et Multi-Caisses">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-network-wired"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="anom-kpi-multi">1</div>
+        <div class="stat-label">Réseau & Multi-Caisses</div>
+        <div class="stat-trend down"><i class="fas fa-handshake"></i> Cumul engagements CreditFast</div>
+      </div>
+    </div>
+  </div>
+
+  <div data-app-table="analyst-anomalies"></div>
+
+  <!-- Sidedrawer Volet Latéral : Détail Approfondi de l'Anomalie & Diagnostic Risque -->
+  
+</section>

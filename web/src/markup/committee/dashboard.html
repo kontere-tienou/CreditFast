@@ -1,0 +1,150 @@
+<!-- ====================================================================
+     [COMITÉ] VUE 1 : SÉANCE DE DÉLIBÉRATION DU COMITÉ DE CRÉDIT
+     ==================================================================== -->
+<section id="view-role-committee" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Séance de Délibération du Comité de Crédit</h1>
+      <div class="page-breadcrumb">
+        <span>Instance Décisionnaire</span> <i class="fas fa-chevron-right"></i>
+        <span>Délibérations Collégiales, Vote & Décisions d'Octroi</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary btn-sm" onclick="App.switchView('view-committee-dossiers')">
+        <i class="fas fa-folder-gavel"></i> Dossiers à Délibérer & Votes
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-committee-signed')">
+        <i class="fas fa-file-signature"></i> Procès-Verbaux (PV)
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-audit-logs')">
+        <i class="fas fa-clock-rotate-left"></i> Journal d'Audit
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Committee Cards -->
+  <div class="grid-4">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap purple">
+        <i class="fas fa-scale-balanced"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Dossiers en Séance</div>
+        <div class="stat-trend down"><i class="fas fa-gavel"></i> Délibération requise</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-vault"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">18.5 M</div>
+        <div class="stat-label">Volume Total Délibéré</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> 5 dossiers</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">84%</div>
+        <div class="stat-label">Taux d'Approbation</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux seuils CreditFast</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-stopwatch"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">48 h</div>
+        <div class="stat-label">Délai Moyen Décision</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif &lt; 72h</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Committee Deliberation Table -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title"><i class="fas fa-gavel text-primary"></i> Dossiers Transmis par les Analystes Risque</h3>
+        <p class="card-subtitle">Cliquez sur une ligne ou sur « Détails » pour afficher le volet d'analyse approfondie</p>
+      </div>
+      <span class="badge badge-committee"><i class="fas fa-circle-dot mr-1 text-emerald"></i> Séance en cours</span>
+    </div>
+    <div data-app-table="committee-session"></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     [COMITÉ] VUE 3 : RAPPORTS D'OCTROI & STATISTIQUES CREDITFAST RÉGIONALES
+     ==================================================================== -->
+<section id="view-committee-reports" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Rapports d'Octroi & Gouvernance CreditFast Régionale</h1>
+      <div class="page-breadcrumb">
+        <span>Pilotage Stratégique</span> <i class="fas fa-chevron-right"></i>
+        <span>Indicateurs de Portefeuille & Respect des Normes Prudentielles</span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-committee')">
+        <i class="fas fa-arrow-left"></i> Séance du Comité
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="App.showToast('Génération du rapport prudentiel UEMOA au format PDF...', 'info')">
+        <i class="fas fa-file-lines"></i> Rapport Prudentiel
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 1.25rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">142 M</div>
+        <div class="stat-label">Volume Octroyé Q3 2026</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12% vs Q2</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1.8%</div>
+        <div class="stat-label">Taux de PAR 30 Jours</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> Sous la norme BCEAO (&lt;3%)</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-users-viewfinder"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">420</div>
+        <div class="stat-label">Crédits en Cours de Remboursement</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Taux de recouvrement : 98.4%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-building-columns text-primary"></i> Répartition des Crédits par Caisses & Agences CreditFast (Bamako)</h3>
+    </div>
+    <div data-app-table="committee-agencies"></div>
+  </div>
+</section>
+

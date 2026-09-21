@@ -1,0 +1,85 @@
+<!-- ====================================================================
+     [ESPACE AGENT] PIÈCES MANQUANTES, RELANCES SMS & COMPLÉMENTS GED
+     ==================================================================== -->
+<section id="view-agent-complements" class="app-view" style="display: none;">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title"><i class="fas fa-triangle-exclamation text-danger mr-2"></i> Pièces Manquantes & Relances Documentaires</h1>
+      <div class="page-breadcrumb">
+        <span>Espace Agent de Crédit</span> <i class="fas fa-chevron-right"></i>
+        <span>Collecte Terrain & Régularisation des Dossiers en Suspens</span>
+      </div>
+    </div>
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="App.openQrScannerModal('general')" title="Scanner le QR Code d'un document ou justificatif">
+        <i class="fas fa-qrcode text-primary mr-1"></i> Scanner Document Mobile
+      </button>
+      <button class="btn btn-primary" onclick="App.triggerBulkSmsReminder()">
+        <i class="fas fa-paper-plane mr-1"></i> Relance Groupée SMS / WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="anomaly-item warning" style="margin-bottom: 1.5rem;">
+    <i class="fas fa-bell-concierge anomaly-icon" style="color: var(--warning-dark);"></i>
+    <div class="anomaly-content">
+      <h5 style="color: var(--warning-dark);">3 dossiers nécessitent une collecte complémentaire avant passage en Comité</h5>
+      <p>Certaines pièces présentent une anomalie OCR (date dépassée, montant discordant) ou n'ont pas encore été transmises par l'emprunteur.</p>
+    </div>
+  </div>
+
+  <!-- Top Metrics -->
+  <div class="grid-4" style="margin-bottom: 1.5rem;">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-file-circle-xmark"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="comp-kpi-missing">4</div>
+        <div class="stat-label">Pièces Manquantes ou Rejetées</div>
+        <div class="stat-trend down"><i class="fas fa-clock"></i> Bloquant l'instruction</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-comment-sms"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value" id="comp-kpi-reminders">8</div>
+        <div class="stat-label">Relances Transmises (7j)</div>
+        <div class="stat-trend up"><i class="fas fa-paper-plane"></i> SMS & WhatsApp API</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-hourglass-half"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1.8 j</div>
+        <div class="stat-label">Délai Moyen de Réponse Client</div>
+        <div class="stat-trend up"><i class="fas fa-bolt"></i> Objectif agence : &lt; 3 jours</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-shield-circle-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">91%</div>
+        <div class="stat-label">Taux de Régularisation</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> Conforme aux normes CreditFast</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table of Missing / Incomplete Documents -->
+  <div data-app-table="agent-complements"></div>
+
+  <!-- Sidedrawer Volet Latéral : Détail Approfondi Pièce Manquante & Relance -->
+  
+</section>

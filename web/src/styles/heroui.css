@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import '@heroui/styles';
+
+@theme {
+  --color-indigo-50: #eef4ee;
+  --color-indigo-100: #d5e3d4;
+  --color-indigo-200: #a8c5a4;
+  --color-indigo-400: #518e45;
+  --color-indigo-500: #1b4332;
+  --color-indigo-600: #1b4332;
+  --color-indigo-700: #0d2818;
+  --color-purple-50: #eef4ee;
+  --color-purple-500: #518e45;
+  --color-purple-600: #1b4332;
+  --color-purple-700: #0d2818;
+}

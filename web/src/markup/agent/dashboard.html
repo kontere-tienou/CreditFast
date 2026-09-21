@@ -1,0 +1,116 @@
+<!-- ====================================================================
+     [ESPACE 2] TABLEAU DE BORD DE L'AGENT DE CRÉDIT (TERRAIN & COLLECTE)
+     ==================================================================== -->
+<section id="view-role-agent" class="app-view" style="display: none;">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Espace Agent de Crédit • Portefeuille & Instruction</h1>
+      <div class="page-breadcrumb">
+        <span>Opérations Guichet</span> <i class="fas fa-chevron-right"></i>
+        <span>Agence Nyèsigiso Grand Marché (Bamako, Mali • CreditFast)</span>
+      </div>
+    </div>
+    
+    <!-- Activity Trend Sparkline Widget (7 Days Submissions) -->
+    <div class="header-sparkline-widget" id="agent-activity-widget" title="Rythme de soumission des demandes sur les 7 derniers jours">
+      <div class="sparkline-meta">
+        <div class="sparkline-title">
+          <i class="fas fa-chart-line text-primary"></i>
+          <span>Tendance d'Activité</span>
+        </div>
+        <div class="sparkline-stat">
+          <span class="sparkline-val">23</span>
+          <span class="sparkline-sub">dossiers / 7j</span>
+          <span class="sparkline-trend"><i class="fas fa-arrow-trend-up"></i> +18%</span>
+        </div>
+      </div>
+      <div class="sparkline-canvas-container">
+        <canvas id="agent-activity-sparkline"></canvas>
+      </div>
+    </div>
+
+    <div class="page-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-primary" onclick="App.openNewLoanModal()" title="Enregistrer une nouvelle demande de crédit pour un emprunteur">
+        <i class="fas fa-file-circle-plus mr-1"></i> Enregistrer Nouvelle Demande
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Agent Cards -->
+  <div class="grid-4">
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-role-agent')" title="Voir tous les dossiers de financement">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">42</div>
+        <div class="stat-label">Dossiers au Guichet</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8 cette semaine</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-inspections')" title="Accéder aux inspections garanties terrain">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-clipboard-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Pré-inspections Garanties</div>
+        <div class="stat-trend down"><i class="fas fa-motorcycle"></i> À visiter sur le terrain</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-complements')" title="Accéder aux pièces manquantes et relances">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Pièces Manquantes</div>
+        <div class="stat-trend down"><i class="fas fa-phone"></i> Relances nécessaires</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" style="cursor: pointer;" onclick="App.switchView('view-agent-clients')" title="Consulter le portefeuille emprunteurs">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">88%</div>
+        <div class="stat-label">Portefeuille Sociétaires</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> 1 248 membres actifs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agent Loan Requests Table (Essential Columns & Responsive Filter Tabs) -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="card-header" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div>
+        <h3 class="card-title"><i class="fas fa-file-invoice-dollar text-primary mr-1"></i> Registre des Demandes de Financement</h3>
+        <p class="card-subtitle">Instruction Guichet & Terrain • Cliquez sur une ligne pour ouvrir la fiche détaillée du dossier</p>
+      </div>
+      <!-- Filter Tabs -->
+      <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button id="filter-agent-all" class="btn btn-secondary btn-sm active" onclick="App.filterAgentPipeline('ALL', this)">
+          Toutes (<span id="agent-filter-count-all">0</span>)
+        </button>
+        <button id="filter-agent-submitted" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('SUBMITTED', this)">
+          <i class="fas fa-inbox text-primary"></i> Soumises (<span id="agent-filter-count-submitted">0</span>)
+        </button>
+        <button id="filter-agent-review" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('REVIEW', this)">
+          <i class="fas fa-hourglass-half text-warning"></i> En Vérification (<span id="agent-filter-count-review">0</span>)
+        </button>
+        <button id="filter-agent-approved" class="btn btn-secondary btn-sm" onclick="App.filterAgentPipeline('APPROVED', this)">
+          <i class="fas fa-circle-check text-success"></i> Comité / Accordées (<span id="agent-filter-count-approved">0</span>)
+        </button>
+      </div>
+    </div>
+    <div data-app-table="agent-pipeline"></div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     SIDE DRAWER: DÉTAIL COMPLET DU DOSSIER AGENT
+     ==================================================================== -->
+

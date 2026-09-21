@@ -1,0 +1,300 @@
+<!-- ====================================================================
+     [ESPACE 3] TABLEAU DE BORD DE L'ANALYSTE RISQUE (SCORING V2 & 360°)
+     ==================================================================== -->
+<section id="view-role-analyst" class="app-view">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Supervision des Risques & Scoring Explicable</h1>
+      <div class="page-breadcrumb">
+        <span>CreditFast </span> <i class="fas fa-chevron-right"></i>
+        <a href="#">Supervision Microcrédit </a> <i class="fas fa-chevron-right"></i>
+        <span>Vue Régionale </span>
+      </div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary btn-sm" onclick="DB.reset(); App.init(); App.showToast('Données réinitialisées avec succès', 'info');">
+        <i class="fas fa-arrows-rotate"></i> Réinitialiser Données
+      </button>
+      <button class="btn btn-primary" onclick="App.switchView('view-client-wizard')">
+        <i class="fas fa-plus"></i> Nouvelle Demande
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Stat Cards (Zoogler Style) -->
+  <div class="grid-4">
+    <div class="card stat-card">
+      <div class="stat-icon-wrap primary">
+        <i class="fas fa-folder-open"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">190</div>
+        <div class="stat-label">Demandes Actives</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +12.5% ce mois</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap emerald">
+        <i class="fas fa-coins"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">342.5 M</div>
+        <div class="stat-label">Encours Accordé (FCFA)</div>
+        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> +8.2% vs N-1</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon-wrap amber">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">96.8%</div>
+        <div class="stat-label">Taux de Recouvrement</div>
+        <div class="stat-trend up"><i class="fas fa-check"></i> Objectif  atteint</div>
+      </div>
+    </div>
+
+    <div class="card stat-card" onclick="App.switchView('view-analyst-anomalies')" style="cursor: pointer;" title="Accéder au Registre des Anomalies & Discordances">
+      <div class="stat-icon-wrap rose">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Alertes & Anomalies</div>
+        <div class="stat-trend down"><i class="fas fa-shield-halved"></i> 2 Critiques • Cliquez pour ouvrir</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Grid (Main Spline + Risk Breakdown) -->
+  <div class="grid-dashboard-main">
+    <!-- Evolution Spline Chart -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-chart-area text-primary"></i> Évolution des Octrois & Demandes</h3>
+          <p class="card-subtitle">Volume mensuel en Millions FCFA pour le réseau des coopératives CreditFast</p>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-secondary btn-sm" onclick="AppCharts.renderEvolutionChart('evolution-chart-canvas', 'year')">Année</button>
+          <button class="btn btn-secondary btn-sm" onclick="AppCharts.renderEvolutionChart('evolution-chart-canvas', 'month')">Mois</button>
+        </div>
+      </div>
+      <div class="card-body" style="height: 320px;">
+        <canvas id="evolution-chart-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Risk Distribution Doughnut -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title"><i class="fas fa-chart-pie text-emerald"></i> Profil de Risque</h3>
+          <p class="card-subtitle">Répartition basée sur le moteur de scoring explicable </p>
+        </div>
+      </div>
+      <div class="card-body" style="height: 320px;">
+        <canvas id="risk-doughnut-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Regional Performance + Recent Credit Requests -->
+  <div class="grid-dashboard-main" style="margin-top: 1.25rem;">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-globe-africa text-primary"></i> Encours par Quartier de Bamako (CreditFast MALI)</h3>
+        <span class="badge badge-submitted">Les Ville/Quartiers  du Mali </span>
+      </div>
+      <div class="card-body" style="height: 280px;">
+        <canvas id="regional-chart-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Compliance Watchlist Card -->
+    <!-- <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-fingerprint text-danger"></i> Surveillance LBC / FT / FP</h3>
+        <button class="btn btn-secondary btn-sm" onclick="App.switchView('view-role-compliance')">Voir Tout</button>
+      </div>
+      <div class="card-body">
+        <div class="anomaly-item critical">
+          <i class="fas fa-ban anomaly-icon"></i>
+          <div class="anomaly-content">
+            <h5>Sanction Régionale UEMOA</h5>
+            <p>Ibrahim Ould Mohamed • Mali</p>
+            <span class="badge badge-rejected" style="margin-top: 4px;">Blocage Opération</span>
+          </div>
+        </div>
+        <div class="anomaly-item warning">
+          <i class="fas fa-user-shield anomaly-icon"></i>
+          <div class="anomaly-content">
+            <h5>Personne Politiquement Exposée</h5>
+            <p>Ousmane Coulibaly • Bamako</p>
+            <span class="badge badge-verification" style="margin-top: 4px;">Diligence Renforcée</span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  <!-- CREDITFAST IMPACT & METRICS SECTION (NOTE DE PRÉSENTATION CREDITFAST-DIGICOOP-WA+) -->
+  <div class="card" style="margin-top: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05); border-radius: var(--radius-lg); overflow: hidden;">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 1.15rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
+      <div>
+        <h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-chart-line text-emerald" style="font-size: 1.1rem;"></i> Indicateurs de Performance & Efficacité Opérationnelle (CreditFast)
+        </h3>
+        <p class="card-subtitle" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+          Métriques d'impact pour les coopératives financières CreditFast (Mali - Bamako)
+        </p>
+      </div>
+      <span class="impact-metric-badge green" style="font-size: 0.75rem; padding: 0.35rem 0.8rem;">
+        <i class="fas fa-circle-check"></i> Modèle Hybride & Responsable
+      </span>
+    </div>
+    <div class="card-body" style="padding: 1.35rem 1.5rem; background: var(--bg-app);">
+      <div class="impact-metric-grid">
+        <!-- Card 1 : Temps Moyen de Pré-Analyse -->
+        <div class="impact-metric-card theme-indigo">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon indigo">
+                <i class="fas fa-bolt-lightning"></i>
+              </div>
+              <span class="impact-metric-title">Temps Moyen de Pré-Analyse</span>
+            </div>
+            <span class="impact-metric-badge green">-85% vs manuel</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value indigo">15 min</span>
+              <span class="impact-metric-subvalue">(au lieu de 48h)</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 85%; background: linear-gradient(90deg, var(--ds-30), var(--ds-10));"></div>
+            </div>
+            <p class="impact-metric-desc">Instruction accélérée dès réception des pièces au guichet ou via l'application mobile.</p>
+          </div>
+        </div>
+
+        <!-- Card 2 : Extraction OCR & Cohérence -->
+        <div class="impact-metric-card theme-emerald">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon emerald">
+                <i class="fas fa-brain-circuit"></i>
+              </div>
+              <span class="impact-metric-title">Extraction OCR & Cohérence</span>
+            </div>
+            <span class="impact-metric-badge green">Précision Haute</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value emerald">96.4%</span>
+              <span class="impact-metric-subvalue">de taux de lecture conforme</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 96.4%; background: linear-gradient(90deg, #518e45, #518e45);"></div>
+            </div>
+            <p class="impact-metric-desc">Rapprochement instantané cartes NINA, quittances EDM-SA, factures proforma & devis.</p>
+          </div>
+        </div>
+
+        <!-- Card 3 : Incohérences & Discordances -->
+        <div class="impact-metric-card theme-amber">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon amber">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+              <span class="impact-metric-title">Incohérences & Discordances</span>
+            </div>
+            <span class="impact-metric-badge amber">Alertes Actives</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value amber">100%</span>
+              <span class="impact-metric-subvalue">repérées avant comité</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #ff9800, #ffd700);"></div>
+            </div>
+            <p class="impact-metric-desc">Détection automatique des écarts de montants, doublons et pièces d'identité expirées.</p>
+          </div>
+        </div>
+
+        <!-- Card 4 : Scoring 100% Explicable -->
+        <div class="impact-metric-card theme-purple">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon purple">
+                <i class="fas fa-magnifying-glass-chart"></i>
+              </div>
+              <span class="impact-metric-title">Scoring 100% Explicable</span>
+            </div>
+            <span class="impact-metric-badge purple">Audit Ready</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value purple">100%</span>
+              <span class="impact-metric-subvalue">justifié facteur par facteur</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+            </div>
+            <p class="impact-metric-desc">Zéro boîte noire : piliers de solvabilité, ratios d'effort et alertes certifiés pour le comité.</p>
+          </div>
+        </div>
+
+        <!-- Card 5 : Temps Économisé / Dossier -->
+        <div class="impact-metric-card theme-teal">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon teal">
+                <i class="fas fa-clock-rotate-left"></i>
+              </div>
+              <span class="impact-metric-title">Temps Économisé / Dossier</span>
+            </div>
+            <span class="impact-metric-badge green">Gain Productivité</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value teal">~3h 30</span>
+              <span class="impact-metric-subvalue">par agent et par dossier</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 88%; background: linear-gradient(90deg, #14b8a6, #2dd4bf);"></div>
+            </div>
+            <p class="impact-metric-desc">Recentrage du chargé de crédit sur l'accompagnement client, le conseil et les visites terrain.</p>
+          </div>
+        </div>
+
+        <!-- Card 6 : Supervision Humaine Finale -->
+        <div class="impact-metric-card theme-blue">
+          <div class="impact-metric-header">
+            <div class="impact-metric-title-group">
+              <div class="impact-metric-icon blue">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <span class="impact-metric-title">Supervision Humaine Finale</span>
+            </div>
+            <span class="impact-metric-badge blue">Éthique & RSE</span>
+          </div>
+          <div class="impact-metric-body">
+            <div class="impact-metric-value-row">
+              <span class="impact-metric-value blue">100%</span>
+              <span class="impact-metric-subvalue">humain dans la boucle</span>
+            </div>
+            <div class="impact-metric-progress-track">
+              <div class="impact-metric-progress-bar" style="width: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+            </div>
+            <p class="impact-metric-desc">L'IA prépare, contrôle et alerte ; la décision souveraine d'octroi reste 100% humaine.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
